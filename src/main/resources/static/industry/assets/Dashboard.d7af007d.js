@@ -1,0 +1,1 @@
+import{_ as e}from"./main.afca9582.js";const a=Vue.defineComponent({__name:"Dashboard",setup(o){return VueRouter.useRoute(),(t,_)=>(Vue.openBlock(),Vue.createElementBlock("div",null," welcome to https://vn.douson.cn/ "))}});var n=e(a,[["__scopeId","data-v-04afc27a"],["__file","/Users/panchaohui/code/lead/dmmp_page/src/page/industry/admin/Dashboard.vue"]]);export{n as default};
