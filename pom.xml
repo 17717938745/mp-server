@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.lead.fund.base</groupId>
         <artifactId>manage</artifactId>
-        <version>202405.1-SNAPSHOT</version>
+        <version>202408.1-SNAPSHOT</version>
     </parent>
     <groupId>com.lead.fund.base.server</groupId>
     <artifactId>mp-server</artifactId>
