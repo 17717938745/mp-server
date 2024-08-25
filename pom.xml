@@ -4,10 +4,11 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.lead.fund.base.server</groupId>
-        <artifactId>server-manage</artifactId>
+        <groupId>com.lead.fund.base</groupId>
+        <artifactId>manage</artifactId>
         <version>202405.1-SNAPSHOT</version>
     </parent>
+    <groupId>com.lead.fund.base.server</groupId>
     <artifactId>mp-server</artifactId>
     <properties>
         <start-class>com.lead.fund.base.MpServerApplication</start-class>
