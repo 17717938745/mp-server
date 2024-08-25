@@ -18,7 +18,7 @@ yarn.lock
 /node_modules/
 /dist/
 src/page/node_modules/
-src/page/industry/
+#src/page/industry/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

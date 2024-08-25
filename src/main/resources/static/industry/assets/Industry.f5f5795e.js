@@ -1,1 +1,0 @@
-import{_ as r}from"./main.afca9582.js";const n={};function t(_,o){const e=Vue.resolveComponent("router-view");return Vue.openBlock(),Vue.createBlock(e)}var c=r(n,[["render",t],["__file","/Users/panchaohui/code/lead/dmmp_page/src/page/Industry.vue"]]);export{c as default};
