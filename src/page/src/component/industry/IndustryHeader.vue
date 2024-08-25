@@ -63,7 +63,7 @@
 </template>
 <script lang="tsx" setup>
 import {ElMessage} from 'element-plus'
-import arrowDownSVG from '../../asset/img/ma/arrow-down.svg'
+import arrowDownSVG from '../../asset/img/arrow-down.svg'
 import Avatar from '../../asset/img/img.jpg'
 import {ref} from 'vue'
 import {Store, useStore} from 'vuex'

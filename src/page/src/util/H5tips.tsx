@@ -1,0 +1,9 @@
+export const LoginPasswordRulesText:string = "登录密码必须是数字与大写字母/小写字母的组合"
+export const tradePasswordRulesText:string = "密码可以是纯数字、数字与大写字母/小写字母的组合"
+export const passwordRulesText:string = " 密码必须为6-20位数字+字母组合，区分大小写（不能是纯数字或字母）"
+export const passPlaceholderText: string = "设置6-20位新密码"
+export const confirmPassPlaceholderText: string = "请输入确认交易密码"
+export const passwordRules: any = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+export const loginPwdPlaceholder:string ="请输入登陆密码"
+export const oldPswPlaceholder:string ="输入原密码"
+export const confirmPswPlaceholder:string ="确认新密码"

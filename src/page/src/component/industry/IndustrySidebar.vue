@@ -31,7 +31,7 @@
 
 <script lang="tsx">
 import logo from "@/asset/img/industry/logo.ico"
-import collapseSVG from "@/asset/img/ma/collapse.svg"
+import collapseSVG from "@/asset/img/collapse.svg"
 import {computed, reactive, ref, toRefs} from "vue"
 import {Store, useStore} from "vuex"
 import {useRoute} from "vue-router"
