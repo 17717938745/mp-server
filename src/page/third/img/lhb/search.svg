@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>搜索栏icon</title>
+    <g id="基金详情&amp;交易" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="选择基金" transform="translate(-327, -222)">
+            <g id="编组" transform="translate(30, 208)">
+                <g id="搜索" transform="translate(297, 14)">
+                    <rect id="矩形" fill="#96969B" fill-rule="nonzero" opacity="0" x="0" y="0" width="30" height="30"></rect>
+                    <line x1="21.144" y1="22.872" x2="26.136" y2="27.864" id="直线" stroke="#96969B" stroke-width="2.4" stroke-linecap="round"></line>
+                    <path d="M14.904,3.688 C17.7891355,3.688 20.4011355,4.85743222 22.2918517,6.74814833 C24.1825678,8.63886443 25.352,11.2508644 25.352,14.1359999 C25.352,17.8687108 23.3606225,21.3178779 20.128,23.1842334 C18.5116888,24.1174111 16.7078444,24.584 14.904,24.584 C13.1001556,24.584 11.2963112,24.1174111 9.67999995,23.1842334 C6.44737748,21.3178779 4.456,17.8687108 4.456,14.1359999 C4.456,11.2508644 5.62543223,8.63886443 7.51614835,6.74814833 C9.40686446,4.85743222 12.0188645,3.688 14.904,3.688 Z" id="路径" stroke="#96969B" stroke-width="2.4" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

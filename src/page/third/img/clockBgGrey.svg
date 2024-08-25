@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状结合备份 3</title>
+    <defs>
+        <linearGradient x1="50%" y1="-3.1918912e-14%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#F4F4F4" offset="0%"></stop>
+            <stop stop-color="#DDDDDD" offset="51.0693359%"></stop>
+            <stop stop-color="#F4F4F4" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="新发基金-募集结束" transform="translate(-360, -378)" fill="url(#linearGradient-1)">
+            <path d="M440,419 L440,450 C440,454.418278 436.418278,458 432,458 L368,458 C363.581722,458 360,454.418278 360,450 L360,419 L440,419 Z M360,386 C360,381.581722 363.581722,378 368,378 L432,378 C436.418278,378 440,381.581722 440,386 L440,417 L360,417 L360,386 Z" id="形状结合备份-3"></path>
+        </g>
+    </g>
+</svg>

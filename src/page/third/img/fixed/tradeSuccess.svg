@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90px" height="90px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>结果状态icon/成功</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="定投设置成功" transform="translate(-330, -268)">
+            <g id="结果状态icon/成功" transform="translate(330, 268)">
+                <rect id="矩形" x="0" y="0" width="90" height="90"></rect>
+                <g id="分组" transform="translate(9.9, 11.28)" stroke="#12B469" stroke-linecap="round">
+                    <path d="M48.9318451,2.83048451 C48.3476649,2.57975521 47.7553104,2.34442505 47.1552922,2.12500479 M40.0481445,0.346060505 C38.4315374,0.117964633 36.7795447,0 35.1,0 C15.7148053,0 0,15.7148053 0,35.1 C0,54.4851947 15.7148053,70.2 35.1,70.2 C54.4851947,70.2 70.2,54.4851947 70.2,35.1 C70.2,33.3874512 70.0773537,31.7035481 69.8403653,30.0565948" id="形状" stroke-width="4"></path>
+                    <polyline id="路径" stroke-width="8" stroke-linejoin="round" points="19.3507031 34.7910969 32.8544531 47.653125 64.087207 11.55375"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

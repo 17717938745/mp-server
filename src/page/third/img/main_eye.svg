@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/显示密码</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="H5首页-已登录" transform="translate(-200.000000, -318.000000)">
+            <g id="Page-1" transform="translate(200.000000, 318.000000)">
+                <rect id="矩形" fill="#FFFFFF" opacity="0" x="0" y="0" width="40" height="40"></rect>
+                <path d="M35,20 C35,20 28.2841379,30 20,30 C11.7158621,30 5,20 5,20 C5,20 11.7158621,10 20,10 C28.2841379,10 35,20 35,20 Z" id="Stroke-1" stroke="#FFFFFF" stroke-width="2"></path>
+                <path d="M23.2183908,20.2262069 C21.536092,20.2262069 20.1724138,18.8625287 20.1724138,17.1802299 C20.1724138,16.3747126 20.4873563,15.6445977 20.9977011,15.1002299 C20.6754023,15.0349425 20.3416092,15 20,15 C17.2386207,15 15,17.2386207 15,20 C15,22.7613793 17.2386207,25 20,25 C22.7613793,25 25,22.7613793 25,20 C25,19.8850575 24.9903448,19.7728736 24.9829885,19.6602299 C24.4845977,20.0151724 23.8767816,20.2262069 23.2183908,20.2262069 Z" id="Stroke-3" stroke="#FFFFFF" stroke-width="2"></path>
+            </g>
+        </g>
+    </g>
+</svg>

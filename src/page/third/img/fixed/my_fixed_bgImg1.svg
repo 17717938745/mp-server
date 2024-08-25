@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="750px" height="350px" viewBox="0 0 750 350" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>蒙版</title>
+    <defs>
+        <linearGradient x1="1.08420217e-15%" y1="39.1111111%" x2="61.1614583%" y2="59.2948184%" id="linearGradient-1">
+            <stop stop-color="#FF5151" offset="0%"></stop>
+            <stop stop-color="#DB3333" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="定投详情-正常" transform="translate(0, -188)" fill="url(#linearGradient-1)">
+            <polygon id="蒙版" points="0 188 750 188 750 538 0 538"></polygon>
+        </g>
+    </g>
+</svg>

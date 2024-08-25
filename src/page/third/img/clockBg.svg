@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状结合</title>
+    <defs>
+        <linearGradient x1="50%" y1="-3.1918912e-14%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFEEEE" offset="0%"></stop>
+            <stop stop-color="#FFCCCC" offset="51.0693359%"></stop>
+            <stop stop-color="#FFEEEE" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="新发基金" transform="translate(-48, -438)" fill="url(#linearGradient-1)">
+            <path d="M128,479 L128,510 C128,514.418278 124.418278,518 120,518 L56,518 C51.581722,518 48,514.418278 48,510 L48,479 L128,479 Z M48,446 C48,441.581722 51.581722,438 56,438 L120,438 C124.418278,438 128,441.581722 128,446 L128,477 L48,477 L48,446 Z" id="形状结合"></path>
+        </g>
+    </g>
+</svg>

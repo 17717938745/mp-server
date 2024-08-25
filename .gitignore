@@ -1,7 +1,6 @@
 *.iml
 *.DS_Store
-
-
+.history
 .idea/
 */.idea/
 */*/.idea/
@@ -14,41 +13,11 @@ logs/
 .git/
 */.git/
 */*/.git/
-/h5/node_modules/
-/h5/dist/
-/h5/package-lock.json
-/h5/yarn.lock
-/front-gateway/
-*/.back_fund_base_db
-
-HELP.md
+package-lock.json
+yarn.lock
+/node_modules/
+/dist/
+src/page/node_modules/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
