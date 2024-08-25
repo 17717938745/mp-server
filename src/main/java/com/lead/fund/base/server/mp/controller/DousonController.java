@@ -505,13 +505,16 @@ public class DousonController {
     }
 
     private PageResult<ProductResponse> productPage(ProductPageRequest request) {
-        if (isNotBlank(request.getData().getTestDevice()) || isNotBlank(request.getData().getProcessProcedure())) {
+        if (isNotBlank(request.getData().getTestDevice()) || isNotBlank(request.getData().getProcessProcedure()) || isNotBlank(request.getData().getOrderNo())) {
             LambdaQueryWrapper<OrderEntity> lambda = new LambdaQueryWrapper<>();
             if (isNotBlank(request.getData().getTestDevice())) {
                 lambda.eq(OrderEntity::getTestDevice, request.getData().getTestDevice());
             }
             if (isNotBlank(request.getData().getProcessProcedure())) {
                 lambda.eq(OrderEntity::getProcessProcedure, request.getData().getProcessProcedure());
+            }
+            if (isNotBlank(request.getData().getOrderNo())) {
+                lambda.eq(OrderEntity::getOrderNo, request.getData().getOrderNo());
             }
             final List<String> orderIdList = orderMapper.selectList(lambda)
                     .stream().map(AbstractPrimaryKey::getId)
@@ -649,9 +652,6 @@ public class DousonController {
         LambdaQueryWrapper<ProductEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(request.getProductId())) {
             lambda.eq(ProductEntity::getId, request.getProductId());
-        }
-        if (isNotBlank(request.getOrderId())) {
-            lambda.like(ProductEntity::getOrderId, request.getOrderId());
         }
         if (CollUtil.isNotEmpty(request.getOpenIdList())) {
             DatabaseUtil.or(lambda, request.getOpenIdList(), (l, dl) -> l.in(ProductEntity::getOpenId, dl));

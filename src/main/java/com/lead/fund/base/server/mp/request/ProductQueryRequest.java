@@ -66,5 +66,5 @@ public class ProductQueryRequest implements Serializable {
     /**
      * 订单编号
      */
-    private String orderId;
+    private String orderNo;
 }

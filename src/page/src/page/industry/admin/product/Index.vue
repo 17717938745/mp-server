@@ -34,6 +34,15 @@
                 @keyup.enter="handlePage"
                 :placeholder="store.state.label.username"
                 class="search-item"/>
+      <el-select v-model="query.data.processProcedure" @change="handlePage" clearable placeholder="Please select">
+        <el-option
+            v-for="item in config.processProcedureList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-input v-model="query.data.orderNo" :placeholder="store.state.label.orderNo"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -93,7 +102,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="orderNo" :label="store.state.label.orderNo">
-          <el-input v-model="formData.orderNo"/>
+          <el-input v-model="formData.orderNo" :placeholder="store.state.label.orderNo"/>
         </el-form-item>
         <el-form-item prop="projectSequence" :label="store.state.label.projectSequence">
           <el-input v-model="formData.projectSequence"/>
@@ -116,7 +125,7 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="processProcedure" :label="store.state.label.processProcedure">
-          <el-select v-model="formData.processProcedure" clearable placeholder="请选择">
+          <el-select v-model="formData.processProcedure" clearable placeholder="Please select">
             <el-option
                 v-for="item in config.processProcedureList"
                 :key="item.value"
@@ -259,6 +268,8 @@ const state = reactive({
       testDevice: '',
       openId: '',
       nickname: '',
+      processProcedure: '',
+      orderNo: '',
     },
     page: {
       page: DEFAULT_PAGE,
@@ -362,9 +373,9 @@ const handleEdit = (row: any) => {
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  if(includes(roleCodeList, 'admin')) {
+  if (includes(roleCodeList, 'admin')) {
     return true
-  } else{
+  } else {
     return row.creator === store.state.user.userId
   }
 }
