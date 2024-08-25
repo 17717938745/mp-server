@@ -52,8 +52,8 @@ public class EquipmentResponse implements Serializable {
     /**
      * 使用人员
      */
-    private String userId;
-    private String userIdFormat;
+    private List<String> useUserList;
+    private String useUserFormat;
     /**
      * 备注
      */

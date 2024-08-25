@@ -2,66 +2,13 @@ package com.lead.fund.base.server.mp.converter;
 
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
-import com.lead.fund.base.server.mp.entity.douson.AccidentAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.AccidentEntity;
-import com.lead.fund.base.server.mp.entity.douson.BoxFlagEntity;
-import com.lead.fund.base.server.mp.entity.douson.BoxFlagPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ComputerEntity;
-import com.lead.fund.base.server.mp.entity.douson.ComputerPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
-import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderEntity;
-import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.EquipmentAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EquipmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EventAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EventEntity;
-import com.lead.fund.base.server.mp.entity.douson.ImproveAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.ImproveEntity;
-import com.lead.fund.base.server.mp.entity.douson.MaintainAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.MaintainEntity;
-import com.lead.fund.base.server.mp.entity.douson.OrderEntity;
-import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ProductEntity;
-import com.lead.fund.base.server.mp.entity.douson.ProductPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.*;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import com.lead.fund.base.server.mp.model.VideoModel;
-import com.lead.fund.base.server.mp.request.AccidentRequest;
-import com.lead.fund.base.server.mp.request.BoxFlagRequest;
-import com.lead.fund.base.server.mp.request.ComputerRequest;
-import com.lead.fund.base.server.mp.request.DeviceCheckLedgerRequest;
-import com.lead.fund.base.server.mp.request.DisqualificationOrderRequest;
-import com.lead.fund.base.server.mp.request.EquipmentRequest;
-import com.lead.fund.base.server.mp.request.EventRequest;
-import com.lead.fund.base.server.mp.request.ImproveRequest;
-import com.lead.fund.base.server.mp.request.MaintainRequest;
-import com.lead.fund.base.server.mp.request.OrderRequest;
-import com.lead.fund.base.server.mp.request.PlanRequest;
-import com.lead.fund.base.server.mp.request.ProductRequest;
-import com.lead.fund.base.server.mp.request.ReportRequest;
-import com.lead.fund.base.server.mp.response.AccidentResponse;
-import com.lead.fund.base.server.mp.response.BoxFlagResponse;
-import com.lead.fund.base.server.mp.response.ComputerResponse;
-import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
-import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
-import com.lead.fund.base.server.mp.response.EquipmentResponse;
-import com.lead.fund.base.server.mp.response.EventResponse;
-import com.lead.fund.base.server.mp.response.ImproveResponse;
-import com.lead.fund.base.server.mp.response.MaintainResponse;
-import com.lead.fund.base.server.mp.response.MpSignInHistoryResponse;
-import com.lead.fund.base.server.mp.response.OrderResponse;
-import com.lead.fund.base.server.mp.response.ParamConfigResponse;
-import com.lead.fund.base.server.mp.response.PlanResponse;
-import com.lead.fund.base.server.mp.response.ProductResponse;
-import com.lead.fund.base.server.mp.response.ReportResponse;
-import com.lead.fund.base.server.mp.response.UserDeviceResponse;
+import com.lead.fund.base.server.mp.request.*;
+import com.lead.fund.base.server.mp.response.*;
+
 import java.io.Serializable;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -375,6 +322,38 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
     FileModel eventFile(EventAttachmentEntity e, String urlPrefix);
 
+    @org.mapstruct.Mapping(target = "qualityId", source = "qualityId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "0")
+    @org.mapstruct.Mapping(target = "url", source = "t.photoUrl")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.photoCompressUrl")
+    QualityAttachmentEntity qualityAttachment(String qualityId, String attachmentCategory, PhotoImgModel t);
+
+    @org.mapstruct.Mapping(target = "qualityId", source = "qualityId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "1")
+    @org.mapstruct.Mapping(target = "url", source = "t.url")
+    @org.mapstruct.Mapping(target = "fileId", source = "t.fileId")
+    @org.mapstruct.Mapping(target = "filename", source = "t.filename")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.url")
+    QualityAttachmentEntity qualityAttachment(String qualityId, String attachmentCategory, FileModel t);
+
+    @org.mapstruct.Mapping(target = "id", source = "qualityId")
+    QualityEntity quality(QualityRequest t);
+
+    List<QualityResponse> qualityList(List<QualityEntity> l);
+
+    @org.mapstruct.Mapping(target = "qualityId", source = "id")
+    QualityResponse quality(QualityEntity t);
+
+    @org.mapstruct.Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoCompressUrl", expression = "java(e.getCompressUrl().startsWith(\"http:\") || e.getCompressUrl().startsWith(\"https:\") ? e.getCompressUrl() : (urlPrefix + e.getCompressUrl()))")
+    @org.mapstruct.Mapping(target = "photoUrl", expression = "java(e.getUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    PhotoImgModel qualityPhoto(QualityAttachmentEntity e, String urlPrefix);
+
+    @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    FileModel qualityFile(QualityAttachmentEntity e, String urlPrefix);
 
     @Mapping(target = "improveId", source = "improveId")
     @Mapping(target = "attachmentCategory", source = "attachmentCategory")
@@ -433,6 +412,7 @@ public interface IndustryConverter extends Serializable {
 
     @Mapping(target = "equipmentId", source = "id")
     @Mapping(target = "chargeUserList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(t.getChargeUser()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
+    @Mapping(target = "useUserList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(t.getUseUser()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     EquipmentResponse equipment(EquipmentEntity t);
 
     @Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")

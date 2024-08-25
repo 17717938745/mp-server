@@ -53,7 +53,8 @@ public class EquipmentRequest implements Serializable {
     /**
      * 使用人员
      */
-    private String userId;
+    private String useUser;
+    private List<String> useUserList = new ArrayList<>();
     /**
      * 备注
      */

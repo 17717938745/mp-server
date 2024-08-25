@@ -28,7 +28,7 @@ public class TodoData implements Serializable {
      */
     private String id;
     /**
-     * 类型，0-不合格单，1-EHS，2-改善，3-设备维修记录
+     * 类型，0-不合格单，1-EHS，2-改善，3-设备维修记录，4-质量事故报告
      */
     private Integer type;
     /**

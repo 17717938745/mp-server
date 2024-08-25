@@ -41,142 +41,22 @@ import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.NumberUtil;
 import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.server.mp.dao.AccidentAttachmentDao;
-import com.lead.fund.base.server.mp.dao.BoxFlagDao;
-import com.lead.fund.base.server.mp.dao.BoxFlagPhotoDao;
-import com.lead.fund.base.server.mp.dao.BoxFlagSerialNoDao;
-import com.lead.fund.base.server.mp.dao.ComputerDao;
-import com.lead.fund.base.server.mp.dao.ComputerPhotoDao;
-import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerDao;
-import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerPhotoDao;
-import com.lead.fund.base.server.mp.dao.DisqualificationOrderDao;
-import com.lead.fund.base.server.mp.dao.DisqualificationOrderPhotoDao;
-import com.lead.fund.base.server.mp.dao.EquipmentAttachmentDao;
-import com.lead.fund.base.server.mp.dao.EventAttachmentDao;
-import com.lead.fund.base.server.mp.dao.ImproveAttachmentDao;
-import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
-import com.lead.fund.base.server.mp.dao.ParamDao;
-import com.lead.fund.base.server.mp.dao.PlanAttachmentDao;
-import com.lead.fund.base.server.mp.dao.PlanDao;
-import com.lead.fund.base.server.mp.dao.PlanPhotoDao;
-import com.lead.fund.base.server.mp.dao.ProductPhotoDao;
-import com.lead.fund.base.server.mp.dao.ReportPhotoDao;
-import com.lead.fund.base.server.mp.dao.ReportSerialNoDao;
+import com.lead.fund.base.server.mp.dao.*;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
-import com.lead.fund.base.server.mp.entity.douson.AccidentAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.AccidentEntity;
-import com.lead.fund.base.server.mp.entity.douson.BoxFlagEntity;
-import com.lead.fund.base.server.mp.entity.douson.BoxFlagPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ComputerEntity;
-import com.lead.fund.base.server.mp.entity.douson.ComputerPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
-import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderEntity;
-import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.EquipmentAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EquipmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EventAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.EventEntity;
-import com.lead.fund.base.server.mp.entity.douson.ImproveAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.ImproveEntity;
-import com.lead.fund.base.server.mp.entity.douson.MaintainAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.MaintainEntity;
-import com.lead.fund.base.server.mp.entity.douson.OrderEntity;
-import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanAttachmentEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanEntity;
-import com.lead.fund.base.server.mp.entity.douson.PlanPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ProductEntity;
-import com.lead.fund.base.server.mp.entity.douson.ProductPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportPhotoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportSerialNoEntity;
-import com.lead.fund.base.server.mp.entity.douson.ReportUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.*;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpAccountMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpFileMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
-import com.lead.fund.base.server.mp.mapper.douson.AccidentAttachmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.AccidentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
-import com.lead.fund.base.server.mp.mapper.douson.EquipmentAttachmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.EquipmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.EventAttachmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.EventMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ImproveAttachmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ImproveMapper;
-import com.lead.fund.base.server.mp.mapper.douson.MaintainAttachmentMapper;
-import com.lead.fund.base.server.mp.mapper.douson.MaintainMapper;
-import com.lead.fund.base.server.mp.mapper.douson.OrderMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ParamMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ProductMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ProductPhotoMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
-import com.lead.fund.base.server.mp.request.AccidentPageRequest;
-import com.lead.fund.base.server.mp.request.AccidentQueryRequest;
-import com.lead.fund.base.server.mp.request.AccidentRequest;
-import com.lead.fund.base.server.mp.request.BoxFlagPageRequest;
-import com.lead.fund.base.server.mp.request.BoxFlagRequest;
-import com.lead.fund.base.server.mp.request.ComputerPageRequest;
-import com.lead.fund.base.server.mp.request.ComputerRequest;
-import com.lead.fund.base.server.mp.request.DeviceCheckLedgerRequest;
-import com.lead.fund.base.server.mp.request.DeviceQueryRequest;
-import com.lead.fund.base.server.mp.request.DisqualificationOrderPageRequest;
-import com.lead.fund.base.server.mp.request.DisqualificationOrderRequest;
-import com.lead.fund.base.server.mp.request.EquipmentPageRequest;
-import com.lead.fund.base.server.mp.request.EquipmentRequest;
-import com.lead.fund.base.server.mp.request.EventPageRequest;
-import com.lead.fund.base.server.mp.request.EventQueryRequest;
-import com.lead.fund.base.server.mp.request.EventRequest;
-import com.lead.fund.base.server.mp.request.ImprovePageRequest;
-import com.lead.fund.base.server.mp.request.ImproveRequest;
-import com.lead.fund.base.server.mp.request.MaintainPageRequest;
-import com.lead.fund.base.server.mp.request.MaintainRequest;
-import com.lead.fund.base.server.mp.request.MpAccountQueryPageRequest;
-import com.lead.fund.base.server.mp.request.MpAccountRequest;
-import com.lead.fund.base.server.mp.request.OrderPageRequest;
-import com.lead.fund.base.server.mp.request.OrderQueryRequest;
-import com.lead.fund.base.server.mp.request.OrderRequest;
-import com.lead.fund.base.server.mp.request.ParamRequest;
-import com.lead.fund.base.server.mp.request.PlanPageRequest;
-import com.lead.fund.base.server.mp.request.PlanRequest;
-import com.lead.fund.base.server.mp.request.ProductPageRequest;
-import com.lead.fund.base.server.mp.request.ProductQueryRequest;
-import com.lead.fund.base.server.mp.request.ProductRequest;
-import com.lead.fund.base.server.mp.request.ReportQueryRequest;
-import com.lead.fund.base.server.mp.request.ReportRequest;
-import com.lead.fund.base.server.mp.response.AccidentResponse;
-import com.lead.fund.base.server.mp.response.BoxFlagResponse;
-import com.lead.fund.base.server.mp.response.ComputerResponse;
-import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
-import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
-import com.lead.fund.base.server.mp.response.EquipmentResponse;
-import com.lead.fund.base.server.mp.response.EventResponse;
-import com.lead.fund.base.server.mp.response.ImproveResponse;
-import com.lead.fund.base.server.mp.response.MaintainResponse;
-import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
-import com.lead.fund.base.server.mp.response.MpAccountResponse;
-import com.lead.fund.base.server.mp.response.MpRoleResponse;
-import com.lead.fund.base.server.mp.response.MpUserResponse;
-import com.lead.fund.base.server.mp.response.OrderResponse;
-import com.lead.fund.base.server.mp.response.ParamConfigResponse;
+import com.lead.fund.base.server.mp.mapper.douson.*;
+import com.lead.fund.base.server.mp.request.*;
+import com.lead.fund.base.server.mp.response.*;
 import com.lead.fund.base.server.mp.response.ParamResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse.ParamResponseBuilder;
-import com.lead.fund.base.server.mp.response.PlanResponse;
-import com.lead.fund.base.server.mp.response.ProductResponse;
-import com.lead.fund.base.server.mp.response.ReportResponse;
-import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
-import com.lead.fund.base.server.mp.response.TodoData;
-import com.lead.fund.base.server.mp.response.TodoResponse;
-import com.lead.fund.base.server.mp.response.UserDeviceResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -314,6 +194,12 @@ public class DousonController {
     @Resource
     private EventMapper eventMapper;
     @Resource
+    private QualityMapper qualityMapper;
+    @Resource
+    private QualityAttachmentMapper qualityAttachmentMapper;
+    @Resource
+    private QualityAttachmentDao qualityAttachmentDao;
+    @Resource
     private EventAttachmentMapper eventAttachmentMapper;
     @Resource
     private EventAttachmentDao eventAttachmentDao;
@@ -400,6 +286,7 @@ public class DousonController {
                 case "brokenReason" -> builder.brokenReasonList(paramDao.listByCategoryId(categoryId));
                 case "repairType" -> builder.repairTypeList(paramDao.listByCategoryId(categoryId));
                 case "improveReason" -> builder.improveReasonList(paramDao.listByCategoryId(categoryId));
+                case "qualityReason" -> builder.qualityReasonList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -420,7 +307,7 @@ public class DousonController {
     public DataResult<TodoResponse> todoList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId) {
         final TodoResponse r = new TodoResponse();
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        final List<String> qualityIdList = u.getRoleCodeList().stream().noneMatch("qualityManager"::equals) ? new ArrayList<>() : disqualificationOrderDao.list(new LambdaQueryWrapper<DisqualificationOrderEntity>()
+        final List<String> disqualificationIdList = u.getRoleCodeList().stream().noneMatch("qualityManager"::equals) ? new ArrayList<>() : disqualificationOrderDao.list(new LambdaQueryWrapper<DisqualificationOrderEntity>()
                         .isNull(DisqualificationOrderEntity::getQualityDealOpinion)
                         .or(true, lam -> lam.eq(DisqualificationOrderEntity::getQualityDealOpinion, ""))
                         .select(DisqualificationOrderEntity::getId)
@@ -454,6 +341,15 @@ public class DousonController {
                         .select(EventEntity::getId)
                 ).stream().map(EventEntity::getId)
                 .collect(Collectors.toList());
+        final List<String> qualityIdList = qualityMapper.selectList(new LambdaQueryWrapper<QualityEntity>()
+                        .and(true, lam ->
+                                lam.eq(QualityEntity::getUserId, u.getUserId())
+                                        .or(true, lam1 -> lam1.eq(QualityEntity::getDirectLeader, u.getUserId()))
+                        )
+                        .eq(QualityEntity::getValid, false)
+                        .select(QualityEntity::getId)
+                ).stream().map(QualityEntity::getId)
+                .collect(Collectors.toList());
         final List<String> improveIdList = improveMapper.selectList(new LambdaQueryWrapper<ImproveEntity>()
                         .and(true, lam ->
                                 lam.eq(ImproveEntity::getUserId, u.getUserId())
@@ -469,7 +365,7 @@ public class DousonController {
                         .select(MaintainEntity::getId)
                 ).stream().map(MaintainEntity::getId)
                 .collect(Collectors.toList());
-        final List<String> idList = Stream.of(qualityIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList)
+        final List<String> idList = Stream.of(disqualificationIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList, qualityIdList)
                 .flatMap(Collection::stream)
                 .distinct().toList();
         AtomicInteger index = new AtomicInteger(0);
@@ -479,8 +375,8 @@ public class DousonController {
                     final List<String> sceneList = new ArrayList<>();
                     String labelTail = "Null";
                     int type = -1;
-                    if (qualityIdList.contains(t)) {
-                        sceneList.add("quality");
+                    if (disqualificationIdList.contains(t)) {
+                        sceneList.add("disqualification");
                         labelTail = "Order";
                         type = 0;
                     }
@@ -508,6 +404,11 @@ public class DousonController {
                         sceneList.add("maintain");
                         labelTail = "Maintain";
                         type = 3;
+                    }
+                    if (qualityIdList.contains(t)) {
+                        sceneList.add("quality");
+                        labelTail = "Quality";
+                        type = 4;
                     }
                     return new TodoData()
                             .setId(t)
@@ -2353,6 +2254,251 @@ public class DousonController {
         );
     }
 
+    private void mergeRelevance(QualityRequest request, QualityEntity e) {
+        qualityAttachmentMapper.delete(new LambdaUpdateWrapper<QualityAttachmentEntity>()
+                .eq(QualityAttachmentEntity::getQualityId, e.getId())
+        );
+        qualityAttachmentDao.saveBatch(
+                Stream.of(
+                                CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.qualityAttachment(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.qualityAttachment(e.getId(), "1", t)),
+                                CollUtil.defaultIfEmpty(request.getImprovePhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.qualityAttachment(e.getId(), "2", t)),
+                                CollUtil.defaultIfEmpty(request.getImproveFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.qualityAttachment(e.getId(), "3", t))
+                        ).flatMap(t -> t)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 保存事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link QualityRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/quality")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result qualitySave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody QualityRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        QualityEntity e;
+        qualityMapper.insert(e = (QualityEntity) INDUSTRY_INSTANCE.quality(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 修改事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link QualityRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/quality")
+    public Result qualityUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody QualityRequest request
+    ) {
+        MpUserResponse u;
+        try {
+            u = accountHelper.getUser(deviceId);
+        } catch (Exception e) {
+            u = new MpUserResponse();
+        }
+        QualityEntity e = (QualityEntity) INDUSTRY_INSTANCE.quality(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setModifier(u.getUserId());
+        LambdaUpdateWrapper<QualityEntity> lambda = new LambdaUpdateWrapper<QualityEntity>()
+                .eq(QualityEntity::getId, e.getId());
+        if (!"admin".equals(u.getUserId())) {
+            lambda.eq(QualityEntity::getValid, false);
+        }
+        if (qualityMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 删除事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link QualityRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/quality")
+    public Result qualityDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute QualityRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<QualityEntity> lambda = new LambdaUpdateWrapper<QualityEntity>().eq(QualityEntity::getId, request.getQualityId());
+        if (isNotBlank(request.getQualityId())) {
+            if (qualityMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+        }
+        return new Result();
+    }
+
+    private List<QualityEntity> qualityList(QualityRequest request) {
+        LambdaQueryWrapper<QualityEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getQualityId())) {
+            lambda.eq(QualityEntity::getId, request.getQualityId());
+        }
+        if (null != request.getStartReportDate()) {
+            lambda.ge(QualityEntity::getReportDate, DateUtil.day(request.getStartReportDate()));
+        }
+        if (null != request.getEndReportDate()) {
+            lambda.le(QualityEntity::getReportDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndReportDate())));
+        }
+        if (null != request.getReportDate()) {
+            lambda.eq(QualityEntity::getReportDate, request.getReportDate());
+        }
+        if (isNotBlank(request.getReason())) {
+            lambda.like(QualityEntity::getReason, "," + request.getReason() + ",");
+        }
+        if (CollUtil.isNotEmpty(request.getReasonList())) {
+            DatabaseUtil.or(lambda, request.getReasonList(), (lam, l) -> lam.in(QualityEntity::getReason, l));
+        }
+        if (isNotBlank(request.getUserId())) {
+            lambda.eq(QualityEntity::getUserId, request.getUserId());
+        }
+        if (isNotBlank(request.getQueryUserId())) {
+            lambda.and(true, lam -> {
+                lam.eq(QualityEntity::getUserId, request.getQueryUserId())
+                        .or(true, lam1 -> lam1.eq(QualityEntity::getDirectLeader, request.getQueryUserId()));
+            });
+        }
+        if (CollUtil.isNotEmpty(request.getUserIdList())) {
+            DatabaseUtil.or(lambda, request.getUserIdList(), (lam, l) -> lam.in(QualityEntity::getUserId, l));
+        }
+        if (null != request.getValid()) {
+            lambda.eq(QualityEntity::getValid, request.getValid());
+        }
+        return qualityMapper.selectList(lambda.orderByDesc(QualityEntity::getReportDate));
+    }
+
+    private List<QualityResponse> formatQualityList(List<QualityEntity> l) {
+        final List<QualityResponse> list = INDUSTRY_INSTANCE.qualityList(l);
+        List<String> userIdList = Stream.of(
+                        list.stream().map(QualityResponse::getUserId).filter(StrUtil::isNotBlank),
+                        list.stream().map(QualityResponse::getDirectLeader).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getUserId())).collect(Collectors.toList()),
+                QualityResponse::getUserId,
+                l1 -> userList,
+                (r, t) -> r.getUserId().equals(t.getId()),
+                (r, t) -> r.setUserIdFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getDirectLeader())).collect(Collectors.toList()),
+                QualityResponse::getDirectLeader,
+                l1 -> userList,
+                (r, t) -> r.getDirectLeader().equals(t.getId()),
+                (r, t) -> r.setDirectLeaderFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list,
+                QualityResponse::getQualityId,
+                l1 -> qualityAttachmentMapper.selectList(new LambdaQueryWrapper<QualityAttachmentEntity>()
+                        .in(QualityAttachmentEntity::getQualityId, l1)),
+                (t, r) -> t.getQualityId().equals(r.getQualityId()),
+                (t, r) -> {
+                    switch (r.getAttachmentCategory()) {
+                        case "0" -> t.getPhotoList().add(
+                                INDUSTRY_INSTANCE.qualityPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "1" -> t.getFileList().add(
+                                INDUSTRY_INSTANCE.qualityFile(r, urlHelper.getUrlPrefix())
+                        );
+                        case "2" -> t.getImprovePhotoList().add(
+                                INDUSTRY_INSTANCE.qualityPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "3" -> t.getImproveFileList().add(
+                                INDUSTRY_INSTANCE.qualityFile(r, urlHelper.getUrlPrefix())
+                        );
+                        default -> log.info("quality attachment: {}", JSONUtil.toJsonStr(r));
+                    }
+                }
+        );
+        Map<Object, String> qualityReasonMap = paramDao.listByCategoryId("qualityReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
+        for (QualityResponse t : list) {
+            t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));
+            t.setReasonFormat(t.getReasonList().stream().filter(StrUtil::isNotBlank).map(t1 -> qualityReasonMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
+        return list;
+    }
+
+    /**
+     * 事故列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MpAccountQueryPageRequest}
+     * @return {@link PageResult <QualityResponse>}
+     */
+    @GetMapping("admin/quality/page")
+    public PageResult<QualityResponse> qualityAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute QualityPageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "qualityView".equals(t))) {
+            request.getData().setQueryUserId(u.getUserId());
+        }
+        PageResult<QualityEntity> page = DatabaseUtil.page(request, this::qualityList);
+        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(
+                page.getTotal(),
+                formatQualityList(page.getList())
+                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 事故（公开）
+     *
+     * @param request {@link AccidentQueryRequest}
+     * @return {@link DataResult <QualityResponse>}
+     */
+    @GetMapping("quality")
+    public DataResult<QualityResponse> quality(
+            @ModelAttribute QualityRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatQualityList(qualityList(request))), new QualityResponse())
+        );
+    }
+
     private void mergeRelevance(ImproveRequest request, ImproveEntity e) {
         improveAttachmentMapper.delete(new LambdaUpdateWrapper<ImproveAttachmentEntity>()
                 .eq(ImproveAttachmentEntity::getImproveId, e.getId())
@@ -2631,6 +2777,7 @@ public class DousonController {
         }
         EquipmentEntity e;
         equipmentMapper.insert(e = (EquipmentEntity) INDUSTRY_INSTANCE.equipment(request)
+                .setUseUser("," + String.join(",", request.getUseUserList()) + ",")
                 .setChargeUser("," + String.join(",", request.getChargeUserList()) + ",")
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
@@ -2655,6 +2802,7 @@ public class DousonController {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         EquipmentEntity e = (EquipmentEntity) INDUSTRY_INSTANCE.equipment(request)
+                .setUseUser("," + String.join(",", request.getUseUserList()) + ",")
                 .setChargeUser("," + String.join(",", request.getChargeUserList()) + ",")
                 .setModifier(u.getUserId());
         LambdaUpdateWrapper<EquipmentEntity> lambda = new LambdaUpdateWrapper<EquipmentEntity>()
@@ -2717,12 +2865,12 @@ public class DousonController {
         if (null != request.getEndDate()) {
             lambda.le(EquipmentEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndDate())));
         }
-        if (isNotBlank(request.getUserId())) {
-            lambda.eq(EquipmentEntity::getUserId, request.getUserId());
+        if (isNotBlank(request.getUseUser())) {
+            lambda.like(EquipmentEntity::getUseUser, "," + request.getUseUser() + ",");
         }
         if (isNotBlank(request.getQueryUserId())) {
             lambda.and(true, lam -> {
-                lam.eq(EquipmentEntity::getUserId, request.getQueryUserId())
+                lam.eq(EquipmentEntity::getUseUser, request.getQueryUserId())
                         .or(true, lam1 -> lam1.eq(EquipmentEntity::getChargeUser, request.getQueryUserId()));
             });
         }
@@ -2732,7 +2880,7 @@ public class DousonController {
     private List<EquipmentResponse> formatEquipmentList(List<EquipmentEntity> l) {
         final List<EquipmentResponse> list = INDUSTRY_INSTANCE.equipmentList(l);
         List<String> userIdList = Stream.of(
-                        list.stream().map(EquipmentResponse::getUserId).filter(StrUtil::isNotBlank),
+                        list.stream().map(EquipmentResponse::getUseUserList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank),
                         list.stream().map(EquipmentResponse::getChargeUserList).flatMap(t -> t.stream())
                 )
                 .flatMap(t -> t)
@@ -2743,13 +2891,7 @@ public class DousonController {
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
-        MultitaskUtil.supplementList(
-                list.stream().filter(t -> isNotBlank(t.getUserId())).collect(Collectors.toList()),
-                EquipmentResponse::getUserId,
-                l1 -> userList,
-                (r, t) -> r.getUserId().equals(t.getId()),
-                (r, t) -> r.setUserIdFormat(t.getName())
-        );
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 list.stream().filter(t -> isNotBlank(t.getPosition())).collect(Collectors.toList()),
                 EquipmentResponse::getPosition,
@@ -2778,6 +2920,7 @@ public class DousonController {
         final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));
         for (EquipmentResponse t : list) {
             t.setChargeUserFormat(t.getChargeUserList().stream().filter(StrUtil::isNotBlank).map(t1 -> um.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+            t.setUseUserFormat(t.getUseUserList().stream().filter(StrUtil::isNotBlank).map(t1 -> um.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
         }
         return list;
     }
@@ -3256,7 +3399,7 @@ public class DousonController {
                 lambda.and(
                         lam -> lam.isNull(BoxFlagEntity::getSendCount)
                                 .or()
-                                .ge(BoxFlagEntity::getSendCount, 0)
+                                .le(BoxFlagEntity::getSendCount, 0)
                 );
             }
         }

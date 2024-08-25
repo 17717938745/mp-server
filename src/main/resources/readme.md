@@ -14,6 +14,18 @@ cd /opt/douson/mp-server/
 EOF
 ```
 
+windows
+
+```shell
+[Environment]::SetEnvironmentVariable('JAVA_HOME', 'D:\program\Java\jdk17.0.6', 'Process')
+mvn clean package -DskipTests
+scp -P 33333 target/mp-server.jar root@085a8d1e51b66c57.natapp.cc:/opt/douson/mp-server/
+ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+cd /opt/douson/mp-server/
+./run
+EOF
+```
+
 ```shell
 # yarn industry-douson-build && rm -rf ~/Desktop/mp-server/static/industry/ && mv industry/ ~/Desktop/mp-server/static/
 # yarn industry-java-build && rm -rf ~/Desktop/mp-server/static/industry/ && mv industry/ ~/Desktop/mp-server/static/
@@ -24,4 +36,12 @@ cd /opt/douson/mp-server/static/
 rm -rf industry
 unzip industry.zip
 EOF
+```
+
+windows
+
+```shell
+npm run industry-java-build
+scp -r -P 33333 industry/ root@085a8d1e51b66c57.natapp.cc:/opt/douson/mp-server/static/
+rm -rf industry/
 ```

@@ -53,8 +53,8 @@ public class EquipmentEntity extends AbstractAdministrator {
      * 使用人员
      */
     @FieldRemark(value = "使用人员")
-    @Size(max = 64)
-    private String userId;
+    @Size(max = 256)
+    private String useUser;
     /**
      * 设备细节描述
      */
