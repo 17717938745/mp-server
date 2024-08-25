@@ -650,6 +650,9 @@ public class DousonController {
         if (isNotBlank(request.getProductId())) {
             lambda.eq(ProductEntity::getId, request.getProductId());
         }
+        if (isNotBlank(request.getOrderId())) {
+            lambda.like(ProductEntity::getOrderId, request.getOrderId());
+        }
         if (CollUtil.isNotEmpty(request.getOpenIdList())) {
             DatabaseUtil.or(lambda, request.getOpenIdList(), (l, dl) -> l.in(ProductEntity::getOpenId, dl));
         }

@@ -3,6 +3,9 @@ package com.lead.fund.base.server.mp.request;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -60,4 +63,8 @@ public class ProductQueryRequest implements Serializable {
      * 加工工序
      */
     private String processProcedure;
+    /**
+     * 订单编号
+     */
+    private String orderId;
 }
