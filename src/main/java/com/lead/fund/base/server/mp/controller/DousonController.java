@@ -505,8 +505,15 @@ public class DousonController {
     }
 
     private PageResult<ProductResponse> productPage(ProductPageRequest request) {
-        if (isNotBlank(request.getData().getTestDevice())) {
-            final List<String> orderIdList = orderMapper.selectList(new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getTestDevice, request.getData().getTestDevice()))
+        if (isNotBlank(request.getData().getTestDevice()) || isNotBlank(request.getData().getProcessProcedure())) {
+            LambdaQueryWrapper<OrderEntity> lambda = new LambdaQueryWrapper<>();
+            if (isNotBlank(request.getData().getTestDevice())) {
+                lambda.eq(OrderEntity::getTestDevice, request.getData().getTestDevice());
+            }
+            if (isNotBlank(request.getData().getProcessProcedure())) {
+                lambda.eq(OrderEntity::getProcessProcedure, request.getData().getProcessProcedure());
+            }
+            final List<String> orderIdList = orderMapper.selectList(lambda)
                     .stream().map(AbstractPrimaryKey::getId)
                     .collect(Collectors.toList());
             if (CollUtil.isNotEmpty(orderIdList)) {

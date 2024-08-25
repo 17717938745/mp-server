@@ -56,4 +56,8 @@ public class ProductQueryRequest implements Serializable {
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endReportDate;
+    /**
+     * 加工工序
+     */
+    private String processProcedure;
 }
