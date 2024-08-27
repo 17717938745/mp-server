@@ -775,7 +775,7 @@ const columnConfigList = ref<ViewConfig[]>([
     labelKey: 'valid',
     align: 'center',
     width: 86,
-    type: ValueType.ValidEdit,
+    type: user.username === 'admin' ? ValueType.ValidEdit : ValueType.Valid,
   },
   {
     value: 'photoList',
