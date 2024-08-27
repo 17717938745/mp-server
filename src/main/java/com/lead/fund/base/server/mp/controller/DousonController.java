@@ -41,25 +41,152 @@ import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.NumberUtil;
 import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.server.mp.dao.*;
+import com.lead.fund.base.server.mp.dao.AccidentAttachmentDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagPhotoDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagSerialNoDao;
+import com.lead.fund.base.server.mp.dao.ComputerDao;
+import com.lead.fund.base.server.mp.dao.ComputerPhotoDao;
+import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerDao;
+import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerPhotoDao;
+import com.lead.fund.base.server.mp.dao.DisqualificationOrderDao;
+import com.lead.fund.base.server.mp.dao.DisqualificationOrderPhotoDao;
+import com.lead.fund.base.server.mp.dao.EquipmentAttachmentDao;
+import com.lead.fund.base.server.mp.dao.EventAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ImproveAttachmentDao;
+import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ParamDao;
+import com.lead.fund.base.server.mp.dao.PlanAttachmentDao;
+import com.lead.fund.base.server.mp.dao.PlanDao;
+import com.lead.fund.base.server.mp.dao.PlanPhotoDao;
+import com.lead.fund.base.server.mp.dao.ProductPhotoDao;
+import com.lead.fund.base.server.mp.dao.QualityAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ReportPhotoDao;
+import com.lead.fund.base.server.mp.dao.ReportSerialNoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
-import com.lead.fund.base.server.mp.entity.douson.*;
+import com.lead.fund.base.server.mp.entity.douson.AccidentAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.AccidentEntity;
+import com.lead.fund.base.server.mp.entity.douson.BoxFlagEntity;
+import com.lead.fund.base.server.mp.entity.douson.BoxFlagPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ComputerEntity;
+import com.lead.fund.base.server.mp.entity.douson.ComputerPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
+import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderEntity;
+import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.EquipmentAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EquipmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EventAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EventEntity;
+import com.lead.fund.base.server.mp.entity.douson.ImproveAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.ImproveEntity;
+import com.lead.fund.base.server.mp.entity.douson.MaintainAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.MaintainEntity;
+import com.lead.fund.base.server.mp.entity.douson.OrderEntity;
+import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ProductEntity;
+import com.lead.fund.base.server.mp.entity.douson.ProductPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.QualityAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.QualityEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportSerialNoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportUserEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpAccountMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpFileMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
-import com.lead.fund.base.server.mp.mapper.douson.*;
-import com.lead.fund.base.server.mp.request.*;
-import com.lead.fund.base.server.mp.response.*;
+import com.lead.fund.base.server.mp.mapper.douson.AccidentAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.AccidentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EquipmentAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EquipmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EventAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EventMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ImproveAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ImproveMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainMapper;
+import com.lead.fund.base.server.mp.mapper.douson.OrderMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ParamMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ProductMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ProductPhotoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.QualityAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.QualityMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
+import com.lead.fund.base.server.mp.request.AccidentPageRequest;
+import com.lead.fund.base.server.mp.request.AccidentQueryRequest;
+import com.lead.fund.base.server.mp.request.AccidentRequest;
+import com.lead.fund.base.server.mp.request.BoxFlagPageRequest;
+import com.lead.fund.base.server.mp.request.BoxFlagRequest;
+import com.lead.fund.base.server.mp.request.ComputerPageRequest;
+import com.lead.fund.base.server.mp.request.ComputerRequest;
+import com.lead.fund.base.server.mp.request.DeviceCheckLedgerRequest;
+import com.lead.fund.base.server.mp.request.DeviceQueryRequest;
+import com.lead.fund.base.server.mp.request.DisqualificationOrderPageRequest;
+import com.lead.fund.base.server.mp.request.DisqualificationOrderRequest;
+import com.lead.fund.base.server.mp.request.EquipmentPageRequest;
+import com.lead.fund.base.server.mp.request.EquipmentRequest;
+import com.lead.fund.base.server.mp.request.EventPageRequest;
+import com.lead.fund.base.server.mp.request.EventQueryRequest;
+import com.lead.fund.base.server.mp.request.EventRequest;
+import com.lead.fund.base.server.mp.request.ImprovePageRequest;
+import com.lead.fund.base.server.mp.request.ImproveRequest;
+import com.lead.fund.base.server.mp.request.MaintainPageRequest;
+import com.lead.fund.base.server.mp.request.MaintainRequest;
+import com.lead.fund.base.server.mp.request.MpAccountQueryPageRequest;
+import com.lead.fund.base.server.mp.request.MpAccountRequest;
+import com.lead.fund.base.server.mp.request.OrderPageRequest;
+import com.lead.fund.base.server.mp.request.OrderQueryRequest;
+import com.lead.fund.base.server.mp.request.OrderRequest;
+import com.lead.fund.base.server.mp.request.ParamRequest;
+import com.lead.fund.base.server.mp.request.PlanPageRequest;
+import com.lead.fund.base.server.mp.request.PlanRequest;
+import com.lead.fund.base.server.mp.request.ProductPageRequest;
+import com.lead.fund.base.server.mp.request.ProductQueryRequest;
+import com.lead.fund.base.server.mp.request.ProductRequest;
+import com.lead.fund.base.server.mp.request.QualityPageRequest;
+import com.lead.fund.base.server.mp.request.QualityRequest;
+import com.lead.fund.base.server.mp.request.ReportQueryRequest;
+import com.lead.fund.base.server.mp.request.ReportRequest;
+import com.lead.fund.base.server.mp.response.AccidentResponse;
+import com.lead.fund.base.server.mp.response.BoxFlagResponse;
+import com.lead.fund.base.server.mp.response.ComputerResponse;
+import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
+import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
+import com.lead.fund.base.server.mp.response.EquipmentResponse;
+import com.lead.fund.base.server.mp.response.EventResponse;
+import com.lead.fund.base.server.mp.response.ImproveResponse;
+import com.lead.fund.base.server.mp.response.MaintainResponse;
+import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
+import com.lead.fund.base.server.mp.response.MpAccountResponse;
+import com.lead.fund.base.server.mp.response.MpRoleResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.OrderResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse.ParamResponseBuilder;
+import com.lead.fund.base.server.mp.response.PlanResponse;
+import com.lead.fund.base.server.mp.response.ProductResponse;
+import com.lead.fund.base.server.mp.response.QualityResponse;
+import com.lead.fund.base.server.mp.response.ReportResponse;
+import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
+import com.lead.fund.base.server.mp.response.TodoData;
+import com.lead.fund.base.server.mp.response.TodoResponse;
+import com.lead.fund.base.server.mp.response.UserDeviceResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -77,7 +204,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -269,8 +395,7 @@ public class DousonController {
                                 .collect(Collectors.toList())
                 );
                 case "storage" -> builder.storageList(paramDao.listByCategoryId(categoryId));
-                case "deviceCheckLedgerState" ->
-                        builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
+                case "deviceCheckLedgerState" -> builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
                 case "userProperty" -> builder.userPropertyList(paramDao.listByCategoryId(categoryId));
                 case "computerName" -> builder.computerNameList(paramDao.listByCategoryId(categoryId));
                 case "companyPosition" -> builder.companyPositionList(paramDao.listByCategoryId(categoryId));
@@ -904,7 +1029,7 @@ public class DousonController {
      */
     @PostMapping("admin/param")
     public Result paramSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                            @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.insert(request);
@@ -921,7 +1046,7 @@ public class DousonController {
      */
     @PutMapping("admin/param")
     public Result paramUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.updateByMultiId(request);
@@ -938,7 +1063,7 @@ public class DousonController {
      */
     @DeleteMapping("admin/param")
     public Result paramDelete(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername())) {
@@ -966,7 +1091,7 @@ public class DousonController {
      */
     @GetMapping("admin/param/list")
     public ListResult<ParamEntity> paramAdminPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                  @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(paramList(request));
@@ -981,7 +1106,7 @@ public class DousonController {
      */
     @PostMapping("admin/device")
     public Result deviceSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                             @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.insert(request);
@@ -997,7 +1122,7 @@ public class DousonController {
      */
     @PutMapping("admin/device")
     public Result deviceUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                               @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.updateById(request);
@@ -1024,7 +1149,7 @@ public class DousonController {
      */
     @GetMapping("admin/device/list")
     public ListResult<DeviceEntity> deviceAdminList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                    @ModelAttribute DeviceQueryRequest request
+            @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(deviceList(request));
@@ -1039,7 +1164,7 @@ public class DousonController {
      */
     @PostMapping("admin/order")
     public Result ordrSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                           @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.insert(INDUSTRY_INSTANCE.order(request));
@@ -1055,7 +1180,7 @@ public class DousonController {
      */
     @PutMapping("admin/order")
     public Result orderUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.updateById(INDUSTRY_INSTANCE.order(request));
@@ -1146,7 +1271,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/list")
     public ListResult<OrderResponse> orderList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderQueryRequest request
+            @ModelAttribute OrderQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(formatOrderList(orderList(request)));
@@ -1161,7 +1286,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/page")
     public PageResult<OrderResponse> orderPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderPageRequest request
+            @ModelAttribute OrderPageRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         if (isNotBlank(request.getData().getDesignNumber())) {
