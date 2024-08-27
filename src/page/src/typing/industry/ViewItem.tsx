@@ -45,4 +45,5 @@ export enum ValueType {
   NumberEdit,
   TextEdit,
   DateEdit,
+  ValidEdit,
 }

@@ -219,6 +219,7 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "createTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getCreateTime()))")
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getModifyTime()))")
     @Mapping(target = "fineAmountFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.formatIntTh(d.getFineAmount()))")
+    @Mapping(target = "dutyPersonList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(d.getDutyPerson()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     DisqualificationOrderResponse disqualificationOrder(DisqualificationOrderEntity d);
 
     List<DisqualificationOrderResponse> disqualificationOrderList(List<DisqualificationOrderEntity> list);

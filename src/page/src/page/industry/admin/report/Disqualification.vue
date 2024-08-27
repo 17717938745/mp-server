@@ -224,9 +224,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="dutyPerson" :label="store.state.label.dutyPerson">
-          <el-select v-model="formData.dutyPerson"
+        <el-form-item prop="dutyPersonList" :label="store.state.label.dutyPerson">
+          <el-select v-model="formData.dutyPersonList"
                      filterable
+                     multiple
                      clearable
                      :placeholder="store.state.label.dutyPerson">
             <el-option
@@ -374,7 +375,7 @@ const defaultFormData = {
   disqualificationContent: '',
   count: 0,
   checkPoint: '',
-  dutyPerson: '',
+  dutyPersonList: [],
   qualityDealOpinion: '',
   skillDealOpinion: '',
   fineAmount: null,
@@ -438,7 +439,7 @@ const state = reactive({
     disqualificationContent: [{required: true, message: 'Please check', trigger: 'blur'}],
     count: [{required: true, message: 'Please check', trigger: 'blur'}],
     checkPoint: [{required: true, message: 'Please check', trigger: 'blur'}],
-    dutyPerson: [{required: true, message: 'Please check', trigger: 'blur'}],
+    dutyPersonList: [{required: true, type: 'array', min: 1, max: 99999}],
     serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
     defectType: [{required: true, message: 'Please check', trigger: 'blur'}],
     photoList: [{required: false, type: 'array', min: 0, max: 3}],

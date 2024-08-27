@@ -83,6 +83,7 @@ public class DisqualificationOrderResponse extends AbstractAdministratorModel {
      * 责任人员
      */
     private String dutyPerson;
+    private List<String> dutyPersonList;
     private String dutyPersonFormat;
     /**
      * 质量处理意见

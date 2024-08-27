@@ -48,6 +48,7 @@
         idKey="reportId"
         :columnConfigList="columnConfigList"
         :list="tableData"
+        :handleUpdate="handleUpdate"
         :handleEdit="handleEdit"
         :handleDelete="handleDelete"
     >
@@ -774,7 +775,7 @@ const columnConfigList = ref<ViewConfig[]>([
     labelKey: 'valid',
     align: 'center',
     width: 86,
-    type: ValueType.Valid,
+    type: ValueType.ValidEdit,
   },
   {
     value: 'photoList',
@@ -863,13 +864,16 @@ const handleMerge = () => {
           handleList()
         })
       } else {
-        httpPutJson('douson/admin/report', state.formData).then(() => {
-          state.formVisible = false
-          ElMessage.success('Update success')
-          handleList()
-        })
+        handleUpdate(state.formSave)
       }
     }
+  })
+}
+const handleUpdate = (row: any) => {
+  return httpPutJson('douson/admin/report', row).then(() => {
+    state.formVisible = false
+    ElMessage.success('Update success')
+    handleList()
   })
 }
 const handleDelete = (row: any) => {

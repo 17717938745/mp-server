@@ -318,6 +318,19 @@
     >
     </el-date-picker>
   </template>
+  <template v-else-if="viewConfig.type === ValueType.ValidEdit">
+    <span v-if="!props.handleUpdate">
+        {{ row[viewConfig.value] || '--' }}
+    </span>
+    <el-link
+        v-else-if="!editValid"
+        automatic-dropdown="true"
+        @click="() => handleEditValidShow(row)"
+        type="warning">
+      {{ row[viewConfig.value] || '--' }}
+    </el-link>
+    <el-switch v-else v-model="formData[viewConfig.value]" active-text="Yes" inactive-text="No" @change="handleUpdateSubmit"/>
+  </template>
   <template v-else-if="viewConfig.type === null || viewConfig.type === undefined || viewConfig.type === ValueType.Text">
     {{ row[viewConfig.value] }}
   </template>
@@ -360,6 +373,7 @@ const editSelect = ref(false)
 const editNumber = ref(false)
 const editText = ref(false)
 const editDate = ref(false)
+const editValid = ref(false)
 const formData: Ref<any> = ref({})
 const handleEditSelectShow = (row: any) => {
   editSelect.value = true
@@ -377,6 +391,10 @@ const handleEditDateShow = (row: any) => {
   editDate.value = true
   formData.value = Object.assign({}, row)
 }
+const handleEditValidShow = (row: any) => {
+  editValid.value = true
+  formData.value = Object.assign({}, row)
+}
 const handleDateUpdateSubmit = (v: any) => {
   const key: string = viewConfig.value.originValue || viewConfig.value.value
   formData.value[key] = formatDate(formData.value[key], 'yyyy-MM-dd')
@@ -391,6 +409,7 @@ const handleUpdateSubmit = (v: any) => {
         editNumber.value = false
         editText.value = false
         editDate.value = false
+        editValid.value = false
       })
     }
   } else {

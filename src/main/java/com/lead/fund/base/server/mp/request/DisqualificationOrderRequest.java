@@ -3,6 +3,7 @@ package com.lead.fund.base.server.mp.request;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -90,6 +91,7 @@ public class DisqualificationOrderRequest implements Serializable {
      * 责任人员
      */
     private String dutyPerson;
+    private List<String> dutyPersonList = new ArrayList<>();
     /**
      * 质量处理意见
      */

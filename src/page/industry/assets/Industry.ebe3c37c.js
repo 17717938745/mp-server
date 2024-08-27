@@ -1,1 +1,0 @@
-import{_ as t}from"./main.e162c083.js";const i={};function r(n,o){const e=Vue.resolveComponent("router-view");return Vue.openBlock(),Vue.createBlock(e)}var p=t(i,[["render",r],["__file","D:/code/mp-server/src/page/src/page/Industry.vue"]]);export{p as default};
