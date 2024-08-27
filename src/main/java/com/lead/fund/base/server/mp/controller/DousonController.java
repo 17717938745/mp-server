@@ -3015,8 +3015,8 @@ public class DousonController {
     private List<EquipmentResponse> formatEquipmentList(List<EquipmentEntity> l) {
         final List<EquipmentResponse> list = INDUSTRY_INSTANCE.equipmentList(l);
         List<String> userIdList = Stream.of(
-                        list.stream().map(EquipmentResponse::getUseUserList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank),
-                        list.stream().map(EquipmentResponse::getChargeUserList).flatMap(t -> t.stream())
+                        list.stream().map(EquipmentResponse::getUseUserList).flatMap(Collection::stream).filter(StrUtil::isNotBlank),
+                        list.stream().map(EquipmentResponse::getChargeUserList).flatMap(Collection::stream)
                 )
                 .flatMap(t -> t)
                 .distinct()
