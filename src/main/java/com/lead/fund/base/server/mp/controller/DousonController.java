@@ -269,8 +269,7 @@ public class DousonController {
                                 .collect(Collectors.toList())
                 );
                 case "storage" -> builder.storageList(paramDao.listByCategoryId(categoryId));
-                case "deviceCheckLedgerState" ->
-                        builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
+                case "deviceCheckLedgerState" -> builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
                 case "userProperty" -> builder.userPropertyList(paramDao.listByCategoryId(categoryId));
                 case "computerName" -> builder.computerNameList(paramDao.listByCategoryId(categoryId));
                 case "companyPosition" -> builder.companyPositionList(paramDao.listByCategoryId(categoryId));
@@ -904,7 +903,7 @@ public class DousonController {
      */
     @PostMapping("admin/param")
     public Result paramSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                            @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.insert(request);
@@ -921,7 +920,7 @@ public class DousonController {
      */
     @PutMapping("admin/param")
     public Result paramUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.updateByMultiId(request);
@@ -938,7 +937,7 @@ public class DousonController {
      */
     @DeleteMapping("admin/param")
     public Result paramDelete(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername())) {
@@ -966,7 +965,7 @@ public class DousonController {
      */
     @GetMapping("admin/param/list")
     public ListResult<ParamEntity> paramAdminPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                  @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(paramList(request));
@@ -981,7 +980,7 @@ public class DousonController {
      */
     @PostMapping("admin/device")
     public Result deviceSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                             @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.insert(request);
@@ -997,7 +996,7 @@ public class DousonController {
      */
     @PutMapping("admin/device")
     public Result deviceUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                               @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.updateById(request);
@@ -1024,7 +1023,7 @@ public class DousonController {
      */
     @GetMapping("admin/device/list")
     public ListResult<DeviceEntity> deviceAdminList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                    @ModelAttribute DeviceQueryRequest request
+            @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(deviceList(request));
@@ -1039,7 +1038,7 @@ public class DousonController {
      */
     @PostMapping("admin/order")
     public Result ordrSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                           @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.insert(INDUSTRY_INSTANCE.order(request));
@@ -1055,7 +1054,7 @@ public class DousonController {
      */
     @PutMapping("admin/order")
     public Result orderUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.updateById(INDUSTRY_INSTANCE.order(request));
@@ -1146,7 +1145,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/list")
     public ListResult<OrderResponse> orderList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderQueryRequest request
+            @ModelAttribute OrderQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(formatOrderList(orderList(request)));
@@ -1161,7 +1160,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/page")
     public PageResult<OrderResponse> orderPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderPageRequest request
+            @ModelAttribute OrderPageRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         if (isNotBlank(request.getData().getDesignNumber())) {
@@ -1445,7 +1444,7 @@ public class DousonController {
                 ),
                 (r, t) -> r.getUserId().equals(t.getId()),
                 (r, t) -> r.setUserId(t.getId())
-                        .setUsername(t.getUsername())
+                        .setUsername(t.getName())
         );
         // 工人当日工作情况（工时、...）
         MultitaskUtil.supplementList(
@@ -1878,13 +1877,6 @@ public class DousonController {
                 l1 -> userList,
                 (r, t) -> r.getUserId().equals(t.getId()),
                 (r, t) -> r.setUsername(t.getUsername())
-        );
-        MultitaskUtil.supplementList(
-                list.stream().filter(t -> isNotBlank(t.getDutyPerson())).collect(Collectors.toList()),
-                AccidentResponse::getDutyPerson,
-                l1 -> userList,
-                (r, t) -> r.getDutyPerson().equals(t.getId()),
-                (r, t) -> r.setDutyPersonFormat(t.getName())
         );
         MultitaskUtil.supplementList(
                 list.stream().filter(t -> isNotBlank(t.getGroupLeader())).collect(Collectors.toList()),
@@ -3520,6 +3512,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         Integer integer = disqualificationOrderDao.nextOrderNo();
         DisqualificationOrderEntity e = (DisqualificationOrderEntity) INDUSTRY_INSTANCE.disqualificationOrder(request)
+                .setDutyPerson("," + String.join(",", request.getDutyPersonList()) + ",")
                 .setDisqualificationOrderNo(integer)
                 .setDisqualificationOrder("NCR-" + DateUtil.daySimple() + StrUtil.padPre(String.valueOf(integer), 3, "0"))
                 .setCreator(u.getUserId())
@@ -3547,7 +3540,8 @@ public class DousonController {
         if (null == db) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
-        DisqualificationOrderEntity e = (DisqualificationOrderEntity) INDUSTRY_INSTANCE.disqualificationOrder(request)
+        final DisqualificationOrderEntity e = (DisqualificationOrderEntity) INDUSTRY_INSTANCE.disqualificationOrder(request)
+                .setDutyPerson("," + String.join(",", request.getDutyPersonList()) + ",")
                 .setDisqualificationOrder("NCR-" + DateUtil.daySimple(db.getCreateTime()) + StrUtil.padPre(String.valueOf(request.getDisqualificationOrderNo()), 3, "0"))
                 .setModifier(u.getUserId());
         LambdaUpdateWrapper<DisqualificationOrderEntity> lambda = new LambdaUpdateWrapper<DisqualificationOrderEntity>()
@@ -3640,7 +3634,20 @@ public class DousonController {
     }
 
     private List<DisqualificationOrderResponse> formatDisqualificationOrderList(List<DisqualificationOrderEntity> list) {
-        List<DisqualificationOrderResponse> rl = INDUSTRY_INSTANCE.disqualificationOrderList(list);
+        final List<DisqualificationOrderResponse> rl = INDUSTRY_INSTANCE.disqualificationOrderList(list);
+        final List<String> userIdList = Stream.of(
+                        rl.stream().map(DisqualificationOrderResponse::getCreator).filter(StrUtil::isNotBlank),
+                        rl.stream().map(DisqualificationOrderResponse::getDutyPersonList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 rl,
                 DisqualificationOrderResponse::getDisqualificationOrderId,
@@ -3651,9 +3658,9 @@ public class DousonController {
         MultitaskUtil.supplementList(
                 rl,
                 DisqualificationOrderResponse::getCreator,
-                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
+                l -> userList,
                 (t, r) -> t.getCreator().equals(r.getId()),
-                (t, r) -> t.setCreatorFormat(r.getUsername())
+                (t, r) -> t.setCreatorFormat(r.getName())
         );
         MultitaskUtil.supplementList(
                 rl.stream().filter(t -> isNotBlank(t.getProcess())).collect(Collectors.toList()),
@@ -3690,13 +3697,9 @@ public class DousonController {
                 (t, r) -> t.getDefectType().equals(r.getValue()),
                 (t, r) -> t.setDefectTypeFormat(r.getLabel())
         );
-        MultitaskUtil.supplementList(
-                rl.stream().filter(t -> isNotBlank(t.getDutyPerson())).collect(Collectors.toList()),
-                DisqualificationOrderResponse::getDutyPerson,
-                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getName)),
-                (t, r) -> t.getDutyPerson().equals(r.getId()),
-                (t, r) -> t.setDutyPersonFormat(r.getName())
-        );
+        for (DisqualificationOrderResponse t : rl) {
+            t.setDutyPersonFormat(t.getDutyPersonList().stream().filter(StrUtil::isNotBlank).map(t1 -> userMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
         return rl;
     }
 
@@ -4020,7 +4023,7 @@ public class DousonController {
         if (u.getRoleCodeList().stream().noneMatch("gauger"::equals)) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
-        DeviceCheckLedgerEntity e = (DeviceCheckLedgerEntity) INDUSTRY_INSTANCE.deviceCheckLedger(request)
+        final DeviceCheckLedgerEntity e = (DeviceCheckLedgerEntity) INDUSTRY_INSTANCE.deviceCheckLedger(request)
                 .setDueDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(DateUtil.parse(request.getCalibrationDate()), request.getCalibrationPeriod())))
                 .setBorrower("," + String.join(",", request.getBorrowerList()) + ",")
                 .setCreator(u.getUserId())
@@ -4155,7 +4158,7 @@ public class DousonController {
 
     private List<DeviceCheckLedgerResponse> formatDeviceCheckLedgerList(List<DeviceCheckLedgerEntity> list) {
         List<DeviceCheckLedgerResponse> rl = INDUSTRY_INSTANCE.deviceCheckLedgerList(list);
-        List<String> userIdList = Stream.of(
+        final List<String> userIdList = Stream.of(
                         rl.stream().map(DeviceCheckLedgerResponse::getCreator).filter(StrUtil::isNotBlank),
                         rl.stream().map(DeviceCheckLedgerResponse::getBorrowerList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
                 )
