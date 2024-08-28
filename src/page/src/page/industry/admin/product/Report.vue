@@ -864,7 +864,7 @@ const handleMerge = () => {
           handleList()
         })
       } else {
-        handleUpdate(state.formSave)
+        handleUpdate(state.formData)
       }
     }
   })
