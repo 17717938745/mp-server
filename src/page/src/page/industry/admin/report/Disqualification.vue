@@ -238,8 +238,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="photoList" :label="store.state.label.mostFourPhoto">
-          <image-upload :photoList="formData.photoList" :maxSize="3"></image-upload>
+        <el-form-item prop="photoList" :label="`${store.state.label.photo}(${(formRuleList['photoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.photoList" :maxSize="Number(`${(formRuleList['photoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
         <el-form-item v-if="includes(roleCodeList, 'qualityManager')" prop="qualityDealOpinion" :label="store.state.label.qualityDealOpinion">
           <el-select v-model="formData.qualityDealOpinion"
@@ -442,7 +442,7 @@ const state = reactive({
     dutyPersonList: [{required: true, type: 'array', min: 1, max: 99999}],
     serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
     defectType: [{required: true, message: 'Please check', trigger: 'blur'}],
-    photoList: [{required: false, type: 'array', min: 0, max: 3}],
+    photoList: [{required: false, type: 'array', min: 0, max: 4}],
   },
 })
 

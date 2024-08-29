@@ -251,8 +251,8 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="photoList" :label="store.state.label.mostFourPhoto">
-          <image-upload :photoList="formData.photoList"></image-upload>
+        <el-form-item prop="photoList" :label="`${store.state.label.photo}(${(formRuleList['photoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.photoList" :maxSize="Number(`${(formRuleList['photoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -567,6 +567,7 @@ const state = reactive({
     serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
     volume: [{required: true, message: 'Please check', trigger: 'blur'}],
     orderNo: [{required: true, message: 'Please check', trigger: 'blur'}],
+    photoList: [{required: false, type: 'array', min: 0, max: 4}],
   },
 })
 
