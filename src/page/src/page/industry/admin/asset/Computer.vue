@@ -236,7 +236,7 @@
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
           <h1 style="text-align: center;height: 50px; position: relative;width: 100%;">
-            <img src="/third/img/douson.png" style="position: absolute; height: 100%;left: 10px;top: 0px;">
+            <img :src="fullUrl('/third/img/douson.png', '')" style="position: absolute; height: 100%;left: 10px;top: 0px;">
             <span style="font-size: 36px; color: #ff0000;">ASSET CARD 财产卡</span>
             <br>
           </h1>
@@ -307,6 +307,7 @@ import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
 import ImageUpload from '../../component/ImageUpload.vue'
+import {fullUrl} from '@/util/EnvUtil'
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()

@@ -37,7 +37,6 @@ Promise.all([
   import('element-plus'),
   import('element-plus/lib/locale/lang/zh-cn'),  // 4
   // @ts-ignore
-  // import('/third/element-plus@2.2.6/dist/index.css'),
   import('element-plus/dist/index.css'),
   // 5, 6
   // @ts-ignore

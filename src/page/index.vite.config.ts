@@ -138,7 +138,7 @@ export default ({mode}) => {
                       main: 'industry.html',
                     },
                   },
-                  outDir: 'industry',
+                  outDir: '../../static/industry',
                 },
               }, {
                 plugins: [

@@ -3,7 +3,7 @@ spring:
     name: mp-server
   web:
     resources:
-      static-locations: file:/Users/panchaohui/Desktop/mp-server/static/
+      static-locations: file:/Users/panchaohui/code/douson/mp-server/static/
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -30,10 +30,10 @@ com:
           dmmp:
             url: jdbc:mysql://localhost:3306/dmmp?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT
             username: root
-            password: password
+            password: Yn.123456
             driver-class-name: com.mysql.cj.jdbc.Driver
           douson:
             url: jdbc:mysql://localhost:3306/douson?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT
             username: root
-            password: password
+            password: Yn.123456
             driver-class-name: com.mysql.cj.jdbc.Driver

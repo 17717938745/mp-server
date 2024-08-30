@@ -52,7 +52,6 @@ export const initShare = (token: string = '') => {
         desc: obj.description,
         link: changeURLArg(data.url, 'token', token),
         imgUrl: obj.iconUrl,
-        // imgUrl: '/third/icon/icon.png',
         success: function () {
           console.log('分享成功给好友');
         },
@@ -67,7 +66,6 @@ export const initShare = (token: string = '') => {
         link: changeURLArg(data.url, 'token', token),
         // 分享时的图标
         imgUrl: obj.iconUrl,
-        // imgUrl: '/third/icon/icon.png',
         success: function () {
           console.log('分享到朋友圈、QQ空间成功');
         },
@@ -80,7 +78,6 @@ export const initShare = (token: string = '') => {
         desc: obj.description,
         link: changeURLArg(data.url, 'token', token),
         imgUrl: obj.iconUrl,
-        // imgUrl: '/third/icon/icon.png',
         success: function () {
           console.log('111分享成功给好友');
         },

@@ -1,0 +1,7 @@
+pid=`ps aux|grep './natapp -authtoken=e31a7c7ff0de2c14'|grep -v grep|awk '{print $2}'`
+if [ "${pid}" == "" ]; then
+    echo "ssl not run, now start..."
+    nohup ./natapp -authtoken=e31a7c7ff0de2c14  >/dev/null 2>&1 &
+else
+    echo "ssl is running, do nothing, pid: ${pid}"
+fi

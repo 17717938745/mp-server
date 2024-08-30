@@ -1,0 +1,1 @@
+set global max_allowed_packet = 10 * 10 * 1024 * 1024;

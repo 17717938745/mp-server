@@ -14,7 +14,7 @@
       <div class="pt-[25px] relative text-[#19191E]">
         <div class="absolute top-0 right-0 p-[15px]">
           <img
-            src="/third/img/dialogClose.svg"
+            :src="fullUrl('/third/img/dialogClose.svg', '')"
             alt=""
             class="w-[20px] h-[20px]"
             @click="handleHideDialog"
@@ -56,6 +56,7 @@
 
 <script lang="ts" setup>
   import { computed, nextTick, onMounted, ref, watch, watchEffect } from 'vue';
+  import {fullUrl} from '@/util/EnvUtil'
 
   interface IProps {
     show: boolean;

@@ -1,0 +1,8 @@
+pid=`ps aux|grep './natapp -authtoken=3162aaa953f69209'|grep -v grep|awk '{print $2}'`
+if [ "${pid}" == "" ]; then
+    echo "ssh not run, start run..."
+    nohup ./natapp -authtoken=3162aaa953f69209 >/dev/null 2>&1 &
+else
+    echo "ssh is run, do nothing, pid: ${pid}"
+fi
+
