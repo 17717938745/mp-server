@@ -59,15 +59,8 @@ export function clearAllCache() {
 export function getDefaultUrlPrefix(newPrefix: string = 'api'): string {
   const urlPrefix = '/' + newPrefix + '/'
   switch (getEnv()) {
-    case 'mp':
-      return 'https://www.leadfund.com.cn' + urlPrefix
-    case 'm2':
-      return 'https://m2.deep-tek.com' + urlPrefix
-    case 'test':
-    case 'testm':
-      return 'https://testm.leadfund.com.cn' + urlPrefix
-    case 'prep':
-      return 'https://prepfund.leadbank.com.cn' + urlPrefix
+    case 'douson':
+      return 'https://douson.natapp4.cc/'
     case 'pch':
       return 'https://pch.mynatapp.cc/'
     case 'java':
