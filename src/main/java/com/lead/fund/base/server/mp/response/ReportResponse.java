@@ -44,6 +44,7 @@ public class ReportResponse implements Serializable {
      */
     private String userId;
     private String username;
+    private String userFormat;
     /**
      * 订单数量
      */

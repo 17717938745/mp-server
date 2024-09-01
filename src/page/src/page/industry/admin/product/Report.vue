@@ -11,7 +11,21 @@
           end-placeholder="End date"
       >
       </el-date-picker>
-      <el-input v-model="query.data.username" @keyup.enter="handleList" :placeholder="store.state.label.username" class="search-item"/>
+
+      <el-select v-model="query.data.userId"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.user"
+      >
+        <el-option
+            v-for="item in userOptionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <el-input v-model="query.data.orderNo" @keyup.enter="handleList" :placeholder="store.state.label.orderNo" class="search-item"/>
       <el-input v-model="query.data.projectSequence" @keyup.enter="handleList" :placeholder="store.state.label.projectSequence" class="search-item"/>
       <el-input v-model="query.data.designNumber" @keyup.enter="handleList" :placeholder="store.state.label.designNumber" class="search-item"/>
@@ -24,6 +38,34 @@
                  class="search-item">
         <el-option
             v-for="item in config.testDeviceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.processType"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.processType"
+                 class="search-item">
+        <el-option
+            v-for="item in config.processTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.processProcedure"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.processProcedure"
+                 class="search-item">
+        <el-option
+            v-for="item in config.processProcedureList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -338,11 +380,15 @@ const state = reactive({
       startReportDate: formatDate(startDate, 'yyyy-MM-dd'),
       endReportDate: formatDate(endDate, 'yyyy-MM-dd'),
       reportId: '',
+      userId: '',
       username: '',
       orderNo: '',
       projectSequence: '',
       designNumber: '',
       productId: '',
+      testDevice: '',
+      processType: '',
+      processProcedure: '',
     },
     page: {
       page: DEFAULT_PAGE,
@@ -421,16 +467,6 @@ const state = reactive({
   },
 })
 
-const handleJumpOrder = (t: any) => {
-  router.push(
-      {
-        path: '/industry/admin/product/order',
-        query: {
-          orderId: t.orderId,
-        },
-      })
-}
-
 const handleAutoInsertSerialNo = (t: any, i: number, arr: any[]) => {
   if (i === 0) {
     let n
@@ -443,46 +479,6 @@ const handleAutoInsertSerialNo = (t: any, i: number, arr: any[]) => {
       arr[j] = n + j
     }
   }
-}
-
-interface SpanMethodProps {
-  row: typeof state.tableData
-  column: TableColumnCtx<typeof state.tableData>
-  rowIndex: number
-  columnIndex: number
-}
-
-const handleTableRowClassName = ({
-                                   row,
-                                   rowIndex,
-                                 }: {
-  row: any
-  rowIndex: number
-}) => {
-  if (row.valid) {
-    return 'row-done'
-  }
-  return ''
-}
-const spanArray: any = {}
-const handleMergeSpan = ({
-                           row,
-                           column,
-                           rowIndex,
-                           columnIndex,
-                         }: SpanMethodProps) => {
-  return spanArray[`${rowIndex}-${columnIndex}`] || {
-    rowspan: 1,
-    colspan: 1,
-  }
-}
-
-const getLabel = (la: string = '', key: string) => {
-  const arr = columnConfigList.value.filter(c => c.value === key)
-  if (arr.length > 0) {
-    return arr[0].label
-  }
-  return key
 }
 
 const handleStart = () => {
@@ -498,9 +494,30 @@ const handleStart = () => {
   }
 }
 
-httpGet('douson/config').then(r => {
-  state.config = r.data
-  handleStart()
+const userOptionList = ref(new Array<any>())
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'processProcedure',
+      'testDevice',
+      'processType',
+      'schedule',
+      'workMinute',
+      'stopWorkingContent1',
+      'stopWorkingContent2',
+      'stopWorkingContent3',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
+  handlePage()
 })
 
 const handleToggleDetail = () => {
@@ -559,10 +576,9 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {
     mergeKey: ['reportDate', 'userId'],
-    value: 'username',
-    labelKey: 'username',
+    value: 'userFormat',
+    labelKey: 'userFormat',
     width: 100,
-    showOverflow: true,
     align: 'center',
   },
   {

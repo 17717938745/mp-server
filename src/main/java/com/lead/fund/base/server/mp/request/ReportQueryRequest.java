@@ -76,4 +76,12 @@ public class ReportQueryRequest implements Serializable {
      * 调试设备
      */
     private String testDevice;
+    /**
+     * 加工类型
+     */
+    private String processType;
+    /**
+     * 加工工序
+     */
+    private String processProcedure;
 }

@@ -233,7 +233,7 @@ public class DousonController {
         final ParamResponseBuilder builder = ParamResponse.builder();
         for (String categoryId : request.getCategoryIdList()) {
             switch (categoryId) {
-                case "device" -> builder.testDeviceList(
+                case "device", "testDevice" -> builder.testDeviceList(
                         deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().orderByAsc(DeviceEntity::getSorter))
                                 .stream()
                                 .map(t -> (ParamConfigResponse) new ParamConfigResponse().setValue(t.getId()).setLabel(t.getDeviceName()))
@@ -1408,6 +1408,9 @@ public class DousonController {
         if (CollUtil.isNotEmpty(request.getProductIdList())) {
             DatabaseUtil.or(lambda, request.getProductIdList(), (lam, l) -> lam.in(ReportEntity::getProductId, l));
         }
+        if (isNotBlank(request.getProcessType())) {
+            lambda.eq(ReportEntity::getProcessType, request.getProcessType());
+        }
         if (isNotBlank(request.getUsername())) {
             final List<String> userIdList = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().like(MpUserEntity::getUsername, request.getUsername()))
                     .stream().map(AbstractPrimaryKey::getId)
@@ -1444,7 +1447,8 @@ public class DousonController {
                 ),
                 (r, t) -> r.getUserId().equals(t.getId()),
                 (r, t) -> r.setUserId(t.getId())
-                        .setUsername(t.getName())
+                        .setUsername(t.getUsername())
+                        .setUserFormat(t.getName())
         );
         // 工人当日工作情况（工时、...）
         MultitaskUtil.supplementList(
@@ -1648,7 +1652,7 @@ public class DousonController {
         if (u.getRoleList().stream().noneMatch(t -> AdminUser.ADMIN.getCode().equals(t.getRoleCode()))) {
             request.setUserId(u.getUserId());
         }
-        if (isNotBlank(request.getOrderNo()) || isNotBlank(request.getProjectSequence()) || isNotBlank(request.getTestDevice())) {
+        if (isNotBlank(request.getOrderNo()) || isNotBlank(request.getProcessProcedure()) || isNotBlank(request.getProjectSequence()) || isNotBlank(request.getTestDevice())) {
             LambdaQueryWrapper<OrderEntity> lambda = new LambdaQueryWrapper<>();
             if (isNotBlank(request.getOrderNo())) {
                 lambda.like(OrderEntity::getOrderNo, request.getOrderNo());
@@ -1658,6 +1662,9 @@ public class DousonController {
             }
             if (isNotBlank(request.getTestDevice())) {
                 lambda.eq(OrderEntity::getTestDevice, request.getTestDevice());
+            }
+            if (isNotBlank(request.getProcessProcedure())) {
+                lambda.eq(OrderEntity::getProcessProcedure, request.getProcessProcedure());
             }
             List<String> orderIdList = orderMapper.selectList(lambda).stream().map(OrderEntity::getId).collect(Collectors.toList());
             if (CollUtil.isEmpty(orderIdList)) {

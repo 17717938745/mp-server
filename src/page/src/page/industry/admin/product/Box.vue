@@ -60,6 +60,10 @@
                 @change="handlePage"
                 :placeholder="store.state.label.purchaseOrderNo"
                 class="search-item"/>
+      <el-input v-model="query.data.poProject"
+                @change="handlePage"
+                :placeholder="store.state.label.poProject"
+                class="search-item"/>
       <el-select
           v-model="query.data.alreadySend"
           @change="handlePage"
@@ -74,10 +78,6 @@
             :value="false"
         />
       </el-select>
-      <el-input v-model="query.data.poProject"
-                @change="handlePage"
-                :placeholder="store.state.label.poProject"
-                class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
