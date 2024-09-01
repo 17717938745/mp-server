@@ -1,6 +1,6 @@
 # sdk use java 17.0.8-zulu
 # export JAVA_HOME=~/program/jdk-17.0.2.jdk/Contents/Home
-# git pull origin master
+git pull origin master
 mvn clean package -DskipTests
 app_jar_name=`ls -rt target/*.jar|grep jar| tail -1`
 if [ "${app_jar_name}" == "" ]; then
