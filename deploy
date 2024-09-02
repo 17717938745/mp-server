@@ -12,7 +12,7 @@ pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
 if [ "${pid}" == "" ]; then
     echo "${app_jar_name} not run..."
 else
-    echo "${app_jar_name} is run, now kill pid: ${pid}"
+    echo "${app_jar_name} is running, now kill pid: ${pid}"
     kill ${pid}
     kill -9 ${pid}
 fi

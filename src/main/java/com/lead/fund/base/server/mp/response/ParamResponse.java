@@ -153,4 +153,12 @@ public class ParamResponse implements Serializable {
      * 原因分析
      */
     private List<ParamConfigResponse> qualityReasonList;
+    /**
+     * 原因分析
+     */
+    private List<ParamConfigResponse> crashReasonList;
+    /**
+     * 原因分析
+     */
+    private List<ParamConfigResponse> troubleReasonList;
 }

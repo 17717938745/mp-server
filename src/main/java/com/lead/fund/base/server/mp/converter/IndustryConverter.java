@@ -356,6 +356,73 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
     FileModel qualityFile(QualityAttachmentEntity e, String urlPrefix);
 
+    @org.mapstruct.Mapping(target = "crashId", source = "crashId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "0")
+    @org.mapstruct.Mapping(target = "url", source = "t.photoUrl")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.photoCompressUrl")
+    CrashAttachmentEntity crashAttachment(String crashId, String attachmentCategory, PhotoImgModel t);
+
+    @org.mapstruct.Mapping(target = "crashId", source = "crashId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "1")
+    @org.mapstruct.Mapping(target = "url", source = "t.url")
+    @org.mapstruct.Mapping(target = "fileId", source = "t.fileId")
+    @org.mapstruct.Mapping(target = "filename", source = "t.filename")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.url")
+    CrashAttachmentEntity crashAttachment(String crashId, String attachmentCategory, FileModel t);
+
+    @org.mapstruct.Mapping(target = "id", source = "crashId")
+    CrashEntity crash(CrashRequest t);
+
+    List<CrashResponse> crashList(List<CrashEntity> l);
+
+    @org.mapstruct.Mapping(target = "crashId", source = "id")
+    CrashResponse crash(CrashEntity t);
+
+    @org.mapstruct.Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoCompressUrl", expression = "java(e.getCompressUrl().startsWith(\"http:\") || e.getCompressUrl().startsWith(\"https:\") ? e.getCompressUrl() : (urlPrefix + e.getCompressUrl()))")
+    @org.mapstruct.Mapping(target = "photoUrl", expression = "java(e.getUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    PhotoImgModel crashPhoto(CrashAttachmentEntity e, String urlPrefix);
+
+    @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    FileModel crashFile(CrashAttachmentEntity e, String urlPrefix);
+
+
+    @org.mapstruct.Mapping(target = "troubleId", source = "troubleId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "0")
+    @org.mapstruct.Mapping(target = "url", source = "t.photoUrl")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.photoCompressUrl")
+    TroubleAttachmentEntity troubleAttachment(String troubleId, String attachmentCategory, PhotoImgModel t);
+
+    @org.mapstruct.Mapping(target = "troubleId", source = "troubleId")
+    @org.mapstruct.Mapping(target = "attachmentCategory", source = "attachmentCategory")
+    @org.mapstruct.Mapping(target = "attachmentType", constant = "1")
+    @org.mapstruct.Mapping(target = "url", source = "t.url")
+    @org.mapstruct.Mapping(target = "fileId", source = "t.fileId")
+    @org.mapstruct.Mapping(target = "filename", source = "t.filename")
+    @org.mapstruct.Mapping(target = "compressUrl", source = "t.url")
+    TroubleAttachmentEntity troubleAttachment(String troubleId, String attachmentCategory, FileModel t);
+
+    @org.mapstruct.Mapping(target = "id", source = "troubleId")
+    TroubleEntity trouble(TroubleRequest t);
+
+    List<TroubleResponse> troubleList(List<TroubleEntity> l);
+
+    @org.mapstruct.Mapping(target = "troubleId", source = "id")
+    TroubleResponse trouble(TroubleEntity t);
+
+    @org.mapstruct.Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoCompressUrl", expression = "java(e.getCompressUrl().startsWith(\"http:\") || e.getCompressUrl().startsWith(\"https:\") ? e.getCompressUrl() : (urlPrefix + e.getCompressUrl()))")
+    @org.mapstruct.Mapping(target = "photoUrl", expression = "java(e.getUrl())")
+    @org.mapstruct.Mapping(target = "fullPhotoUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    PhotoImgModel troublePhoto(TroubleAttachmentEntity e, String urlPrefix);
+
+    @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
+    FileModel troubleFile(TroubleAttachmentEntity e, String urlPrefix);
+
     @Mapping(target = "improveId", source = "improveId")
     @Mapping(target = "attachmentCategory", source = "attachmentCategory")
     @Mapping(target = "attachmentType", constant = "0")

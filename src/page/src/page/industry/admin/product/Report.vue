@@ -577,7 +577,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     mergeKey: ['reportDate', 'userId'],
     value: 'userFormat',
-    labelKey: 'userFormat',
+    labelKey: 'user',
     width: 100,
     align: 'center',
   },
@@ -791,7 +791,7 @@ const columnConfigList = ref<ViewConfig[]>([
     labelKey: 'valid',
     align: 'center',
     width: 86,
-    type: user.username === 'admin' ? ValueType.ValidEdit : ValueType.Valid,
+    type: includes(roleCodeList, 'admin') ? ValueType.ValidEdit : ValueType.Valid,
   },
   {
     value: 'photoList',

@@ -245,6 +245,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '质量事故报告',
         },
         {
+          value: 'accidentCrash',
+          label: '设备撞机',
+        },
+        {
+          value: 'accidentTrouble',
+          label: '量具损坏',
+        },
+        {
           value: 'userRunReport',
           label: '人员运行日报',
         },
@@ -769,6 +777,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '原因分析',
         },
         {
+          value: 'crashReason',
+          label: '撞机原因分析',
+        },
+        {
+          value: 'troubleReason',
+          label: '量具事故原因分析',
+        },
+        {
           value: 'improveReason',
           label: '原因分析',
         },
@@ -1213,6 +1229,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'accidentQuality',
           label: 'Báo cáo sự cố chất lượng',
+        },
+        {
+          value: 'accidentCrash',
+          label: 'Va đập thiết bị',
+        },
+        {
+          value: 'accidentTrouble',
+          label: 'Dụng cụ đo bị hỏng',
         },
         {
           value: 'userRunReport',
@@ -1733,6 +1757,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'qualityReason',
           label: 'Phân tích nguyên nhân',
+        },
+        {
+          value: 'crashReason',
+          label: 'Phân tích nguyên nhân（Va đập thiết bị）',
+        },
+        {
+          value: 'troubleReason',
+          label: 'Phân tích nguyên nhân（Dụng cụ đo bị hỏng）',
         },
         {
           value: 'improveReason',

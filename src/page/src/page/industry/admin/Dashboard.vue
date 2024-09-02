@@ -76,6 +76,10 @@ const handleJump = (t: any) => {
     handleJumpToMaintain(t)
   } else if (4 === t.type) {
     handleJumpToQuality(t)
+  } else if (5 === t.type) {
+    handleJumpToCrash(t)
+  } else if (6 === t.type) {
+    handleJumpToTrouble(t)
   } else {
     ElMessage.warning("Not support todo: " + JSON.stringify(t))
   }
@@ -101,6 +105,22 @@ const handleJumpToQuality = (t: any) => {
     path: '/industry/admin/report/accident/quality',
     query: {
       qualityId: t.id,
+    }
+  })
+}
+const handleJumpToCrash = (t: any) => {
+  router.push({
+    path: '/industry/admin/report/accident/crash',
+    query: {
+      crashId: t.id,
+    }
+  })
+}
+const handleJumpToTrouble = (t: any) => {
+  router.push({
+    path: '/industry/admin/report/accident/trouble',
+    query: {
+      troubleId: t.id,
     }
   })
 }

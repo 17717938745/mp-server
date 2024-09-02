@@ -1,4 +1,16 @@
-# 参考命令
+# 本地开发
+
+### 启动java
+
+需要配置Environment variables
+
+```text
+--spring.config.location=./application-prd.yml
+```
+
+# 发布帮助
+
+### 参考命令
 
 ```shell
 # ssh
@@ -11,16 +23,7 @@ ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
 ./sun
 ```
 
-# deploy java
-
-```shell
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
-cd /opt/douson/mp-server/
-./deploy
-EOF
-```
-
-# deploy java & page
+### deploy java & page
 
 ```shell
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
@@ -29,11 +32,26 @@ cd /opt/douson/mp-server/
 EOF
 ```
 
-# deploy page
+### deploy java
+
+```shell
+ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+cd /opt/douson/mp-server/
+./deploy
+EOF
+```
+
+### deploy page
 
 ```shell
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
 cd /opt/douson/mp-server/
 ./page
 EOF
+```
+
+### 查看定时任务
+
+```shell
+crontab -l
 ```

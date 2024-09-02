@@ -200,6 +200,18 @@ public class DousonController {
     @Resource
     private QualityAttachmentDao qualityAttachmentDao;
     @Resource
+    private CrashMapper crashMapper;
+    @Resource
+    private CrashAttachmentMapper crashAttachmentMapper;
+    @Resource
+    private CrashAttachmentDao crashAttachmentDao;
+    @Resource
+    private TroubleMapper troubleMapper;
+    @Resource
+    private TroubleAttachmentMapper troubleAttachmentMapper;
+    @Resource
+    private TroubleAttachmentDao troubleAttachmentDao;
+    @Resource
     private EventAttachmentMapper eventAttachmentMapper;
     @Resource
     private EventAttachmentDao eventAttachmentDao;
@@ -286,6 +298,8 @@ public class DousonController {
                 case "repairType" -> builder.repairTypeList(paramDao.listByCategoryId(categoryId));
                 case "improveReason" -> builder.improveReasonList(paramDao.listByCategoryId(categoryId));
                 case "qualityReason" -> builder.qualityReasonList(paramDao.listByCategoryId(categoryId));
+                case "crashReason" -> builder.crashReasonList(paramDao.listByCategoryId(categoryId));
+                case "troubleReason" -> builder.troubleReasonList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -349,6 +363,24 @@ public class DousonController {
                         .select(QualityEntity::getId)
                 ).stream().map(QualityEntity::getId)
                 .collect(Collectors.toList());
+        final List<String> crashIdList = crashMapper.selectList(new LambdaQueryWrapper<CrashEntity>()
+                        .and(true, lam ->
+                                lam.eq(CrashEntity::getUserId, u.getUserId())
+                                        .or(true, lam1 -> lam1.eq(CrashEntity::getDirectLeader, u.getUserId()))
+                        )
+                        .eq(CrashEntity::getValid, false)
+                        .select(CrashEntity::getId)
+                ).stream().map(CrashEntity::getId)
+                .collect(Collectors.toList());
+        final List<String> troubleIdList = troubleMapper.selectList(new LambdaQueryWrapper<TroubleEntity>()
+                        .and(true, lam ->
+                                lam.eq(TroubleEntity::getUserId, u.getUserId())
+                                        .or(true, lam1 -> lam1.eq(TroubleEntity::getDirectLeader, u.getUserId()))
+                        )
+                        .eq(TroubleEntity::getValid, false)
+                        .select(TroubleEntity::getId)
+                ).stream().map(TroubleEntity::getId)
+                .collect(Collectors.toList());
         final List<String> improveIdList = improveMapper.selectList(new LambdaQueryWrapper<ImproveEntity>()
                         .and(true, lam ->
                                 lam.eq(ImproveEntity::getUserId, u.getUserId())
@@ -364,7 +396,7 @@ public class DousonController {
                         .select(MaintainEntity::getId)
                 ).stream().map(MaintainEntity::getId)
                 .collect(Collectors.toList());
-        final List<String> idList = Stream.of(disqualificationIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList, qualityIdList)
+        final List<String> idList = Stream.of(disqualificationIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList, qualityIdList, crashIdList, troubleIdList)
                 .flatMap(Collection::stream)
                 .distinct().toList();
         AtomicInteger index = new AtomicInteger(0);
@@ -408,6 +440,16 @@ public class DousonController {
                         sceneList.add("quality");
                         labelTail = "Quality";
                         type = 4;
+                    }
+                    if (crashIdList.contains(t)) {
+                        sceneList.add("crash");
+                        labelTail = "Crash";
+                        type = 5;
+                    }
+                    if (troubleIdList.contains(t)) {
+                        sceneList.add("trouble");
+                        labelTail = "Trouble";
+                        type = 6;
                     }
                     return new TodoData()
                             .setId(t)
@@ -2507,6 +2549,504 @@ public class DousonController {
                 defaultIfNull(CollUtil.getFirst(formatQualityList(qualityList(request))), new QualityResponse())
         );
     }
+
+    private void mergeRelevance(CrashRequest request, CrashEntity e) {
+        crashAttachmentMapper.delete(new LambdaUpdateWrapper<CrashAttachmentEntity>()
+                .eq(CrashAttachmentEntity::getCrashId, e.getId())
+        );
+        crashAttachmentDao.saveBatch(
+                Stream.of(
+                                CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.crashAttachment(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.crashAttachment(e.getId(), "1", t)),
+                                CollUtil.defaultIfEmpty(request.getImprovePhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.crashAttachment(e.getId(), "2", t)),
+                                CollUtil.defaultIfEmpty(request.getImproveFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.crashAttachment(e.getId(), "3", t))
+                        ).flatMap(t -> t)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 保存事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link CrashRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/crash")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result crashSave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody CrashRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        CrashEntity e;
+        crashMapper.insert(e = (CrashEntity) INDUSTRY_INSTANCE.crash(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 修改事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link CrashRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/crash")
+    public Result crashUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody CrashRequest request
+    ) {
+        MpUserResponse u;
+        try {
+            u = accountHelper.getUser(deviceId);
+        } catch (Exception e) {
+            u = new MpUserResponse();
+        }
+        CrashEntity e = (CrashEntity) INDUSTRY_INSTANCE.crash(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setModifier(u.getUserId());
+        LambdaUpdateWrapper<CrashEntity> lambda = new LambdaUpdateWrapper<CrashEntity>()
+                .eq(CrashEntity::getId, e.getId());
+        if (!"admin".equals(u.getUserId())) {
+            lambda.eq(CrashEntity::getValid, false);
+        }
+        if (crashMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 删除事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link CrashRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/crash")
+    public Result crashDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute CrashRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<CrashEntity> lambda = new LambdaUpdateWrapper<CrashEntity>().eq(CrashEntity::getId, request.getCrashId());
+        if (isNotBlank(request.getCrashId())) {
+            if (crashMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+        }
+        return new Result();
+    }
+
+    private List<CrashEntity> crashList(CrashRequest request) {
+        LambdaQueryWrapper<CrashEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getCrashId())) {
+            lambda.eq(CrashEntity::getId, request.getCrashId());
+        }
+        if (null != request.getStartReportDate()) {
+            lambda.ge(CrashEntity::getReportDate, DateUtil.day(request.getStartReportDate()));
+        }
+        if (null != request.getEndReportDate()) {
+            lambda.le(CrashEntity::getReportDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndReportDate())));
+        }
+        if (null != request.getReportDate()) {
+            lambda.eq(CrashEntity::getReportDate, request.getReportDate());
+        }
+        if (isNotBlank(request.getReason())) {
+            lambda.like(CrashEntity::getReason, "," + request.getReason() + ",");
+        }
+        if (isNotBlank(request.getAccidentDescribe())) {
+            lambda.like(CrashEntity::getAccidentDescribe, request.getAccidentDescribe());
+        }
+        if (CollUtil.isNotEmpty(request.getReasonList())) {
+            DatabaseUtil.or(lambda, request.getReasonList(), (lam, l) -> lam.in(CrashEntity::getReason, l));
+        }
+        if (isNotBlank(request.getUserId())) {
+            lambda.eq(CrashEntity::getUserId, request.getUserId());
+        }
+        if (isNotBlank(request.getQueryUserId())) {
+            lambda.and(true, lam -> {
+                lam.eq(CrashEntity::getUserId, request.getQueryUserId())
+                        .or(true, lam1 -> lam1.eq(CrashEntity::getDirectLeader, request.getQueryUserId()));
+            });
+        }
+        if (CollUtil.isNotEmpty(request.getUserIdList())) {
+            DatabaseUtil.or(lambda, request.getUserIdList(), (lam, l) -> lam.in(CrashEntity::getUserId, l));
+        }
+        if (null != request.getValid()) {
+            lambda.eq(CrashEntity::getValid, request.getValid());
+        }
+        return crashMapper.selectList(lambda.orderByDesc(CrashEntity::getReportDate));
+    }
+
+    private List<CrashResponse> formatCrashList(List<CrashEntity> l) {
+        final List<CrashResponse> list = INDUSTRY_INSTANCE.crashList(l);
+        List<String> userIdList = Stream.of(
+                        list.stream().map(CrashResponse::getUserId).filter(StrUtil::isNotBlank),
+                        list.stream().map(CrashResponse::getDirectLeader).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getUserId())).collect(Collectors.toList()),
+                CrashResponse::getUserId,
+                l1 -> userList,
+                (r, t) -> r.getUserId().equals(t.getId()),
+                (r, t) -> r.setUserIdFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getDirectLeader())).collect(Collectors.toList()),
+                CrashResponse::getDirectLeader,
+                l1 -> userList,
+                (r, t) -> r.getDirectLeader().equals(t.getId()),
+                (r, t) -> r.setDirectLeaderFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list,
+                CrashResponse::getCrashId,
+                l1 -> crashAttachmentMapper.selectList(new LambdaQueryWrapper<CrashAttachmentEntity>()
+                        .in(CrashAttachmentEntity::getCrashId, l1)),
+                (t, r) -> t.getCrashId().equals(r.getCrashId()),
+                (t, r) -> {
+                    switch (r.getAttachmentCategory()) {
+                        case "0" -> t.getPhotoList().add(
+                                INDUSTRY_INSTANCE.crashPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "1" -> t.getFileList().add(
+                                INDUSTRY_INSTANCE.crashFile(r, urlHelper.getUrlPrefix())
+                        );
+                        case "2" -> t.getImprovePhotoList().add(
+                                INDUSTRY_INSTANCE.crashPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "3" -> t.getImproveFileList().add(
+                                INDUSTRY_INSTANCE.crashFile(r, urlHelper.getUrlPrefix())
+                        );
+                        default -> log.info("crash attachment: {}", JSONUtil.toJsonStr(r));
+                    }
+                }
+        );
+        Map<Object, String> crashReasonMap = paramDao.listByCategoryId("crashReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
+        for (CrashResponse t : list) {
+            t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));
+            t.setReasonFormat(t.getReasonList().stream().filter(StrUtil::isNotBlank).map(t1 -> crashReasonMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
+        return list;
+    }
+
+    /**
+     * 事故列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MpAccountQueryPageRequest}
+     * @return {@link PageResult <CrashResponse>}
+     */
+    @GetMapping("admin/crash/page")
+    public PageResult<CrashResponse> crashAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute CrashPageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "equipmentManager".equals(t))) {
+            request.getData().setQueryUserId(u.getUserId());
+        }
+        PageResult<CrashEntity> page = DatabaseUtil.page(request, this::crashList);
+        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(
+                page.getTotal(),
+                formatCrashList(page.getList())
+                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 事故（公开）
+     *
+     * @param request {@link AccidentQueryRequest}
+     * @return {@link DataResult <CrashResponse>}
+     */
+    @GetMapping("crash")
+    public DataResult<CrashResponse> crash(
+            @ModelAttribute CrashRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatCrashList(crashList(request))), new CrashResponse())
+        );
+    }
+
+
+    private void mergeRelevance(TroubleRequest request, TroubleEntity e) {
+        troubleAttachmentMapper.delete(new LambdaUpdateWrapper<TroubleAttachmentEntity>()
+                .eq(TroubleAttachmentEntity::getTroubleId, e.getId())
+        );
+        troubleAttachmentDao.saveBatch(
+                Stream.of(
+                                CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.troubleAttachment(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.troubleAttachment(e.getId(), "1", t)),
+                                CollUtil.defaultIfEmpty(request.getImprovePhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.troubleAttachment(e.getId(), "2", t)),
+                                CollUtil.defaultIfEmpty(request.getImproveFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.troubleAttachment(e.getId(), "3", t))
+                        ).flatMap(t -> t)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 保存事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TroubleRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/trouble")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result troubleSave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody TroubleRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        TroubleEntity e;
+        troubleMapper.insert(e = (TroubleEntity) INDUSTRY_INSTANCE.trouble(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 修改事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TroubleRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/trouble")
+    public Result troubleUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody TroubleRequest request
+    ) {
+        MpUserResponse u;
+        try {
+            u = accountHelper.getUser(deviceId);
+        } catch (Exception e) {
+            u = new MpUserResponse();
+        }
+        TroubleEntity e = (TroubleEntity) INDUSTRY_INSTANCE.trouble(request)
+                .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setModifier(u.getUserId());
+        LambdaUpdateWrapper<TroubleEntity> lambda = new LambdaUpdateWrapper<TroubleEntity>()
+                .eq(TroubleEntity::getId, e.getId());
+        if (!"admin".equals(u.getUserId())) {
+            lambda.eq(TroubleEntity::getValid, false);
+        }
+        if (troubleMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 删除事故
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TroubleRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/trouble")
+    public Result troubleDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute TroubleRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<TroubleEntity> lambda = new LambdaUpdateWrapper<TroubleEntity>().eq(TroubleEntity::getId, request.getTroubleId());
+        if (isNotBlank(request.getTroubleId())) {
+            if (troubleMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+        }
+        return new Result();
+    }
+
+    private List<TroubleEntity> troubleList(TroubleRequest request) {
+        LambdaQueryWrapper<TroubleEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getTroubleId())) {
+            lambda.eq(TroubleEntity::getId, request.getTroubleId());
+        }
+        if (null != request.getStartReportDate()) {
+            lambda.ge(TroubleEntity::getReportDate, DateUtil.day(request.getStartReportDate()));
+        }
+        if (null != request.getEndReportDate()) {
+            lambda.le(TroubleEntity::getReportDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndReportDate())));
+        }
+        if (null != request.getReportDate()) {
+            lambda.eq(TroubleEntity::getReportDate, request.getReportDate());
+        }
+        if (isNotBlank(request.getReason())) {
+            lambda.like(TroubleEntity::getReason, "," + request.getReason() + ",");
+        }
+        if (isNotBlank(request.getAccidentDescribe())) {
+            lambda.like(TroubleEntity::getAccidentDescribe, request.getAccidentDescribe());
+        }
+        if (CollUtil.isNotEmpty(request.getReasonList())) {
+            DatabaseUtil.or(lambda, request.getReasonList(), (lam, l) -> lam.in(TroubleEntity::getReason, l));
+        }
+        if (isNotBlank(request.getUserId())) {
+            lambda.eq(TroubleEntity::getUserId, request.getUserId());
+        }
+        if (isNotBlank(request.getQueryUserId())) {
+            lambda.and(true, lam -> {
+                lam.eq(TroubleEntity::getUserId, request.getQueryUserId())
+                        .or(true, lam1 -> lam1.eq(TroubleEntity::getDirectLeader, request.getQueryUserId()));
+            });
+        }
+        if (CollUtil.isNotEmpty(request.getUserIdList())) {
+            DatabaseUtil.or(lambda, request.getUserIdList(), (lam, l) -> lam.in(TroubleEntity::getUserId, l));
+        }
+        if (null != request.getValid()) {
+            lambda.eq(TroubleEntity::getValid, request.getValid());
+        }
+        return troubleMapper.selectList(lambda.orderByDesc(TroubleEntity::getReportDate));
+    }
+
+    private List<TroubleResponse> formatTroubleList(List<TroubleEntity> l) {
+        final List<TroubleResponse> list = INDUSTRY_INSTANCE.troubleList(l);
+        List<String> userIdList = Stream.of(
+                        list.stream().map(TroubleResponse::getUserId).filter(StrUtil::isNotBlank),
+                        list.stream().map(TroubleResponse::getDirectLeader).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getUserId())).collect(Collectors.toList()),
+                TroubleResponse::getUserId,
+                l1 -> userList,
+                (r, t) -> r.getUserId().equals(t.getId()),
+                (r, t) -> r.setUserIdFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getDirectLeader())).collect(Collectors.toList()),
+                TroubleResponse::getDirectLeader,
+                l1 -> userList,
+                (r, t) -> r.getDirectLeader().equals(t.getId()),
+                (r, t) -> r.setDirectLeaderFormat(t.getName())
+        );
+        MultitaskUtil.supplementList(
+                list,
+                TroubleResponse::getTroubleId,
+                l1 -> troubleAttachmentMapper.selectList(new LambdaQueryWrapper<TroubleAttachmentEntity>()
+                        .in(TroubleAttachmentEntity::getTroubleId, l1)),
+                (t, r) -> t.getTroubleId().equals(r.getTroubleId()),
+                (t, r) -> {
+                    switch (r.getAttachmentCategory()) {
+                        case "0" -> t.getPhotoList().add(
+                                INDUSTRY_INSTANCE.troublePhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "1" -> t.getFileList().add(
+                                INDUSTRY_INSTANCE.troubleFile(r, urlHelper.getUrlPrefix())
+                        );
+                        case "2" -> t.getImprovePhotoList().add(
+                                INDUSTRY_INSTANCE.troublePhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "3" -> t.getImproveFileList().add(
+                                INDUSTRY_INSTANCE.troubleFile(r, urlHelper.getUrlPrefix())
+                        );
+                        default -> log.info("trouble attachment: {}", JSONUtil.toJsonStr(r));
+                    }
+                }
+        );
+        Map<Object, String> troubleReasonMap = paramDao.listByCategoryId("troubleReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
+        for (TroubleResponse t : list) {
+            t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));
+            t.setReasonFormat(t.getReasonList().stream().filter(StrUtil::isNotBlank).map(t1 -> troubleReasonMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
+        return list;
+    }
+
+    /**
+     * 事故列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MpAccountQueryPageRequest}
+     * @return {@link PageResult <TroubleResponse>}
+     */
+    @GetMapping("admin/trouble/page")
+    public PageResult<TroubleResponse> troubleAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute TroublePageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "gauger".equals(t))) {
+            request.getData().setQueryUserId(u.getUserId());
+        }
+        PageResult<TroubleEntity> page = DatabaseUtil.page(request, this::troubleList);
+        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(
+                page.getTotal(),
+                formatTroubleList(page.getList())
+                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 事故（公开）
+     *
+     * @param request {@link AccidentQueryRequest}
+     * @return {@link DataResult <TroubleResponse>}
+     */
+    @GetMapping("trouble")
+    public DataResult<TroubleResponse> trouble(
+            @ModelAttribute TroubleRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatTroubleList(troubleList(request))), new TroubleResponse())
+        );
+    }
+
 
     private void mergeRelevance(ImproveRequest request, ImproveEntity e) {
         improveAttachmentMapper.delete(new LambdaUpdateWrapper<ImproveAttachmentEntity>()

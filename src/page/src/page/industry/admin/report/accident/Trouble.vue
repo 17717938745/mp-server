@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="query-container">
-      <el-input v-model="query.data.qualityId" @keyup.enter="handlePage"
+      <el-input v-model="query.data.troubleId" @keyup.enter="handlePage"
                 :placeholder="store.state.label.accidentQuality" clearable @change="handlePage" class="search-item"/>
       <el-date-picker
           v-model="dateTimeList"
@@ -33,38 +33,24 @@
                  filterable
                  allow-create
                  clearable
-                 :placeholder="store.state.label.qualityReason"
+                 :placeholder="store.state.label.troubleReason"
                  class="search-item">
         <el-option
-            v-for="item in config.qualityReasonList"
+            v-for="item in config.troubleReasonList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
         />
       </el-select>
-      <!--      <el-select v-model="query.data.valid"
-                       @change="handlePage"
-                       filterable
-                       allow-create
-                       clearable
-                       :placeholder="store.state.label.valid"
-                       class="search-item">
-              <el-option
-                  label="Done"
-                  :value="true"
-              />
-              <el-option
-                  label="Pending"
-                  :value="false"
-              />
-            </el-select>-->
+      <el-input v-model="query.data.accidentDescribe" @keyup.enter="handlePage"
+                :placeholder="store.state.label.accidentQualityDescribe" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
       </div>
     </div>
     <view-list
-        idKey="qualityId"
+        idKey="troubleId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -134,21 +120,16 @@
           <image-upload :photoList="formData.photoList"
                         :maxSize="Number(`${(formRuleList['photoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
-        <el-form-item prop="fileList"
-                      :label="`${store.state.label.qualityFile}(${(formRuleList['fileList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <file-upload :fileList="formData.fileList"
-                       :maxSize="Number(`${(formRuleList['fileList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
-        </el-form-item>
-        <el-form-item prop="reason" :label="store.state.label.qualityReason">
+        <el-form-item prop="reason" :label="store.state.label.troubleReason">
           <el-select v-model="formData.reasonList"
                      filterable
                      multiple
                      allow-create
                      clearable
-                     :placeholder="store.state.label.qualityReason"
+                     :placeholder="store.state.label.troubleReason"
                      class="search-item">
             <el-option
-                v-for="item in config.qualityReasonList"
+                v-for="item in config.troubleReasonList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -157,16 +138,6 @@
         </el-form-item>
         <el-form-item prop="solve" :label="store.state.label.qualitySolve">
           <el-input type="textarea" :rows=4 v-model="formData.solve"/>
-        </el-form-item>
-        <el-form-item prop="improvePhotoList"
-                      :label="`${store.state.label.improveQualityPhoto}(${(formRuleList['improvePhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.improvePhotoList"
-                        :maxSize="Number(`${(formRuleList['improvePhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
-        </el-form-item>
-        <el-form-item prop="improveFileList"
-                      :label="`${store.state.label.improveQualityFile}(${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <file-upload :fileList="formData.improveFileList"
-                       :maxSize="Number(`${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
         </el-form-item>
         <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
           <el-input type="textarea" :rows=4 v-model="formData.improveDescribe"/>
@@ -243,9 +214,6 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'opinion', labelKey: 'qualityOpinion', width: 221,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
   {value: 'photoList', labelKey: 'qualityPhoto', width: 128, type: ValueType.Image,},
-  {value: 'fileList', labelKey: 'qualityFile', width: 128, type: ValueType.Attachment,},
-  {value: 'improvePhotoList', labelKey: 'improveQualityPhoto', width: 128, type: ValueType.Image,},
-  {value: 'improveFileList', labelKey: 'improveQualityFile', width: 128, type: ValueType.Attachment,},
 ])
 const handleTableRowClassName = ({
                                    row,
@@ -260,7 +228,7 @@ const handleTableRowClassName = ({
   return ''
 }
 const handleShowPrintDetail = (d: any) => {
-  window.open(`/industry/public/quality?qualityId=${d.param.qualityId}`)
+  window.open(`/industry/public/trouble?troubleId=${d.param.troubleId}`)
 }
 
 const defaultFormData = {
@@ -284,11 +252,12 @@ const state = reactive({
   expandRowKeys: [],
   query: {
     data: {
-      qualityId: route.query.qualityId,
+      troubleId: route.query.troubleId,
       startReportDate: '',
       endReportDate: '',
       userId: '',
       reason: '',
+      accidentDescribe: '',
       reasonList: [],
       valid: null,
     },
@@ -302,7 +271,7 @@ const state = reactive({
   formData: Object.assign({}, defaultFormData),
   formSave: false,
   config: {
-    qualityReasonList: [],
+    troubleReasonList: [],
   },
   userOptionList: new Array<any>(),
   formVisible: false,
@@ -311,21 +280,15 @@ const state = reactive({
     userId: [{required: true, message: 'Please check', trigger: 'blur'}],
     directLeader: [{required: true, message: 'Please check', trigger: 'blur'}],
     accidentDescribe: [{required: true, message: 'Please check', trigger: 'blur'}],
-    // solve: [{required: true, message: 'Please check', trigger: 'blur'}],
-    // improveDescribe: [{required: true, message: 'Please check', trigger: 'blur'}],
-    // opinion: [{required: true, message: 'Please check', trigger: 'blur'}],
     reasonList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],
     photoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
-    fileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
-    improvePhotoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
-    improveFileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
   },
 })
 
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
-      'qualityReason',
+      'troubleReason',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -337,18 +300,6 @@ Promise.all([
       label: t.name,
     }
   })
-  if (includes(roleCodeList, 'gauger')) {
-    columnConfigList.value = columnConfigList.value.map((t: any) => {
-      if ('0' === t.value) {
-        (t.children || []).forEach((t1: any) => {
-          if ('dutyPerson' === t1.value || 'groupLeader' === t1.value || 'chargePerson' === t1.value || 'manager' === t1.value) {
-            t1.optionList = userOptionList.value
-          }
-        })
-      }
-      return t
-    })
-  }
   handlePage()
 })
 const handlePage = () => {
@@ -365,7 +316,7 @@ const handlePage = () => {
     state.query.data.startReportDate = ''
     state.query.data.endReportDate = ''
   }
-  httpGet(`douson/admin/quality/page`, state.query).then(
+  httpGet(`douson/admin/trouble/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
         const l = res.list || []
         state.tableData = l
@@ -397,7 +348,7 @@ const handleMerge = () => {
   formRef.value.validate((valid: any, fields: any) => {
     if (valid) {
       if (state.formSave) {
-        httpPostJson('douson/admin/quality', state.formData).then(() => {
+        httpPostJson('douson/admin/trouble', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handlePage()
@@ -411,7 +362,7 @@ const handleMerge = () => {
   })
 }
 const handleUpdate = (row: any) => {
-  return httpPutJson('douson/admin/quality', row).then(() => {
+  return httpPutJson('douson/admin/trouble', row).then(() => {
     state.formVisible = false
     ElMessage.success('Update success')
     handlePage()
@@ -421,11 +372,11 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/admin/quality', {qualityId: row.qualityId})
-        .then(() => {
-          ElMessage.success('Delete success')
-          handlePage()
-        })
+    httpDelete('douson/admin/trouble', {troubleId: row.troubleId})
+    .then(() => {
+      ElMessage.success('Delete success')
+      handlePage()
+    })
   })
 }
 const handleDateTimeChange = () => {

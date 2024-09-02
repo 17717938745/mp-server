@@ -112,6 +112,22 @@ const initialRouter = (router: Router) => {
                     component: () => import ('../page/industry/admin/public/Quality.vue'),
                 },
                 {
+                    path: 'public/crash',
+                    name: '/industry/public/crash',
+                    meta: {
+                        title: 'Accident crash',
+                    },
+                    component: () => import ('../page/industry/admin/public/Crash.vue'),
+                },
+                {
+                    path: 'public/trouble',
+                    name: '/industry/public/trouble',
+                    meta: {
+                        title: 'Accident trouble',
+                    },
+                    component: () => import ('../page/industry/admin/public/Trouble.vue'),
+                },
+                {
                     path: 'public/improve',
                     name: '/industry/public/improve',
                     meta: {

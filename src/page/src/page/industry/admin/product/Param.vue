@@ -305,6 +305,14 @@ const paramCategoryGroupList = [
         value: 'qualityReason',
         label: store.state.label.qualityReason,
       },
+      {
+        value: 'crashReason',
+        label: store.state.label.crashReason,
+      },
+      {
+        value: 'troubleReason',
+        label: store.state.label.troubleReason,
+      },
     ],
   },
   {
