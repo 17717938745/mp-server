@@ -1463,6 +1463,9 @@ public class DousonController {
                 return new ArrayList<>();
             }
         }
+        if (null != request.getValid()) {
+            lambda.eq(ReportEntity::getValid, request.getValid());
+        }
         return reportMapper.selectList(lambda
                 .orderByDesc(ReportEntity::getReportDate)
                 .orderByAsc(ReportEntity::getUserId)

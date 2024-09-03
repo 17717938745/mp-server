@@ -11,7 +11,6 @@
           end-placeholder="End date"
       >
       </el-date-picker>
-
       <el-select v-model="query.data.userId"
                  @change="handleList"
                  filterable
@@ -69,6 +68,22 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.valid"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.valid"
+                 class="search-item">
+        <el-option
+            label="Done"
+            :value="true"
+        />
+        <el-option
+            label="Pending"
+            :value="false"
         />
       </el-select>
       <div class="query-btn">
@@ -389,6 +404,7 @@ const state = reactive({
       testDevice: '',
       processType: '',
       processProcedure: '',
+      valid: null,
     },
     page: {
       page: DEFAULT_PAGE,
@@ -517,7 +533,7 @@ Promise.all([
       label: t.name,
     }
   })
-  handlePage()
+  handleStart()
 })
 
 const handleToggleDetail = () => {

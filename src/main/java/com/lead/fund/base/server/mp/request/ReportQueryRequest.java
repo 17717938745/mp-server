@@ -84,4 +84,8 @@ public class ReportQueryRequest implements Serializable {
      * 加工工序
      */
     private String processProcedure;
+    /**
+     * 是否生效
+     */
+    private Boolean valid;
 }
