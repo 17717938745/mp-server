@@ -28,6 +28,20 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.equipmentId"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.equipmentNo"
+      >
+        <el-option
+            v-for="item in config.equipmentNoList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <el-select v-model="query.data.reason"
                  @change="handlePage"
                  filterable
@@ -96,6 +110,16 @@
           <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="equipmentId" :label="store.state.label.equipmentNo">
+          <el-select v-model="formData.equipmentId" clearable filterable placeholder="Please select">
+            <el-option
+                v-for="item in config.equipmentNoList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -210,6 +234,7 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'index', labelKey: 'index', width: 80,},
   {value: 'reportDate', labelKey: 'date', width: 100,},
+  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 156,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 151,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 151,},
   {value: 'accidentDescribe', labelKey: 'accidentQualityDescribe', width: 276, showOverflow: true,},
@@ -246,6 +271,7 @@ const defaultFormData = {
   reasonList: [],
   solve: '',
   improveDescribe: '',
+  equipmentId: '',
   opinion: '',
   valid: false,
   photoList: [],
@@ -262,6 +288,7 @@ const state = reactive({
       startReportDate: '',
       endReportDate: '',
       userId: '',
+      equipmentId: '',
       accidentDescribe: '',
       reason: '',
       reasonList: [],
@@ -278,6 +305,7 @@ const state = reactive({
   formSave: false,
   config: {
     crashReasonList: [],
+    equipmentNoList: [],
   },
   userOptionList: new Array<any>(),
   formVisible: false,
@@ -296,6 +324,7 @@ Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
       'crashReason',
+      'equipmentNo',
     ]
   }),
   httpGet(`system/user/config/list`, {}),

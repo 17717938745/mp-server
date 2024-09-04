@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.io.Serializable;
@@ -30,6 +31,10 @@ public class CrashRequest implements Serializable {
      * ID
      */
     private String crashId;
+    /**
+     * 维修ID
+     */
+    private String equipmentId;
     /**
      * 活动时间
      */

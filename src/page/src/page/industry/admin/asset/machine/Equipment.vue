@@ -13,7 +13,7 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
-      <el-select v-model="query.data.equipmentNo"
+      <el-select v-model="query.data.equipmentId"
                  @change="handlePage"
                  filterable
                  allow-create

@@ -2674,6 +2674,9 @@ public class DousonController {
         if (null != request.getReportDate()) {
             lambda.eq(CrashEntity::getReportDate, request.getReportDate());
         }
+        if (isNotBlank(request.getEquipmentId())) {
+            lambda.eq(CrashEntity::getEquipmentId, request.getEquipmentId());
+        }
         if (isNotBlank(request.getReason())) {
             lambda.like(CrashEntity::getReason, "," + request.getReason() + ",");
         }
@@ -2751,6 +2754,17 @@ public class DousonController {
                         );
                         default -> log.info("crash attachment: {}", JSONUtil.toJsonStr(r));
                     }
+                }
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getEquipmentId())).collect(Collectors.toList()),
+                CrashResponse::getEquipmentId,
+                l1 -> equipmentMapper.selectList(new LambdaQueryWrapper<EquipmentEntity>()
+                        .in(EquipmentEntity::getId, l1)),
+                (t, r) -> t.getEquipmentId().equals(r.getId()),
+                (t, r) -> {
+                    t.setEquipmentNo(r.getEquipmentNo())
+                    ;
                 }
         );
         Map<Object, String> crashReasonMap = paramDao.listByCategoryId("crashReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
@@ -3642,6 +3656,9 @@ public class DousonController {
         }
         if (isNotBlank(request.getBrokenReason())) {
             lambda.like(MaintainEntity::getBrokenReason, "," + request.getBrokenReason() + ",");
+        }
+        if (isNotBlank(request.getEquipmentId())) {
+            lambda.eq(MaintainEntity::getEquipmentId, request.getEquipmentId());
         }
         if (CollUtil.isNotEmpty(request.getBrokenReasonList())) {
             DatabaseUtil.or(lambda, request.getBrokenReasonList(), (lam, l) -> lam.in(MaintainEntity::getBrokenReason, l));
