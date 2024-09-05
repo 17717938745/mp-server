@@ -1,11 +1,6 @@
 <template>
   <div>
     <div class="query-container">
-      <el-input v-model="query.data.disqualificationOrderId"
-                @change="handlePage"
-                :placeholder="store.state.label.disqualificationOrder"
-                clearable
-                class="search-item"/>
       <el-date-picker
           v-model="dateTimeList"
           @change="handleDateTimeChange"
