@@ -4176,8 +4176,12 @@ public class DousonController {
             lambda.like(DisqualificationOrderEntity::getDisqualificationOrder, d.getDisqualificationOrder());
         }
         if (isNotBlank(d.getDutyPerson())) {
-            lambda.or(true, t -> t.eq(DisqualificationOrderEntity::getDutyPerson, d.getDutyPerson())
-                    .or(true, t1 -> t1.eq(DisqualificationOrderEntity::getCreator, d.getDutyPerson())));
+            lambda.and(true, lam -> {
+                lam.eq(DisqualificationOrderEntity::getCreator, d.getDutyPerson())
+                        .or(true, lam1 -> {
+                            lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + d.getDutyPerson() + ",");
+                        });
+            });
         }
         if (isNotBlank(d.getDefectType())) {
             lambda.eq(DisqualificationOrderEntity::getDefectType, d.getDefectType());
@@ -4204,7 +4208,7 @@ public class DousonController {
         final List<DisqualificationOrderResponse> rl = INDUSTRY_INSTANCE.disqualificationOrderList(list);
         final List<String> userIdList = Stream.of(
                         rl.stream().map(DisqualificationOrderResponse::getCreator).filter(StrUtil::isNotBlank),
-                        rl.stream().map(DisqualificationOrderResponse::getDutyPersonList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
+                        rl.stream().map(DisqualificationOrderResponse::getDutyPersonList).flatMap(Collection::stream).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
