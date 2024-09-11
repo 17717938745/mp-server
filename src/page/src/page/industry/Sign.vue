@@ -154,6 +154,15 @@ const handleSubmit = (retry: boolean = true) => {
                           {
                             "children": [],
                             "id": "-1",
+                            "path": "vocation",
+                            "component": "vocation",
+                            "nameKey": "vocationRecord",
+                            "white": false,
+                            "showFlag": true,
+                          },
+                          {
+                            "children": [],
+                            "id": "-1",
                             "path": "account",
                             "component": "account",
                             "nameKey": "accountManage",

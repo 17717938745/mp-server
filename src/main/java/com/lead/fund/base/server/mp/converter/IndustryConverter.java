@@ -526,4 +526,16 @@ public interface IndustryConverter extends Serializable {
 
     @Mapping(target = "fullUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
     FileModel maintainFile(MaintainAttachmentEntity e, String urlPrefix);
+
+    @Mapping(target = "id", source = "vocationId")
+    @Mapping(target = "date", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getDate()))")
+    @Mapping(target = "startDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getStartDate()))")
+    @Mapping(target = "endDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getEndDate()))")
+    VocationEntity vocation(VocationRequest t);
+
+    List<VocationResponse> vocationList(List<VocationEntity> l);
+
+    @Mapping(target = "vocationId", source = "id")
+    @Mapping(target = "countFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getCount()))")
+    VocationResponse vocation(VocationEntity t);
 }

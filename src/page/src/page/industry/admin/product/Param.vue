@@ -219,6 +219,10 @@ const paramCategoryGroupList = [
         value: 'deviceCheckLedgerState',
         label: store.state.label.deviceCheckLedgerState,
       },
+      {
+        value: 'vocationType',
+        label: store.state.label.vocationType,
+      },
     ],
   },
   {

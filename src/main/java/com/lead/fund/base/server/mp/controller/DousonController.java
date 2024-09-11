@@ -41,25 +41,174 @@ import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.NumberUtil;
 import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.server.mp.dao.*;
+import com.lead.fund.base.server.mp.dao.AccidentAttachmentDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagPhotoDao;
+import com.lead.fund.base.server.mp.dao.BoxFlagSerialNoDao;
+import com.lead.fund.base.server.mp.dao.ComputerDao;
+import com.lead.fund.base.server.mp.dao.ComputerPhotoDao;
+import com.lead.fund.base.server.mp.dao.CrashAttachmentDao;
+import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerDao;
+import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerPhotoDao;
+import com.lead.fund.base.server.mp.dao.DisqualificationOrderDao;
+import com.lead.fund.base.server.mp.dao.DisqualificationOrderPhotoDao;
+import com.lead.fund.base.server.mp.dao.EquipmentAttachmentDao;
+import com.lead.fund.base.server.mp.dao.EventAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ImproveAttachmentDao;
+import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ParamDao;
+import com.lead.fund.base.server.mp.dao.PlanAttachmentDao;
+import com.lead.fund.base.server.mp.dao.PlanDao;
+import com.lead.fund.base.server.mp.dao.PlanPhotoDao;
+import com.lead.fund.base.server.mp.dao.ProductPhotoDao;
+import com.lead.fund.base.server.mp.dao.QualityAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ReportPhotoDao;
+import com.lead.fund.base.server.mp.dao.ReportSerialNoDao;
+import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
-import com.lead.fund.base.server.mp.entity.douson.*;
+import com.lead.fund.base.server.mp.entity.douson.AccidentAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.AccidentEntity;
+import com.lead.fund.base.server.mp.entity.douson.BoxFlagEntity;
+import com.lead.fund.base.server.mp.entity.douson.BoxFlagPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ComputerEntity;
+import com.lead.fund.base.server.mp.entity.douson.ComputerPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.CrashAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.CrashEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceCheckLedgerPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
+import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderEntity;
+import com.lead.fund.base.server.mp.entity.douson.DisqualificationOrderPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.EquipmentAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EquipmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EventAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.EventEntity;
+import com.lead.fund.base.server.mp.entity.douson.ImproveAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.ImproveEntity;
+import com.lead.fund.base.server.mp.entity.douson.MaintainAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.MaintainEntity;
+import com.lead.fund.base.server.mp.entity.douson.OrderEntity;
+import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanEntity;
+import com.lead.fund.base.server.mp.entity.douson.PlanPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ProductEntity;
+import com.lead.fund.base.server.mp.entity.douson.ProductPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.QualityAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.QualityEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportPhotoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportSerialNoEntity;
+import com.lead.fund.base.server.mp.entity.douson.ReportUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.TroubleAttachmentEntity;
+import com.lead.fund.base.server.mp.entity.douson.TroubleEntity;
+import com.lead.fund.base.server.mp.entity.douson.VocationEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpAccountMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpFileMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
-import com.lead.fund.base.server.mp.mapper.douson.*;
-import com.lead.fund.base.server.mp.request.*;
-import com.lead.fund.base.server.mp.response.*;
+import com.lead.fund.base.server.mp.mapper.douson.AccidentAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.AccidentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.CrashAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.CrashMapper;
+import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EquipmentAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EquipmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EventAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.EventMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ImproveAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ImproveMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainMapper;
+import com.lead.fund.base.server.mp.mapper.douson.OrderMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ParamMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ProductMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ProductPhotoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.QualityAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.QualityMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
+import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleMapper;
+import com.lead.fund.base.server.mp.mapper.douson.VocationMapper;
+import com.lead.fund.base.server.mp.request.AccidentPageRequest;
+import com.lead.fund.base.server.mp.request.AccidentQueryRequest;
+import com.lead.fund.base.server.mp.request.AccidentRequest;
+import com.lead.fund.base.server.mp.request.BoxFlagPageRequest;
+import com.lead.fund.base.server.mp.request.BoxFlagRequest;
+import com.lead.fund.base.server.mp.request.ComputerPageRequest;
+import com.lead.fund.base.server.mp.request.ComputerRequest;
+import com.lead.fund.base.server.mp.request.CrashPageRequest;
+import com.lead.fund.base.server.mp.request.CrashRequest;
+import com.lead.fund.base.server.mp.request.DeviceCheckLedgerRequest;
+import com.lead.fund.base.server.mp.request.DeviceQueryRequest;
+import com.lead.fund.base.server.mp.request.DisqualificationOrderPageRequest;
+import com.lead.fund.base.server.mp.request.DisqualificationOrderRequest;
+import com.lead.fund.base.server.mp.request.EquipmentPageRequest;
+import com.lead.fund.base.server.mp.request.EquipmentRequest;
+import com.lead.fund.base.server.mp.request.EventPageRequest;
+import com.lead.fund.base.server.mp.request.EventQueryRequest;
+import com.lead.fund.base.server.mp.request.EventRequest;
+import com.lead.fund.base.server.mp.request.ImprovePageRequest;
+import com.lead.fund.base.server.mp.request.ImproveRequest;
+import com.lead.fund.base.server.mp.request.MaintainPageRequest;
+import com.lead.fund.base.server.mp.request.MaintainRequest;
+import com.lead.fund.base.server.mp.request.MpAccountQueryPageRequest;
+import com.lead.fund.base.server.mp.request.MpAccountRequest;
+import com.lead.fund.base.server.mp.request.OrderPageRequest;
+import com.lead.fund.base.server.mp.request.OrderQueryRequest;
+import com.lead.fund.base.server.mp.request.OrderRequest;
+import com.lead.fund.base.server.mp.request.ParamRequest;
+import com.lead.fund.base.server.mp.request.PlanPageRequest;
+import com.lead.fund.base.server.mp.request.PlanRequest;
+import com.lead.fund.base.server.mp.request.ProductPageRequest;
+import com.lead.fund.base.server.mp.request.ProductQueryRequest;
+import com.lead.fund.base.server.mp.request.ProductRequest;
+import com.lead.fund.base.server.mp.request.QualityPageRequest;
+import com.lead.fund.base.server.mp.request.QualityRequest;
+import com.lead.fund.base.server.mp.request.ReportQueryRequest;
+import com.lead.fund.base.server.mp.request.ReportRequest;
+import com.lead.fund.base.server.mp.request.TroublePageRequest;
+import com.lead.fund.base.server.mp.request.TroubleRequest;
+import com.lead.fund.base.server.mp.request.VocationPageRequest;
+import com.lead.fund.base.server.mp.request.VocationRequest;
+import com.lead.fund.base.server.mp.response.AccidentResponse;
+import com.lead.fund.base.server.mp.response.BoxFlagResponse;
+import com.lead.fund.base.server.mp.response.ComputerResponse;
+import com.lead.fund.base.server.mp.response.CrashResponse;
+import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
+import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
+import com.lead.fund.base.server.mp.response.EquipmentResponse;
+import com.lead.fund.base.server.mp.response.EventResponse;
+import com.lead.fund.base.server.mp.response.ImproveResponse;
+import com.lead.fund.base.server.mp.response.MaintainResponse;
+import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
+import com.lead.fund.base.server.mp.response.MpAccountResponse;
+import com.lead.fund.base.server.mp.response.MpRoleResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.OrderResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse.ParamResponseBuilder;
+import com.lead.fund.base.server.mp.response.PlanResponse;
+import com.lead.fund.base.server.mp.response.ProductResponse;
+import com.lead.fund.base.server.mp.response.QualityResponse;
+import com.lead.fund.base.server.mp.response.ReportResponse;
+import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
+import com.lead.fund.base.server.mp.response.TodoData;
+import com.lead.fund.base.server.mp.response.TodoResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import com.lead.fund.base.server.mp.response.UserDeviceResponse;
+import com.lead.fund.base.server.mp.response.VocationResponse;
+import com.lead.fund.base.server.mp.response.VocationSummaryResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -77,7 +226,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -233,6 +381,8 @@ public class DousonController {
     private MaintainAttachmentMapper maintainAttachmentMapper;
     @Resource
     private MaintainAttachmentDao maintainAttachmentDao;
+    @Resource
+    private VocationMapper vocationMapper;
 
     /**
      * 配置类接口（字典接口）
@@ -300,6 +450,7 @@ public class DousonController {
                 case "qualityReason" -> builder.qualityReasonList(paramDao.listByCategoryId(categoryId));
                 case "crashReason" -> builder.crashReasonList(paramDao.listByCategoryId(categoryId));
                 case "troubleReason" -> builder.troubleReasonList(paramDao.listByCategoryId(categoryId));
+                case "vocationType" -> builder.vocationTypeList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -3808,6 +3959,347 @@ public class DousonController {
     ) {
         return new DataResult<>(
                 defaultIfNull(CollUtil.getFirst(formatMaintainList(maintainList(request))), new MaintainResponse())
+        );
+    }
+
+    /**
+     * 保存请假
+     *
+     * @param deviceId 设备id
+     * @param request  {@link VocationRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/vocation")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result vocationSave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody VocationRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "vocationManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        VocationEntity e;
+        vocationMapper.insert(e = (VocationEntity) INDUSTRY_INSTANCE.vocation(request)
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        return new Result();
+    }
+
+    /**
+     * 修改请假
+     *
+     * @param deviceId 设备id
+     * @param request  {@link VocationRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/vocation")
+    public Result vocationUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody VocationRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "vocationManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        VocationEntity e = (VocationEntity) INDUSTRY_INSTANCE.vocation(request)
+                .setModifier(u.getUserId());
+        LambdaUpdateWrapper<VocationEntity> lambda = new LambdaUpdateWrapper<VocationEntity>()
+                .eq(VocationEntity::getId, e.getId());
+        if (vocationMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        return new Result();
+    }
+
+    /**
+     * 删除请假
+     *
+     * @param deviceId 设备id
+     * @param request  {@link VocationRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/vocation")
+    public Result vocationDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute VocationRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<VocationEntity> lambda = new LambdaUpdateWrapper<VocationEntity>().eq(VocationEntity::getId, request.getVocationId());
+        if (isNotBlank(request.getVocationId())) {
+            if (vocationMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+        }
+        return new Result();
+    }
+
+    private LambdaQueryWrapper<VocationEntity> vocationLambda(VocationRequest request) {
+        final LambdaQueryWrapper<VocationEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getVocationId())) {
+            lambda.eq(VocationEntity::getId, request.getVocationId());
+        }
+        if (isNotBlank(request.getQueryUserId())) {
+            lambda.and(true,
+                    lam -> {
+                        lam.eq(VocationEntity::getUser, request.getQueryUserId())
+                                .or(true, lam1 -> lam1.eq(VocationEntity::getChargeUser, request.getQueryUserId())
+                                );
+                    }
+            );
+        }
+        if (isNotBlank(request.getVocationType())) {
+            lambda.eq(VocationEntity::getVocationType, request.getVocationType());
+        }
+        if (isNotBlank(request.getUser())) {
+            lambda.eq(VocationEntity::getUser, request.getUser());
+        }
+        if (null != request.getDate()) {
+            lambda.ge(VocationEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getDate())));
+            lambda.le(VocationEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getDate())));
+        }
+        if (null != request.getStartDate() && null != request.getEndDate()) {
+            lambda.ge(VocationEntity::getStartDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getStartDate())));
+            lambda.le(VocationEntity::getEndDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getEndDate())));
+        }
+        if (CollUtil.isNotEmpty(request.getUserIdList())) {
+            DatabaseUtil.or(lambda, request.getUserIdList(), (lam, l) -> {
+                        lam.in(VocationEntity::getUser, request.getUserIdList());
+                    }
+            );
+        }
+        return lambda;
+    }
+
+    private List<VocationEntity> vocationList(VocationRequest request) {
+        return vocationMapper.selectList(vocationLambda(request)
+                .orderByDesc(VocationEntity::getCreatedTime)
+                .select(
+                        VocationEntity::getId,
+                        VocationEntity::getCreator,
+                        VocationEntity::getLastModifiedTime,
+                        VocationEntity::getDeletedFlag,
+                        VocationEntity::getCreator,
+                        VocationEntity::getModifier,
+                        VocationEntity::getRemark,
+                        VocationEntity::getVocationType,
+                        VocationEntity::getDate,
+                        VocationEntity::getUser,
+                        VocationEntity::getChargeUser,
+                        VocationEntity::getStartDate,
+                        VocationEntity::getEndDate,
+                        VocationEntity::getReason,
+                        VocationEntity::getCount,
+                        VocationEntity::getCompliance,
+                        VocationEntity::getViolationReason
+                )
+        );
+    }
+
+    private List<VocationSummaryResponse> vocationSummaryList(VocationRequest request) {
+        final List<VocationResponse> rl = formatVocationList(vocationMapper.selectList(
+                vocationLambda(request)
+                        .select(
+                                VocationEntity::getUser,
+                                VocationEntity::getCompliance,
+                                VocationEntity::getCount
+                        )
+        ));
+        Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().collect(
+                Collectors.groupingBy(
+                        VocationResponse::getDepartment
+                )
+        );
+        return vocationPartitionList.values()
+                .stream().map(l -> {
+                    VocationResponse t = CollUtil.getFirst(l);
+                    final VocationSummaryResponse r = new VocationSummaryResponse()
+                            .setDepartment(t.getDepartment())
+                            .setDepartmentFormat(t.getDepartmentFormat())
+                            .setSumUserCount(new BigDecimal(l.stream().map(VocationResponse::getUser).distinct().count()))
+                            .setSumCount(l.stream().map(VocationResponse::getCount).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .setSumViolationCount(new BigDecimal(l.stream().filter(t1 -> !Boolean.TRUE.equals(t1.getCompliance())).count()))
+                            .setSumComplianceCount(new BigDecimal(l.stream().filter(t1 -> Boolean.TRUE.equals(t1.getCompliance())).count()))
+                            .setSum(new BigDecimal(l.size()))
+                            .setComplianceRate(new BigDecimal(l.stream().filter(t1 -> Boolean.TRUE.equals(t1.getCompliance())).count()).divide(
+                                    new BigDecimal(l.size()), 4, RoundingMode.HALF_UP
+                            ));
+                    return r
+                            .setSumUserCountFormat(NumberUtil.formatIntTh(r.getSumUserCount()))
+                            .setSumCountFormat(NumberUtil.format(r.getSumCount()))
+                            .setSumViolationCountFormat(NumberUtil.formatIntTh(r.getSumViolationCount()))
+                            .setSumComplianceCountFormat(NumberUtil.formatIntTh(r.getSumComplianceCount()))
+                            .setSumFormat(NumberUtil.formatIntTh(r.getSumCount()))
+                            .setComplianceRateFormat(NumberUtil.formatPercent(r.getComplianceRate()))
+                            ;
+                }).collect(Collectors.toList());
+    }
+
+    private List<VocationResponse> formatVocationList(List<VocationEntity> list) {
+        final List<VocationResponse> rl = INDUSTRY_INSTANCE.vocationList(list);
+        List<String> userIdList = Stream.of(
+                        rl.stream().map(VocationResponse::getUser).filter(StrUtil::isNotBlank),
+                        rl.stream().map(VocationResponse::getChargeUser).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName, MpUserEntity::getDepartment, MpUserEntity::getProfession),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        final Map<String, MpUserEntity> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> t, (t, t1) -> t1));
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getVocationType())).collect(Collectors.toList()),
+                VocationResponse::getVocationType,
+                l -> paramDao.listByCategoryId("vocationType"),
+                (t, r) -> t.getVocationType().equals(r.getValue()),
+                (t, r) -> t.setVocationTypeFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getUser())).collect(Collectors.toList()),
+                VocationResponse::getUser,
+                l1 -> userList,
+                (t, r) -> t.getUser().equals(r.getId()),
+                (t, r) -> {
+                    t.setUserFormat(r.getName())
+                            .setProfession(r.getProfession())
+                            .setDepartment(r.getDepartment())
+                    ;
+                }
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getDepartment())).collect(Collectors.toList()),
+                VocationResponse::getDepartment,
+                l -> paramDao.listByCategoryId("department"),
+                (t, r) -> t.getDepartment().equals(r.getValue()),
+                (t, r) -> t.setDepartmentFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getProfession())).collect(Collectors.toList()),
+                VocationResponse::getProfession,
+                l -> paramDao.listByCategoryId("profession"),
+                (t, r) -> t.getProfession().equals(r.getValue()),
+                (t, r) -> t.setProfessionFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getChargeUser())).collect(Collectors.toList()),
+                VocationResponse::getChargeUser,
+                l1 -> userList,
+                (t, r) -> t.getChargeUser().equals(r.getId()),
+                (t, r) -> {
+                    t.setChargeUserFormat(r.getName());
+                }
+        );
+        for (VocationResponse t : rl) {
+            t.setComplianceFormat(Boolean.TRUE.equals(t.getCompliance()) ? "YES" : "NO");
+        }
+        return rl;
+    }
+
+    /**
+     * 请假列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MpAccountQueryPageRequest}
+     * @return {@link PageResult <VocationResponse>}
+     */
+    @GetMapping("admin/vocation/page")
+    public PageResult<VocationResponse> vocationAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute VocationPageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "vocationView".equals(t.getRoleCode()) || "vocationManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            request.getData().setQueryUserId(u.getUserId());
+        }
+        if (isNotBlank(request.getData().getDepartment())) {
+            List<String> uesrIdList = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().eq(MpUserEntity::getDepartment, request.getData().getDepartment())
+                            .select(MpUserEntity::getId))
+                    .stream().map(AbstractPrimaryKey::getId)
+                    .collect(Collectors.toList());
+            if (CollUtil.isEmpty(uesrIdList)) {
+                return new PageResult<>();
+            } else {
+                request.getData().setUserIdList(uesrIdList);
+            }
+        }
+        final PageResult<VocationEntity> page = DatabaseUtil.page(request, this::vocationList);
+        final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(
+                page.getTotal(),
+                formatVocationList(page.getList())
+                        .stream()
+                        .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 请假汇总列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link VocationRequest}
+     * @return {@link ListResult<VocationSummaryResponse>}
+     */
+    @GetMapping("admin/vocation/summary-list")
+    public ListResult<VocationSummaryResponse> vocationAdminSummaryList(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute VocationRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final List<VocationSummaryResponse> rl = vocationSummaryList(request);
+        VocationSummaryResponse r = new VocationSummaryResponse()
+                .setDepartment(null)
+                .setDepartmentFormat("汇总")
+                .setSumUserCount(BigDecimal.ZERO)
+                .setSumCount(BigDecimal.ZERO)
+                .setSumViolationCount(BigDecimal.ZERO)
+                .setSumComplianceCount(BigDecimal.ZERO)
+                .setSum(BigDecimal.ZERO)
+                .setComplianceRate(BigDecimal.ZERO);
+        rl.forEach(t -> {
+            r.setSumUserCount(r.getSumUserCount().add(t.getSumUserCount()))
+                    .setSumCount(r.getSumCount().add(t.getSumCount()))
+                    .setSumViolationCount(r.getSumViolationCount().add(t.getSumViolationCount()))
+                    .setSumComplianceCount(r.getSumComplianceCount().add(t.getSumComplianceCount()))
+                    .setSum(r.getSum().add(t.getSum()))
+                    .setComplianceRate(r.getComplianceRate().add(t.getComplianceRate()))
+            ;
+        });
+        r.setComplianceRate(r.getComplianceRate().divide(new BigDecimal(rl.size()), 4, RoundingMode.HALF_UP));
+        rl.add(r
+                .setSumUserCountFormat(NumberUtil.formatIntTh(r.getSumUserCount()))
+                .setSumCountFormat(NumberUtil.format(r.getSumCount()))
+                .setSumViolationCountFormat(NumberUtil.formatIntTh(r.getSumViolationCount()))
+                .setSumComplianceCountFormat(NumberUtil.formatIntTh(r.getSumComplianceCount()))
+                .setSumFormat(NumberUtil.formatIntTh(r.getSumCount()))
+                .setComplianceRateFormat(NumberUtil.formatPercent(r.getComplianceRate())));
+        return new ListResult<>(
+                rl.stream()
+                        .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 请假（公开）
+     *
+     * @param request {@link VocationRequest}
+     * @return {@link DataResult <VocationResponse>}
+     */
+    @GetMapping("vocation")
+    public DataResult<VocationResponse> vocation(
+            @ModelAttribute VocationRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatVocationList(vocationList(request))), new VocationResponse())
         );
     }
 

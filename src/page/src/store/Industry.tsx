@@ -1012,6 +1012,66 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           value: 'photoCount',
           label: '照片数量',
         },
+        {
+          value: 'vocationRecord',
+          label: '请假记录',
+        },
+        {
+          value: 'vocationSummary',
+          label: '请假汇总分析',
+        },
+        {
+          value: 'vocationType',
+          label: '请假类型',
+        },
+        {
+          value: 'vocationDate',
+          label: '申请日期',
+        },
+        {
+          value: 'vocationUser',
+          label: '请假人',
+        },
+        {
+          value: 'vocationChargeUser',
+          label: '主管领导',
+        },
+        {
+          value: 'vocationStartDate',
+          label: '请假开始日期',
+        },
+        {
+          value: 'vocationEndDate',
+          label: '请假结束日期',
+        },
+        {
+          value: 'vocationReason',
+          label: '请假理由',
+        },
+        {
+          value: 'vocationDays',
+          label: '请假天数',
+        },
+        {
+          value: 'vocationCompliance',
+          label: '是否符合请假规定',
+        },
+        {
+          value: 'violationReason',
+          label: '不符合理由',
+        },
+        {
+          value: 'violationUserCount',
+          label: '请假人次',
+        },
+        {
+          value: 'violationViolationCount',
+          label: '不合格',
+        },
+        {
+          value: 'violationComplianceRate',
+          label: '合格率',
+        },
       ],
       'THA': [
         {
@@ -1985,6 +2045,66 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'photoCount',
           label: 'Photo count',
+        },
+        {
+          value: 'vocationRecord',
+          label: 'Ghi chú xin nghỉ',
+        },
+        {
+          value: 'vocationSummary',
+          label: 'Phân tích báo cáo xin nghỉ',
+        },
+        {
+          value: 'vocationType',
+          label: 'Phân loại xin nghỉ',
+        },
+        {
+          value: 'vocationDate',
+          label: 'Ngày xin nghỉ',
+        },
+        {
+          value: 'vocationUser',
+          label: 'Người xin nghỉ',
+        },
+        {
+          value: 'vocationChargeUser',
+          label: 'Chủ quản ca',
+        },
+        {
+          value: 'vocationStartDate',
+          label: 'Ngày bắt đầu nghỉ',
+        },
+        {
+          value: 'vocationEndDate',
+          label: 'Ngày kết thúc',
+        },
+        {
+          value: 'vocationReason',
+          label: ' Lý do',
+        },
+        {
+          value: 'vocationDays',
+          label: ' Tổng số  ngày nghỉ',
+        },
+        {
+          value: 'vocationCompliance',
+          label: 'Hợp lệ/ Không hợp lệ',
+        },
+        {
+          value: 'violationReason',
+          label: 'Lý do nghỉ không hợp lệ',
+        },
+        {
+          value: 'violationUserCount',
+          label: 'Số lần xin nghỉ',
+        },
+        {
+          value: 'violationViolationCount',
+          label: 'không hợp lệ ',
+        },
+        {
+          value: 'violationComplianceRate',
+          label: 'Tỷ lệ hợp lệ',
         },
       ]
     },

@@ -98,7 +98,7 @@ export default ({mode}) => {
               port: 9000,
               open: true,
               proxy: {
-                '^/api/.*': {
+                '^/third/.*': {
                   target: 'http://localhost',
                   changeOrigin: true,
                   rewrite: (path: string) => path

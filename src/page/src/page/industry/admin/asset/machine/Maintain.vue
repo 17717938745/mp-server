@@ -215,10 +215,6 @@ const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
 const user = store.state.user
 const formRef: Ref = ref(null)
-const activeNames = ref(['0'])
-const handleChange = (val: string[]) => {
-  console.log(`collapse change: ${val}`)
-}
 const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'expand',

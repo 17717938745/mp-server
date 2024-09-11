@@ -161,4 +161,8 @@ public class ParamResponse implements Serializable {
      * 原因分析
      */
     private List<ParamConfigResponse> troubleReasonList;
+    /**
+     * 请假类型
+     */
+    private List<ParamConfigResponse> vocationTypeList;
 }
