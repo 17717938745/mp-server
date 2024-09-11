@@ -4274,7 +4274,7 @@ public class DousonController {
                     .setComplianceRate(r.getComplianceRate().add(t.getComplianceRate()))
             ;
         });
-        r.setComplianceRate(r.getComplianceRate().divide(new BigDecimal(rl.size()), 4, RoundingMode.HALF_UP));
+        r.setComplianceRate(rl.size() <= 0 ? BigDecimal.ZERO : r.getComplianceRate().divide(new BigDecimal(rl.size()), 4, RoundingMode.HALF_UP));
         rl.add(r
                 .setSumUserCountFormat(NumberUtil.formatIntTh(r.getSumUserCount()))
                 .setSumCountFormat(NumberUtil.format(r.getSumCount()))
