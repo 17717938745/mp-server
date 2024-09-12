@@ -92,6 +92,19 @@
           >
           </el-date-picker>
         </el-form-item>
+        <el-form-item prop="equipmentId" :label="store.state.label.equipmentNo">
+          <el-select v-model="formData.equipmentId" clearable filterable placeholder="Please select">
+            <el-option
+                v-for="item in config.equipmentNoList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="toolDescribe" :label="store.state.label.toolDescribe">
+          <el-input type="textarea" :rows=4 v-model="formData.toolDescribe"/>
+        </el-form-item>
         <el-form-item prop="userId" :label="store.state.label.user">
           <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
             <el-option
@@ -167,16 +180,15 @@ import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Printer, Search,} from '@element-plus/icons-vue'
-import {useRouter, useRoute,} from 'vue-router'
+import {useRoute, useRouter,} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
 import {includes} from '@/util/ArrayUtil'
-import {ListResult, PageResult} from '@/typing/ma/System'
+import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../../component/ViewList.vue'
 import ImageUpload from '../../../component/ImageUpload.vue'
-import FileUpload from '../../../component/FileUpload.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -184,10 +196,6 @@ const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
 const user = store.state.user
 const formRef: Ref = ref(null)
-const activeNames = ref(['0'])
-const handleChange = (val: string[]) => {
-  console.log(`collapse change: ${val}`)
-}
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {
@@ -205,6 +213,8 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'index', labelKey: 'index', width: 80,},
   {value: 'reportDate', labelKey: 'date', width: 100,},
+  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
+  {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 151,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 151,},
   {value: 'accidentDescribe', labelKey: 'accidentQualityDescribe', width: 276, showOverflow: true,},
@@ -239,6 +249,8 @@ const defaultFormData = {
   reason: '',
   reasonList: [],
   solve: '',
+  equipmentId: '',
+  toolDescribe: '',
   improveDescribe: '',
   opinion: '',
   valid: false,
@@ -272,6 +284,7 @@ const state = reactive({
   formSave: false,
   config: {
     troubleReasonList: [],
+    equipmentNoList: [],
   },
   userOptionList: new Array<any>(),
   formVisible: false,
@@ -289,6 +302,7 @@ Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
       'troubleReason',
+      'equipmentNo',
     ]
   }),
   httpGet(`system/user/config/list`, {}),

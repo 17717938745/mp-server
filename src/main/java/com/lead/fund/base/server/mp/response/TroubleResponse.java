@@ -88,4 +88,13 @@ public class TroubleResponse implements Serializable {
      * 改善后的文件列表
      */
     private List<FileModel> improveFileList = new ArrayList<>();
+    /**
+     * 维修ID
+     */
+    private String equipmentId;
+    private String equipmentNo;
+    /**
+     * 刀具描述
+     */
+    private String toolDescribe;
 }

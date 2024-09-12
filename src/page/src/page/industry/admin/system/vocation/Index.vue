@@ -228,7 +228,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'operator',
     labelKey: 'viewAndEdit',
-    width: 312,
+    width: 245,
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 51},
@@ -237,13 +237,13 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'userFormat', labelKey: 'vocationUser', width: 189},
   {value: 'chargeUserFormat', labelKey: 'vocationChargeUser', width: 189},
   {value: 'departmentFormat', labelKey: 'department', width: 168},
-  {value: 'professionFormat', labelKey: 'profession', width: 268},
+  {value: 'professionFormat', labelKey: 'profession', width: 189},
   {value: 'startDate', labelKey: 'vocationStartDate', width: 102},
   {value: 'endDate', labelKey: 'vocationEndDate', width: 102},
-  {value: 'reason', labelKey: 'vocationReason', width: 168},
+  {value: 'reason', labelKey: 'vocationReason', width: 216},
   {value: 'count', labelKey: 'vocationDays', width: 96},
-  {value: 'complianceFormat', labelKey: 'vocationCompliance', width: 96},
-  {value: 'violationReason', labelKey: 'violationReason', width: 96},
+  {value: 'complianceFormat', labelKey: 'vocationCompliance', width: 76},
+  {value: 'violationReason', labelKey: 'violationReason', width: 168, showOverflow: true},
 ])
 /*
 let str = ''

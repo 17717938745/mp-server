@@ -3167,6 +3167,17 @@ public class DousonController {
                     }
                 }
         );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getEquipmentId())).collect(Collectors.toList()),
+                TroubleResponse::getEquipmentId,
+                l1 -> equipmentMapper.selectList(new LambdaQueryWrapper<EquipmentEntity>()
+                        .in(EquipmentEntity::getId, l1)),
+                (t, r) -> t.getEquipmentId().equals(r.getId()),
+                (t, r) -> {
+                    t.setEquipmentNo(r.getEquipmentNo())
+                    ;
+                }
+        );
         Map<Object, String> troubleReasonMap = paramDao.listByCategoryId("troubleReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
         for (TroubleResponse t : list) {
             t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));

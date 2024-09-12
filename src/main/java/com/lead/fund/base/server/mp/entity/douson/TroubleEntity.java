@@ -5,6 +5,7 @@ import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdministrator;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -80,4 +81,26 @@ public class TroubleEntity extends AbstractAdministrator {
      */
     @FieldRemark(value = "是否有效", defaultValue = "0")
     private Boolean valid;
+    /**
+     * 维修ID
+     */
+    @FieldRemark(value = "维修ID")
+    private String equipmentId;
+    /**
+     * 刀具描述
+     */
+    @FieldRemark(value = "刀具描述")
+    private String toolDescribe;
+//    /**
+//     * 奖惩人员
+//     */
+//    @FieldRemark(value = "奖惩人员")
+//    @Size(max = 64, message = "奖惩人员")
+//    private String opinionUser;
+//    /**
+//     * 奖惩金额
+//     */
+//    @FieldRemark(value = "奖惩金额")
+//    @Size(max = 64, message = "奖惩金额")
+//    private BigDecimal opinionAmount;
 }

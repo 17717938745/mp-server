@@ -713,6 +713,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '机（设备）描述',
         },
         {
+          value: 'toolDescribe',
+          label: '刀具描述',
+        },
+        {
           value: 'designNumberPhoto',
           label: '产品图号',
         },
@@ -1749,6 +1753,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'deviceDescribe',
           label: 'Máy ( Thiết bị & công cụ )',
+        },
+        {
+          value: 'toolDescribe',
+          label: 'Tool describe',
         },
         {
           value: 'designNumberPhoto',

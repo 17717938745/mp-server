@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.io.Serializable;
@@ -95,4 +96,12 @@ public class TroubleRequest implements Serializable {
      * 改善后的文件列表
      */
     private List<FileModel> improveFileList = new ArrayList<>();
+    /**
+     * 维修ID
+     */
+    private String equipmentId;
+    /**
+     * 刀具描述
+     */
+    private String toolDescribe;
 }
