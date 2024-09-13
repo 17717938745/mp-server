@@ -160,6 +160,8 @@ const idKey = 'improveId'
 const formRef: Ref = ref(null)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'reportDate', labelKey: 'date', width: 100,},
+  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
+  {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 116,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 88,},
   {value: 'accidentDescribe', labelKey: 'accidentImproveDescribe', width: 276, showOverflow: true,},

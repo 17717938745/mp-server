@@ -80,4 +80,14 @@ public class ImproveEntity extends AbstractAdministrator {
      */
     @FieldRemark(value = "是否有效", defaultValue = "0")
     private Boolean valid;
+    /**
+     * 维修ID
+     */
+    @FieldRemark(value = "维修ID")
+    private String equipmentId;
+    /**
+     * 刀具描述
+     */
+    @FieldRemark(value = "刀具描述")
+    private String toolDescribe;
 }

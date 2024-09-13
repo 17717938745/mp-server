@@ -92,19 +92,6 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="equipmentId" :label="store.state.label.equipmentNo">
-          <el-select v-model="formData.equipmentId" clearable filterable placeholder="Please select">
-            <el-option
-                v-for="item in config.equipmentNoList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="toolDescribe" :label="store.state.label.toolDescribe">
-          <el-input type="textarea" :rows=4 v-model="formData.toolDescribe"/>
-        </el-form-item>
         <el-form-item prop="userId" :label="store.state.label.user">
           <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
             <el-option
@@ -213,8 +200,8 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'index', labelKey: 'index', width: 80,},
   {value: 'reportDate', labelKey: 'date', width: 100,},
-  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
-  {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},
+  // {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
+  // {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 151,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 151,},
   {value: 'accidentDescribe', labelKey: 'accidentQualityDescribe', width: 276, showOverflow: true,},
@@ -302,7 +289,7 @@ Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
       'troubleReason',
-      'equipmentNo',
+      // 'equipmentNo',
     ]
   }),
   httpGet(`system/user/config/list`, {}),

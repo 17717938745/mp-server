@@ -3421,6 +3421,17 @@ public class DousonController {
                     }
                 }
         );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getEquipmentId())).collect(Collectors.toList()),
+                ImproveResponse::getEquipmentId,
+                l1 -> equipmentMapper.selectList(new LambdaQueryWrapper<EquipmentEntity>()
+                        .in(EquipmentEntity::getId, l1)),
+                (t, r) -> t.getEquipmentId().equals(r.getId()),
+                (t, r) -> {
+                    t.setEquipmentNo(r.getEquipmentNo())
+                    ;
+                }
+        );
         Map<Object, String> improveReasonMap = paramDao.listByCategoryId("improveReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
         for (ImproveResponse t : list) {
             t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));
@@ -3608,8 +3619,8 @@ public class DousonController {
     private List<EquipmentResponse> formatEquipmentList(List<EquipmentEntity> l) {
         final List<EquipmentResponse> list = INDUSTRY_INSTANCE.equipmentList(l);
         List<String> userIdList = Stream.of(
-                        list.stream().map(EquipmentResponse::getUseUserList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank),
-                        list.stream().map(EquipmentResponse::getChargeUserList).flatMap(t -> t.stream())
+                        list.stream().map(EquipmentResponse::getUseUserList).flatMap(Collection::stream).filter(StrUtil::isNotBlank),
+                        list.stream().map(EquipmentResponse::getChargeUserList).flatMap(Collection::stream)
                 )
                 .flatMap(t -> t)
                 .distinct()
@@ -3869,7 +3880,7 @@ public class DousonController {
     private List<MaintainResponse> formatMaintainList(List<MaintainEntity> l) {
         final List<MaintainResponse> list = INDUSTRY_INSTANCE.maintainList(l);
         List<String> userIdList = Stream.of(
-                        list.stream().map(MaintainResponse::getPartyUserList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
+                        list.stream().map(MaintainResponse::getPartyUserList).flatMap(Collection::stream).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
@@ -4285,7 +4296,7 @@ public class DousonController {
                     .setComplianceRate(r.getComplianceRate().add(t.getComplianceRate()))
             ;
         });
-        r.setComplianceRate(rl.size() <= 0 ? BigDecimal.ZERO : r.getComplianceRate().divide(new BigDecimal(rl.size()), 4, RoundingMode.HALF_UP));
+        r.setComplianceRate(rl.isEmpty() ? BigDecimal.ZERO : r.getComplianceRate().divide(new BigDecimal(rl.size()), 4, RoundingMode.HALF_UP));
         rl.add(r
                 .setSumUserCountFormat(NumberUtil.formatIntTh(r.getSumUserCount()))
                 .setSumCountFormat(NumberUtil.format(r.getSumCount()))
@@ -5234,7 +5245,7 @@ public class DousonController {
         List<DeviceCheckLedgerResponse> rl = INDUSTRY_INSTANCE.deviceCheckLedgerList(list);
         final List<String> userIdList = Stream.of(
                         rl.stream().map(DeviceCheckLedgerResponse::getCreator).filter(StrUtil::isNotBlank),
-                        rl.stream().map(DeviceCheckLedgerResponse::getBorrowerList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
+                        rl.stream().map(DeviceCheckLedgerResponse::getBorrowerList).flatMap(Collection::stream).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
