@@ -58,8 +58,8 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="data.userId" clearable filterable placeholder="Please select">
+        <el-form-item prop="userIdList" :label="store.state.label.partyUser">
+          <el-select v-model="data.userIdList" multiple clearable filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"
                 :key="item.value"
@@ -112,9 +112,9 @@
         <el-form-item prop="improveFileList" :label="`${store.state.label.improveImproveFile}(${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
           <file-upload :fileList="data.improveFileList" :maxSize="Number(`${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
         </el-form-item>
-        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
+<!--        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
           <el-input type="textarea" :rows=4 v-model="data.improveDescribe"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="opinion" :label="store.state.label.improveOpinion">
           <el-input type="textarea" :rows=4 v-model="data.opinion"/>
         </el-form-item>
@@ -167,7 +167,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'accidentDescribe', labelKey: 'accidentImproveDescribe', width: 276, showOverflow: true,},
   {value: 'reasonFormat', labelKey: 'improveReason', width: 276, showOverflow: true,},
   {value: 'solve', labelKey: 'improveSolve', width: 276, showOverflow: true,},
-  {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
+  // {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'improveOpinion', width: 128,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
   {value: 'photoList', labelKey: 'improvePhoto', width: 128, type: ValueType.Image,},
@@ -178,6 +178,7 @@ const columnConfigList = ref<ViewConfig[]>([
 const data = ref({
   reportDate: formatDate(new Date(), 'yyyy-MM-dd'),
   userId: '',
+  userIdList: [],
   directLeader: '',
   accidentDescribe: '',
   reason: '',
@@ -209,6 +210,7 @@ const state = reactive({
     reasonList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],
     photoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
     fileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
+    userIdList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],
     improvePhotoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
     improveFileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
   },

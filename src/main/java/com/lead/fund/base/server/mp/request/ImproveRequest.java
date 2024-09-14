@@ -48,6 +48,7 @@ public class ImproveRequest implements Serializable {
      * 当事人
      */
     private String userId;
+    private List<String> userIdList;
     /**
      * 查询用户ID
      */

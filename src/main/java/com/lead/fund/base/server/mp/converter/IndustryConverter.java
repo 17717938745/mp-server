@@ -445,6 +445,7 @@ public interface IndustryConverter extends Serializable {
     List<ImproveResponse> improveList(List<ImproveEntity> l);
 
     @Mapping(target = "improveId", source = "id")
+    @Mapping(target = "userIdList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(t.getUserId()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     ImproveResponse improve(ImproveEntity t);
 
     @Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")

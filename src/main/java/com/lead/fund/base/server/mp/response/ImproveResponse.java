@@ -40,6 +40,7 @@ public class ImproveResponse implements Serializable {
      * 当事人
      */
     private String userId;
+    private List<String> userIdList;
     private String userIdFormat;
     /**
      * 上级领导

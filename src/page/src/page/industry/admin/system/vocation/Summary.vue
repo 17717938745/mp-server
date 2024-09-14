@@ -52,9 +52,9 @@ const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
   {value: 'departmentFormat', labelKey: 'department', width: 168},
-  {value: 'sumUserCountFormat', labelKey: 'violationUserCount', width: 189},
-  {value: 'sumCountFormat', labelKey: 'vocationDays', width: 189},
-  {value: 'sumViolationCountFormat', labelKey: 'violationViolationCount', width: 189},
+  {value: 'sumUserCountFormat', labelKey: 'violationUserCount', width: 123},
+  {value: 'sumCountFormat', labelKey: 'vocationDays', width: 128},
+  {value: 'sumViolationCountFormat', labelKey: 'violationViolationCount', width: 110},
   {value: 'complianceRateFormat', labelKey: 'violationComplianceRate', width: 189},
 ])
 const state = reactive({

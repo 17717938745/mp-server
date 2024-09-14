@@ -9,6 +9,7 @@ import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
+import static com.lead.fund.base.common.util.StrUtil.lineEmpty2None;
 import static com.lead.fund.base.server.mp.cons.MpConst.STRING_LIST_ENGINEER_USER_ROLE_CODE_LIST;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_OPERATOR_OTHER_NOT_ALLOW;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_ORDER_REPEAT;
@@ -3267,6 +3268,7 @@ public class DousonController {
         ImproveEntity e;
         improveMapper.insert(e = (ImproveEntity) INDUSTRY_INSTANCE.improve(request)
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setUserId("," + String.join(",", request.getUserIdList()) + ",")
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
         mergeRelevance(request, e);
@@ -3293,6 +3295,7 @@ public class DousonController {
         }
         ImproveEntity e = (ImproveEntity) INDUSTRY_INSTANCE.improve(request)
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
+                .setUserId("," + String.join(",", request.getUserIdList()) + ",")
                 .setModifier(u.getUserId());
         LambdaUpdateWrapper<ImproveEntity> lambda = new LambdaUpdateWrapper<ImproveEntity>()
                 .eq(ImproveEntity::getId, e.getId());
@@ -3355,11 +3358,11 @@ public class DousonController {
             DatabaseUtil.or(lambda, request.getReasonList(), (lam, l) -> lam.in(ImproveEntity::getReason, l));
         }
         if (isNotBlank(request.getUserId())) {
-            lambda.eq(ImproveEntity::getUserId, request.getUserId());
+            lambda.like(ImproveEntity::getUserId, "," + request.getUserId() + ",");
         }
         if (isNotBlank(request.getQueryUserId())) {
             lambda.and(true, lam -> {
-                lam.eq(ImproveEntity::getUserId, request.getQueryUserId())
+                lam.like(ImproveEntity::getUserId, "," + request.getUserId() + ",")
                         .or(true, lam1 -> lam1.eq(ImproveEntity::getDirectLeader, request.getQueryUserId()));
             });
         }
@@ -3372,7 +3375,7 @@ public class DousonController {
     private List<ImproveResponse> formatImproveList(List<ImproveEntity> l) {
         final List<ImproveResponse> list = INDUSTRY_INSTANCE.improveList(l);
         List<String> userIdList = Stream.of(
-                        list.stream().map(ImproveResponse::getUserId).filter(StrUtil::isNotBlank),
+                        list.stream().map(ImproveResponse::getUserIdList).flatMap(Collection::stream).filter(StrUtil::isNotBlank),
                         list.stream().map(ImproveResponse::getDirectLeader).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
@@ -3383,6 +3386,7 @@ public class DousonController {
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
+        final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName));
         MultitaskUtil.supplementList(
                 list.stream().filter(t -> isNotBlank(t.getUserId())).collect(Collectors.toList()),
                 ImproveResponse::getUserId,
@@ -3436,6 +3440,7 @@ public class DousonController {
         for (ImproveResponse t : list) {
             t.setReasonList(Arrays.stream(t.getReason().split(",", -1)).filter(StrUtil::isNotBlank).collect(Collectors.toList()));
             t.setReasonFormat(t.getReasonList().stream().filter(StrUtil::isNotBlank).map(t1 -> improveReasonMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+            t.setUserIdFormat(t.getUserIdList().stream().filter(StrUtil::isNotBlank).map(t1 -> um.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
         }
         return list;
     }

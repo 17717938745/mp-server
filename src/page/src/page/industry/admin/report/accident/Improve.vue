@@ -118,18 +118,8 @@
         <el-form-item prop="toolDescribe" :label="store.state.label.toolDescribe">
           <el-input type="textarea" :rows=4 v-model="formData.toolDescribe"/>
         </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
-            <el-option
-                v-for="item in userOptionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
+        <el-form-item prop="userIdList" :label="store.state.label.partyUser">
+          <el-select v-model="formData.userIdList" multiple clearable filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"
                 :key="item.value"
@@ -182,9 +172,9 @@
         <el-form-item prop="improveFileList" :label="`${store.state.label.improveImproveFile}(${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
           <file-upload :fileList="formData.improveFileList" :maxSize="Number(`${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
         </el-form-item>
-        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
+<!--        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
           <el-input type="textarea" :rows=4 v-model="formData.improveDescribe"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="opinion" :label="store.state.label.improveOpinion">
           <el-input type="textarea" :rows=4 v-model="formData.opinion"/>
         </el-form-item>
@@ -247,15 +237,15 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 80,},
-  {value: 'reportDate', labelKey: 'date', width: 100,},
-  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
-  {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},
+  {value: 'reportDate', labelKey: 'date', width: 108,},
+  {value: 'equipmentNo', labelKey: 'equipmentNo', width: 118,},
+  {value: 'toolDescribe', labelKey: 'toolDescribe', width: 189,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 116,},
-  {value: 'directLeaderFormat', labelKey: 'directLeader', width: 88,},
-  {value: 'accidentDescribe', labelKey: 'accidentImproveDescribe', width: 276, showOverflow: true,},
+  {value: 'directLeaderFormat', labelKey: 'directLeader', width: 108,},
+  {value: 'accidentDescribe', labelKey: 'accidentImproveDescribe', width: 289, showOverflow: true,},
   {value: 'reasonFormat', labelKey: 'improveReason', width: 276, showOverflow: true,},
   {value: 'solve', labelKey: 'improveSolve', width: 276, showOverflow: true,},
-  {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
+  // {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'improveOpinion', width: 128,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
   {value: 'photoList', labelKey: 'improvePhoto', width: 128, type: ValueType.Image,},
@@ -282,6 +272,7 @@ const handleShowPrintDetail = (d: any) => {
 const defaultFormData = {
   reportDate: formatDate(new Date(), 'yyyy-MM-dd'),
   userId: user.userId,
+  userIdList: [user.userId],
   directLeader: '',
   equipmentId: '',
   toolDescribe: '',
@@ -328,7 +319,6 @@ const state = reactive({
   formVisible: false,
   formRuleList: {
     reportDate: [{required: true, message: 'Please check', trigger: 'blur'}],
-    userId: [{required: true, message: 'Please check', trigger: 'blur'}],
     directLeader: [{required: true, message: 'Please check', trigger: 'blur'}],
     accidentDescribe: [{required: true, message: 'Please check', trigger: 'blur'}],
     // solve: [{required: true, message: 'Please check', trigger: 'blur'}],
@@ -337,6 +327,7 @@ const state = reactive({
     reasonList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],
     photoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
     fileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
+    userIdList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],
     improvePhotoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
     improveFileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6}],
   },

@@ -37,7 +37,7 @@ public class ImproveEntity extends AbstractAdministrator {
      * 当事人
      */
     @FieldRemark(value = "当事人")
-    @Size(max = 64, message = "当事人")
+    @Size(max = 1024, message = "当事人")
     private String userId;
     /**
      * 上级领导
