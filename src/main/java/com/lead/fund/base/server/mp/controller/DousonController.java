@@ -222,6 +222,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -4138,9 +4139,9 @@ public class DousonController {
                                 VocationEntity::getCount
                         )
         ));
-        Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().collect(
+        Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().filter(Objects::nonNull).collect(
                 Collectors.groupingBy(
-                        t -> defaultIfBlank(t.getDepartment(), t.getUserFormat())
+                        t -> defaultIfBlank(t.getDepartment(), "Depart is empty...")
                 )
         );
         return vocationPartitionList.values()
