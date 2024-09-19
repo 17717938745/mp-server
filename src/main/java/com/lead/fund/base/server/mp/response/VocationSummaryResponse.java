@@ -15,12 +15,11 @@ import lombok.experimental.Accessors;
  * @version 1.0
  * @date 2023-08-14 10:53
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class VocationSummaryResponse extends AbstractAdministratorModel {
+public class VocationSummaryResponse {
 
     private static final long serialVersionUID = 5945041243096001178L;
     /**

@@ -4139,14 +4139,18 @@ public class DousonController {
                                 VocationEntity::getCount
                         )
         ));
-        Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().filter(Objects::nonNull).collect(
+        Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().collect(
                 Collectors.groupingBy(
-                        t -> defaultIfBlank(t.getDepartment(), "Depart is empty...")
+                        VocationResponse::getDepartment
                 )
         );
         return vocationPartitionList.values()
                 .stream().map(l -> {
-                    VocationResponse t = CollUtil.getFirst(l);
+                    final VocationResponse t = CollUtil.getFirst(l);
+                    if (null == t && isBlank(t.getDepartment())) {
+                        log.warn("Vocation is null: {}", t);
+                        return null;
+                    }
                     final VocationSummaryResponse r = new VocationSummaryResponse()
                             .setDepartment(t.getDepartment())
                             .setDepartmentFormat(t.getDepartmentFormat())
@@ -4166,7 +4170,7 @@ public class DousonController {
                             .setSumFormat(NumberUtil.formatIntTh(r.getSumCount()))
                             .setComplianceRateFormat(NumberUtil.formatPercent(r.getComplianceRate()))
                             ;
-                }).collect(Collectors.toList());
+                }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private List<VocationResponse> formatVocationList(List<VocationEntity> list) {
@@ -4228,6 +4232,12 @@ public class DousonController {
         );
         for (VocationResponse t : rl) {
             t.setComplianceFormat(Boolean.TRUE.equals(t.getCompliance()) ? "YES" : "NO");
+            if (isBlank(t.getDepartmentFormat())) {
+                t.setDepartmentFormat(t.getUserFormat());
+            }
+            if (isBlank(t.getDepartment())) {
+                t.setDepartment(t.getUser());
+            }
         }
         return rl;
     }
