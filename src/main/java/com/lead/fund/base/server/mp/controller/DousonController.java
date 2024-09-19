@@ -4140,7 +4140,7 @@ public class DousonController {
         ));
         Map<String, List<VocationResponse>> vocationPartitionList = rl.stream().collect(
                 Collectors.groupingBy(
-                        VocationResponse::getDepartment
+                        t -> defaultIfBlank(t.getDepartment(), t.getUserFormat())
                 )
         );
         return vocationPartitionList.values()
