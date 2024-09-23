@@ -3,7 +3,7 @@
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 595px;">
       <h1 style="text-align: center;">
         <span style="font-size: 36px;">
-          EHS安全 An toànEHS
+          质量事故报告 Báo cáo sự cố chất lượng
             <el-icon style="vertical-align: middle" @click="handleCopyLink">
               <document-copy/>
             </el-icon>
