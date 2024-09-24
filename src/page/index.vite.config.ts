@@ -79,6 +79,15 @@ const commonConfig = {
           href: '/third/element-plus@2.2.6/dist/index.css',
         }
       },
+    },
+    reportPlusCssModule = {
+      htmlTag: {
+        tag: 'link',
+        attrs: {
+          rel: 'stylesheet',
+          href: '/third/css/report.css',
+        }
+      },
     }
 
 // @ts-ignore
@@ -126,7 +135,7 @@ export default ({mode}) => {
               VuePlugin(),
               InjectExternals({
                 injectTo: '<!-- Custom placeholder for vite plugin inject externals -->',
-                modules: [vueModule, vueRouterModule, vuexModule, axiosModule]
+                modules: [vueModule, vueRouterModule, vuexModule, axiosModule, reportPlusCssModule]
               }),
               legacy({
                 targets: ['> 1%, last 1 version, ie >= 11'],
@@ -156,7 +165,7 @@ export default ({mode}) => {
                   InjectExternals({
                     injectTo: '<!-- Custom placeholder for vite plugin inject externals -->',
                     // @ts-ignore
-                    modules: [vueModule, vueRouterModule, vuexModule, axiosModule, elementPlusModule, elementPlusCssModule]
+                    modules: [vueModule, vueRouterModule, vuexModule, axiosModule, elementPlusModule, elementPlusCssModule, reportPlusCssModule]
                   }),
                 ],
               }
