@@ -5157,7 +5157,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         DeviceCheckLedgerEntity e = (DeviceCheckLedgerEntity) INDUSTRY_INSTANCE.deviceCheckLedger(request)
                 .setDueDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(DateUtil.parse(request.getCalibrationDate()), request.getCalibrationPeriod())))
-                .setBorrowDate(isBlank(request.getBorrower()) ? "" : defaultIfBlank(request.getBorrowDate(), DateUtil.day(new Date())))
+                .setBorrowDate(CollUtil.isEmpty(request.getBorrowerList()) ? "" : defaultIfBlank(request.getBorrowDate(), DateUtil.day(new Date())))
                 .setBorrower("," + String.join(",", request.getBorrowerList()) + ",")
                 .setModifier(u.getUserId());
         LambdaUpdateWrapper<DeviceCheckLedgerEntity> lambda = new LambdaUpdateWrapper<DeviceCheckLedgerEntity>()
