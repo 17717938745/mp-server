@@ -9,6 +9,7 @@
           size="large"
           :placeholder="commentaryPlaceHolder"
           :suffix-icon="ChatDotSquare"
+          :disabled="submitDisable"
           @keyup.enter="handleMerge"
       />
     </div>
@@ -23,8 +24,13 @@
         <div style="width: 100%; margin-bottom: 20px;">{{ d.content }}</div>
         <div style="color: #aaaaaa; width: 100%; display: flex; justify-content: space-between;">
           <span class="icon-text">{{ d.createdTimeFormat }}</span>
-          <span style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="props.prepareWriteCommentary ? props.prepareWriteCommentary(d) : handlePrepareWriteCommentary(d)">
-            <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>Comment
+          <span style="display: flex; align-items: center;">
+            <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="handleDelete(d)">
+              <el-icon style="margin-right: 5px;"><Delete/></el-icon>Delete
+            </span>
+            <span style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="props.prepareWriteCommentary ? props.prepareWriteCommentary(d) : handlePrepareWriteCommentary(d)">
+              <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>Comment
+            </span>
           </span>
         </div>
         <div :style="{
@@ -43,13 +49,13 @@
 import {onMounted, reactive, ref, toRefs, watch, watchEffect,} from 'vue'
 import {Store, useStore} from 'vuex'
 import {useRouter} from 'vue-router'
-import {httpGet, httpPutJson,} from '@/util/HttpUtil'
-import {ElMessage} from 'element-plus'
+import {httpGet, httpPutJson, httpDelete,} from '@/util/HttpUtil'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {DataResult, PageResult} from '@/typing/ma/System'
 import {StoreType} from '@/store/Industry'
 import Commentary from './Commentary.vue'
-import {CaretTop, CaretBottom, ChatDotSquare, ArrowDown, ArrowUp, UserFilled, EditPen, Edit,} from '@element-plus/icons-vue'
+import {CaretTop, Delete, ChatDotSquare, ArrowDown, ArrowUp, UserFilled, EditPen, Edit,} from '@element-plus/icons-vue'
 
 interface PropType {
   forumId?: string
@@ -69,6 +75,7 @@ const props = withDefaults(defineProps<PropType>(), {
 
 const store: Store<StoreType> = useStore()
 const storeState: StoreType = store.state
+const user = store.state.user
 const router = useRouter()
 const formData = ref({
   forumId: props.forumId,
@@ -79,7 +86,7 @@ const commentaryData = ref({
   total: 0,
   list: props.children,
 })
-
+const submitDisable = ref(false)
 onMounted(() => {
 })
 const count = ref(0)
@@ -92,15 +99,31 @@ const handlePrepareWriteCommentary = (d: any) => {
       commentaryRef.value.focus()
     },
     handleMerge = () => {
-      if (formData.value.content) {
+      if (formData.value.content && !submitDisable.value) {
+        submitDisable.value = true
         httpPutJson(`forum/commentary`, formData.value).then((r: any) => {
           ElMessage.success("Merge success")
+          submitDisable.value = false
           handleCommentaryTree()
         })
         .catch((r: any) => {
-          state.submitDisable = false
+          submitDisable.value = false
         })
       }
+    },
+    handleDelete = (row: any) => {
+      ElMessageBox.confirm('Confirm Delete?', 'Tips', {
+        type: 'warning',
+      }).then(() => {
+        httpDelete('forum/commentary', {
+          forumId: row.forumId,
+          commentaryId: row.commentaryId,
+        })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handleCommentaryTree()
+        })
+      })
     },
     handleCommentaryTree = () => {
       if (formData.value.forumId) {
@@ -121,7 +144,6 @@ const handlePrepareWriteCommentary = (d: any) => {
         })
       }
     }
-handleCommentaryTree()
 watch(
     () => props.forumId,
     (t: string) => {

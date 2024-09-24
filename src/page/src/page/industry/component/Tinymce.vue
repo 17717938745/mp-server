@@ -291,7 +291,6 @@ const handleValueChange = () => {
         })
       }
     }
-handleGet()
 watchEffect(() => {
   // console.log(`html change: ${state.param.viewDetail.html}`)
 });

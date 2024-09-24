@@ -46,15 +46,22 @@
                   <el-icon style="margin-right: 5px;"><ArrowDown/></el-icon>展开
                 </span>
             </div>
-            <div style="height: 50px; display: flex; align-items: center; cursor: pointer; background-color: #e8ecd6;">
-              <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)">赞同 {{ d.thumbsUp }}</el-button>
-              <el-button :icon="CaretBottom" :type="d.thumbsUpType === 2 ? 'success' : 'default'" class="thumbs-down-btn" @click="handleForumThumbsUp(d, false)"></el-button>
-              <span style="margin-left: 30px;" class="icon-text" @click="showCommentaryAll[d.forumId] = !showCommentaryAll[d.forumId]">
-                <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条评论
+            <div style="height: 50px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background-color: #e8ecd6;">
+              <span style="display: flex; align-items: center;">
+                <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)">赞同 {{ d.thumbsUp }}</el-button>
+                <el-button :icon="CaretBottom" :type="d.thumbsUpType === 2 ? 'success' : 'default'" class="thumbs-down-btn" @click="handleForumThumbsUp(d, false)"></el-button>
+                <span style="margin-left: 30px;" class="icon-text" @click="showCommentaryAll[d.forumId] = !showCommentaryAll[d.forumId]">
+                  <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条评论
+                </span>
               </span>
-              <span style="position: absolute; right: 5px;" class="icon-text">
-                <span v-if="showAll[d.forumId]" @click="showAll[d.forumId] = false">
-                  <el-icon style="margin-right: 5px;"><ArrowUp/></el-icon>收起
+              <span style="display: flex; align-items: center;">
+<!--                <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="handleDelete(d)">
+                  <el-icon style="margin-right: 5px;"><Delete/></el-icon>Delete
+                </span>-->
+                  <span style="position: absolute; right: 5px;" class="icon-text">
+                  <span v-if="showAll[d.forumId]" @click="showAll[d.forumId] = false">
+                    <el-icon style="margin-right: 5px;"><ArrowUp/></el-icon>收起
+                  </span>
                 </span>
               </span>
             </div>
@@ -108,12 +115,12 @@
 <script lang="ts" setup>
 import {ref,} from 'vue'
 import {useRouter, useRoute,} from 'vue-router'
-import {httpGet, httpPutJson,} from '@/util/HttpUtil'
+import {httpGet, httpPutJson, httpDelete,} from '@/util/HttpUtil'
 import {DataResult} from '@/typing/ma/System'
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
-import {CaretTop, CaretBottom, ChatDotSquare, ArrowDown, ArrowUp, UserFilled, EditPen, Edit,} from '@element-plus/icons-vue'
+import {CaretTop, CaretBottom, ChatDotSquare, Delete, ArrowDown, ArrowUp, UserFilled, EditPen, Edit,} from '@element-plus/icons-vue'
 import {Store, useStore} from 'vuex'
 import Commentary from '../component/Commentary.vue'
 
@@ -255,6 +262,19 @@ const handleForumThumbsUp = (t: any, thumbsUp: boolean) => {
         ElMessage.success("Thumbs up success")
       }
   )
+}
+const handleDelete = (row: any) => {
+  ElMessageBox.confirm('Confirm Delete?', 'Tips', {
+    type: 'warning',
+  }).then(() => {
+    httpDelete('forum', {
+      forumId: row.forumId,
+    })
+    .then(() => {
+      ElMessage.success('Delete success')
+      handleCommentaryTree()
+    })
+  })
 }
 handleTodoList()
 handleForumPage()

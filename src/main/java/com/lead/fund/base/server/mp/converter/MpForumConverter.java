@@ -37,6 +37,7 @@ public interface MpForumConverter extends Serializable {
     @Mapping(target = "id", source = "forumId")
     ForumEntity entity(ForumRequest request);
 
+    @Mapping(target = "id", source = "commentaryId")
     ForumCommentaryEntity commentary(ForumCommentaryRequest t);
 
     @Mapping(target = "commentaryId", source = "id")

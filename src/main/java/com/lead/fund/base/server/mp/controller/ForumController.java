@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.controller;
 
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.SERVER_ERROR;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.converter.MpForumConverter.MP_FORUM_INSTANCE;
@@ -278,7 +279,7 @@ public class ForumController {
     @DeleteMapping("commentary")
     public Result commentaryDelete(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @RequestBody ForumCommentaryRequest request
+            @ModelAttribute ForumCommentaryRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         final LambdaUpdateWrapper<ForumCommentaryEntity> lambda = new LambdaUpdateWrapper<ForumCommentaryEntity>()
@@ -286,7 +287,10 @@ public class ForumController {
         if (!"admin".equals(u.getUsername())) {
             lambda.eq(ForumCommentaryEntity::getUserId, u.getUserId());
         }
-        if (forumCommentaryMapper.delete(lambda) <= 0) {
+        if (forumCommentaryMapper.selectCount(new LambdaQueryWrapper<ForumCommentaryEntity>().eq(ForumCommentaryEntity::getParentId, request.getCommentaryId())) > 0) {
+            throw new BusinessException(SERVER_ERROR.getCode(), "Some one comment you");
+        }
+        if (isNotBlank(request.getForumId()) || forumCommentaryMapper.delete(lambda) <= 0) {
             throw new BusinessException(ExceptionType.AUTHORITY_AUTH_FAIL);
         }
         forumMapper.update(

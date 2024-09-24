@@ -282,7 +282,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'forum',
-          label: '论坛',
+          label: '道森心声社区',
         },
         {
           value: 'admin',
