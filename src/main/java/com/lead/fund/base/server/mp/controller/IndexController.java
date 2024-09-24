@@ -9,8 +9,10 @@ import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_ACCOUNT_SIGN_
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_COMPRESS_IMG_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_SAVE_FILE_ERROR;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_SAVE_H5_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_SAVE_VIDEO_ERROR;
 import static com.lead.fund.base.server.mp.converter.MpAccountConverter.MP_ACCOUNT_INSTANCE;
+import static com.lead.fund.base.server.mp.converter.MpIndexConverter.MP_INDEX_INSTANCE;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -23,20 +25,24 @@ import com.lead.fund.base.server.mp.dao.MpAccountDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpDeviceEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpFileEntity;
+import com.lead.fund.base.server.mp.entity.dmmp.MpH5Entity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpImgEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpVideoEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpDeviceMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpFileMapper;
+import com.lead.fund.base.server.mp.mapper.dmmp.MpH5Mapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpImgMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpVideoMapper;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.request.MpAccountRequest;
+import com.lead.fund.base.server.mp.request.MpH5Request;
 import com.lead.fund.base.server.mp.request.MpImgLoadRequest;
 import com.lead.fund.base.server.mp.request.MpMobileRequest;
 import com.lead.fund.base.server.mp.request.MpSignRequest;
 import com.lead.fund.base.server.mp.response.MpAccountResponse;
+import com.lead.fund.base.server.mp.response.MpH5BaseResponse;
 import com.lead.fund.base.server.mp.response.MpImgResponse;
 import com.lead.fund.base.server.mp.response.MpMobileResponse;
 import com.lead.fund.base.server.mp.response.MpVideoResponse;
@@ -105,6 +111,8 @@ public class IndexController {
     private RestTemplate externalRestTemplate;
     @Resource
     private UrlHelper urlHelper;
+    @Resource
+    private MpH5Mapper h5Mapper;
 
     /**
      * 首页
@@ -404,7 +412,7 @@ public class IndexController {
     }
 
     public byte[] compress(byte[] content) {
-        float quality = (float) (0.5 - content.length / 1024 / 256 / 10.0);
+        float quality = (float) (0.5 - content.length / 1024.0 / 256.0 / 10.0);
         quality = Math.max(quality, 0.1f);
         log.info("quality: {}", quality);
         try (final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content)) {
@@ -423,6 +431,31 @@ public class IndexController {
         } catch (IOException e) {
             log.warn("compress error", e);
             return content;
+        }
+    }
+
+    /**
+     * 上传H5
+     *
+     * @param request {@link MpH5Request}
+     * @return {@link DataResult<MpH5BaseResponse>}
+     */
+    @PutMapping("h5")
+    public DataResult<MpH5BaseResponse> mergeH5(
+            @RequestBody MpH5Request request
+    ) {
+        final MpH5Entity entity = MP_INDEX_INSTANCE.data(request);
+        if (isNotBlank(entity.getId())) {
+            h5Mapper.updateById(entity);
+        } else {
+            h5Mapper.insert(entity);
+        }
+        try {
+            return new DataResult<>(
+                    MP_INDEX_INSTANCE.data(entity)
+            );
+        } catch (Exception e) {
+            throw new BusinessException(MP_SAVE_H5_ERROR).setOriginException(e);
         }
     }
 }

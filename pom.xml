@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.lead.fund.base</groupId>
         <artifactId>manage</artifactId>
-        <version>202408.1-SNAPSHOT</version>
+        <version>202409.1-SNAPSHOT</version>
     </parent>
     <groupId>com.lead.fund.base.server</groupId>
     <artifactId>mp-server</artifactId>
@@ -19,19 +19,19 @@
         <dependency>
             <groupId>com.lead.fund.base.common</groupId>
             <artifactId>common-log</artifactId>
-            <version>202408.1-SNAPSHOT</version>
+            <version>202409.1-SNAPSHOT</version>
         </dependency>
         <!--common-database-->
         <dependency>
             <groupId>com.lead.fund.base.common</groupId>
             <artifactId>common-database</artifactId>
-            <version>202408.1-SNAPSHOT</version>
+            <version>202409.1-SNAPSHOT</version>
         </dependency>
         <!--common-web-->
         <dependency>
             <groupId>com.lead.fund.base.common</groupId>
             <artifactId>common-web</artifactId>
-            <version>202408.1-SNAPSHOT</version>
+            <version>202409.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

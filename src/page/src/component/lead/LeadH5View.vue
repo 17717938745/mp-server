@@ -48,5 +48,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../asset/css/report.css';
+
 </style>

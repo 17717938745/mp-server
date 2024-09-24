@@ -95,13 +95,23 @@ export default ({mode}) => {
           {
             server: {
               host: '0.0.0.0',
-              port: 9000,
+              port: 9090,
               open: true,
               proxy: {
                 '^/third/.*': {
                   target: 'http://localhost',
                   changeOrigin: true,
                   rewrite: (path: string) => path
+                },
+                // /api/system/device -> /system/device
+                '^/api/.*': {
+                  target: 'http://localhost',
+                  changeOrigin: true,
+                  rewrite: (path: string) => {
+                    const targetPath = path.substring(4)
+                    console.log(`path: ${path}, targetPath: ${targetPath}`)
+                    return targetPath
+                  }
                 },
               }
             }

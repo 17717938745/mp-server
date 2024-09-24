@@ -13,15 +13,15 @@
       >
       </el-date-picker>
       <el-input v-model="query.data.deviceNumber"
-                @change="handleList"
+                @change="handlePage"
                 :placeholder="store.state.label.deviceNumber"
                 class="search-item"/>
       <el-input v-model="query.data.specification"
-                @change="handleList"
+                @change="handlePage"
                 :placeholder="store.state.label.specification"
                 class="search-item"/>
       <el-select v-model="query.data.chineseVietnamName"
-                 @change="handleList"
+                 @change="handlePage"
                  filterable
                  allow-create
                  clearable
@@ -36,7 +36,7 @@
       </el-select>
       <el-select
           v-model="query.data.deviceCheckLedgerState"
-          @change="handleList"
+          @change="handlePage"
           clearable
           :placeholder="store.state.label.deviceCheckLedgerState">
         <el-option
@@ -51,7 +51,7 @@
                  allow-create
                  clearable
                  :placeholder="store.state.label.borrower"
-                 @change="handleList"
+                 @change="handlePage"
       >
         <el-option
             v-for="item in userOptionList"
@@ -62,7 +62,7 @@
       </el-select>
       <el-select
           v-model="query.data.storage"
-          @change="handleList"
+          @change="handlePage"
           clearable
           :placeholder="store.state.label.storage">
         <el-option
@@ -74,7 +74,7 @@
       </el-select>
       <el-select
           v-model="query.data.outOfStock"
-          @change="handleList"
+          @change="handlePage"
           clearable
           :placeholder="store.state.label.outOfStock">
         <el-option
@@ -87,7 +87,7 @@
         />
       </el-select>
       <div class="query-btn">
-        <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
+        <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
             v-if="includes(roleCodeList, 'gauger')"
             :icon="Plus"
@@ -109,6 +109,8 @@
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
+        :handlePageChange="handlePageChange"
+        :handleLimitChange="handleLimitChange"
     >
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
@@ -584,25 +586,15 @@ const handleDateTimeChange = () => {
     state.query.data.startDueDate = ''
     state.query.data.endDueDate = ''
   }
-  handleList()
+  handlePage()
 }
-const handleShowPrintDetail = (d: any) => {
-  // ElMessage.info('该功能正在开发中')
-  printData.value = Object.assign({}, d.param || {})
-  showPrint.value = true
+const handlePageChange = (val: number) => {
+  state.query.page.page = val
+  handlePage()
 }
-const handleAutoInsertSerialNo = (t: any, i: number, arr: any[]) => {
-  if (i === 0) {
-    let n
-    try {
-      n = Number(t)
-    } catch (e) {
-      n = 1
-    }
-    for (let j = 1; j < arr.length; j++) {
-      arr[j] = n + j
-    }
-  }
+const handleLimitChange = (val: number) => {
+  state.query.page.limit = val
+  handlePage()
 }
 const handleTableRowClassName = ({
                                    row,
@@ -617,11 +609,6 @@ const handleTableRowClassName = ({
     return 'device-expire'
   }
   return ''
-}
-const handleFormatValue = (key: string, val: any) => {
-  // @ts-ignore
-  const a = (state.config[key] || []).filter(t => t.value === val)
-  return a.length > 0 ? a[0].label : val
 }
 const handleBorrowerChange = () => {
   if (formData.value.borrower) {
@@ -642,8 +629,8 @@ const handleCalcValidDate = () => {
     }
   }
 }
-const handleList = () => {
-  httpGet(`douson/admin/device-check-ledger/list`, state.query.data).then(
+const handlePage = () => {
+  httpGet(`douson/admin/device-check-ledger/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = res.list
         state.total = res.total
@@ -696,7 +683,7 @@ Promise.all([
       return t
     })
   }
-  handleList()
+  handlePage()
 })
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {
@@ -705,7 +692,7 @@ const handleMerge = () => {
         httpPostJson('douson/admin/device-check-ledger', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
-          handleList()
+          handlePage()
         })
       } else {
         handleUpdate(state.formData)
@@ -717,7 +704,7 @@ const handleUpdate = (row: any) => {
   return httpPutJson('douson/admin/device-check-ledger', row).then(() => {
     state.formVisible = false
     ElMessage.success('Edit success')
-    handleList()
+    handlePage()
   })
 }
 const handleDelete = (row: any) => {
@@ -729,7 +716,7 @@ const handleDelete = (row: any) => {
     })
     .then(() => {
       ElMessage.success('Delete success')
-      handleList()
+      handlePage()
     })
   })
 }

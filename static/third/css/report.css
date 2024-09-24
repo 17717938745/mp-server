@@ -1,0 +1,83 @@
+.douson-h5 {
+    padding: calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 12px calc(16px + env(safe-area-inset-left));
+    background-color: #fafafa;
+    hyphens: auto;
+    text-align: justify;
+    position: relative;
+    word-wrap: break-word;
+    line-height: 1.1;
+    font-size: 16px;
+    color: #333;
+    letter-spacing: 0.034em;
+    z-index: 0;
+    font-family: "times new roman", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.douson-h5 p {
+    white-space: normal;
+    line-height: 1.1em;
+    letter-spacing: 1px;
+    clear: both;
+    min-height: 1em;
+    max-width: 100% !important;
+    -webkit-box-sizing: border-box !important;
+    word-wrap: break-word !important;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
+
+.douson-h5 .full-width {
+    width: 100%;
+}
+
+.h5 .header .title {
+    font-size: 22px;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.h5 .header .tips {
+    font-style: normal;
+    color: rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10px 10px 0;
+    font-size: 15px;
+    line-height: 20px;
+    word-wrap: break-word;
+    hyphens: auto;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.h5 .two-image {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.h5 .two-image img {
+    width: 49%;
+}
+
+.h5 .two-two-image {
+    width: 100%;
+}
+
+.h5 .two-two-image div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.h5 .two-two-image div:not(:first-of-type) {
+    margin-top: 10px;
+}
+
+.h5 .two-two-image div img {
+    width: 49%;
+}

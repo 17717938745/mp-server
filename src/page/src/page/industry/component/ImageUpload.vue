@@ -85,8 +85,8 @@ const handleRequest = (d: any) => {
     Promise.all(keys.map((k: any) => {
       const t = fileMap[k]
       const formData = new FormData()
-      formData.set("filename", t.name)
-      formData.set("file", t)
+      formData.set('filename', t.name)
+      formData.set('file', t)
       return httpUpload(`index/img`, formData)
     }))
     .then((l: any[]) => {

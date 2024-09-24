@@ -281,6 +281,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '首页',
         },
         {
+          value: 'forum',
+          label: '论坛',
+        },
+        {
           value: 'admin',
           label: '管理页面',
         },
@@ -1329,6 +1333,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'dashboard',
           label: 'Home',
+        },
+        {
+          value: 'forum',
+          label: 'Forum',
         },
         {
           value: 'admin',

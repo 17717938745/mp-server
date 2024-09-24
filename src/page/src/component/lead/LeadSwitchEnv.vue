@@ -1,39 +1,9 @@
 <template>
   <div v-show="show" style="overflow-y: scroll;" class="content">
-    <h1>选择商户id</h1>
-    <div class="select-input">
-      <select id="merchant-select" v-model="merchantId" @change="handleMerhantIdChange" class="select-input-item">
-        <option v-for="data in merchantIdList" :value="data.value">{{ data.label }}（{{ data.value }}）</option>
-      </select>
-    </div>
     <h1>环境重置</h1>
     <div>
       <button style="background-color: #f5f5f5;padding: 0 5px;" @click="handleClearAll">重置</button>
-      <button type="button" @click="handleSwitchSit">测试</button>
-      <button type="button" @click="handleSwitchTest2">测试2套</button>
-      <button type="button" @click="handleSwitchUat">预发</button>
       <button type="button" @click="handleSwitchPrd">生产</button>
-    </div>
-    <h1>指定模块路由</h1>
-    <button style="background-color: #f5f5f5;padding: 0 5px;" @click="handleAddService">添加路由++++++++</button>
-    <div v-for="(service, index) in serviceId">
-      <div class="select-input">
-        <select v-model="service[0]" @change="handleServiceIdChange" class="select-input-item">
-          <option v-for="data in serviceIdList" :value="data.value">{{ data.label }}（{{ data.value }}）</option>
-        </select>
-        <input type="text" v-model="service[0]" @blur="handleServiceIdChange" placeholder="请输入模块" class="select-input-item"/>
-      </div>
-      <div class="select-input">
-        <select v-model="service[1]" @change="handleServiceIdChange" class="select-input-item">
-          <option v-for="data in profileList" :value="data.value">{{ data.label }}（{{ data.value }}）</option>
-        </select>
-        <input
-            type="text" v-model="service[1]" @blur="handleServiceIdChange" placeholder="请输入profile"
-            class="select-input-item"/>
-      </div>
-      <div style="margin-top: 10px;">
-        <button style="background-color: #f5f5f5;padding: 0 5px;" @click="handleRemoveService(index)">删除</button>
-      </div>
     </div>
     <h1>接口地址：</h1>
     <div class="select-input">
@@ -133,24 +103,9 @@ const handleClearAll = () => {
   clearAllCache()
   handleInitValue()
 }
-const handleSwitchSit = () => {
-  clearAllCache()
-  setUrlPrefix(URL_PREFIX_SIT)
-  handleInitValue()
-}
-const handleSwitchTest2 = () => {
-  clearAllCache()
-  setUrlPrefix(URL_PREFIX_TEST2)
-  handleInitValue()
-}
-const handleSwitchUat = () => {
-  clearAllCache()
-  setUrlPrefix(URL_PREFIX_UAT)
-  handleInitValue()
-}
 const handleSwitchPrd = () => {
   clearAllCache()
-  setUrlPrefix(URL_PREFIX_PRD)
+  setUrlPrefix('https://douson.natapp4.cc/')
   handleInitValue()
 }
 const handleAddService = () => {

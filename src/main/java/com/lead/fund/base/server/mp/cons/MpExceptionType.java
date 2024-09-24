@@ -31,6 +31,7 @@ public enum MpExceptionType implements TypeApi<Integer> {
     MP_OPERATOR_OTHER_NOT_ALLOW(310012, "非管理员无法修改他人数据"),
     MP_ORDER_REPEAT(310013, "序列号重复"),
     MP_PASSWORD_ERROR(310014, "密码不正确"),
+    MP_SAVE_H5_ERROR(310015, "H5保存失败"),
     ;
 
     private final Integer code;

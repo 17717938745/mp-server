@@ -147,6 +147,7 @@ import com.lead.fund.base.server.mp.request.ComputerPageRequest;
 import com.lead.fund.base.server.mp.request.ComputerRequest;
 import com.lead.fund.base.server.mp.request.CrashPageRequest;
 import com.lead.fund.base.server.mp.request.CrashRequest;
+import com.lead.fund.base.server.mp.request.DeviceCheckLedgerPageRequest;
 import com.lead.fund.base.server.mp.request.DeviceCheckLedgerRequest;
 import com.lead.fund.base.server.mp.request.DeviceQueryRequest;
 import com.lead.fund.base.server.mp.request.DisqualificationOrderPageRequest;
@@ -5204,11 +5205,31 @@ public class DousonController {
      * 检测设备台账分页（后管）
      *
      * @param deviceId 设备id
+     * @param request  {@link DeviceCheckLedgerPageRequest}
+     * @return {@link PageResult<DeviceCheckLedgerResponse>}
+     */
+    @GetMapping("admin/device-check-ledger/page")
+    public PageResult<DeviceCheckLedgerResponse> deviceCheckLedgerAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute DeviceCheckLedgerPageRequest request
+    ) {
+        MpUserResponse user = accountHelper.getUser(deviceId);
+        if (user.getRoleList().stream().noneMatch(t -> "gauger".equals(t.getRoleCode()) || "computerView".equals(t.getRoleCode()) || AdminUser.ADMIN.getCode().equals(t.getRoleCode()))) {
+            request.getData().setBorrower(user.getUserId());
+        }
+        final PageResult<DeviceCheckLedgerEntity> pr = DatabaseUtil.page(request, this::deviceCheckLedgerList);
+        return new PageResult<>(pr.getTotal(), formatDeviceCheckLedgerList(pr.getList()));
+    }
+
+    /**
+     * 检测设备台账列表（后管）
+     *
+     * @param deviceId 设备id
      * @param request  {@link DeviceCheckLedgerRequest}
      * @return {@link ListResult <DeviceCheckLedgerResponse>}
      */
     @GetMapping("admin/device-check-ledger/list")
-    public ListResult<DeviceCheckLedgerResponse> deviceCheckLedgerAdminPage(
+    public ListResult<DeviceCheckLedgerResponse> deviceCheckLedgerAdminList(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute DeviceCheckLedgerRequest request
     ) {
@@ -5254,7 +5275,7 @@ public class DousonController {
         if (null != d.getOutOfStock()) {
             lambda.eq(DeviceCheckLedgerEntity::getOutOfStock, d.getOutOfStock());
         }
-        return deviceCheckLedgerDao.list(lambda.orderByDesc(DeviceCheckLedgerEntity::getCreateTime));
+        return deviceCheckLedgerDao.list(lambda.orderByDesc(DeviceCheckLedgerEntity::getChineseVietnamName).orderByDesc(DeviceCheckLedgerEntity::getCreateTime));
     }
 
     private List<DeviceCheckLedgerResponse> formatDeviceCheckLedgerList(List<DeviceCheckLedgerEntity> list) {

@@ -135,6 +135,15 @@ const handleSubmit = (retry: boolean = true) => {
                         "showFlag": true,
                       },
                       {
+                        "children": [],
+                        "id": "-1",
+                        "path": "forum",
+                        "component": "forum",
+                        "nameKey": "forum",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
                         "id": "-1",
                         "path": "system",
                         "component": "",
