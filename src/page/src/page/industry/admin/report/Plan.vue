@@ -272,13 +272,13 @@ const columnConfigList = ref<ViewConfig[]>([
 ])
 const defaultFormData = {
   planId: '',
-  creator: store.state.user.username,
+  creator: store.state.user.userId,
   createDate: formatDate(new Date(), 'yyyy-MM-dd'),
   department: '',
   optimizeType: '',
   existsProblem: '',
   solveScheme: '',
-  responsiblePerson: store.state.user.username,
+  responsiblePerson: store.state.user.userId,
   planCompleteTime: '',
   beforePhotoList: [],
   afterPhotoList: [],
