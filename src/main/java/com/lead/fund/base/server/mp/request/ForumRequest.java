@@ -4,6 +4,7 @@ import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -33,6 +34,14 @@ public class ForumRequest implements Serializable {
      * H5的ID
      */
     private String h5Id;
+    /**
+     * H5的ID列表
+     */
+    private List<String> h5IdList;
+    /**
+     * 标题
+     */
+    private String title;
     /**
      * 点赞
      */

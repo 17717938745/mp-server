@@ -3,6 +3,7 @@ package com.lead.fund.base.server.mp.controller;
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.SERVER_ERROR;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
+import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.converter.MpForumConverter.MP_FORUM_INSTANCE;
 
@@ -14,6 +15,7 @@ import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.TreeUtil;
@@ -40,6 +42,7 @@ import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -97,7 +100,7 @@ public class ForumController {
         final ForumEntity e = (ForumEntity) MP_FORUM_INSTANCE.entity(request)
                 .setModifier(u.getUserId());
         if (isNotBlank(e.getId())) {
-            forumMapper.updateById(e);
+            forumMapper.updateById(e.setThumbsUp(null).setCommentary(null));
         } else {
             forumMapper.insert(
                     (ForumEntity) e
@@ -123,14 +126,36 @@ public class ForumController {
             @ModelAttribute ForumPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
+        final String title = request.getData().getTitle();
+        final boolean searchTitle = isNotBlank(title);
+        if (searchTitle) {
+            final List<String> h5IdList = h5Mapper.selectList(new LambdaQueryWrapper<MpH5Entity>().like(MpH5Entity::getTitle, title)
+                            .select(MpH5Entity::getId)
+                    ).stream().map(AbstractPrimaryKey::getId)
+                    .distinct().collect(Collectors.toList());
+            if (CollUtil.isEmpty(h5IdList)) {
+                return new PageResult<>();
+            } else {
+                request.getData().setH5IdList(h5IdList);
+            }
+        }
         final PageResult<ForumEntity> pr = DatabaseUtil.page(request, this::forumList);
-        return new PageResult<>(pr.getTotal(), formatForumList(u, pr.getList()));
+        return new PageResult<>(pr.getTotal(), formatForumList(u, pr.getList())
+                .stream().peek(t -> {
+                    if (searchTitle) {
+                        t.setTitle(t.getTitle().replace(title, "<span style=\"color: #EE0000\">" + title + "</span>"));
+                    }
+                }).collect(Collectors.toList())
+        );
     }
 
     private List<ForumEntity> forumList(ForumRequest request) {
         final LambdaQueryWrapper<ForumEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(request.getForumId())) {
             lambda.eq(ForumEntity::getId, request.getForumId());
+        }
+        if (CollUtil.isNotEmpty(request.getH5IdList())) {
+            DatabaseUtil.or(lambda, request.getH5IdList(), (lam, l) -> lam.in(ForumEntity::getH5Id, l));
         }
         return forumMapper.selectList(lambda);
     }
@@ -269,6 +294,34 @@ public class ForumController {
     }
 
     /**
+     * 删除文章
+     *
+     * @param deviceId 设备id
+     * @param request  {@link ForumCommentaryRequest}
+     * @return {@link Result}
+     */
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    @DeleteMapping("")
+    public Result delete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute ForumRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (isNotBlank(request.getForumId())) {
+            final LambdaUpdateWrapper<ForumEntity> lambda = new LambdaUpdateWrapper<ForumEntity>()
+                    .eq(ForumEntity::getId, request.getForumId());
+            if (!"admin".equals(u.getUsername())) {
+                lambda.eq(ForumEntity::getUserId, u.getUserId());
+            }
+            if (forumMapper.delete(lambda) <= 0) {
+                throw new BusinessException(ExceptionType.AUTHORITY_AUTH_FAIL);
+            }
+            forumCommentaryMapper.delete(new LambdaUpdateWrapper<ForumCommentaryEntity>().eq(ForumCommentaryEntity::getForumId, request.getForumId()));
+        }
+        return new Result();
+    }
+
+    /**
      * 删除评论
      *
      * @param deviceId 设备id
@@ -290,7 +343,7 @@ public class ForumController {
         if (forumCommentaryMapper.selectCount(new LambdaQueryWrapper<ForumCommentaryEntity>().eq(ForumCommentaryEntity::getParentId, request.getCommentaryId())) > 0) {
             throw new BusinessException(SERVER_ERROR.getCode(), "Some one comment you");
         }
-        if (isNotBlank(request.getForumId()) || forumCommentaryMapper.delete(lambda) <= 0) {
+        if (isBlank(request.getForumId()) || forumCommentaryMapper.delete(lambda) <= 0) {
             throw new BusinessException(ExceptionType.AUTHORITY_AUTH_FAIL);
         }
         forumMapper.update(
@@ -333,13 +386,14 @@ public class ForumController {
 
     private List<ForumCommentaryResponse> formatForumCommentaryList(MpUserResponse u, List<ForumCommentaryEntity> list) {
         final List<ForumCommentaryResponse> rl = MP_FORUM_INSTANCE.commentaryList(list);
+        boolean admin = "admin".equals(u.getUsername());
         MultitaskUtil.supplementList(
                 rl,
                 ForumCommentaryResponse::getUserId,
                 l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
                 (t, r) -> t.getUserId().equals(r.getId()),
                 (t, r) -> t
-                        .setUserIdFormat(defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
+                        .setUserIdFormat(!admin ? ("匿名用户" + r.getId().substring(r.getId().length() - 4)) : defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
         );
         return rl;
     }

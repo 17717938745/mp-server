@@ -15,21 +15,21 @@
     </div>
     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto; position: relative; width: 100%;">
       <li v-for="(d, i) in (commentaryData.list || [])" :key="i" class="infinite-list-item" style="position: relative; width: 100%;">
-        <h3 class="icon-text">
+        <h3 class="icon-text" style="font-size: 16px;">
           <el-icon style="margin-right: 5px;">
             <UserFilled/>
           </el-icon>
           {{ d.userIdFormat }}
         </h3>
-        <div style="width: 100%; margin-bottom: 20px;">{{ d.content }}</div>
-        <div style="color: #aaaaaa; width: 100%; display: flex; justify-content: space-between;">
+        <div style="width: 100%; margin-bottom: 10px; font-size: 15px;">{{ d.content }}</div>
+        <div style="color: #aaaaaa; width: 100%; display: flex; justify-content: space-between; font-size: 13px;">
           <span class="icon-text">{{ d.createdTimeFormat }}</span>
           <span style="display: flex; align-items: center;">
             <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="handleDelete(d)">
-              <el-icon style="margin-right: 5px;"><Delete/></el-icon>Delete
+              <el-icon style="margin-right: 5px;"><Delete/></el-icon> 删除
             </span>
             <span style="cursor: pointer; margin-right: 5px;" class="icon-text" @click="props.prepareWriteCommentary ? props.prepareWriteCommentary(d) : handlePrepareWriteCommentary(d)">
-              <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>Comment
+              <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon> 评论
             </span>
           </span>
         </div>
@@ -37,7 +37,7 @@
           paddingLeft: 8 * (props.level + 1) + 'px',
           width: '100%',
         }">
-          <commentary v-if="(d.children || []).length > 0" :children="d.children || []" :level="props.level + 1" :prepare-write-commentary="handlePrepareWriteCommentary"/>
+          <commentary v-if="(d.children || []).length > 0" :children="d.children || []" :level="props.level + 1" :prepare-write-commentary="props.prepareWriteCommentary ? props.prepareWriteCommentary : handlePrepareWriteCommentary" :after-write-commentary="props.afterWriteCommentary ? props.afterWriteCommentary : handleCommentaryTree"/>
         </div>
       </li>
     </ul>
@@ -62,10 +62,11 @@ interface PropType {
   level?: number
   children?: any[]
   prepareWriteCommentary?: Function
+  afterWriteCommentary?: Function
 }
 
 const commentaryRef = ref(null)
-const commentaryPlaceHolder = ref('Write commentary')
+const commentaryPlaceHolder = ref('写评论')
 const props = withDefaults(defineProps<PropType>(), {
   forumId: '',
   level: 0,
@@ -94,9 +95,24 @@ const load = () => {
   count.value += 2
 }
 const handlePrepareWriteCommentary = (d: any) => {
-      formData.value.parentId = d.commentaryId;
-      commentaryPlaceHolder.value = `To ${d.userIdFormat}：`;
+      formData.value.parentId = d.commentaryId
+      commentaryPlaceHolder.value = `To ${d.userIdFormat}：`
       commentaryRef.value.focus()
+      commentaryRef.value.select()
+    },
+    handleGetCommentary = (children: any[], commentaryId: string) => {
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].commentaryId === commentaryId) {
+          return children[i];
+        }
+        if ((children[i].children || []).length > 0) {
+          const r = handleGetCommentary(children[i].children, commentaryId)
+          if (r) {
+            return r
+          }
+        }
+      }
+      return null
     },
     handleMerge = () => {
       if (formData.value.content && !submitDisable.value) {
@@ -104,7 +120,16 @@ const handlePrepareWriteCommentary = (d: any) => {
         httpPutJson(`forum/commentary`, formData.value).then((r: any) => {
           ElMessage.success("Merge success")
           submitDisable.value = false
-          handleCommentaryTree()
+          formData.value.content = ''
+          const parent = handleGetCommentary(commentaryData.value.list, formData.value.parentId)
+          if (parent && parent.children) {
+            parent.children.push(r.data)
+          }
+          /*if (props.afterWriteCommentary) {
+            props.afterWriteCommentary(r)
+          } else {
+            handleCommentaryTree()
+          }*/
         })
         .catch((r: any) => {
           submitDisable.value = false
@@ -121,7 +146,23 @@ const handlePrepareWriteCommentary = (d: any) => {
         })
         .then(() => {
           ElMessage.success('Delete success')
-          handleCommentaryTree()
+          formData.value.content = ''
+          const parent = handleGetCommentary(commentaryData.value.list, row.parentId)
+          const list = parent && parent.children ? parent.children :  commentaryData.value.list
+          if (list) {
+            for (let i = 0; i < list.length; i++) {
+              const t = list[i]
+              if (t.commentaryId === row.commentaryId) {
+                list.splice(i, 1)
+                break
+              }
+            }
+          }
+          /*if (props.afterWriteCommentary) {
+            props.afterWriteCommentary(r)
+          } else {
+            handleCommentaryTree()
+          }*/
         })
       })
     },
