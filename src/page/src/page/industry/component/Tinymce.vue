@@ -53,16 +53,15 @@
 
 <!--suppress TypeScriptUnresolvedFunction, JSUnusedGlobalSymbols, TypeScriptUnresolvedVariable -->
 <script lang="tsx" setup>
-import {computed, onMounted, reactive, ref, toRefs, watch, watchEffect,} from 'vue'
+import {onMounted, reactive, ref, toRefs, watch, watchEffect,} from 'vue'
 import {Store, useStore} from 'vuex'
 import {useRouter} from 'vue-router'
 import Editor from '@tinymce/tinymce-vue'
-import {httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
+import {httpGet, httpPutJson, httpUpload,} from '@/util/HttpUtil'
 import {Edit, Plus} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
-import {DataResult, PageResult} from '@/typing/ma/System'
+import {DataResult} from '@/typing/ma/System'
 import {StoreType} from '@/store/Industry'
-import {fullUrl} from '@/util/EnvUtil'
 
 interface PropType {
   forumId?: string
@@ -103,6 +102,7 @@ const state = reactive({
     menubar: "",
     language: "zh_CN",
     branding: false,
+    convert_urls: false,
     paste_data_images: true,
     fontsize_formats: "12px 14px 16px 18px 20px 24px 26px 28px 30px 32px 36px",
     font_formats:
@@ -132,8 +132,8 @@ const state = reactive({
       formData.set("file", blobInfo.blob())
       formData.set("filename", blobInfo.filename)
       httpUpload(`index/img`, formData).then(function (res) {
-        success(res.data.fullUrl, {
-          src: res.data.fullUrl /*, class: 'full-width'*/,
+        success(res.data.url, {
+          src: res.data.url /*, class: 'full-width'*/,
           width: '100%',
         })
         ElMessage.success(`Image upload success`)

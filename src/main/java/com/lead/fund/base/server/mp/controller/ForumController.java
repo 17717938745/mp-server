@@ -157,7 +157,7 @@ public class ForumController {
         if (CollUtil.isNotEmpty(request.getH5IdList())) {
             DatabaseUtil.or(lambda, request.getH5IdList(), (lam, l) -> lam.in(ForumEntity::getH5Id, l));
         }
-        return forumMapper.selectList(lambda);
+        return forumMapper.selectList(lambda.orderByDesc(ForumEntity::getCreatedTime));
     }
 
     private List<ForumResponse> formatForumList(MpUserResponse u, List<ForumEntity> list) {

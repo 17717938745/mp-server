@@ -107,10 +107,23 @@ export default ({mode}) => {
               port: 9090,
               open: true,
               proxy: {
+                '^/index/img/.*': {
+                  target: 'http://localhost',
+                  changeOrigin: true,
+                  rewrite: (path: string) => {
+                    const targetPath = path
+                    console.log(`Convert /index/img/ path: ${path}, targetPath: ${targetPath}`)
+                    return targetPath
+                  }
+                },
                 '^/third/.*': {
                   target: 'http://localhost',
                   changeOrigin: true,
-                  rewrite: (path: string) => path
+                  rewrite: (path: string) => {
+                    const targetPath = path
+                    console.log(`Convert /third/, path: ${path}, targetPath: ${targetPath}`)
+                    return targetPath
+                  }
                 },
                 // /api/system/device -> /system/device
                 '^/api/.*': {
@@ -118,7 +131,7 @@ export default ({mode}) => {
                   changeOrigin: true,
                   rewrite: (path: string) => {
                     const targetPath = path.substring(4)
-                    console.log(`path: ${path}, targetPath: ${targetPath}`)
+                    console.log(`Convert /api/, path: ${path}, targetPath: ${targetPath}`)
                     return targetPath
                   }
                 },

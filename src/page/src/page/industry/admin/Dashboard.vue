@@ -1,7 +1,8 @@
 <template>
-  <div style="background-color: #f4f6f9; display: flex; align-items: start; justify-content: center; padding: 10px 10px 10px 10px;">
+  <div style="background-color: #f4f6f9; display: flex; align-items: start; justify-content: center; padding: 10px 10px 10px 10px; flex-wrap: wrap;">
     <div
-        style="background-color: #ffffff; width: 786px; margin-right:40px ;border-radius: 5px; padding: 0;"
+        style="background-color: #ffffff; margin-right:40px ;border-radius: 5px; padding: 0; margin-bottom: 20px;"
+        class="forum-content"
     >
       <div style="font-size: 16px; border-bottom: 1px solid #eeeeee; padding: 20px;">
         道森心声社区
@@ -70,7 +71,8 @@
       </ul>
     </div>
     <div
-        style="background-color: #ffffff; width: 286px; padding: 10px; border-radius: 5px;"
+        style="background-color: #ffffff;  padding: 10px; border-radius: 5px;"
+        class="todo-content"
     >
       <div style="display: flex; justify-content: start; margin: 10px 0 10px;">
         <el-button round :icon="EditPen" @click="router.push({
@@ -320,5 +322,21 @@ handleForumPage()
   justify-content: center;
   align-items: center;
   height: 30px;
+}
+
+.forum-content {
+  width: 1024px;
+  max-width: 90vw;
+}
+
+.todo-content {
+  width: 256px;
+}
+
+@media (max-width: 1024px) {
+  .forum-content {
+    width: 512px;
+    max-width: 95vw;
+  }
 }
 </style>
