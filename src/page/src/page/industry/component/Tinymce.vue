@@ -31,7 +31,7 @@
               v-model="formData.title"
               style="width: 100%"
               class="title"
-              placeholder="请输入标题"
+              :placeholder="store.state.label.pleaseInputTitle"
           />
         </el-form-item>
         <el-form-item class="lead-header" prop="content">
@@ -90,7 +90,7 @@ const state = reactive({
     title: [
       {
         required: true,
-        message: "请输入标题",
+        message: "Please input",
         trigger: "blur",
       },
     ],

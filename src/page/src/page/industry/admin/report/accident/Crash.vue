@@ -106,7 +106,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
+        <el-form-item prop="userIdList" :label="store.state.label.user">
           <el-select v-model="formData.userIdList" clearable multiple filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"

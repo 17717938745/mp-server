@@ -57,8 +57,8 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="data.userId" clearable filterable placeholder="Please select">
+        <el-form-item prop="userIdList" :label="store.state.label.user">
+          <el-select v-model="data.userIdList" clearable multiple filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"
                 :key="item.value"
@@ -169,6 +169,7 @@ const columnConfigList = ref<ViewConfig[]>([
 const data = ref({
   reportDate: formatDate(new Date(), 'yyyy-MM-dd'),
   userId: '',
+  userIdList: [],
   directLeader: '',
   accidentDescribe: '',
   reason: '',
@@ -191,7 +192,7 @@ const state = reactive({
   },
   formRuleList: {
     reportDate: [{required: true, message: 'Please check', trigger: 'blur'}],
-    userId: [{required: true, message: 'Please check', trigger: 'blur'}],
+    userIdList:  [{required: true, type: 'array', message: 'Please check', min: 1, max: 999}],
     directLeader: [{required: true, message: 'Please check', trigger: 'blur'}],
     accidentDescribe: [{required: true, message: 'Please check', trigger: 'blur'}],
     reasonList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],

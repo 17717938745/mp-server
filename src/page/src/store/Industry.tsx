@@ -285,6 +285,30 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '道森心声社区',
         },
         {
+          value: 'agree',
+          label: '赞同',
+        },
+        {
+          value: 'comment',
+          label: '评论',
+        },
+        {
+          value: 'delete',
+          label: '删除',
+        },
+        {
+          value: 'pleaseInputTitle',
+          label: '请输入标题',
+        },
+        {
+          value: 'readAll',
+          label: '阅读全文',
+        },
+        {
+          value: 'readSummary',
+          label: '收起',
+        },
+        {
           value: 'admin',
           label: '管理页面',
         },
@@ -1336,7 +1360,31 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'forum',
-          label: 'Forum',
+          label: 'Bạn đang nghĩ gì vậy?',
+        },
+        {
+          value: 'agree',
+          label: 'Like',
+        },
+        {
+          value: 'comment',
+          label: 'Bình luận',
+        },
+        {
+          value: 'delete',
+          label: 'Xóa',
+        },
+        {
+          value: 'pleaseInputTitle',
+          label: 'Nhập tiêu đề',
+        },
+        {
+          value: 'readAll',
+          label: 'Nội dung bài đăng',
+        },
+        {
+          value: 'readSummary',
+          label: 'Thu gọn',
         },
         {
           value: 'admin',

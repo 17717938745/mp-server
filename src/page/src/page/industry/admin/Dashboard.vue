@@ -5,7 +5,7 @@
         class="forum-content"
     >
       <div style="font-size: 16px; border-bottom: 1px solid #eeeeee; padding: 20px;">
-        道森心声社区
+        {{ store.state.label.forum }}
         <el-input
             v-model="forumRequest.data.title"
             @keyup.enter="handleResetForumPage"
@@ -44,22 +44,22 @@
           </div>
           <div style="height: 50px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #c4c7ce">
               <span style="display: flex; align-items: center;">
-                <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)" plain>赞同 {{ d.thumbsUp }}</el-button>
+                <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)" plain>{{ store.state.label.agree }} {{ d.thumbsUp }}</el-button>
                 <el-button :icon="CaretBottom" :type="d.thumbsUpType === 2 ? 'success' : 'primary'" class="thumbs-down-btn" @click="handleForumThumbsUp(d, false)" plain></el-button>
                 <span style="margin-left: 30px; margin-right: 15px;" class="icon-text" @click="showCommentaryAll[d.forumId] = !showCommentaryAll[d.forumId]">
                   <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条评论
                 </span>
                 <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 15px;" class="icon-text" @click="handleDelete(d)">
-                  <el-icon style="margin-right: 5px;"><Delete/></el-icon>删除
+                  <el-icon style="margin-right: 5px;"><Delete/></el-icon>{{ store.state.label.delete }}
                 </span>
               </span>
             <span style="display: flex; align-items: center;">
                 <span @click="showAll[d.forumId] = !showAll[d.forumId]" class="icon-text">
                   <span v-if="showAll[d.forumId]" class="icon-text">
-                    收起 <el-icon style="margin-right: 5px;"><ArrowUp/></el-icon>
+                    {{ store.state.label.readSummary }} <el-icon style="margin-right: 5px;"><ArrowUp/></el-icon>
                   </span>
                   <span v-else class="icon-text">
-                    阅读全文 <el-icon style="margin-right: 5px;"><ArrowDown/></el-icon>
+                    {{ store.state.label.readAll }} <el-icon style="margin-right: 5px;"><ArrowDown/></el-icon>
                   </span>
                 </span>
               </span>
@@ -81,7 +81,7 @@
             forumId: ''
           }
         })">
-          写评论
+          {{ store.state.label.comment }}
         </el-button>
       </div>
       <div style="width: 100%; display: flex; justify-content: center;">

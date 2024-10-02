@@ -393,7 +393,7 @@ public class ForumController {
                 l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
                 (t, r) -> t.getUserId().equals(r.getId()),
                 (t, r) -> t
-                        .setUserIdFormat(!admin ? ("匿名用户" + r.getId().substring(r.getId().length() - 4)) : defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
+                        .setUserIdFormat(!admin ? ("匿名用户（Người dùng ẩn danh）" + r.getId().substring(r.getId().length() - 4)) : defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
         );
         return rl;
     }
