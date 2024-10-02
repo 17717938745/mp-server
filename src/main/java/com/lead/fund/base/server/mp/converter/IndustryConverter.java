@@ -378,6 +378,7 @@ public interface IndustryConverter extends Serializable {
     List<CrashResponse> crashList(List<CrashEntity> l);
 
     @org.mapstruct.Mapping(target = "crashId", source = "id")
+    @Mapping(target = "userIdList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(t.getUserId()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     CrashResponse crash(CrashEntity t);
 
     @org.mapstruct.Mapping(target = "photoCompressUrl", expression = "java(e.getCompressUrl())")

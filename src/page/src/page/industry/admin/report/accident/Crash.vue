@@ -107,7 +107,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="formData.userId" clearable filterable placeholder="Please select">
+          <el-select v-model="formData.userIdList" clearable multiple filterable placeholder="Please select">
             <el-option
                 v-for="item in userOptionList"
                 :key="item.value"
@@ -265,6 +265,7 @@ const handleShowPrintDetail = (d: any) => {
 const defaultFormData = {
   reportDate: formatDate(new Date(), 'yyyy-MM-dd'),
   userId: user.userId,
+  userIdList: [user.userId],
   directLeader: '',
   accidentDescribe: '',
   reason: '',
@@ -311,7 +312,7 @@ const state = reactive({
   formVisible: false,
   formRuleList: {
     reportDate: [{required: true, message: 'Please check', trigger: 'blur'}],
-    userId: [{required: true, message: 'Please check', trigger: 'blur'}],
+    userIdList:  [{required: true, type: 'array', message: 'Please check', min: 1, max: 999}],
     directLeader: [{required: true, message: 'Please check', trigger: 'blur'}],
     accidentDescribe: [{required: true, message: 'Please check', trigger: 'blur'}],
     reasonList: [{required: false, type: 'array', message: 'Please check', min: 1, max: 999}],

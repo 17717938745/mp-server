@@ -3,7 +3,7 @@
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 595px;">
       <h1 style="text-align: center;">
         <span style="font-size: 36px;">
-          设备撞机故报告 Va đập thiết bị Accident Report
+          设备撞机事故 Sự cố va đập thiết bị
             <el-icon style="vertical-align: middle" @click="handleCopyLink">
               <document-copy/>
             </el-icon>
