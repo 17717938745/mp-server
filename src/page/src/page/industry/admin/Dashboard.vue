@@ -47,7 +47,7 @@
                 <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)" plain>{{ store.state.label.agree }} {{ d.thumbsUp }}</el-button>
                 <el-button :icon="CaretBottom" :type="d.thumbsUpType === 2 ? 'success' : 'primary'" class="thumbs-down-btn" @click="handleForumThumbsUp(d, false)" plain></el-button>
                 <span style="margin-left: 30px; margin-right: 15px;" class="icon-text" @click="showCommentaryAll[d.forumId] = !showCommentaryAll[d.forumId]">
-                  <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条评论
+                  <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条{{ store.state.label.comment }}
                 </span>
                 <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 15px;" class="icon-text" @click="handleDelete(d)">
                   <el-icon style="margin-right: 5px;"><Delete/></el-icon>{{ store.state.label.delete }}
