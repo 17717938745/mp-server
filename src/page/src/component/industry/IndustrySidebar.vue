@@ -13,12 +13,10 @@
         active-text-color="#20a0ff"
         router
     >
-      <el-menu-item index="0">
-        <template #title>
+      <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center;">
           <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
-          <a href="https://vn.douson.cn/" style="color: #ffffff;">https://vn.douson.cn/</a>
-        </template>
-      </el-menu-item>
+          https://vn.douson.cn/
+      </a>
       <template v-for="sidebarTree in sidebarTreeList">
         <Industry-sidebar-item class="leadSidebarItem" :sidebar-tree="sidebarTree"/>
       </template>
