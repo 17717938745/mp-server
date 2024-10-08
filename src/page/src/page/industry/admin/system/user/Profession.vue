@@ -9,6 +9,7 @@
         idKey="computerId"
         :columnConfigList="columnConfigList"
         :list="tableData"
+        :handleTableRowClassName="handleTableRowClassName"
     >
       <template #operator="row">
       </template>
@@ -43,6 +44,19 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'office', labelKey: 'office', width: 128},
   {value: 'total', labelKey: 'total', width: 110},
 ])
+
+const handleTableRowClassName = ({
+                                   row,
+                                   rowIndex,
+                                 }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.professionFormat && (row.professionFormat.indexOf('经理') >= 0 || row.professionFormat.indexOf('主管') >= 0)) {
+    return 'data-manager'
+  }
+  return ''
+}
 const state = reactive({
   query: {
     data: {},
@@ -74,5 +88,10 @@ const {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.data-manager {
+  background-color: #e2e5ed !important;
+  color: #16b867;
+  font-weight: 800;
+}
 </style>

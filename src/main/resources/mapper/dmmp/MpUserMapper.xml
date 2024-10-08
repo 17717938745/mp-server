@@ -13,6 +13,7 @@
                SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING,
                SUM(CASE WHEN T.USER_PROPERTY = 4 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING_12
         FROM MP_USER T
+        WHERE T.PROFESSION != '101'
         GROUP BY DEPARTMENT
     </select>
 
@@ -23,6 +24,7 @@
                SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END) OFFICE,
                COUNT(1)                                             TOTAL
         FROM MP_USER T
+        WHERE T.PROFESSION != '101'
         GROUP BY DEPARTMENT, PROFESSION
     </select>
 </mapper>
