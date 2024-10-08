@@ -233,7 +233,7 @@ public class SystemController {
         final AtomicInteger pps = new AtomicInteger(0);
         final Map<Object, Integer> pm1 = ppl
                 .stream().collect(Collectors.toMap(
-                        ParamConfigResponse::getValue, t -> dps.addAndGet(1), (t, t1) -> t1
+                        ParamConfigResponse::getValue, t -> pps.addAndGet(1), (t, t1) -> t1
                 ));
         final AtomicInteger index = new AtomicInteger(0);
         final BigDecimal[] bl = new BigDecimal[]{
@@ -244,7 +244,7 @@ public class SystemController {
         l = l.stream().peek(t -> {
                     t.setIndex(index.addAndGet(1))
                             .setDepartmentFormat(dm.getOrDefault(t.getDepartment(), t.getDepartment()))
-                            .setProfessionFormat(pm.getOrDefault(t.getDepartment(), t.getDepartment()))
+                            .setProfessionFormat(pm.getOrDefault(t.getProfession(), t.getProfession()))
                     ;
                     bl[0] = bl[0].add(t.getWorkShop());
                     bl[1] = bl[1].add(t.getOffice());
@@ -252,7 +252,7 @@ public class SystemController {
                 }).sorted((t, t1) -> {
                     int i = dm1.getOrDefault(t.getDepartment(), 0) - dm1.getOrDefault(t1.getDepartment(), 0);
                     if (i == 0) {
-                        return pm1.getOrDefault(t.getDepartment(), 0) - pm1.getOrDefault(t1.getDepartment(), 0);
+                        return pm1.getOrDefault(t.getProfession(), 0) - pm1.getOrDefault(t1.getProfession(), 0);
                     } else {
                         return i;
                     }

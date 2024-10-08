@@ -15,6 +15,7 @@
         FROM MP_USER T
         WHERE T.PROFESSION != '101'
         GROUP BY DEPARTMENT
+        ORDER BY DEPARTMENT
     </select>
 
     <select id="userProfessionSummary" resultType="com.lead.fund.base.server.mp.response.MpUserProfessionSummaryResponse">
@@ -26,5 +27,6 @@
         FROM MP_USER T
         WHERE T.PROFESSION != '101'
         GROUP BY DEPARTMENT, PROFESSION
+        ORDER BY DEPARTMENT, PROFESSION
     </select>
 </mapper>
