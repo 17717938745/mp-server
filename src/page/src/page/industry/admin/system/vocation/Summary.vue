@@ -31,17 +31,15 @@
 import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {Plus, Search,} from '@element-plus/icons-vue'
+import {ElMessage} from 'element-plus'
+import {Search,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
-import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
-import {PageResult} from '@/typing/ma/System'
+import {httpGet} from '@/util/HttpUtil'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
-import {formatDate} from '@/util/DateUtil'
-import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
+import {ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../../component/ViewList.vue'
-import {includes} from '@/util/ArrayUtil'
-import {ListResult} from "../../../../../typing/ma/System";
+import {ListResult} from '../../../../../typing/ma/System'
+import {formatDate, getMonthStart, getMonthEnd} from '@/util/DateUtil'
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
@@ -58,7 +56,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'complianceRateFormat', labelKey: 'violationComplianceRate', width: 189},
 ])
 const state = reactive({
-  dateTimeList: [],
+  dateTimeList: [getMonthStart(), getMonthEnd()],
   userConfigList: new Array<any>(),
   query: {
     data: {
@@ -66,8 +64,8 @@ const state = reactive({
       vocationType: '',
       user: '',
       date: '',
-      startDate: '',
-      endDate: '',
+      startDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
+      endDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
     },
     page: {
       page: DEFAULT_PAGE,

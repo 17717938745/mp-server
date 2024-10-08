@@ -20,7 +20,6 @@ import {useRoute} from 'vue-router'
 import {TabsPaneContext} from 'element-plus'
 import Index from './vocation/Index.vue'
 import Summary from './vocation/Summary.vue'
-
 const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 

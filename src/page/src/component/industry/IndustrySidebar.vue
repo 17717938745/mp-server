@@ -16,7 +16,7 @@
       <el-menu-item index="0">
         <template #title>
           <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
-          https://vn.douson.cn/
+          <a href="https://vn.douson.cn/" style="color: #ffffff;">https://vn.douson.cn/</a>
         </template>
       </el-menu-item>
       <template v-for="sidebarTree in sidebarTreeList">

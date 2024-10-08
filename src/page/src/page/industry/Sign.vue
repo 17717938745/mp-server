@@ -266,15 +266,6 @@ const handleSubmit = (retry: boolean = true) => {
                               {
                                 "children": [],
                                 "id": "-1",
-                                "path": "backup",
-                                "component": "backup",
-                                "nameKey": "accidentReportBackup",
-                                "white": false,
-                                "showFlag": true,
-                              },
-                              {
-                                "children": [],
-                                "id": "-1",
                                 "path": "event",
                                 "component": "event",
                                 "nameKey": "accidentEvent",

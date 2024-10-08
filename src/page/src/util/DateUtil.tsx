@@ -126,46 +126,35 @@ export const getQuarter = (diff: number = 0): Date => {
   console.log(dateString)
   return new Date(dateString)
 }
-/**
- * 获取本周、本季度、本月、上月的开始日期、结束日期
- */
-var now = new Date();                    //当前日期   
-var nowDayOfWeek = now.getDay();         //今天本周的第几天   
-var nowDay = now.getDate();              //当前日   
-var nowMonth = now.getMonth();           //当前月   
-var nowYear = now.getYear();             //当前年   
-nowYear += (nowYear < 2000) ? 1900 : 0;  //  
 
-var lastMonthDate = new Date();  //上月日期
-lastMonthDate.setDate(1);
-lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-var lastYear = lastMonthDate.getYear();
-var lastMonth = lastMonthDate.getMonth();
 
-//格式化日期：yyyy-MM-dd   
-function formatDate2(date) {
-  var myyear = date.getFullYear();
-  var mymonth = date.getMonth() + 1;
-  var myweekday = date.getDate();
-
-  if (mymonth < 10) {
-    mymonth = "0" + mymonth;
-  }
-  if (myweekday < 10) {
-    myweekday = "0" + myweekday;
-  }
-  return (myyear + "-" + mymonth + "-" + myweekday);
+export const getMonthStart = () => {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), 1)
+}
+export const getMonthEnd = () => {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = now.getMonth()
+  return new Date(new Date(m < 11 ? y : (y + 1),  m < 11 ? (m + 1) : m, 1).getTime() - 24 * 3600 * 1000)
 }
 
-//今天
-var getCurrentDate = new Date(nowYear, nowMonth, nowDay);
-var getCurrentDate = formatDate2(getCurrentDate)
+// 格式化日期：yyyy-MM-dd
+function parseDate(date) {
+  const y = date.getFullYear()
+  let m = date.getMonth() + 1
+  var w = date.getDate()
 
-//昨天
-var getYesterdayDate = new Date(nowYear, nowMonth, nowDay - 1);
-var getYesterdayDate = formatDate2(getYesterdayDate);
+  if (m < 10) {
+    m = '0' + m
+  }
+  if (w < 10) {
+    w = '0' + w
+  }
+  return (y + '-' + m + '-' + w)
+}
 
-//获得某月的天数   
+//获得某月的天数
 function getMonthDays(myMonth) {
   var monthStartDate = new Date(nowYear, myMonth, 1);
   var monthEndDate = new Date(nowYear, myMonth + 1, 1);
@@ -173,7 +162,7 @@ function getMonthDays(myMonth) {
   return days;
 }
 
-//获得本季度的开始月份   
+//获得本季度的开始月份
 export function getQuarterStartMonth() {
   var quarterStartMonth = 0;
   let month = nowMonth; //默认当前月份
@@ -191,69 +180,76 @@ export function getQuarterStartMonth() {
   }
   return quarterStartMonth;
 }
-//获得某季度的开始日期　　 
+
+//获得某季度的开始日期　　
 export function getQuarterStartDate(paraSeason = getQuarterStartMonth()) {
   switch (paraSeason) {
-    case 1: return new Date(nowYear + "-01-01" + ' 00:00:00');
-    case 2: return new Date(nowYear + "-04-01" + ' 00:00:00');
-    case 3: return new Date(nowYear + "-07-01" + ' 00:00:00');
-    case 4: return new Date(nowYear + "-10-01" + ' 00:00:00');
+    case 1:
+      return new Date(nowYear + "-01-01" + ' 00:00:00');
+    case 2:
+      return new Date(nowYear + "-04-01" + ' 00:00:00');
+    case 3:
+      return new Date(nowYear + "-07-01" + ' 00:00:00');
+    case 4:
+      return new Date(nowYear + "-10-01" + ' 00:00:00');
   }
 }
 
-//获得某季度的结束日期　　 
+//获得某季度的结束日期　　
 export function getQuarterEndDate(paraSeason = getQuarterStartMonth()) {
   switch (paraSeason) {
-    case 1: return new Date(nowYear + "-03-31" + ' 23:59:59');
-    case 2: return new Date(nowYear + "-06-30" + ' 23:59:59');
-    case 3: return new Date(nowYear + "-09-30" + ' 23:59:59');
-    case 4: return new Date(nowYear + "-12-31" + ' 23:59:59');
+    case 1:
+      return new Date(nowYear + "-03-31" + ' 23:59:59');
+    case 2:
+      return new Date(nowYear + "-06-30" + ' 23:59:59');
+    case 3:
+      return new Date(nowYear + "-09-30" + ' 23:59:59');
+    case 4:
+      return new Date(nowYear + "-12-31" + ' 23:59:59');
   }
 }
-//获得本周的开始日期   
+
+//获得本周的开始日期
 function getWeekStartDate() {
   var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
-  return formatDate2(weekStartDate);
+  return parseDate(weekStartDate);
 }
 
-//获得本周的结束日期   
+//获得本周的结束日期
 function getWeekEndDate() {
   var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek));
-  return formatDate2(weekEndDate);
+  return parseDate(weekEndDate);
 }
 
-//获得本月的开始日期   
+//获得本月的开始日期
 function getMonthStartDate() {
   var monthStartDate = new Date(nowYear, nowMonth, 1);
-  return formatDate2(monthStartDate);
+  return parseDate(monthStartDate);
 }
 
-//获得本月的结束日期   
+//获得本月的结束日期
 function getMonthEndDate() {
   var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
-  return formatDate2(monthEndDate);
+  return parseDate(monthEndDate);
 }
 
 //获得上月开始时间
 function getLastMonthStartDate() {
   var lastMonthStartDate = new Date(nowYear, lastMonth, 1);
-  return formatDate2(lastMonthStartDate);
+  return parseDate(lastMonthStartDate);
 }
 
 //获得上月结束时间
 function getLastMonthEndDate() {
   var lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
-  return formatDate2(lastMonthEndDate);
+  return parseDate(lastMonthEndDate);
 }
-
-
-
 
 
 /**
  * 日期格式化函数：
  * 例如：20220901 -> 2022-9-1
- *			202209 -> 2022-9
+ *      202209 -> 2022-9
  *
  */
 
@@ -270,7 +266,7 @@ export function formatUserDate(value: string) {
   }
 
   let _arr = [],
-    pattern;
+      pattern;
 
   if (len >= 6 && len < 8) {
     pattern = /(\d{4})(\d{2})/;
@@ -298,13 +294,12 @@ export function formatUserDate(value: string) {
   return _arr.toString().replace(/,/g, '');
 }
 
-
-
 // 获取本月最后一天
 export const getLastDate = (month = new Date().getMonth() + 1, year = new Date().getFullYear()) => {
   return new Date(new Date(year, month).setDate(0)).getDate();
 }
-export function getlastMonth() {
+
+export function getLastMonth() {
   const date = new Date();
   let nowMonth = date.getMonth() // 0-11
   let lastMonth = '0';
