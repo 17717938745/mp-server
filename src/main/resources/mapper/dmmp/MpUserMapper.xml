@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper">
+
+    <select id="userDepartmentSummary" resultType="com.lead.fund.base.server.mp.response.MpUserDepartmentSummaryResponse">
+        SELECT DEPARTMENT,
+               SUM(CASE WHEN T.USER_PROPERTY = 1 THEN 1 ELSE 0 END)                   WORK_SHOP,
+               SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END)                   OFFICE,
+               COUNT(1)                                                               TOTAL,
+               SUM(CASE WHEN T.SCHEDULE IS NULL OR T.SCHEDULE = '' THEN 1 ELSE 0 END) SCHEDULE_NULL,
+               SUM(CASE WHEN T.SCHEDULE = 0 THEN 1 ELSE 0 END)                        SCHEDULE_DAY_TIME,
+               SUM(CASE WHEN T.SCHEDULE = 3 THEN 1 ELSE 0 END)                        SCHEDULE_DAY_TIME_12,
+               SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING,
+               SUM(CASE WHEN T.USER_PROPERTY = 4 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING_12
+        FROM MP_USER T
+        GROUP BY DEPARTMENT
+    </select>
+
+    <select id="userProfessionSummary" resultType="com.lead.fund.base.server.mp.response.MpUserProfessionSummaryResponse">
+        SELECT DEPARTMENT,
+               PROFESSION,
+               SUM(CASE WHEN T.USER_PROPERTY = 1 THEN 1 ELSE 0 END) WORK_SHOP,
+               SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END) OFFICE,
+               COUNT(1)                                             TOTAL
+        FROM MP_USER T
+        GROUP BY DEPARTMENT, PROFESSION
+    </select>
+</mapper>

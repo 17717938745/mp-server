@@ -73,6 +73,10 @@
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>
+    <div>
+      <span style="font-size: 26px; font-weight: bold;">{{ store.state.label.vocationDays }}:</span>
+      <span style="font-weight: bold;">{{ summaryData.vocationDaysFormat }}</span>
+    </div>
     <view-list
         idKey="computerId"
         :columnConfigList="columnConfigList"
@@ -295,6 +299,7 @@ const state = reactive({
     },
   },
   tableData: new Array<any>(),
+  summaryData: {},
   total: 0,
   formData: Object.assign({}, defaultFormData),
   formSave: false,
@@ -355,6 +360,7 @@ const handlePage = () => {
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = res.list
         state.total = res.total
+        state.summaryData = res.data || {}
         ElMessage.success("Query success")
       }
   )
@@ -437,6 +443,7 @@ const handleDelete = (row: any) => {
 const {
   query,
   tableData,
+  summaryData,
   config,
   userConfigList,
   total,

@@ -50,10 +50,18 @@ import com.lead.fund.base.server.mp.request.MpUserPasswordRequest;
 import com.lead.fund.base.server.mp.request.MpUserRequest;
 import com.lead.fund.base.server.mp.request.SignInHistoryPageRequest;
 import com.lead.fund.base.server.mp.request.SignInRequest;
-import com.lead.fund.base.server.mp.response.*;
+import com.lead.fund.base.server.mp.response.MpRoleGroupResponse;
+import com.lead.fund.base.server.mp.response.MpRoleResponse;
+import com.lead.fund.base.server.mp.response.MpSignInHistoryResponse;
+import com.lead.fund.base.server.mp.response.MpUserConfigResponse;
+import com.lead.fund.base.server.mp.response.MpUserDepartmentSummaryResponse;
+import com.lead.fund.base.server.mp.response.MpUserProfessionSummaryResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
+import com.lead.fund.base.server.mp.response.SignInResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -62,7 +70,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -112,6 +119,8 @@ public class SystemController {
     private UrlHelper urlHelper;
     @Resource
     private MpSignInHistoryMapper signInHistoryMapper;
+    @Resource
+    private MpUserMapper mpUserMapper;
 
     /**
      * 注册设备
@@ -124,7 +133,6 @@ public class SystemController {
         return new DataResult<>(deviceDao.defaultDevice(null, null, HttpUtil.ip(req)));
     }
 
-
     /**
      * 用户配置列表
      *
@@ -136,6 +144,130 @@ public class SystemController {
                 .stream()
                 .map(t -> new MpUserConfigResponse().setUserId(t.getId()).setUsername(t.getUsername()).setName(t.getName()))
                 .collect(Collectors.toList()));
+    }
+
+    /**
+     * 用户部门汇总
+     *
+     * @return {@link ListResult<MpUserDepartmentSummaryResponse>}
+     */
+    @GetMapping("user/department-summary")
+    public ListResult<MpUserDepartmentSummaryResponse> departmentSummary() {
+        List<MpUserDepartmentSummaryResponse> l = mpUserMapper.userDepartmentSummary();
+        final List<ParamConfigResponse> pl = paramDao.listByCategoryId("department");
+        final Map<Object, String> m = pl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, ParamConfigResponse::getLabel, (t, t1) -> t1
+                ));
+        final AtomicInteger ps = new AtomicInteger(0);
+        final Map<Object, Integer> m1 = pl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, t -> ps.addAndGet(1), (t, t1) -> t1
+                ));
+        final AtomicInteger index = new AtomicInteger(0);
+        final BigDecimal[] bl = new BigDecimal[]{
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO
+        };
+        l = l.stream().peek(t -> {
+
+                    t.setIndex(index.addAndGet(1))
+                            .setDepartmentFormat(m.getOrDefault(t.getDepartment(), t.getDepartment()))
+                    ;
+                    bl[0] = bl[0].add(t.getWorkShop());
+                    bl[1] = bl[1].add(t.getOffice());
+                    bl[2] = bl[2].add(t.getTotal());
+                    bl[3] = bl[3].add(t.getScheduleNull());
+                    bl[4] = bl[4].add(t.getScheduleDayTime());
+                    bl[5] = bl[5].add(t.getScheduleDayTime12());
+                    bl[6] = bl[6].add(t.getScheduleEvening());
+                    bl[7] = bl[7].add(t.getScheduleEvening12());
+                }).sorted(Comparator.comparingInt(t -> m1.getOrDefault(t.getDepartment(), 0)))
+                .collect(Collectors.toList());
+        l.add(
+                new MpUserDepartmentSummaryResponse()
+                        .setIndex(index.addAndGet(1))
+                        .setDepartment("-1")
+                        .setDepartmentFormat("总计")
+                        .setWorkShop(bl[0])
+                        .setOffice(bl[1])
+                        .setTotal(bl[2])
+                        .setScheduleNull(bl[3])
+                        .setScheduleDayTime(bl[4])
+                        .setScheduleDayTime12(bl[5])
+                        .setScheduleEvening(bl[6])
+                        .setScheduleEvening12(bl[7])
+        );
+        return new ListResult<>(l);
+    }
+
+    /**
+     * 用户职业汇总
+     *
+     * @return {@link ListResult<MpUserDepartmentSummaryResponse>}
+     */
+    @GetMapping("user/profession-summary")
+    public ListResult<MpUserProfessionSummaryResponse> professionSummary() {
+        List<MpUserProfessionSummaryResponse> l = mpUserMapper.userProfessionSummary();
+        final List<ParamConfigResponse> pl = paramDao.listByCategoryId("department");
+        final Map<Object, String> dm = pl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, ParamConfigResponse::getLabel, (t, t1) -> t1
+                ));
+        final AtomicInteger dps = new AtomicInteger(0);
+        final Map<Object, Integer> dm1 = pl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, t -> dps.addAndGet(1), (t, t1) -> t1
+                ));
+        final List<ParamConfigResponse> ppl = paramDao.listByCategoryId("profession");
+        final Map<Object, String> pm = ppl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, ParamConfigResponse::getLabel, (t, t1) -> t1
+                ));
+        final AtomicInteger pps = new AtomicInteger(0);
+        final Map<Object, Integer> pm1 = ppl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, t -> dps.addAndGet(1), (t, t1) -> t1
+                ));
+        final AtomicInteger index = new AtomicInteger(0);
+        final BigDecimal[] bl = new BigDecimal[]{
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO
+        };
+        l = l.stream().peek(t -> {
+                    t.setIndex(index.addAndGet(1))
+                            .setDepartmentFormat(dm.getOrDefault(t.getDepartment(), t.getDepartment()))
+                            .setProfessionFormat(pm.getOrDefault(t.getDepartment(), t.getDepartment()))
+                    ;
+                    bl[0] = bl[0].add(t.getWorkShop());
+                    bl[1] = bl[1].add(t.getOffice());
+                    bl[2] = bl[2].add(t.getTotal());
+                }).sorted((t, t1) -> {
+                    int i = dm1.getOrDefault(t.getDepartment(), 0) - dm1.getOrDefault(t1.getDepartment(), 0);
+                    if (i == 0) {
+                        return pm1.getOrDefault(t.getDepartment(), 0) - pm1.getOrDefault(t1.getDepartment(), 0);
+                    } else {
+                        return i;
+                    }
+                })
+                .collect(Collectors.toList());
+        l.add(
+                new MpUserProfessionSummaryResponse()
+                        .setIndex(index.addAndGet(1))
+                        .setDepartment("-1")
+                        .setDepartmentFormat("总计")
+                        .setWorkShop(bl[0])
+                        .setOffice(bl[1])
+                        .setTotal(bl[2])
+        );
+        return new ListResult<>(l);
     }
 
     /**

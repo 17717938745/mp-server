@@ -59,5 +59,4 @@ import static com.lead.fund.base.server.mp.converter.IndustryConverter.INDUSTRY_
 
 public class Test {
 
-
 }

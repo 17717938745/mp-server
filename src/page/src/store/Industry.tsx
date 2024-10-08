@@ -373,6 +373,42 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '用户管理',
         },
         {
+          value: 'workShop',
+          label: '车间',
+        },
+        {
+          value: 'office',
+          label: '科室',
+        },
+        {
+          value: 'total',
+          label: '总计',
+        },
+        {
+          value: 'scheduleNull',
+          label: '-',
+        },
+        {
+          value: 'scheduleDayTime',
+          label: '白班',
+        },
+        {
+          value: 'scheduleDayTime12',
+          label: '白班12H',
+        },
+        {
+          value: 'scheduleEvening',
+          label: '夜班',
+        },
+        {
+          value: 'scheduleEvening12',
+          label: '夜班12H',
+        },
+        {
+          value: 'departmentAndSchedule',
+          label: '部门和班次',
+        },
+        {
           value: 'accountManage',
           label: '人员管理',
         },
@@ -1449,6 +1485,42 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'userManage',
           label: 'Người quản trị',
+        },
+        {
+          value: 'workShop',
+          label: 'Xưởng SX',
+        },
+        {
+          value: 'office',
+          label: 'Văn phòng',
+        },
+        {
+          value: 'total',
+          label: 'total',
+        },
+        {
+          value: 'scheduleNull',
+          label: '-',
+        },
+        {
+          value: 'scheduleDayTime',
+          label: 'Ca ngày',
+        },
+        {
+          value: 'scheduleDayTime12',
+          label: 'Ca ngày 12H',
+        },
+        {
+          value: 'scheduleEvening',
+          label: 'Ca đêm',
+        },
+        {
+          value: 'scheduleEvening12',
+          label: 'Ca đêm 12H',
+        },
+        {
+          value: 'departmentAndSchedule',
+          label: 'Bộ phận và Ca loại',
         },
         {
           value: 'accountManage',
