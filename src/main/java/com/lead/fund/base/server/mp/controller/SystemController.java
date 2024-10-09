@@ -251,10 +251,11 @@ public class SystemController {
                     bl[2] = bl[2].add(t.getTotal());
                 }).sorted((t, t1) -> {
                     int i = dm1.getOrDefault(t.getDepartment(), 0) - dm1.getOrDefault(t1.getDepartment(), 0);
-                    if (i == 0) {
-                        return pm1.getOrDefault(t.getProfession(), 0) - pm1.getOrDefault(t1.getProfession(), 0);
-                    } else {
+                    int i1 = pm1.getOrDefault(t.getProfession(), 0) - pm1.getOrDefault(t1.getProfession(), 0);
+                    if (i1 == 0) {
                         return i;
+                    } else {
+                        return i1;
                     }
                 })
                 .collect(Collectors.toList());

@@ -10,10 +10,11 @@
                SUM(CASE WHEN T.SCHEDULE IS NULL OR T.SCHEDULE = '' THEN 1 ELSE 0 END) SCHEDULE_NULL,
                SUM(CASE WHEN T.SCHEDULE = 0 THEN 1 ELSE 0 END)                        SCHEDULE_DAY_TIME,
                SUM(CASE WHEN T.SCHEDULE = 3 THEN 1 ELSE 0 END)                        SCHEDULE_DAY_TIME_12,
-               SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING,
-               SUM(CASE WHEN T.USER_PROPERTY = 4 THEN 1 ELSE 0 END)                   SCHEDULE_EVENING_12
+               SUM(CASE WHEN T.SCHEDULE = 2 THEN 1 ELSE 0 END)                        SCHEDULE_EVENING,
+               SUM(CASE WHEN T.SCHEDULE = 4 THEN 1 ELSE 0 END)                        SCHEDULE_EVENING_12
         FROM MP_USER T
         WHERE T.PROFESSION != '101'
+        AND T.STATE = 0
         GROUP BY DEPARTMENT
         ORDER BY DEPARTMENT
     </select>
@@ -26,6 +27,7 @@
                COUNT(1)                                             TOTAL
         FROM MP_USER T
         WHERE T.PROFESSION != '101'
+        AND T.STATE = 0
         GROUP BY DEPARTMENT, PROFESSION
         ORDER BY DEPARTMENT, PROFESSION
     </select>
