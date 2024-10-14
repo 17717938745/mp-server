@@ -4494,7 +4494,7 @@ public class DousonController {
             lambda.like(BoxFlagEntity::getOrderProject, request.getOrderProject());
         }
         if (isNotBlank(request.getCustomerShortName())) {
-            lambda.like(BoxFlagEntity::getCustomerShortName, request.getCustomerShortName());
+            lambda.eq(BoxFlagEntity::getCustomerShortName, request.getCustomerShortName());
         }
         if (isNotBlank(request.getPurchaseOrderNo())) {
             lambda.like(BoxFlagEntity::getPurchaseOrderNo, request.getPurchaseOrderNo());

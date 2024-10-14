@@ -6,5 +6,4 @@
 
 <script lang="tsx" setup>
 import LeadSuper from '../component/lead/LeadSuper.vue'
-import {httpPutJson} from "@/util/HttpUtil";
 </script>
