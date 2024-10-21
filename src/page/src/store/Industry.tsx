@@ -129,6 +129,38 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '物料号',
         },
         {
+          value: 'materialDescribe',
+          label: '物料描述',
+        },
+        {
+          value: 'roughcastDesignNumber',
+          label: '毛坯图号',
+        },
+        {
+          value: 'chargeCompany',
+          label: '负责单位',
+        },
+        {
+          value: 'assemble',
+          label: '装配',
+        },
+        {
+          value: 'pressureTest',
+          label: '试压',
+        },
+        {
+          value: 'dealSurface',
+          label: '表面处理',
+        },
+        {
+          value: 'scheduleProduce',
+          label: '是否排产',
+        },
+        {
+          value: 'materialOrderNo',
+          label: '领料单号',
+        },
+        {
           value: 'designNumber',
           label: '图号',
         },
@@ -267,6 +299,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'deviceManage',
           label: '设备管理',
+        },
+        {
+          value: 'device',
+          label: '设备',
         },
         {
           value: 'paramManage',
@@ -655,6 +691,22 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'shouldCompleteCount',
           label: '当班定额产量',
+        },
+        {
+          value: 'customerOrderNo',
+          label: '客户订单号',
+        },
+        {
+          value: 'customerProjectSequence',
+          label: '客户项次号',
+        },
+        {
+          value: 'orderProjectNo',
+          label: '订单项目号',
+        },
+        {
+          value: 'roughcastExpireDate',
+          label: '毛坯到货日期',
         },
         {
           value: 'actualCompleteCount',
@@ -1243,6 +1295,142 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: 'mã vật liệu',
         },
         {
+          value: 'materialDescribe',
+          label: 'Mô tả vật liệu',
+        },
+        {
+          value: 'roughcastDesignNumber',
+          label: 'Bản vẽ phôi',
+        },
+        {
+          value: 'chargeCompany',
+          label: '负责单位',
+        },
+        {
+          value: 'assemble',
+          label: '装配',
+        },
+        {
+          value: 'pressureTest',
+          label: '试压',
+        },
+        {
+          value: 'dealSurface',
+          label: '表面处理',
+        },
+        {
+          value: 'scheduleProduce',
+          label: '是否排产',
+        },
+        {
+          value: 'materialOrderNo',
+          label: '领料单号',
+        },
+        {
+          value: 'promiseCompleteDate',
+          label: '承诺完成日期',
+        },
+        {
+          value: 'planReformCount',
+          label: '计划加工数量',
+        },
+        {
+          value: 'externalProcedureRemark',
+          label: '外协工序备注',
+        },
+        {
+          value: 'procedureCountHour8',
+          label: '8H班产量/件',
+        },
+        {
+          value: 'procedureCountHour12',
+          label: '12小时班产量/件',
+        },
+        {
+          value: 'processManHour',
+          label: '工序工时/件',
+        },
+        {
+          value: 'processManHour',
+          label: '工序工时/件',
+        },
+        {
+          value: 'onlineDate',
+          label: '上线时间',
+        },
+        {
+          value: 'offlineDate',
+          label: '下线时间',
+        },
+        {
+          value: 'delay',
+          label: '是否拖期',
+        },
+        {
+          value: 'processCount',
+          label: '已加工数量',
+        },
+        {
+          value: 'procedureSketch',
+          label: '工序简述',
+        },
+        {
+          value: 'surplus',
+          label: '剩余',
+        },
+        {
+          value: 'procedureCountHour12',
+          label: 'Sản lượng của 12h/ con',
+        },
+        {
+          value: 'processManHour',
+          label: 'Thời gian/ cái',
+        },
+        {
+          value: 'onlineDate',
+          label: 'Ngày hàng lên máy SX',
+        },
+        {
+          value: 'offlineDate',
+          label: 'Ngày SX xong',
+        },
+        {
+          value: 'delay',
+          label: 'Có quá hạn hay không',
+        },
+        {
+          value: 'processCount',
+          label: 'Số lượng đã SX',
+        },
+        {
+          value: 'procedureSketch',
+          label: 'Công đoạn gia công',
+        },
+        {
+          value: 'surplus',
+          label: 'Còn lại',
+        },
+        {
+          value: 'procedureCountHour8',
+          label: 'Sản lượng của 8h/ con',
+        },
+        {
+          value: 'materialCount',
+          label: 'Số lượng lĩnh liệu',
+        },
+        {
+          value: 'promiseCompleteDate',
+          label: 'Ngày sản xuất chịu trách nhiệm nhập kho',
+        },
+        {
+          value: 'planReformCount',
+          label: 'Kế hoạch số lượng gia công',
+        },
+        {
+          value: 'externalProcedureRemark',
+          label: 'Ghi chú công đoạn nhà gia công',
+        },
+        {
           value: 'designNumber',
           label: 'Số bản vẽ',
         },
@@ -1380,6 +1568,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'deviceManage',
+          label: 'Thiết bị',
+        },
+        {
+          value: 'device',
           label: 'Thiết bị',
         },
         {
@@ -1761,6 +1953,22 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'shouldCompleteCount',
           label: 'Định mức sản lượng ca',
+        },
+        {
+          value: 'customerOrderNo',
+          label: 'Đơn đặt hàng khách',
+        },
+        {
+          value: 'customerProjectSequence',
+          label: 'Đơn đặt hàng khách',
+        },
+        {
+          value: 'orderProjectNo',
+          label: 'Số hạng mục đơn hàng',
+        },
+        {
+          value: 'roughcastExpireDate',
+          label: 'Ngày phôi về',
         },
         {
           value: 'actualCompleteCount',

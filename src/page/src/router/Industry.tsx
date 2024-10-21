@@ -48,6 +48,27 @@ const initialRouter = (router: Router) => {
   console.log(`industry initialRouter...`)
   router.addRoute(
       {
+        path: '/material',
+        name: '/material',
+        meta: {
+          title: 'material',
+        },
+        component: () => import ('../page/industry/admin/temp/Material.vue'),
+      },
+  )
+  router.addRoute(
+      {
+        path: '/operation',
+        name: '/operation',
+        meta: {
+          title: 'material',
+        },
+        component: () => import ('../page/industry/admin/temp/Operation.vue'),
+      },
+  )
+
+  router.addRoute(
+      {
         path: '/local',
         name: '/local',
         meta: {

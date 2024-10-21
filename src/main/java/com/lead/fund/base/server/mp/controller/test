@@ -1,0 +1,350 @@
+package com.lead.fund.base.server.mp.controller;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.lead.fund.base.common.basic.exec.BusinessException;
+import com.lead.fund.base.common.basic.model.OptionItem;
+import com.lead.fund.base.common.basic.response.DataResult;
+import com.lead.fund.base.common.basic.response.PageDataResult;
+import com.lead.fund.base.common.basic.response.PageResult;
+import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
+import com.lead.fund.base.common.database.util.DatabaseUtil;
+import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.MultitaskUtil;
+import com.lead.fund.base.common.util.StrUtil;
+import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
+import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
+import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
+import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.*;
+import com.lead.fund.base.server.mp.helper.AccountHelper;
+import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaintainMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleAttachmentMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TroubleMapper;
+import com.lead.fund.base.server.mp.model.FileModel;
+import com.lead.fund.base.server.mp.model.PhotoImgModel;
+import com.lead.fund.base.server.mp.request.*;
+import com.lead.fund.base.server.mp.response.MaintainResponse;
+import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
+import com.lead.fund.base.server.mp.response.VocationResponse;
+import com.lead.fund.base.server.mp.response.VocationResponse;
+import com.lead.fund.base.server.mp.response.VocationSummaryResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import jakarta.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Collection;
+import org.mapstruct.Mapping;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.BeanUtil.defaultIfNull;
+import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
+import static com.lead.fund.base.server.mp.converter.IndustryConverter.INDUSTRY_INSTANCE;
+
+public class Test {
+
+    private void mergeRelevance(MaintainRequest request, MaintainEntity e) {
+        maintainAttachmentMapper.delete(new LambdaUpdateWrapper<MaintainAttachmentEntity>()
+                .eq(MaintainAttachmentEntity::getMaintainId, e.getId())
+        );
+        maintainAttachmentDao.saveBatch(
+                Stream.of(
+                                CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.maintainAttachment(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getFileList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.maintainAttachment(e.getId(), "1", t))
+                        ).flatMap(t -> t)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 保存维修
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaintainRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/maintain")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result maintainSave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody MaintainRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        MaintainEntity e;
+        maintainMapper.insert(e = (MaintainEntity) INDUSTRY_INSTANCE.maintain(request)
+                .setBrokenReason("," + String.join(",", request.getBrokenReasonList()) + ",")
+                .setPartyUser("," + String.join(",", request.getPartyUserList()) + ",")
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 修改维修
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaintainRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/maintain")
+    public Result maintainUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody MaintainRequest request
+    ) {
+        MpUserResponse u;
+        try {
+            u = accountHelper.getUser(deviceId);
+        } catch (Exception e) {
+            u = new MpUserResponse();
+        }
+        MaintainEntity e = (MaintainEntity) INDUSTRY_INSTANCE.maintain(request)
+                .setBrokenReason("," + String.join(",", request.getBrokenReasonList()) + ",")
+                .setPartyUser("," + String.join(",", request.getPartyUserList()) + ",")
+                .setModifier(u.getUserId());
+        LambdaUpdateWrapper<MaintainEntity> lambda = new LambdaUpdateWrapper<MaintainEntity>()
+                .eq(MaintainEntity::getId, e.getId());
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "maintainView".equals(t))) {
+            lambda.eq(MaintainEntity::getPartyUser, u.getUserId());
+        }
+        if (!"admin".equals(u.getUsername())) {
+            lambda.eq(MaintainEntity::getValid, false);
+        }
+        if (maintainMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 删除维修
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaintainRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/maintain")
+    public Result maintainDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaintainRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<MaintainEntity> lambda = new LambdaUpdateWrapper<MaintainEntity>().eq(MaintainEntity::getId, request.getMaintainId());
+        if (isNotBlank(request.getMaintainId())) {
+            if (maintainMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+        }
+        return new Result();
+    }
+
+    private LambdaQueryWrapper<MaintainEntity> maintainLambda(MaintainRequest request) {
+        final LambdaQueryWrapper<MaintainEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getMaintainId())) {
+            lambda.eq(MaintainEntity::getId, request.getMaintainId());
+        }
+        if (null != request.getStartDate()) {
+            lambda.ge(MaintainEntity::getDate, DateUtil.day(request.getStartDate()));
+        }
+        if (null != request.getEndDate()) {
+            lambda.le(MaintainEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndDate())));
+        }
+        if (isNotBlank(request.getQueryUserId())) {
+            lambda.like(MaintainEntity::getPartyUser, "," + request.getQueryUserId() + ",");
+        }
+        if (isNotBlank(request.getPartyUser())) {
+            lambda.like(MaintainEntity::getPartyUser, "," + request.getPartyUser() + ",");
+        }
+        if (isNotBlank(request.getBrokenReason())) {
+            lambda.like(MaintainEntity::getBrokenReason, "," + request.getBrokenReason() + ",");
+        }
+        if (isNotBlank(request.getEquipmentId())) {
+            lambda.eq(MaintainEntity::getEquipmentId, request.getEquipmentId());
+        }
+        if (CollUtil.isNotEmpty(request.getBrokenReasonList())) {
+            DatabaseUtil.or(lambda, request.getBrokenReasonList(), (lam, l) -> lam.in(MaintainEntity::getBrokenReason, l));
+        }
+        return lambda.orderByDesc(MaintainEntity::getCreatedTime);
+    }
+
+    private List<MaintainEntity> maintainList(MaintainRequest request) {
+        return maintainMapper.selectList(maintainLambda(request)
+                .select(
+                        MaintainEntity::getId,
+                        MaintainEntity::getCreator,
+                        MaintainEntity::getLastModifiedTime,
+                        MaintainEntity::getDeletedFlag,
+                        MaintainEntity::getCreator,
+                        MaintainEntity::getModifier,
+                        MaintainEntity::getRemark,
+                        MaintainEntity::getDate,
+                        MaintainEntity::getEquipmentId,
+                        MaintainEntity::getBrokenReason,
+                        MaintainEntity::getBrokenContent,
+                        MaintainEntity::getRepairContent,
+                        MaintainEntity::getReplacePair,
+                        MaintainEntity::getRepairType,
+                        MaintainEntity::getStopHour,
+                        MaintainEntity::getPartyUser,
+                        MaintainEntity::getValid
+                )
+        );
+    }
+
+    private MaintainSummaryResponse defaultMaintainSummary() {
+        return new MaintainSummaryResponse().setStopHour(BigDecimal.ZERO);
+    }
+
+    private MaintainSummaryResponse maintainSummary(MaintainRequest request) {
+        return maintainMapper.selectList(
+                        maintainLambda(request)
+                                .isNotNull(MaintainEntity::getStopHour)
+                                .select(MaintainEntity::getSumStopHour)
+                ).stream().findFirst()
+                .map(t -> new MaintainSummaryResponse().setStopHour(t.getSumStopHour()))
+                .orElse(defaultMaintainSummary());
+    }
+
+    private List<MaintainResponse> formatMaintainList(List<MaintainEntity> l) {
+        final List<MaintainResponse> list = INDUSTRY_INSTANCE.maintainList(l);
+        List<String> userIdList = Stream.of(
+                        list.stream().map(MaintainResponse::getPartyUserList).flatMap(Collection::stream).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));
+        MultitaskUtil.supplementList(
+                list,
+                MaintainResponse::getMaintainId,
+                l1 -> maintainAttachmentMapper.selectList(new LambdaQueryWrapper<MaintainAttachmentEntity>()
+                        .in(MaintainAttachmentEntity::getMaintainId, l1)),
+                (t, r) -> t.getMaintainId().equals(r.getMaintainId()),
+                (t, r) -> {
+                    switch (r.getAttachmentCategory()) {
+                        case "0" -> t.getPhotoList().add(
+                                INDUSTRY_INSTANCE.maintainPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "1" -> t.getFileList().add(
+                                INDUSTRY_INSTANCE.maintainFile(r, urlHelper.getUrlPrefix())
+                        );
+                    }
+                }
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getEquipmentId())).collect(Collectors.toList()),
+                MaintainResponse::getEquipmentId,
+                l1 -> equipmentMapper.selectList(new LambdaQueryWrapper<EquipmentEntity>()
+                        .in(EquipmentEntity::getId, l1)),
+                (t, r) -> t.getEquipmentId().equals(r.getId()),
+                (t, r) -> {
+                    t.setEquipmentNo(r.getEquipmentNo())
+                            .setPosition(r.getPosition())
+                            .setEquipmentName(r.getEquipmentName())
+                    ;
+                }
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getPosition())).collect(Collectors.toList()),
+                MaintainResponse::getPosition,
+                l1 -> paramDao.listByCategoryId("equipmentPosition"),
+                (r, t) -> r.getPosition().equals(t.getValue()),
+                (r, t) -> r.setPositionFormat(t.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getRepairType())).collect(Collectors.toList()),
+                MaintainResponse::getRepairType,
+                l1 -> paramDao.listByCategoryId("repairType"),
+                (r, t) -> r.getRepairType().equals(t.getValue()),
+                (r, t) -> r.setRepairTypeFormat(t.getLabel())
+        );
+        final Map<Object, String> m = paramDao.listByCategoryId("brokenReason").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, OptionItem::getLabel, (t, t1) -> t1));
+        for (MaintainResponse t : list) {
+            t.setBrokenReasonFormat(t.getBrokenReasonList().stream().filter(StrUtil::isNotBlank).map(t1 -> m.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+            t.setPartyUserFormat(t.getPartyUserList().stream().filter(StrUtil::isNotBlank).map(t1 -> um.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
+        return list;
+    }
+
+    /**
+     * 维修列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MpAccountQueryPageRequest}
+     * @return {@link PageResult <MaintainResponse>}
+     */
+    @GetMapping("admin/maintain/page")
+    public PageDataResult<MaintainResponse, MaintainSummaryResponse> maintainAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaintainPageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "maintainView".equals(t))) {
+            request.getData().setQueryUserId(u.getUserId());
+        }
+        final PageResult<MaintainEntity> page = DatabaseUtil.page(request, this::maintainList);
+        final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageDataResult<>(
+                page.getTotal(),
+                formatMaintainList(page.getList())
+                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList()),
+                page.getTotal() > 0 ? maintainSummary(request.getData()) : defaultMaintainSummary()
+        );
+    }
+
+    /**
+     * 维修（公开）
+     *
+     * @param request {@link MaintainRequest}
+     * @return {@link DataResult <MaintainResponse>}
+     */
+    @GetMapping("maintain")
+    public DataResult<MaintainResponse> maintain(
+            @ModelAttribute MaintainRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatMaintainList(maintainList(request))), new MaintainResponse())
+        );
+    }
+
+}
