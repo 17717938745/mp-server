@@ -199,6 +199,7 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 80,},
+  {value: 'photoCount', labelKey: 'photoCount', width: 57},
   {value: 'reportDate', labelKey: 'date', width: 100,},
   // {value: 'equipmentNo', labelKey: 'equipmentNo', width: 80,},
   // {value: 'toolDescribe', labelKey: 'toolDescribe', width: 156,},

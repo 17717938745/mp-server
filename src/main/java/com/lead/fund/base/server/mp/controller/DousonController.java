@@ -3219,7 +3219,7 @@ public class DousonController {
         return new PageResult<>(
                 page.getTotal(),
                 formatTroubleList(page.getList())
-                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+                        .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1)).setPhotoCount(t.getPhotoList().size())).collect(Collectors.toList())
         );
     }
 
@@ -5593,7 +5593,7 @@ public class DousonController {
         PageResult<ComputerEntity> pr = DatabaseUtil.page(request, this::computerList);
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatComputerList(pr.getList())
-                .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList()));
+                .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1)).setPhotoCount(t.getPhotoList().size())).collect(Collectors.toList()));
     }
 
     /*========>>>>>>>>分割线<<<<<<<<========*/

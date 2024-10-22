@@ -29,6 +29,10 @@ public class TroubleResponse implements Serializable {
      */
     private Integer index;
     /**
+     * 图片数量
+     */
+    private Integer photoCount;
+    /**
      * ID
      */
     private String troubleId;

@@ -30,6 +30,10 @@ public class ComputerResponse extends AbstractAdministratorModel {
      */
     private Integer index;
     /**
+     * 图片数量
+     */
+    private Integer photoCount;
+    /**
      * 创建人用户名
      */
     private String creatorFormat;
