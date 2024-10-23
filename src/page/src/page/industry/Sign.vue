@@ -363,6 +363,15 @@ const handleSubmit = (retry: boolean = true) => {
                             "showFlag": true,
                           },
                           {
+                            "children": [],
+                            "id": "-1",
+                            "path": "template",
+                            "component": "template",
+                            "nameKey": "templateManage",
+                            "white": false,
+                            "showFlag": true,
+                          },
+                          {
                             "children": [
                               {
                                 "children": [],

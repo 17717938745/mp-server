@@ -9,7 +9,6 @@ import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
-import static com.lead.fund.base.common.util.StrUtil.lineEmpty2None;
 import static com.lead.fund.base.server.mp.cons.MpConst.STRING_LIST_ENGINEER_USER_ROLE_CODE_LIST;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_OPERATOR_OTHER_NOT_ALLOW;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_ORDER_REPEAT;
@@ -65,6 +64,8 @@ import com.lead.fund.base.server.mp.dao.ProductPhotoDao;
 import com.lead.fund.base.server.mp.dao.QualityAttachmentDao;
 import com.lead.fund.base.server.mp.dao.ReportPhotoDao;
 import com.lead.fund.base.server.mp.dao.ReportSerialNoDao;
+import com.lead.fund.base.server.mp.dao.TemplateDao;
+import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
@@ -103,6 +104,8 @@ import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
 import com.lead.fund.base.server.mp.entity.douson.ReportPhotoEntity;
 import com.lead.fund.base.server.mp.entity.douson.ReportSerialNoEntity;
 import com.lead.fund.base.server.mp.entity.douson.ReportUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.TemplateEntity;
+import com.lead.fund.base.server.mp.entity.douson.TemplatePhotoEntity;
 import com.lead.fund.base.server.mp.entity.douson.TroubleAttachmentEntity;
 import com.lead.fund.base.server.mp.entity.douson.TroubleEntity;
 import com.lead.fund.base.server.mp.entity.douson.VocationEntity;
@@ -135,6 +138,8 @@ import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TemplateMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TemplatePhotoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TroubleAttachmentMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TroubleMapper;
 import com.lead.fund.base.server.mp.mapper.douson.VocationMapper;
@@ -176,6 +181,8 @@ import com.lead.fund.base.server.mp.request.QualityPageRequest;
 import com.lead.fund.base.server.mp.request.QualityRequest;
 import com.lead.fund.base.server.mp.request.ReportQueryRequest;
 import com.lead.fund.base.server.mp.request.ReportRequest;
+import com.lead.fund.base.server.mp.request.TemplatePageRequest;
+import com.lead.fund.base.server.mp.request.TemplateRequest;
 import com.lead.fund.base.server.mp.request.TroublePageRequest;
 import com.lead.fund.base.server.mp.request.TroubleRequest;
 import com.lead.fund.base.server.mp.request.VocationPageRequest;
@@ -203,6 +210,7 @@ import com.lead.fund.base.server.mp.response.ProductResponse;
 import com.lead.fund.base.server.mp.response.QualityResponse;
 import com.lead.fund.base.server.mp.response.ReportResponse;
 import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
+import com.lead.fund.base.server.mp.response.TemplateResponse;
 import com.lead.fund.base.server.mp.response.TodoData;
 import com.lead.fund.base.server.mp.response.TodoResponse;
 import com.lead.fund.base.server.mp.response.TroubleResponse;
@@ -389,6 +397,14 @@ public class DousonController {
     private MaintainAttachmentDao maintainAttachmentDao;
     @Resource
     private VocationMapper vocationMapper;
+    @Resource
+    private TemplateMapper templateMapper;
+    @Resource
+    private TemplateDao templateDao;
+    @Resource
+    private TemplatePhotoMapper templatePhotoMapper;
+    @Resource
+    private TemplatePhotoDao templatePhotoDao;
 
     /**
      * 配置类接口（字典接口）
@@ -5596,6 +5612,204 @@ public class DousonController {
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1)).setPhotoCount(t.getPhotoList().size())).collect(Collectors.toList()));
     }
 
+    private void mergeRelevance(TemplateRequest request, TemplateEntity e) {
+        templatePhotoMapper.delete(new LambdaUpdateWrapper<TemplatePhotoEntity>()
+                .eq(TemplatePhotoEntity::getTemplateId, e.getId())
+        );
+        templatePhotoDao.saveBatch(
+                Stream.of(
+                                CollUtil.defaultIfEmpty(request.getBorrowPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.templatePhoto(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getReturnPhotoList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.templatePhoto(e.getId(), "1", t))
+                        ).flatMap(t -> t)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 保存供应商刀具模板
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TemplateRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("admin/template")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result templateSave(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody TemplateRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        TemplateEntity e = INDUSTRY_INSTANCE.template(request);
+        templateMapper.insert((TemplateEntity) e
+                .setTemplateOrderNo(templateDao.nextOrderNo())
+                .setMeetRequirement(defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) >= 0 && DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true))
+                .setCreator(u.getUserId())
+                .setModifier(u.getUserId()));
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 修改供应商刀具模板
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TemplateRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("admin/template")
+    public Result templateUpdate(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody TemplateRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        TemplateEntity e = (TemplateEntity) INDUSTRY_INSTANCE.template(request)
+                .setModifier(u.getUserId());
+        BigDecimal returnCount = e.getReturnCount();
+        if (!"admin".equals(u.getUsername())) {
+            e.setReturnCount(templateMapper.selectById(request.getTemplateId()).getReturnCount());
+        }
+        e.setMeetRequirement(defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) >= 0 && DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true));
+        LambdaUpdateWrapper<TemplateEntity> lambda = new LambdaUpdateWrapper<TemplateEntity>()
+                .eq(TemplateEntity::getId, e.getId());
+        if (templateMapper.update(
+                e,
+                lambda
+        ) <= 0) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        mergeRelevance(request, e);
+        return new Result();
+    }
+
+    /**
+     * 删除供应商刀具模板
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TemplateRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("admin/template")
+    public Result templateDelete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute TemplateRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        LambdaUpdateWrapper<TemplateEntity> lambda = new LambdaUpdateWrapper<TemplateEntity>().eq(TemplateEntity::getId, request.getTemplateId());
+        if (isNotBlank(request.getTemplateId())) {
+            if (templateMapper.delete(lambda) <= 0) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            templatePhotoMapper.delete(new LambdaUpdateWrapper<TemplatePhotoEntity>().eq(TemplatePhotoEntity::getTemplateId, request.getTemplateId()));
+        }
+        return new Result();
+    }
+
+    private LambdaQueryWrapper<TemplateEntity> templateLambda(TemplateRequest request) {
+        final LambdaQueryWrapper<TemplateEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(request.getTemplateId())) {
+            lambda.eq(TemplateEntity::getId, request.getTemplateId());
+        }
+        if (isNotBlank(request.getTemplateOrderNo())) {
+            lambda.like(TemplateEntity::getTemplateOrderNo, request.getTemplateOrderNo());
+        }
+        if (isNotBlank(request.getBorrowTemplatePerson())) {
+            lambda.eq(TemplateEntity::getBorrowTemplatePerson, request.getBorrowTemplatePerson());
+        }
+        if (isNotBlank(request.getMaterialNo())) {
+            lambda.like(TemplateEntity::getMaterialNo, request.getMaterialNo());
+        }
+        if (null != request.getAlreadyReturn()) {
+            lambda.apply(request.getAlreadyReturn() ? "TEMPLATE_COUNT <= RETURN_COUNT" : "TEMPLATE_COUNT > RETURN_COUNT");
+        }
+        if (null != request.getMeetRequirement()) {
+            lambda.eq(TemplateEntity::getMeetRequirement, request.getMeetRequirement());
+        }
+        if (null != request.getStartPromiseReturnDate()) {
+            lambda.ge(TemplateEntity::getPromiseReturnDate, DateUtil.day(request.getStartPromiseReturnDate()));
+        }
+        if (null != request.getEndPromiseReturnDate()) {
+            lambda.le(TemplateEntity::getPromiseReturnDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndPromiseReturnDate())));
+        }
+        return lambda.orderByDesc(TemplateEntity::getCreateTime);
+    }
+
+    private List<TemplateEntity> templateList(TemplateRequest request) {
+        return templateMapper.selectList(templateLambda(request)
+        );
+    }
+
+    private List<TemplateResponse> formatTemplateList(List<TemplateEntity> l) {
+        final List<TemplateResponse> list = INDUSTRY_INSTANCE.templateList(l);
+        List<String> userIdList = Stream.of(
+                        list.stream().map(TemplateResponse::getCreator).filter(StrUtil::isNotBlank),
+                        list.stream().map(TemplateResponse::getBorrowTemplatePerson).filter(StrUtil::isNotBlank),
+                        list.stream().map(TemplateResponse::getOperatorPerson).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));
+        for (TemplateResponse t : list) {
+            t.setBorrowTemplatePersonFormat(um.getOrDefault(t.getBorrowTemplatePerson(), t.getBorrowTemplatePerson()));
+            t.setOperatorPersonFormat(um.getOrDefault(t.getOperatorPerson(), t.getOperatorPerson()));
+        }
+        return list;
+    }
+
+    /**
+     * 供应商刀具模板（后管）
+     *
+     * @param deviceId 设备id
+     * @param request  {@link ComputerRequest}
+     * @return {@link ListResult <ComputerResponse>}
+     */
+    @GetMapping("admin/template/page")
+    public PageResult<TemplateResponse> templateAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute TemplatePageRequest request
+    ) {
+        MpUserResponse user = accountHelper.getUser(deviceId);
+        PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
+        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())
+                .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))
+                        .setBorrowPhotoCount(t.getBorrowPhotoList().size())
+                        .setReturnPhotoCount(t.getReturnPhotoList().size())
+                ).collect(Collectors.toList()));
+    }
+
+    /**
+     * 供应商刀具模板（公开）
+     *
+     * @param request {@link TemplateRequest}
+     * @return {@link DataResult <TemplateResponse>}
+     */
+    @GetMapping("template")
+    public DataResult<TemplateResponse> template(
+            @ModelAttribute TemplateRequest request
+    ) {
+        return new DataResult<>(
+                defaultIfNull(CollUtil.getFirst(formatTemplateList(templateList(request))), new TemplateResponse())
+        );
+    }
     /*========>>>>>>>>分割线<<<<<<<<========*/
 
     /**

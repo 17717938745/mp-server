@@ -29,6 +29,73 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "materialDescription",
+          "label": "物料描述"
+        },
+        {
+          "value": "templateCount",
+          "label": "数量"
+        },
+        {
+          "value": "promiseReturnDate",
+          "label": "承诺归还日期"
+        },
+        {
+          "value": "operatorPerson",
+          "label": "经办人"
+        },
+        {
+          "value": "borrowPhotoCount",
+          "label": "借出照片数量"
+        },
+        {
+          "value": "returnPhotoCount",
+          "label": "还回照片数量"
+        },
+        {
+          "value": "description",
+          "label": "备注"
+        },
+        {
+          "value": "returnCount",
+          "label": "已还数量"
+        },
+        {
+          "value": "actualReturnDate",
+          "label": "实际归还日期"
+        },
+        {
+          "value": "meetRequirement",
+          "label": "是否符合要求"
+        }, {
+          "value": "borrowTemplateDate",
+          "label": "借用日期"
+        },
+        {
+          "value": "borrowTemplatePerson",
+          "label": "借用方"
+        },
+        {
+          "value": "borrowPhoto",
+          "label": "借出照片"
+        },
+        {
+          "value": "returnPhoto",
+          "label": "还回照片"
+        },
+        {
+          "value": "isReturn",
+          "label": "是否归还"
+        },
+        {
+          "value": "templateOrderNo",
+          "label": "单号"
+        },
+        {
+          value: 'templateManage',
+          label: '供应商借刀模板',
+        },
+        {
           value: 'date',
           label: '日期',
         },
@@ -1194,6 +1261,73 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        {
+          "value": "materialDescription",
+          "label": "miêu tả vật liệu"
+        },
+        {
+          "value": "templateCount",
+          "label": "số lượng"
+        },
+        {
+          "value": "promiseReturnDate",
+          "label": "Ngày hứa hoàn trả"
+        },
+        {
+          "value": "operatorPerson",
+          "label": "Người cho mượn"
+        },
+        {
+          "value": "borrowPhotoCount",
+          "label": "Hình ảnh mượn"
+        },
+        {
+          "value": "returnPhotoCount",
+          "label": "Hình ảnh trả"
+        },
+        {
+          "value": "description",
+          "label": "Ghi chú"
+        },
+        {
+          "value": "returnCount",
+          "label": "Số lượng đã trả"
+        },
+        {
+          "value": "actualReturnDate",
+          "label": "ngày trả thực tế"
+        }, {
+          "value": "borrowTemplateDate",
+          "label": "Ngày tháng"
+        },
+        {
+          "value": "borrowTemplatePerson",
+          "label": "Bên Mượn"
+        },
+        {
+          "value": "borrowPhoto",
+          "label": "Before borrow photo"
+        },
+        {
+          "value": "returnPhoto",
+          "label": "Return photo"
+        },
+        {
+          "value": "isReturn",
+          "label": "Is return"
+        },
+        {
+          "value": "templateOrderNo",
+          "label": "Số phiếu"
+        },
+        {
+          "value": "meetRequirement",
+          "label": " có đáp ứng  yêu cầu không?"
+        },
+        {
+          value: 'templateManage',
+          label: 'Supplier tool template',
+        },
         {
           value: 'date',
           label: 'Ngày tháng',
@@ -2468,6 +2602,56 @@ MULTIPLE_TEXT_LIST['CHS|THA'] = (MULTIPLE_TEXT_LIST['CHS'] || []).map((t: Text) 
   }
 })
 
+
+export const printMultipleText = (str: string): string => {
+  let entityString = ''
+  let defaultFormData = ''
+  let columnConfigString = '{value: \'expand\', label: \'\', width: 48, type: ValueType.Expand,},\n' +
+      '{value: \'operator\', labelKey: \'viewAndEdit\', width: 312, type: ValueType.Operator,},\n'
+  const data = {
+    'CHS': [],
+    'THA': [],
+  }
+  const arr = str.split('\n')
+  const chsArr = arr[0].split('\t')
+  const thaArr = arr[1].split('\t')
+  for (let i = 0; i < chsArr.length; i++) {
+    const chs = chsArr[i]
+    const tha = thaArr[i]
+    const arr = MULTIPLE_TEXT_LIST['CHS'].filter(t => chs === t.label)
+    const arr1 = MULTIPLE_TEXT_LIST['THA'].filter(t => tha === t.label)
+    const key = arr.length > 0 && arr1.length > 0 && arr[0].value === arr1[0].value ? arr[0].value : ''
+    if (key) {
+      columnConfigString += ('{value: \'' + key + '\', labelKey: \'' + key + '\', width: 189},\n')
+      defaultFormData += `${key}: '',\n`
+      entityString += ('     /**\n' +
+          '     * ' + chs + '\n' +
+          '     */\n' +
+          '    @FieldRemark(value = "' + chs + '")\n' +
+          '    @Size(max = 256, message = "' + chs + '长度不合法")\n' +
+          '    private String ' + key + ';\n'
+      );
+    } else {
+      data['CHS'].push({
+        value: `${i}`,
+        label: chs,
+      })
+      data['THA'].push({
+        value: `${i}`,
+        label: tha,
+      })
+    }
+  }
+  if (data['CHS'].length > 0) {
+    console.log(JSON.stringify(data, null, 2))
+  }
+  console.log(columnConfigString)
+  console.log(defaultFormData)
+  console.log(entityString)
+}
+
+printMultipleText('序号\t借用日期\t借用方\t物料号\t物料描述\t数量\t承诺归还日期\t经办人\t借出照片数量\t还回照片数量\t备注\t已还数量\t实际归还日期\t是否符合要求\t单号\n' +
+    'STT\tNgày tháng\tBên Mượn\tmã vật liệu\tmiêu tả vật liệu\tsố lượng\tNgày hứa hoàn trả\tNgười cho mượn\tHình ảnh mượn\tHình ảnh trả\tGhi chú\tSố lượng đã trả\tngày trả thực tế\t có đáp ứng  yêu cầu không?\tSố phiếu')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

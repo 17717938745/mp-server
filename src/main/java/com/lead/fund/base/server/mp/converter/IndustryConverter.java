@@ -540,4 +540,19 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "vocationId", source = "id")
     @Mapping(target = "countFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getCount()))")
     VocationResponse vocation(VocationEntity t);
+
+    @Mapping(target = "templateId", source = "templateId")
+    @Mapping(target = "photoType", source = "photoType")
+    @Mapping(target = "photoUrl", source = "t.photoUrl")
+    @Mapping(target = "photoCompressUrl", source = "t.photoCompressUrl")
+    TemplatePhotoEntity templatePhoto(String templateId, String photoType, PhotoImgModel t);
+
+
+    @Mapping(target = "id", source = "templateId")
+    TemplateEntity template(TemplateRequest t);
+
+    @Mapping(target = "templateId", source = "id")
+    TemplateResponse template(TemplateEntity t);
+
+    List<TemplateResponse> templateList(List<TemplateEntity> t);
 }

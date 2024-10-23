@@ -1,33 +1,19 @@
 <template>
   <div>
     <div class="query-container">
-      <el-select v-model="query.data.userId"
+      <el-input v-model="query.data.templateOrderNo"
+                @change="handlePage"
+                :placeholder="store.state.label.templateOrderNo"
+                class="search-item"/>
+      <el-select v-model="query.data.borrowTemplatePerson"
                  @change="handlePage"
                  filterable
                  allow-create
                  clearable
-                 :placeholder="store.state.label.chineseName"
+                 :placeholder="store.state.label.borrowTemplatePerson"
                  class="search-item">
         <el-option
             v-for="item in userOptionList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>
-      <el-input v-model="query.data.brand"
-                @change="handlePage"
-                :placeholder="store.state.label.brand"
-                class="search-item"/>
-      <el-select v-model="query.data.computerName"
-                 @change="handlePage"
-                 filterable
-                 allow-create
-                 clearable
-                 :placeholder="store.state.label.computerName"
-                 class="search-item">
-        <el-option
-            v-for="item in config.computerNameList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -37,27 +23,15 @@
                 @change="handlePage"
                 :placeholder="store.state.label.materialNo"
                 class="search-item"/>
-      <el-input v-model="query.data.model"
+      <el-input v-model="query.data.materialDescription"
                 @change="handlePage"
-                :placeholder="store.state.label.computerModel"
+                :placeholder="store.state.label.materialDescription"
                 class="search-item"/>
       <el-select
-          v-model="query.data.position"
+          v-model="query.data.alreadyReturn"
           @change="handlePage"
           clearable
-          :placeholder="store.state.label.position">
-        <el-option
-            v-for="item in config.companyPositionList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>
-      <el-select
-          v-model="query.data.detailed"
-          @change="handlePage"
-          clearable
-          :placeholder="store.state.label.detailed">
+          :placeholder="store.state.label.isReturn">
         <el-option
             label="Yes"
             :value="true"
@@ -67,6 +41,31 @@
             :value="false"
         />
       </el-select>
+      <el-select
+          v-model="query.data.meetRequirement"
+          @change="handlePage"
+          clearable
+          :placeholder="store.state.label.meetRequirement">
+        <el-option
+            label="Yes"
+            :value="true"
+        />
+        <el-option
+            label="No"
+            :value="false"
+        />
+      </el-select>
+      <el-date-picker
+          v-model="dateTimeList"
+          @change="handleDateTimeChange"
+          type="daterange"
+          format="YYYY-MM-DD"
+          range-separator="-"
+          start-placeholder="Start promise return date"
+          end-placeholder="End promise return date"
+          style="width: 180px; margin-right: 20px;"
+      >
+      </el-date-picker>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -79,7 +78,7 @@
       </div>
     </div>
     <view-list
-        idKey="computerId"
+        idKey="templateId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -110,36 +109,21 @@
           label-width="auto"
           label-position="top"
       >
-        <el-form-item prop="materialNo" :label="store.state.label.materialNo">
-          <el-input v-model="formData.materialNo"/>
-        </el-form-item>
-        <el-form-item prop="brand" :label="store.state.label.brand">
-          <el-input v-model="formData.brand"/>
-        </el-form-item>
-        <el-form-item prop="computerName" :label="store.state.label.computerName">
-          <el-select v-model="formData.computerName"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.computerName"
+        <el-form-item prop="borrowTemplateDate" :label="store.state.label.borrowTemplateDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.borrowTemplateDate"
+              format="YYYY-MM-DD"
+              @change="formData.borrowTemplateDate = formatDate(formData.borrowTemplateDate, 'yyyy-MM-dd')"
           >
-            <el-option
-                v-for="item in config.computerNameList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+          </el-date-picker>
         </el-form-item>
-        <el-form-item prop="model" :label="store.state.label.computerModel">
-          <el-input v-model="formData.model"/>
-        </el-form-item>
-        <el-form-item prop="userId" :label="store.state.label.user">
-          <el-select v-model="formData.userId"
+        <el-form-item prop="borrowTemplatePerson" :label="store.state.label.borrowTemplatePerson">
+          <el-select v-model="formData.borrowTemplatePerson"
                      filterable
                      allow-create
                      clearable
-                     :placeholder="store.state.label.user"
+                     :placeholder="store.state.label.borrowTemplatePerson"
           >
             <el-option
                 v-for="item in userOptionList"
@@ -149,74 +133,77 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="position" :label="store.state.label.position">
-          <el-select v-model="formData.position"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.position"
-          >
-            <el-option
-                v-for="item in config.companyPositionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+        <el-form-item prop="materialNo" :label="store.state.label.materialNo">
+          <el-input v-model="formData.materialNo"/>
         </el-form-item>
-        <el-form-item prop="storageDate" :label="store.state.label.storageDate">
+        <el-form-item prop="materialDescription" :label="store.state.label.materialDescription">
+          <el-input v-model="formData.materialDescription"/>
+        </el-form-item>
+        <el-form-item prop="templateCount" :label="store.state.label.templateCount">
+          <el-input-number v-model="formData.templateCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="promiseReturnDate" :label="store.state.label.promiseReturnDate">
           <el-date-picker
               type="date"
-              v-model="formData.storageDate"
+              v-model="formData.promiseReturnDate"
               format="YYYY-MM-DD"
-              @change="formData.storageDate = formatDate(formData.storageDate, 'yyyy-MM-dd')"
+              @change="formData.promiseReturnDate = formatDate(formData.promiseReturnDate, 'yyyy-MM-dd')"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="computerState" :label="store.state.label.computerState">
-          <el-select v-model="formData.computerState"
+        <el-form-item prop="operatorPerson" :label="store.state.label.operatorPerson">
+          <el-select v-model="formData.operatorPerson"
                      filterable
                      allow-create
                      clearable
-                     :placeholder="store.state.label.computerState"
+                     :placeholder="store.state.label.operatorPerson"
           >
             <el-option
-                v-for="item in config.computerStateList"
+                v-for="item in userOptionList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="detailed" :label="store.state.label.detailed">
-          <el-select
-              v-model="formData.detailed"
-              filterable
-              allow-create
-              clearable
-              :placeholder="store.state.label.detailed">
-            <el-option
-                label="Yes"
-                :value="true"
-            />
-            <el-option
-                label="No"
-                :value="false"
-            />
-          </el-select>
+        <el-form-item prop="description" :label="store.state.label.description">
+          <el-input type="textarea" :rows=4 v-model="formData.description"/>
         </el-form-item>
-        <el-form-item prop="productPlace" :label="store.state.label.productPlace">
-          <el-input v-model="formData.productPlace"/>
+        <el-form-item prop="returnCount" :label="store.state.label.returnCount">
+          <el-input-number v-model="formData.returnCount" style="width: 60px;" :controls="false" :min="0" :disabled="!formSave && user.userId !== 'admin'"/>
         </el-form-item>
-        <el-form-item prop="supplier" :label="store.state.label.supplier">
-          <el-input v-model="formData.supplier"/>
+        <el-form-item prop="actualReturnDate" :label="store.state.label.actualReturnDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.actualReturnDate"
+              format="YYYY-MM-DD"
+              @change="formData.actualReturnDate = formatDate(formData.actualReturnDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
         </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.remark">
-          <el-input v-model="formData.remark"/>
+        <el-form-item prop="borrowPhotoList" :label="`${store.state.label.borrowPhoto}(${(formRuleList['borrowPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.borrowPhotoList" :maxSize="Number(`${(formRuleList['borrowPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
-        <el-form-item prop="photoList" :label="store.state.label.photo">
-          <image-upload :photoList="formData.photoList" :maxSize="3"></image-upload>
+        <el-form-item prop="returnPhotoList" :label="`${store.state.label.returnPhoto}(${(formRuleList['returnPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.returnPhotoList" :maxSize="Number(`${(formRuleList['returnPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
+        <!--        <el-form-item prop="meetRequirement" :label="store.state.label.meetRequirement">
+                  <el-select
+                      v-model="formData.meetRequirement"
+                      filterable
+                      allow-create
+                      clearable
+                      :placeholder="store.state.label.meetRequirement">
+                    <el-option
+                        label="Yes"
+                        :value="true"
+                    />
+                    <el-option
+                        label="No"
+                        :value="false"
+                    />
+                  </el-select>
+                </el-form-item>-->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -235,57 +222,88 @@
     >
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
-          <h1 style="text-align: center;height: 50px; position: relative;width: 100%;">
-            <img :src="fullUrl('/third/img/douson.png', '')" style="position: absolute; height: 100%;left: 10px;top: 0px;">
-            <span style="font-size: 36px; color: #ff0000;">ASSET CARD 财产卡</span>
+          <h1 style="text-align: center;height: 90px; position: relative;width: 100%;">
+            <img :src="fullUrl('/third/img/douson.png', '')" style="position: absolute; height: 50px;left: 10px;top: 20px;">
+            <div style="font-size: 36px; color: #222222; ">物品借出单</div>
+            <div style="font-size: 36px; color: #222222; ">Đơn cho mượn dụng cụ</div>
             <br>
           </h1>
-          <el-descriptions
-              :column="1"
-              style="width: 100%;"
-              border
-          >`
-            <el-descriptions-item
-                :label="store.state.label.materialNo"
-                align="center"
-                label-class-name="box-print-label"
-            >
-              <template #label>
-                Mã thiết bị 设备物料号
-              </template>
-              {{ printData['materialNo'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.chineseName"
-                align="center"
-                label-class-name="box-print-label"
-            >
-              <template #label>
-                Người Sử Dụng 用户
-              </template>
-              {{ printData['userChineseName'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.position"
-                align="center"
-                label-class-name="box-print-label"
-            >
-              <template #label>
-                Vị trí 位置
-              </template>
-              {{ printData['positionFormat'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.department"
-                align="center"
-                label-class-name="box-print-label"
-            >
-              <template #label>
-                Bộ Phận 部门
-              </template>
-              {{ printData['departmentFormat'] }}
-            </el-descriptions-item>
-          </el-descriptions>
+          <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>
+          <div style="width: 100%; font-size: 14px; margin-top: 20px;">
+            <div class="print-center-content">
+              <div class="print-left-section">
+                <div style="width: 100%;">
+                  <div>借用人签字</div>
+                  <div>Người mượn：</div>
+                </div>
+                <div></div>
+              </div>
+              <div class="print-right-section">借用方(单位) Đơn vị：{{ printData.borrowTemplatePersonFormat }}</div>
+            </div>
+            <div class="print-center-content">
+              <div class="print-left-section">借用时间 Ngày mượn：{{ printData.borrowTemplateDate }}</div>
+              <div class="print-right-section">承诺归还时间 Ngày trả：{{ printData.promiseReturnDate }}</div>
+            </div>
+            <div class="print-center-content">
+              <div class="print-left-section">
+                <div class="print-item print-border" style="width: 80px;">
+                  序号 STT
+                </div>
+                <div class="print-item" style="width: 80%;">
+                  物料号 Mã vật liệu
+                </div>
+              </div>
+              <div class="print-right-section">
+                <div class="print-item print-border" style="width: 80%;">
+                  物品名称 Miêu tả vật liệu
+                </div>
+                <div class="print-item" style="width: 120px;">
+                  数量 Số lượng
+                </div>
+              </div>
+            </div>
+            <div class="print-center-content">
+              <div class="print-left-section">
+                <div class="print-item print-border" style="width: 80px;">
+                  {{ printData.index }}
+                </div>
+                <div class="print-item" style="width: 80%;">
+                  {{ printData.materialNo }}
+                </div>
+              </div>
+              <div class="print-right-section">
+                <div class="print-item print-border" style="width: 80%;">
+                  {{ printData.materialDescription }}
+                </div>
+                <div class="print-item" style="width: 120px;">
+                  {{ printData.templateCount }}
+                </div>
+              </div>
+            </div>
+            <div class="print-center-content">
+              <div class="print-left-section">
+                <div class="print-bottom-item">
+                  <div>经办人签字</div>
+                  <div>Người cho mượn：</div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">{{ printData.operatorPersonFormat }}</div>
+              </div>
+              <div class="print-right-section">
+                <div class="print-border" style="width: 80%;">
+                  <div>部门负责人:</div>
+                  <div>Người phụ trách bộ phận：</div>
+                </div>
+                <div style="width: 120px;">
+                  <div>仓管签字:</div>
+                  <div>Kho：</div>
+                </div>
+              </div>
+            </div>
+            <div class="print-center-content" style="justify-content: flex-start; flex-wrap: wrap;">
+              <div style="width: 100%;">备注 Ghi chú：</div>
+              <pre>{{ printData.description }}</pre>
+            </div>
+          </div>
         </div>
       </div>
     </el-drawer>
@@ -295,7 +313,7 @@
 <script lang="tsx" setup>
 import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
-import {StoreType} from '@/store'
+import {StoreType,} from '@/store'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Printer, Search,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
@@ -306,8 +324,8 @@ import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
-import ImageUpload from '../../component/ImageUpload.vue'
 import {fullUrl} from '@/util/EnvUtil'
+import ImageUpload from "../../component/ImageUpload.vue";
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
@@ -318,36 +336,25 @@ const printData = ref<any>(null)
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {
-    value: 'expand',
-    label: '',
-    width: 48,
-    type: ValueType.Expand,
-  },
-  {
-    value: 'operator',
-    labelKey: 'viewAndEdit',
-    width: 312,
-    type: ValueType.Operator,
-  },
-  {value: 'index', labelKey: 'index', width: 51},
-  {value: 'photoCount', labelKey: 'photoCount', width: 57},
-  {value: 'materialNo', labelKey: 'materialNo', width: 189},
-  {value: 'brand', labelKey: 'brand', width: 96},
-  {value: 'computerNameFormat', labelKey: 'computerName', width: 189},
-  {value: 'model', labelKey: 'computerModel', width: 293, showOverflow: true,},
-  // {value: 'username', labelKey: 'username', width: 96},
-  {value: 'departmentFormat', labelKey: 'department', width: 168},
-  {value: 'userChineseName', labelKey: 'chineseName', width: 190},
-  {value: 'professionFormat', labelKey: 'profession', width: 268},
-  {value: 'positionFormat', labelKey: 'position', width: 96},
-  {value: 'storageDate', labelKey: 'storageDate', width: 102},
-  {value: 'computerStateFormat', labelKey: 'computerState', width: 168},
-  {value: 'detailedFormat', labelKey: 'detailed', width: 96},
-  {value: 'productPlace', labelKey: 'productPlace', width: 96},
-  {value: 'supplier', labelKey: 'supplier', width: 96},
-  {value: 'remark', labelKey: 'remark', width: 169, showOverflow: true,},
-  {value: 'photoList', labelKey: 'photo', type: ValueType.Image, width: 96},
+  {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
+  {value: 'index', labelKey: 'index', width: 45},
+  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 89},
+  {value: 'borrowTemplatePersonFormat', labelKey: 'borrowTemplatePerson', width: 132},
+  {value: 'materialNo', labelKey: 'materialNo', width: 145},
+  {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
+  {value: 'templateCount', labelKey: 'templateCount', width: 49},
+  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 89},
+  {value: 'operatorPersonFormat', labelKey: 'operatorPerson', width: 132},
+  {value: 'borrowPhotoCount', labelKey: 'borrowPhotoCount', width: 49},
+  {value: 'returnPhotoCount', labelKey: 'returnPhotoCount', width: 49},
+  {value: 'description', labelKey: 'description', width: 189},
+  {value: 'returnCount', labelKey: 'returnCount', width: 49},
+  {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 89},
+  {value: 'meetRequirement', labelKey: 'meetRequirement', width: 59},
+  {value: 'templateOrderNo', labelKey: 'templateOrderNo', width: 123},
+  {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},
+  {value: 'returnPhotoList', labelKey: 'returnPhoto', width: 189, type: ValueType.Image,},
 ])
 if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'manager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
@@ -369,21 +376,22 @@ httpGet(`system/user/config/list`, {}).then(
     })
 const defaultFormData = {
   creator: user.userId,
-  index: '',
-  computerId: '',
+  borrowTemplateDate: formatDate(new Date(), 'yyyy-MM-dd'),
+  borrowTemplatePerson: '',
   materialNo: '',
-  brand: '',
-  computerName: '',
-  model: '',
-  userId: '',
-  position: '',
-  storageDate: '',
-  computerState: '',
-  detailed: null,
-  productPlace: '',
-  supplier: '',
-  remark: '',
-  photoList: new Array<any>(),
+  materialDescription: '',
+  templateCount: '',
+  promiseReturnDate: '',
+  operatorPerson: '',
+  borrowPhotoCount: 0,
+  returnPhotoCount: 0,
+  description: '',
+  returnCount: 0,
+  actualReturnDate: '',
+  meetRequirement: '',
+  templateOrderNo: '',
+  borrowPhotoList: new Array<any>(),
+  returnPhotoList: new Array<any>(),
 }
 
 const state = reactive({
@@ -394,16 +402,14 @@ const state = reactive({
   expandRowKeys: new Array<string>(),
   query: {
     data: {
-      userId: '',
-      startDueDate: '',
-      endDueDate: '',
-      deviceNumber: '',
-      specification: '',
-      chineseVietnamName: '',
-      deviceCheckLedgerState: '',
-      borrower: '',
-      storage: '',
-      outOfStock: null,
+      templateOrderNo: '',
+      borrowTemplatePerson: '',
+      materialNo: '',
+      materialDescription: '',
+      alreadyReturn: null,
+      meetRequirement: null,
+      startPromiseReturnDate: '',
+      endPromiseReturnDate: '',
     },
     page: {
       page: DEFAULT_PAGE,
@@ -413,41 +419,30 @@ const state = reactive({
   tableData: new Array<any>(),
   total: 0,
   formData: Object.assign({}, defaultFormData),
-  formSave: false,
-  config: {
-    computerNameList: [],
-    companyPositionList: [],
-    computerStateList: [],
-  },
+  config: {},
+  formSave: true,
   formVisible: false,
   managerEdit: false,
   formRuleList: {
     materialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    brand: [{required: true, message: 'Please check', trigger: 'blur'}],
-    computerName: [{required: true, message: 'Please check', trigger: 'blur'}],
-    model: [{required: true, message: 'Please check', trigger: 'blur'}],
-    userId: [{required: true, message: 'Please check', trigger: 'blur'}],
-    storageDate: [{required: true, message: 'Please check', trigger: 'blur'}],
-    computerState: [{required: true, message: 'Please check', trigger: 'blur'}],
-    detailed: [{required: true, message: 'Please check', trigger: 'blur'}],
-    productPlace: [{required: true, message: 'Please check', trigger: 'blur'}],
-    photoList: [{required: false, type: 'array', min: 0, max: 3}],
+    borrowPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
+    returnPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
   },
 })
 
 const handleDateTimeChange = () => {
   if (state.dateTimeList && state.dateTimeList.length > 1) {
-    state.query.data.startDueDate = formatDate(
+    state.query.data.startPromiseReturnDate = formatDate(
         state.dateTimeList[0],
         'yyyy-MM-dd hh:mm:ss'
     );
-    state.query.data.endDueDate = formatDate(
+    state.query.data.endPromiseReturnDate = formatDate(
         state.dateTimeList[1],
         'yyyy-MM-dd hh:mm:ss'
     );
   } else {
-    state.query.data.startDueDate = ''
-    state.query.data.endDueDate = ''
+    state.query.data.startPromiseReturnDate = ''
+    state.query.data.endPromiseReturnDate = ''
   }
   handlePage()
 }
@@ -457,35 +452,8 @@ const handleShowPrintDetail = (d: any) => {
   printData.value = Object.assign({}, d.param || {})
   showPrint.value = true
 }
-const handleAutoInsertSerialNo = (t: any, i: number, arr: any[]) => {
-  if (i === 0) {
-    let n
-    try {
-      n = Number(t)
-    } catch (e) {
-      n = 1
-    }
-    for (let j = 1; j < arr.length; j++) {
-      arr[j] = n + j
-    }
-  }
-}
-const handleFormatValue = (key: string, val: any) => {
-  // @ts-ignore
-  const a = (state.config[key] || []).filter(t => t.value === val)
-  return a.length > 0 ? a[0].label : val
-}
-httpGet('douson/config', {
-  categoryIdList: [
-    'computerName',
-    'companyPosition',
-    'computerState',
-  ],
-}).then(r => {
-  state.config = r.data
-})
 const handlePage = () => {
-  httpGet(`douson/admin/computer/page`, state.query).then(
+  httpGet(`douson/admin/template/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = res.list
         state.total = res.total
@@ -524,7 +492,7 @@ const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
       if (state.formSave) {
-        httpPostJson('douson/admin/computer', state.formData).then(() => {
+        httpPostJson('douson/admin/template', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handlePage()
@@ -536,7 +504,7 @@ const handleMerge = () => {
   })
 }
 const handleUpdate = (row: any) => {
-  return httpPutJson('douson/admin/computer', row).then(() => {
+  return httpPutJson('douson/admin/template', row).then(() => {
     state.formVisible = false
     ElMessage.success('Update success')
     handlePage()
@@ -546,8 +514,8 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/admin/computer', {
-      computerId: row.computerId,
+    httpDelete('douson/admin/template', {
+      templateId: row.templateId,
     })
     .then(() => {
       ElMessage.success('Delete success')
@@ -577,4 +545,37 @@ const {
 </script>
 
 <style scoped lang="scss">
+.print-center-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+.print-left-section {
+  width: 40%;
+  display: flex;
+  height: 100%;
+  border-right: 1px solid #ddd;
+}
+
+
+.print-border {
+  border-right: 1px solid #ddd;
+}
+
+
+
+.print-right-section {
+  width: 60%;
+  display: flex;
+  align-items: center;
+}
+
+.print-item {
+  height: 100%;
+  text-align: center;
+}
 </style>
