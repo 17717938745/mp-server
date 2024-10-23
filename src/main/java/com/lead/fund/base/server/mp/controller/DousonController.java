@@ -5253,7 +5253,10 @@ public class DousonController {
             request.getData().setBorrower(user.getUserId());
         }
         final PageResult<DeviceCheckLedgerEntity> pr = DatabaseUtil.page(request, this::deviceCheckLedgerList);
-        return new PageResult<>(pr.getTotal(), formatDeviceCheckLedgerList(pr.getList()));
+        return new PageResult<>(pr.getTotal(), formatDeviceCheckLedgerList(pr.getList())
+                .stream().peek(t -> {
+                    t.setPhotoCount(t.getPhotoList().size());
+                }).collect(Collectors.toList()));
     }
 
     /**

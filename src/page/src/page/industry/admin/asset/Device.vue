@@ -476,6 +476,7 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 78},
+  {value: 'photoCount', labelKey: 'photoCount', width: 57},
   {value: 'materialNo', labelKey: 'materialNo', width: 96},
   {value: 'deviceNumber', labelKey: 'deviceNumber', width: 158},
   {value: 'chineseVietnamNameFormat', labelKey: 'chineseVietnamName', width: 169},
