@@ -87,6 +87,7 @@
         :handleDelete="includes(roleCodeList, 'admin') ? handleDelete : null"
         :page="query.page"
         :total="total"
+        :handleTableRowClassName="handleTableRowClassName"
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
     >
@@ -229,73 +230,101 @@
             <br>
           </h1>
           <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>
-          <div style="width: 100%; font-size: 14px; margin-top: 20px;">
-            <div class="print-center-content">
-              <div class="print-left-section">
-                <div style="width: 100%;">
-                  <div>借用人签字</div>
+          <div class="print-border" style="width: 100%; font-size: 14px; margin-top: 20px;">
+            <div class="print-center-content print-border-bottom">
+              <div class="print-left-section print-border-right print-sign-title">
+                <div>
+                  <div>借用人签字：</div>
                   <div>Người mượn：</div>
                 </div>
                 <div></div>
               </div>
-              <div class="print-right-section">借用方(单位) Đơn vị：{{ printData.borrowTemplatePersonFormat }}</div>
+              <div class="print-right-section print-sign-title">
+                <div>
+                  <div>借用方(单位) Đơn vị：</div>
+                </div>
+                <div>
+                  {{ printData.borrowTemplatePersonFormat }}
+                </div>
+              </div>
             </div>
-            <div class="print-center-content">
-              <div class="print-left-section">借用时间 Ngày mượn：{{ printData.borrowTemplateDate }}</div>
-              <div class="print-right-section">承诺归还时间 Ngày trả：{{ printData.promiseReturnDate }}</div>
+            <div class="print-center-content print-border-bottom">
+              <div class="print-left-section print-sign-title print-border-right">
+                <div>
+                  <div>借用时间：</div>
+                  <div>Ngày mượn：</div>
+                </div>
+                <div>
+                  {{ printData.borrowTemplateDate }}
+                </div>
+              </div>
+              <div class="print-right-section print-sign-title">
+                <div>
+                  <div>承诺归还时间 Ngày trả：</div>
+                </div>
+                <div>
+                  {{ printData.promiseReturnDate }}
+                </div>
+              </div>
             </div>
-            <div class="print-center-content">
+            <div class="print-center-content print-border-bottom">
               <div class="print-left-section">
-                <div class="print-item print-border" style="width: 80px;">
+                <div class="print-item-label print-content-title print-border-right" style="width: 80px;">
                   序号 STT
                 </div>
-                <div class="print-item" style="width: 80%;">
+                <div class="print-item-label print-content-title print-border-right print-section-surplus">
                   物料号 Mã vật liệu
                 </div>
               </div>
               <div class="print-right-section">
-                <div class="print-item print-border" style="width: 80%;">
+                <div class="print-item-label print-content-title print-border-right print-section-surplus">
                   物品名称 Miêu tả vật liệu
                 </div>
-                <div class="print-item" style="width: 120px;">
+                <div class="print-item-label print-content-title print-right-section-sidebar">
                   数量 Số lượng
                 </div>
               </div>
             </div>
-            <div class="print-center-content">
+            <div class="print-center-content print-border-bottom">
               <div class="print-left-section">
-                <div class="print-item print-border" style="width: 80px;">
+                <div class="print-item print-border-right" style="width: 80px;">
                   {{ printData.index }}
                 </div>
-                <div class="print-item" style="width: 80%;">
+                <div class="print-item print-border-right print-section-surplus">
                   {{ printData.materialNo }}
                 </div>
               </div>
               <div class="print-right-section">
-                <div class="print-item print-border" style="width: 80%;">
+                <div class="print-item print-border-right print-section-surplus">
                   {{ printData.materialDescription }}
                 </div>
-                <div class="print-item" style="width: 120px;">
+                <div class="print-item print-right-section-sidebar">
                   {{ printData.templateCount }}
                 </div>
               </div>
             </div>
-            <div class="print-center-content">
-              <div class="print-left-section">
-                <div class="print-bottom-item">
-                  <div>经办人签字</div>
+            <div class="print-center-content print-border-bottom">
+              <div class="print-left-section print-sign-title print-border-right">
+                <div>
+                  <div>经办人签字：</div>
                   <div>Người cho mượn：</div>
                 </div>
-                <div style="display: flex; justify-content: center; align-items: center;">{{ printData.operatorPersonFormat }}</div>
+                <div style="">{{ printData.operatorPersonFormat }}</div>
               </div>
-              <div class="print-right-section">
-                <div class="print-border" style="width: 80%;">
-                  <div>部门负责人:</div>
-                  <div>Người phụ trách bộ phận：</div>
+              <div class="print-right-section print-sign-title">
+                <div class="print-left-section print-sign-title print-border-right print-section-surplus" style="flex-wrap: wrap;">
+                  <div>
+                    <div>部门负责人：</div>
+                    <div>Người phụ trách bộ phận：</div>
+                  </div>
+                  <div>&nbsp;</div>
                 </div>
-                <div style="width: 120px;">
-                  <div>仓管签字:</div>
-                  <div>Kho：</div>
+                <div class="print-sign-title print-right-section-sidebar print-sign-title">
+                  <div>
+                    <div>仓管签字:</div>
+                    <div>Kho：</div>
+                  </div>
+                  <div>&nbsp;</div>
                 </div>
               </div>
             </div>
@@ -424,7 +453,13 @@ const state = reactive({
   formVisible: false,
   managerEdit: false,
   formRuleList: {
+    borrowTemplateDate: [{required: true, message: 'Please check', trigger: 'blur'}],
+    promiseReturnDate: [{required: true, message: 'Please check', trigger: 'blur'}],
+    operatorPerson: [{required: true, message: 'Please check', trigger: 'blur'}],
+    borrowTemplatePerson: [{required: true, message: 'Please check', trigger: 'blur'}],
     materialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
+    templateCount: [{required: true, message: 'Please check', trigger: 'blur'}],
+    materialDescription: [{required: true, message: 'Please check', trigger: 'blur'}],
     borrowPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
     returnPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
   },
@@ -540,42 +575,93 @@ const {
   photoList,
 } = {
   ...toRefs(state),
-};
+}
+const handleTableRowClassName = ({
+                                   row,
+                                   rowIndex,
+                                 }: {
+  row: any
+  rowIndex: number
+}) => {
+  console.log(row.meetRequirement)
+  if (!row.meetRequirement) {
+    return 'row-done'
+  }
+  return ''
+}
 
 </script>
 
 <style scoped lang="scss">
+$print_border_color: #ddd;
 .print-center-content {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ddd;
-  padding: 5px;
+  padding: 0;
+  margin: 0;
 }
 
 .print-left-section {
-  width: 40%;
+  width: 218px;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
   height: 100%;
-  border-right: 1px solid #ddd;
 }
-
-
-.print-border {
-  border-right: 1px solid #ddd;
-}
-
-
 
 .print-right-section {
-  width: 60%;
+  width: 70%;
   display: flex;
   align-items: center;
 }
 
-.print-item {
-  height: 100%;
+.print-item-label {
+  display: flex;
   text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.print-sign-title {
+  height: 50px;
+  display: flex;
+  text-align: left;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.print-content-title {
+  height: 50px;
+}
+
+.print-item {
+  height: 160px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.print-border {
+  border: 1px solid $print_border_color;
+}
+
+.print-border-right {
+  border-right: 1px solid $print_border_color;
+}
+
+.print-border-bottom {
+  border-bottom: 1px solid $print_border_color;
+}
+
+.print-section-surplus {
+  width: 70%;
+}
+
+.print-right-section-sidebar {
+  width: 160px;
 }
 </style>

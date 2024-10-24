@@ -361,7 +361,7 @@ const handleSubmit = (retry: boolean = true) => {
                             "nameKey": "computerManage",
                             "white": false,
                             "showFlag": true,
-                          },/*
+                          },
                           {
                             "children": [],
                             "id": "-1",
@@ -370,7 +370,7 @@ const handleSubmit = (retry: boolean = true) => {
                             "nameKey": "templateManage",
                             "white": false,
                             "showFlag": true,
-                          },*/
+                          },
                           {
                             "children": [
                               {

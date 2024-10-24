@@ -77,24 +77,22 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'scheduleProduce', labelKey: 'scheduleProduce', width: 100,},
   {value: 'materialOrderNo', labelKey: 'materialOrderNo', width: 100,},
 ])
-/*
 let str = ''
 let str1 = ''
 columnConfigList.value.filter((t:any) => t.value !== 'expand' && t.value !== 'operator' && t.value !== 'index').forEach((t: any) => {
-  str += '    /!**\n' +
+  str += '    /**\n' +
       '     * ' + store.state.label[t.labelKey] + '\n' +
-      '     *!/\n' +
+      '     */\n' +
       '    @FieldRemark(value = "' + store.state.label[t.labelKey] + '")\n' +
       '    private String ' + t.value + ';\n'
-  str1 += '    /!**\n' +
+  str1 += '    /**\n' +
       '     * ' + store.state.label[t.labelKey] + '\n' +
-      '     *!/\n' +
+      '     */\n' +
       '    private String ' + t.value + ';\n'
 })
 console.log(str)
 console.log('\n\n')
 console.log(str1)
-*/
 const data = ref({})
 httpGet(`douson/accident`, {accidentId: route.query.accidentId}).then(
     (res: DataResult<any>) => {

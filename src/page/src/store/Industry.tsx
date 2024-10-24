@@ -2650,8 +2650,8 @@ export const printMultipleText = (str: string): string => {
   console.log(entityString)
 }
 
-printMultipleText('序号\t借用日期\t借用方\t物料号\t物料描述\t数量\t承诺归还日期\t经办人\t借出照片数量\t还回照片数量\t备注\t已还数量\t实际归还日期\t是否符合要求\t单号\n' +
-    'STT\tNgày tháng\tBên Mượn\tmã vật liệu\tmiêu tả vật liệu\tsố lượng\tNgày hứa hoàn trả\tNgười cho mượn\tHình ảnh mượn\tHình ảnh trả\tGhi chú\tSố lượng đã trả\tngày trả thực tế\t có đáp ứng  yêu cầu không?\tSố phiếu')
+// printMultipleText('序号\t借用日期\t借用方\t物料号\t物料描述\t数量\t承诺归还日期\t经办人\t借出照片数量\t还回照片数量\t备注\t已还数量\t实际归还日期\t是否符合要求\t单号\n' +
+//     'STT\tNgày tháng\tBên Mượn\tmã vật liệu\tmiêu tả vật liệu\tsố lượng\tNgày hứa hoàn trả\tNgười cho mượn\tHình ảnh mượn\tHình ảnh trả\tGhi chú\tSố lượng đã trả\tngày trả thực tế\t có đáp ứng  yêu cầu không?\tSố phiếu')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

@@ -2883,7 +2883,7 @@ public class DousonController {
         final List<CrashResponse> list = INDUSTRY_INSTANCE.crashList(l);
         List<String> userIdList = Stream.of(
                         list.stream().map(CrashResponse::getUserIdList)
-                                .flatMap(t -> t.stream())
+                                .flatMap(Collection::stream)
                                 .filter(StrUtil::isNotBlank),
                         list.stream().map(CrashResponse::getDirectLeader).filter(StrUtil::isNotBlank)
                 )
@@ -5754,12 +5754,12 @@ public class DousonController {
         );
     }
 
-    private List<TemplateResponse> formatTemplateList(List<TemplateEntity> l) {
-        final List<TemplateResponse> list = INDUSTRY_INSTANCE.templateList(l);
-        List<String> userIdList = Stream.of(
-                        list.stream().map(TemplateResponse::getCreator).filter(StrUtil::isNotBlank),
-                        list.stream().map(TemplateResponse::getBorrowTemplatePerson).filter(StrUtil::isNotBlank),
-                        list.stream().map(TemplateResponse::getOperatorPerson).filter(StrUtil::isNotBlank)
+    private List<TemplateResponse> formatTemplateList(List<TemplateEntity> list) {
+        final List<TemplateResponse> rl = INDUSTRY_INSTANCE.templateList(list);
+        final List<String> userIdList = Stream.of(
+                        rl.stream().map(TemplateResponse::getCreator).filter(StrUtil::isNotBlank),
+                        rl.stream().map(TemplateResponse::getBorrowTemplatePerson).filter(StrUtil::isNotBlank),
+                        rl.stream().map(TemplateResponse::getOperatorPerson).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
@@ -5769,12 +5769,26 @@ public class DousonController {
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
+        MultitaskUtil.supplementList(
+                rl,
+                TemplateResponse::getTemplateId,
+                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, "0")),
+                (t, r) -> 0 == r.getPhotoType(),
+                (t, r) -> t.getBorrowPhotoList().add(INDUSTRY_INSTANCE.templatePhoto(r, urlHelper.getUrlPrefix()))
+        );
+        MultitaskUtil.supplementList(
+                rl,
+                TemplateResponse::getTemplateId,
+                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, "1")),
+                (t, r) -> 1 == r.getPhotoType(),
+                (t, r) -> t.getReturnPhotoList().add(INDUSTRY_INSTANCE.templatePhoto(r, urlHelper.getUrlPrefix()))
+        );
         final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));
-        for (TemplateResponse t : list) {
+        for (TemplateResponse t : rl) {
             t.setBorrowTemplatePersonFormat(um.getOrDefault(t.getBorrowTemplatePerson(), t.getBorrowTemplatePerson()));
             t.setOperatorPersonFormat(um.getOrDefault(t.getOperatorPerson(), t.getOperatorPerson()));
         }
-        return list;
+        return rl;
     }
 
     /**
@@ -5789,7 +5803,10 @@ public class DousonController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute TemplatePageRequest request
     ) {
-        MpUserResponse user = accountHelper.getUser(deviceId);
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())

@@ -548,6 +548,12 @@ public interface IndustryConverter extends Serializable {
     TemplatePhotoEntity templatePhoto(String templateId, String photoType, PhotoImgModel t);
 
 
+    @Mapping(target = "photoCompressUrl", expression = "java(e.getPhotoCompressUrl())")
+    @Mapping(target = "fullPhotoCompressUrl", expression = "java(e.getPhotoCompressUrl().startsWith(\"http:\") || e.getPhotoCompressUrl().startsWith(\"https:\") ? e.getPhotoCompressUrl() : (urlPrefix + e.getPhotoCompressUrl()))")
+    @Mapping(target = "photoUrl", expression = "java(e.getPhotoUrl())")
+    @Mapping(target = "fullPhotoUrl", expression = "java(e.getPhotoUrl().startsWith(\"http:\") || e.getPhotoUrl().startsWith(\"https:\") ? e.getPhotoUrl() : (urlPrefix + e.getPhotoUrl()))")
+    PhotoImgModel templatePhoto(TemplatePhotoEntity e, String urlPrefix);
+
     @Mapping(target = "id", source = "templateId")
     TemplateEntity template(TemplateRequest t);
 
