@@ -107,7 +107,7 @@
                   <div></div>
                 </div>
                 <div style="width: 159px;">
-                  <div>
+                  <div class="padding">
                     <div>仓管签字:</div>
                     <div>Kho：</div>
                   </div>
