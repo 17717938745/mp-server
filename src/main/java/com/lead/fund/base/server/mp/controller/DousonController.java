@@ -5651,6 +5651,7 @@ public class DousonController {
         }
         TemplateEntity e = INDUSTRY_INSTANCE.template(request);
         templateMapper.insert((TemplateEntity) e
+                .setIndex(templateDao.nextIndex())
                 .setTemplateOrderNo(templateDao.nextOrderNo())
                 .setMeetRequirement(defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) >= 0 && DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true))
                 .setCreator(u.getUserId())
@@ -5808,11 +5809,10 @@ public class DousonController {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
-        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())
-                .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))
-                        .setBorrowPhotoCount(t.getBorrowPhotoList().size())
-                        .setReturnPhotoCount(t.getReturnPhotoList().size())
+                .stream().peek(t ->
+                        t.setBorrowPhotoCount(t.getBorrowPhotoList().size())
+                                .setReturnPhotoCount(t.getReturnPhotoList().size())
                 ).collect(Collectors.toList()));
     }
 

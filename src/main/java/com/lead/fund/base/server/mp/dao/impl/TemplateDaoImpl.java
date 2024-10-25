@@ -33,19 +33,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class TemplateDaoImpl extends ServiceImpl<TemplateMapper, TemplateEntity> implements TemplateDao {
 
+    private static final AtomicInteger INDEX = new AtomicInteger(0);
     private static final Map<String, AtomicInteger> ORDER_NO_MAP = new HashMap<>(8);
 
     @PostConstruct
-    public AtomicInteger init() {
-        return ORDER_NO_MAP.computeIfAbsent(DateUtil.daySimple(new Date()), k -> new AtomicInteger(Optional.ofNullable(
-                CollUtil.getFirst(DatabaseUtil.page(new Page(1, 1), () -> getBaseMapper().selectList(new LambdaQueryWrapper<TemplateEntity>().orderByDesc(TemplateEntity::getTemplateOrderNo))).getList())
-        ).map(t -> NumberUtil.defaultInteger(t.getTemplateOrderNo().split("-")[1])).orElse(0)));
+    public void init() {
+        getOrderNo();
+        INDEX.set(
+                Optional.ofNullable(
+                        CollUtil.getFirst(DatabaseUtil.page(new Page(1, 1), () -> getBaseMapper().selectList(new LambdaQueryWrapper<TemplateEntity>().orderByDesc(TemplateEntity::getIndex))).getList())
+                ).map(t -> NumberUtil.defaultInteger(t.getTemplateOrderNo().split("-")[1])).orElse(0)
+        );
     }
+
+    private AtomicInteger getOrderNo() {
+        return ORDER_NO_MAP.computeIfAbsent(DateUtil.daySimple(new Date()), k -> new AtomicInteger(Optional.ofNullable(
+                CollUtil.getFirst(DatabaseUtil.page(new Page(1, 1), () -> getBaseMapper().selectList(new LambdaQueryWrapper<TemplateEntity>().orderByDesc(TemplateEntity::getIndex))).getList())
+        ).map(t -> NumberUtil.defaultInteger(t.getIndex())).orElse(0)));
+    }
+
 
     @Override
     public String nextOrderNo() {
         final String today = DateUtil.daySimple(new Date());
-        return today + "-" + StrUtil.padPre(String.valueOf(init().addAndGet(1)), 2, "0");
+        return today + "-" + StrUtil.padPre(String.valueOf(getOrderNo().addAndGet(1)), 2, "0");
+    }
+
+    @Override
+    public Integer nextIndex() {
+        return INDEX.addAndGet(1);
     }
 
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)

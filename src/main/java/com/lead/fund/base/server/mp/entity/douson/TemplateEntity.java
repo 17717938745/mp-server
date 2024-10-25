@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.entity.douson;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
@@ -29,6 +30,13 @@ import lombok.experimental.Accessors;
 public class TemplateEntity extends AbstractAdmin {
 
     private static final long serialVersionUID = 5945041243096001050L;
+    /**
+     * 序号
+     */
+    @FieldRemark(value = "序号")
+    @Size(max = 16, message = "序号")
+    @TableField(value = "`INDEX`")
+    private Integer index;
     /**
      * 借用方
      */

@@ -13,4 +13,6 @@ import com.lead.fund.base.server.mp.entity.douson.TemplateEntity;
 public interface TemplateDao extends IService<TemplateEntity> {
 
     String nextOrderNo();
+
+    Integer nextIndex();
 }
