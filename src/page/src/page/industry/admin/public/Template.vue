@@ -12,8 +12,8 @@
         <div class="print-container">
           <div class="print-center-content">
             <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content  flex-no-wrap padding">
-                <div>
+              <div class="left-content  flex-no-wrap">
+                <div class="padding">
                   <div>借用人签字：</div>
                   <div>Người mượn：</div>
                 </div>
@@ -21,8 +21,8 @@
               </div>
               <div>
               </div>
-              <div class="right-content flex-no-wrap padding">
-                <div>
+              <div class="right-content flex-no-wrap">
+                <div class="padding">
                   <div>借用方(单位) Đơn vị：</div>
                 </div>
                 <div>
@@ -31,16 +31,16 @@
               </div>
             </div>
             <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap padding">
-                <div>
+              <div class="left-content flex-no-wrap">
+                <div class="padding">
                   <div>借用时间 Ngày mượn：</div>
                 </div>
                 <div>
                   {{ printData.borrowTemplateDate }}
                 </div>
               </div>
-              <div class="right-content flex-no-wrap padding">
-                <div>
+              <div class="right-content flex-no-wrap">
+                <div class="padding">
                   <div>承诺归还时间 Ngày trả：</div>
                 </div>
                 <div>
@@ -89,8 +89,8 @@
               </div>
             </div>
             <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap padding">
-                <div>
+              <div class="left-content flex-no-wrap">
+                <div class="padding">
                   <div>经办人签字：</div>
                   <div>Người cho mượn：</div>
                 </div>
@@ -165,7 +165,7 @@ httpGet(`douson/template`, {templateId: templateId}).then(
 $print_border_color: #ddd;
 .print-container {
   width: 100%;
-  font-size: 13px;
+  font-size: 12px;
   margin-top: 20px;
   border: 1px solid $print_border_color;
 
