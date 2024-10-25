@@ -1,9 +1,11 @@
 <template>
   <div id="printDescription">
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+    <div
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
         <h1 style="text-align: center;height: 90px; position: relative;width: 100%;">
-          <img :src="fullUrl('/third/img/douson.png', '')" style="position: absolute; height: 50px;left: 10px;top: 20px;">
+          <img :src="fullUrl('/third/img/douson.png', '')"
+               style="position: absolute; height: 50px;left: 10px;top: 20px;">
           <div style="font-size: 36px; color: #222222; ">物品借出单</div>
           <div style="font-size: 36px; color: #222222; ">Đơn cho mượn dụng cụ</div>
           <br>
@@ -94,7 +96,7 @@
                   <div>经办人签字：</div>
                   <div>Người cho mượn：</div>
                 </div>
-                <div style="width: 80px;">
+                <div style="width: 120px;">
                   {{ printData.operatorPersonFormat }}
                 </div>
               </div>
@@ -106,7 +108,7 @@
                   </div>
                   <div></div>
                 </div>
-                <div style="width: 159px;">
+                <div>
                   <div class="padding">
                     <div>仓管签字:</div>
                     <div>Kho：</div>
@@ -119,6 +121,20 @@
               <div class="flex-wrap padding">
                 <div style="width: 100%;">备注 Ghi chú：</div>
                 <pre>{{ printData.description }}</pre>
+                <div>
+                  1.借用说明：采购专员参与协调外协所借用工具、量具、刀具、刀片等物品型号，并通知流程中相关参与人员以作备案。原则上仓管员不直接与外协人员打交道。
+                </div>
+                <div> 1. Mượn đồ: Đối với dụng cụ, dao cụ, chip... Tất cả đều do người phụ trách nhà cung cấp mượn và
+                  nhận trả, đồng thời thông báo cho kho, nhà cung cấp không được tự ý liên hệ trực tiếp với kho.
+                </div>
+                <div>
+                  2.归还说明：外协归还的物品需由采购专员、仓管员共同验收，并拍照入系统。如有损坏、遗失则按规定价格赔偿，采购专员执行跟踪落实。
+                </div>
+                <div>2. Trả đồ: Khi nhà cung cấp trả đồ phải thông báo cho người phụ trách nhà cung cấp, nhân viên kho
+                  nhận đồ từ người phụ trách đồng thời tiến hành kiểm tra dụng cụ, chụp ảnh nhập vào hệ thống. Nếu như
+                  dụng cụ hỏng hóc và có tổn hại, nhà cung cấp dựa vào giá tiền quy định của công ty để bồi thường,
+                  người phụ trách nhà cung cấp tiến hành theo dõi và thực hiện.
+                </div>
               </div>
             </div>
           </div>
@@ -168,6 +184,7 @@ $print_border_color: #ddd;
   font-size: 12px;
   margin-top: 20px;
   border: 1px solid $print_border_color;
+  word-break: break-all;
 
   .print-line {
     width: 100%;
@@ -218,6 +235,7 @@ $print_border_color: #ddd;
     justify-content: center;
     align-items: center;
   }
+
   .right-content {
     width: 347px;
 
