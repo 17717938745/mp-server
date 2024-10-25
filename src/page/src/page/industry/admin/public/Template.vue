@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="printDescription">
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
         <h1 style="text-align: center;height: 90px; position: relative;width: 100%;">
@@ -148,6 +148,14 @@ httpGet(`douson/template`, {templateId: templateId}).then(
     (res: any) => {
       printData.value = res.data || {}
       ElMessage.success("Query success")
+      ElMessage.success("Query success")
+      setTimeout(() => {
+        const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
+        const printContainer = document.getElementById('printContainer')
+        if (printContainer) {
+          printContainer.style.height = heightPx
+        }
+      }, 1000)
     }
 )
 
