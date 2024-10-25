@@ -93,7 +93,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'templateManage',
-          label: '供应商借刀模板',
+          label: '物品借出单',
         },
         {
           value: 'date',
@@ -1326,7 +1326,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'templateManage',
-          label: 'Supplier tool template',
+          label: 'Đơn cho mượn dụng cụ',
         },
         {
           value: 'date',
