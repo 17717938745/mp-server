@@ -213,129 +213,6 @@
         </span>
       </template>
     </el-dialog>
-    <el-drawer
-        v-model="showPrint"
-        size="100%"
-        :append-to-body="true"
-        :lock-scroll="false"
-        modal-class="print-drawer"
-        :z-index="99999"
-    >
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
-          <h1 style="text-align: center;height: 90px; position: relative;width: 100%;">
-            <img :src="fullUrl('/third/img/douson.png', '')" style="position: absolute; height: 50px;left: 10px;top: 20px;">
-            <div style="font-size: 36px; color: #222222; ">物品借出单</div>
-            <div style="font-size: 36px; color: #222222; ">Đơn cho mượn dụng cụ</div>
-            <br>
-          </h1>
-          <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>
-          <div class="print-border" style="width: 100%; font-size: 14px; margin-top: 20px;">
-            <div class="print-center-content print-border-bottom">
-              <div class="print-left-section print-border-right print-sign-title">
-                <div>
-                  <div>借用人签字：</div>
-                  <div>Người mượn：</div>
-                </div>
-                <div></div>
-              </div>
-              <div class="print-right-section print-sign-title">
-                <div>
-                  <div>借用方(单位) Đơn vị：</div>
-                </div>
-                <div>
-                  {{ printData.borrowTemplatePersonFormat }}
-                </div>
-              </div>
-            </div>
-            <div class="print-center-content print-border-bottom">
-              <div class="print-left-section print-sign-title print-border-right">
-                <div>
-                  <div>借用时间：</div>
-                  <div>Ngày mượn：</div>
-                </div>
-                <div>
-                  {{ printData.borrowTemplateDate }}
-                </div>
-              </div>
-              <div class="print-right-section print-sign-title">
-                <div>
-                  <div>承诺归还时间 Ngày trả：</div>
-                </div>
-                <div>
-                  {{ printData.promiseReturnDate }}
-                </div>
-              </div>
-            </div>
-            <div class="print-center-content print-border-bottom">
-              <div class="print-left-section">
-                <div class="print-item-label print-content-title print-border-right" style="width: 80px;">
-                  序号 STT
-                </div>
-                <div class="print-item-label print-content-title print-border-right print-section-surplus">
-                  物料号 Mã vật liệu
-                </div>
-              </div>
-              <div class="print-right-section">
-                <div class="print-item-label print-content-title print-border-right print-section-surplus">
-                  物品名称 Miêu tả vật liệu
-                </div>
-                <div class="print-item-label print-content-title print-right-section-sidebar">
-                  数量 Số lượng
-                </div>
-              </div>
-            </div>
-            <div class="print-center-content print-border-bottom">
-              <div class="print-left-section">
-                <div class="print-item print-border-right" style="width: 80px;">
-                  {{ printData.index }}
-                </div>
-                <div class="print-item print-border-right print-section-surplus">
-                  {{ printData.materialNo }}
-                </div>
-              </div>
-              <div class="print-right-section">
-                <div class="print-item print-border-right print-section-surplus">
-                  {{ printData.materialDescription }}
-                </div>
-                <div class="print-item print-right-section-sidebar">
-                  {{ printData.templateCount }}
-                </div>
-              </div>
-            </div>
-            <div class="print-center-content print-border-bottom">
-              <div class="print-left-section print-sign-title print-border-right">
-                <div>
-                  <div>经办人签字：</div>
-                  <div>Người cho mượn：</div>
-                </div>
-                <div style="">{{ printData.operatorPersonFormat }}</div>
-              </div>
-              <div class="print-right-section print-sign-title">
-                <div class="print-left-section print-sign-title print-border-right print-section-surplus" style="flex-wrap: wrap;">
-                  <div>
-                    <div>部门负责人：</div>
-                    <div>Người phụ trách bộ phận：</div>
-                  </div>
-                  <div>&nbsp;</div>
-                </div>
-                <div class="print-sign-title print-right-section-sidebar print-sign-title">
-                  <div>
-                    <div>仓管签字:</div>
-                    <div>Kho：</div>
-                  </div>
-                  <div>&nbsp;</div>
-                </div>
-              </div>
-            </div>
-            <div class="print-center-content" style="justify-content: flex-start; flex-wrap: wrap;">
-              <div style="width: 100%;">备注 Ghi chú：</div>
-              <pre>{{ printData.description }}</pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-drawer>
   </div>
 </template>
 
@@ -353,7 +230,6 @@ import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
-import {fullUrl} from '@/util/EnvUtil'
 import ImageUpload from "../../component/ImageUpload.vue";
 
 const router = useRouter()
@@ -483,9 +359,7 @@ const handleDateTimeChange = () => {
 }
 
 const handleShowPrintDetail = (d: any) => {
-  // ElMessage.info('该功能正在开发中')
-  printData.value = Object.assign({}, d.param || {})
-  showPrint.value = true
+  window.open(`/industry/public/template?templateId=${d.param.templateId}`)
 }
 const handlePage = () => {
   httpGet(`douson/admin/template/page`, state.query).then(
@@ -593,75 +467,4 @@ const handleTableRowClassName = ({
 </script>
 
 <style scoped lang="scss">
-$print_border_color: #ddd;
-.print-center-content {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-}
-
-.print-left-section {
-  width: 218px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100%;
-}
-
-.print-right-section {
-  width: 70%;
-  display: flex;
-  align-items: center;
-}
-
-.print-item-label {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.print-sign-title {
-  height: 50px;
-  display: flex;
-  text-align: left;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.print-content-title {
-  height: 50px;
-}
-
-.print-item {
-  height: 160px;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.print-border {
-  border: 1px solid $print_border_color;
-}
-
-.print-border-right {
-  border-right: 1px solid $print_border_color;
-}
-
-.print-border-bottom {
-  border-bottom: 1px solid $print_border_color;
-}
-
-.print-section-surplus {
-  width: 70%;
-}
-
-.print-right-section-sidebar {
-  width: 160px;
-}
 </style>

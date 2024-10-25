@@ -190,6 +190,14 @@ const initialRouter = (router: Router) => {
             },
             component: () => import ('../page/industry/admin/public/Plan.vue'),
           },
+          {
+            path: 'public/template',
+            name: '/industry/public/template',
+            meta: {
+              title: '物品借出单',
+            },
+            component: () => import ('../page/industry/admin/public/Template.vue'),
+          },
         ],
       }
   )
