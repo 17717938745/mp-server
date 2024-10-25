@@ -96,12 +96,12 @@
                   <div>经办人签字：</div>
                   <div>Người cho mượn：</div>
                 </div>
-                <div class="padding flex-wrap" style="width: 110px; height: 50px;">
+                <div class="padding flex-wrap" style="width: 100px; height: 60px;">
                   {{ printData.operatorPersonFormat }}
                 </div>
               </div>
               <div class="right-content flex-no-wrap">
-                <div class="border-right padding flex-wrap" style="width: 188px; height: 50px;">
+                <div class="border-right padding flex-wrap" style="width: 208px; height: 60px;">
                   <div>
                     <div>部门负责人：</div>
                     <div>Người phụ trách bộ phận：</div>
@@ -217,7 +217,7 @@ $print_border_color: #ddd;
   }
 
   .left-content {
-    width: 238px;
+    width: 228px;
     border-right: 1px solid $print_border_color;
 
     .left {
@@ -237,7 +237,7 @@ $print_border_color: #ddd;
   }
 
   .right-content {
-    width: 347px;
+    width: 357px;
 
     .left {
       width: 287px;
