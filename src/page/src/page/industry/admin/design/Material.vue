@@ -51,15 +51,15 @@
             v-for="item in [
                 {
                   value: 0,
-                  label: '=0',
+                  label: '排产剩余=0',
                 },
                 {
                   value: 1,
-                  label: '>0',
+                  label: '排产剩余>0',
                 },
                 {
                   value: -1,
-                  label: '<0',
+                  label: '排产剩余<0',
                 },
             ]"
             :key="item.value"
@@ -150,11 +150,19 @@
             :icon="Plus"
             @click="handleSaveModal"
             type="success"
-            :disabled="!includes(roleCodeList, 'manager')"
+            :disabled="!includes(roleCodeList, 'material')"
         >Add
         </el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
+    </div>
+    <div>
+      <el-alert v-show="afterUpload" :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`" type="success" />
+    </div>
+    <div>
+      <el-space wrap>
+        <el-switch v-model="showMore" active-text="Show more" inactive-text="Hide info" @change="handleToggleMore"/>
+      </el-space>
     </div>
     <view-list
         idKey="materialId"
@@ -360,6 +368,8 @@ const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
+const uploadData = ref({})
+const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 235, type: ValueType.Operator,},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
@@ -390,13 +400,15 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'productionCount', labelKey: 'productionCount', width: 189},
   {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 189},
   {
-    value: 'materialOrderNo', labelKey: 'materialOrderNo', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d:any) => {
+    value: 'materialOrderNoFormat', labelKey: 'materialOrderNo', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d: any) => {
       window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
     },
   },
-  {value: 'checkOrderNo', labelKey: 'checkOrderNo', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d:any) => {
+  {
+    value: 'checkOrderNoFormat', labelKey: 'checkOrderNo', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d: any) => {
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
-    },},
+    },
+  },
 ])
 
 const fileMap: any = {}
@@ -428,6 +440,8 @@ const handleRequest = (d: any) => {
         return httpUpload(`douson/material/upload`, formData)
       }))
       .then((l: any[]) => {
+        afterUpload.value = true
+        uploadData.value = (l[0] || {}).data || {}
         handlePage()
         return Promise.resolve()
       })
@@ -514,7 +528,7 @@ const state = reactive({
       orderProjectNo: '',
       materialNo: '',
       designNumber: '',
-      surplusCountType: null,
+      surplusCountType: 1,
       chargeCompany: '',
       nde: '',
       assemble: '',
@@ -535,7 +549,6 @@ const state = reactive({
   config: {},
   formSave: true,
   formVisible: false,
-  managerEdit: false,
   formRuleList: {
     customerShortName: [{required: true, message: 'Please check', trigger: 'blur'}],
     customerOrderNo: [{required: true, message: 'Please check', trigger: 'blur'}],
@@ -558,7 +571,28 @@ const state = reactive({
     surplusCount: [{required: true, message: 'Please check', trigger: 'blur'}],
   },
 })
-
+const toggleKeyList = [
+  'customerOrderNo',
+  'customerProjectSequence',
+  'blankMaterialNo',
+  'blankMaterialDescribe',
+  'roughcastDesignNumber',
+  'materialCount',
+  'stoveNo',
+  'hotBatchNo',
+  'serialNo',
+  'materialOrderNo',
+  'checkOrderNo',
+]
+const showMore = ref(!includes(roleCodeList, 'materialManager'))
+const handleToggleMore = (v) => {
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if (toggleKeyList.indexOf(t.value) >= 0) {
+      t.hide = !v
+    }
+    return t
+  })
+}
 const handleDateTimeChange = () => {
   if (state.dateTimeList && state.dateTimeList.length > 1) {
     state.query.data.startPromiseDoneDate = formatDate(
@@ -599,17 +633,16 @@ const handleSaveModal = () => {
   state.formVisible = true
   state.formSave = true
 }
-const handleEdit = (row: any, managerEdit: boolean = false) => {
-  state.managerEdit = managerEdit
+const handleEdit = (row: any) => {
   state.formVisible = true
   state.formSave = false
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  if (includes(roleCodeList, 'admin') || includes(roleCodeList, 'itManager')) {
+  if (includes(roleCodeList, 'admin') || includes(roleCodeList, 'material') || includes(roleCodeList, 'materialManager')) {
     return true
   } else {
-    return row.creator === store.state.user.userId
+    return false
   }
 }
 const handleMerge = () => {

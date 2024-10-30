@@ -1,6 +1,8 @@
 package com.lead.fund.base.server.mp.response;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -149,8 +151,12 @@ public class MaterialResponse extends AbstractAdmin {
      * 领料单号
      */
     private String materialOrderNo;
+    private BigDecimal materialPrintCount;
+    private String materialOrderNoFormat;
     /**
      * 报检单号
      */
     private String checkOrderNo;
+    private BigDecimal checkPrintCount;
+    private String checkOrderNoFormat;
 }

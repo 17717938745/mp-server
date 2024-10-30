@@ -379,7 +379,15 @@ public class DousonMaterialController {
                 (t, r) -> t.getOptimizeType().equals(r.getValue()),
                 (t, r) -> t.setOptimizeTypeFormat(r.getLabel())
         );*/
+        for (MaterialResponse t : rl) {
+            t.setMaterialOrderNoFormat(t.getMaterialOrderNo() + tail(t.getMaterialPrintCount()));
+            t.setCheckOrderNoFormat(t.getCheckOrderNo() + tail(t.getCheckPrintCount()));
+        }
         return rl;
+    }
+
+    private static String tail(BigDecimal v) {
+        return null == v || v.compareTo(BigDecimal.ZERO) <= 0 ? "" : ("-" + v.setScale(0, RoundingMode.HALF_UP));
     }
 
     /**
@@ -444,7 +452,7 @@ public class DousonMaterialController {
                     null,
                     new LambdaUpdateWrapper<MaterialEntity>()
                             .setSql("CHECK_PRINT_COUNT = CHECK_PRINT_COUNT + 1")
-                            .eq(MaterialEntity::getMaterialOrderNo, request.getCheckOrderNo())
+                            .eq(MaterialEntity::getCheckOrderNo, request.getCheckOrderNo())
             );
         }
         return r;
