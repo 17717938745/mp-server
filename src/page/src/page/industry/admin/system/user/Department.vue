@@ -10,8 +10,6 @@
         :columnConfigList="columnConfigList"
         :list="tableData"
     >
-      <template #operator="row">
-      </template>
     </view-list>
   </div>
 </template>

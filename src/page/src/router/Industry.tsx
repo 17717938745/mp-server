@@ -48,27 +48,6 @@ const initialRouter = (router: Router) => {
   console.log(`industry initialRouter...`)
   router.addRoute(
       {
-        path: '/material',
-        name: '/material',
-        meta: {
-          title: 'material',
-        },
-        component: () => import ('../page/industry/admin/temp/Material.vue'),
-      },
-  )
-  router.addRoute(
-      {
-        path: '/operation',
-        name: '/operation',
-        meta: {
-          title: 'material',
-        },
-        component: () => import ('../page/industry/admin/temp/Operation.vue'),
-      },
-  )
-
-  router.addRoute(
-      {
         path: '/local',
         name: '/local',
         meta: {
@@ -197,6 +176,22 @@ const initialRouter = (router: Router) => {
               title: '物品借出单',
             },
             component: () => import ('../page/industry/admin/public/Template.vue'),
+          },
+          {
+            path: 'public/material/index',
+            name: '/industry/public/material/index',
+            meta: {
+              title: '领料表单',
+            },
+            component: () => import ('../page/industry/admin/public/material/Index.vue'),
+          },
+          {
+            path: 'public/material/check',
+            name: '/industry/public/material/check',
+            meta: {
+              title: '报检表单',
+            },
+            component: () => import ('../page/industry/admin/public/material/Check.vue'),
           },
         ],
       }

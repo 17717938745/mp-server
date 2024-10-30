@@ -555,10 +555,12 @@ public interface IndustryConverter extends Serializable {
     PhotoImgModel templatePhoto(TemplatePhotoEntity e, String urlPrefix);
 
     @Mapping(target = "id", source = "templateId")
+    @Mapping(target = "returnCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getReturnCount()))")
     TemplateEntity template(TemplateRequest t);
 
     @Mapping(target = "templateId", source = "id")
     TemplateResponse template(TemplateEntity t);
 
     List<TemplateResponse> templateList(List<TemplateEntity> t);
+
 }

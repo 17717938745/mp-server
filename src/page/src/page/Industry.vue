@@ -88,6 +88,9 @@ $containerLeftGap: 5px;
   .row-done {
     background-color: #e4e7ed;
   }
+  .row-error {
+    background-color: #f1f15b;
+  }
 }
 
 .el-tabs__item {

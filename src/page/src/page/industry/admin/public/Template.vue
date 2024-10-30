@@ -164,7 +164,6 @@ httpGet(`douson/template`, {templateId: templateId}).then(
     (res: any) => {
       printData.value = res.data || {}
       ElMessage.success("Query success")
-      ElMessage.success("Query success")
       setTimeout(() => {
         const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
         const printContainer = document.getElementById('printContainer')

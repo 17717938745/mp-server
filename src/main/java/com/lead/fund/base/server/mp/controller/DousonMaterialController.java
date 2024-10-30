@@ -1,0 +1,487 @@
+package com.lead.fund.base.server.mp.controller;
+
+import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
+import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
+import static com.lead.fund.base.server.mp.converter.MaterialConverter.MATERIAL_INSTANCE;
+
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.lead.fund.base.common.basic.exec.BusinessException;
+import com.lead.fund.base.common.basic.response.DataResult;
+import com.lead.fund.base.common.basic.response.ListResult;
+import com.lead.fund.base.common.basic.response.PageResult;
+import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.util.DatabaseUtil;
+import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.MultitaskUtil;
+import com.lead.fund.base.common.util.NumberUtil;
+import com.lead.fund.base.common.util.StrUtil;
+import com.lead.fund.base.server.mp.dao.MaterialDao;
+import com.lead.fund.base.server.mp.dao.MaterialDetailDao;
+import com.lead.fund.base.server.mp.dao.ParamDao;
+import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
+import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
+import com.lead.fund.base.server.mp.helper.AccountHelper;
+import com.lead.fund.base.server.mp.helper.LockHelper;
+import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaterialDetailMapper;
+import com.lead.fund.base.server.mp.mapper.douson.MaterialMapper;
+import com.lead.fund.base.server.mp.request.MaterialPageRequest;
+import com.lead.fund.base.server.mp.request.MaterialRequest;
+import com.lead.fund.base.server.mp.response.MaterialResponse;
+import com.lead.fund.base.server.mp.response.MaterialUploadResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import jakarta.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * IndustryController
+ *
+ * @author panchaohui
+ * @version 1.0
+ * @date 2024-04-30 16:11
+ */
+@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused"})
+@RestController
+@RequestMapping("/douson/material")
+@Slf4j
+@Validated
+public class DousonMaterialController {
+
+    @Resource
+    private AccountHelper accountHelper;
+    @Resource
+    private TemplatePhotoDao templatePhotoDao;
+    @Resource
+    private MaterialMapper materialMapper;
+    @Resource
+    private MaterialDao materialDao;
+    @Resource
+    private MaterialDetailMapper materialDetailMapper;
+    @Resource
+    private MaterialDetailDao materialDetailDao;
+    @Resource
+    private MpUserMapper userMapper;
+    @Resource
+    private ParamDao paramDao;
+    @Resource
+    private LockHelper lockHelper;
+
+
+    /**
+     * 保存、更新生产工单
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("merge")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result save(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody MaterialRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request)
+                .setModifier(u.getUserId());
+        if (isNotBlank(e.getId())) {
+            if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()) || "materialManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            materialMapper.updateById((MaterialEntity) e
+                    .setCreator(u.getUserId())
+            );
+        } else {
+            if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            materialMapper.insert(e);
+        }
+        return new DataResult<>(e);
+    }
+
+    /**
+     * 上传生产工单
+     *
+     * @param file 单个图片 {@link MultipartFile}
+     * @return {@link DataResult<MaterialUploadResponse>}
+     */
+    @PostMapping("upload")
+    public DataResult<MaterialUploadResponse> upload(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestParam(value = "file", required = false) MultipartFile file
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        final MaterialUploadResponse res = new MaterialUploadResponse();
+        final String today = DateUtil.day(new Date());
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
+            final List<MaterialRequest> el = new ArrayList<>();
+            final XSSFSheet sheet = workbook.getSheetAt(0);
+            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                final Row row = sheet.getRow(i);
+                if (null != row) {
+                    int ci = 0;
+                    final MaterialRequest r = new MaterialRequest()
+                            .setCustomerShortName(getCellValue(row.getCell(ci++)))
+                            .setCustomerOrderNo(getCellValue(row.getCell(ci++)))
+                            .setCustomerProjectSequence(getCellValue(row.getCell(ci++)))
+                            .setSaleOrderNo(getCellValue(row.getCell(ci++)))
+                            .setOrderProjectNo(getCellValue(row.getCell(ci++)))
+                            .setMaterialNo(getCellValue(row.getCell(ci++)))
+                            .setImproveMaterialDescribe(getCellValue(row.getCell(ci++)))
+                            .setDesignNumber(getCellValue(row.getCell(ci++)))
+                            .setOrderCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
+                            .setPromiseDoneDate(DateUtil.day(getCellValue(row.getCell(ci++))))
+                            .setBlankMaterialNo(getCellValue(row.getCell(ci++)))
+                            .setBlankMaterialDescribe(getCellValue(row.getCell(ci++)))
+                            .setRoughcastDesignNumber(getCellValue(row.getCell(ci++)))
+                            .setMaterialCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setStoveNo(getCellValue(row.getCell(ci++)))
+                            .setHotBatchNo(getCellValue(row.getCell(ci++)))
+                            .setSerialNo(getCellValue(row.getCell(ci++)))
+                            .setSurplusCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setNde(getCellValue(row.getCell(ci++)))
+                            .setAssemble(getCellValue(row.getCell(ci++)))
+                            .setTestPress(getCellValue(row.getCell(ci++)))
+                            .setSurfaceTreatment(getCellValue(row.getCell(ci++)))
+                            .setChargeCompany(getCellValue(row.getCell(ci++)))
+                            .setDescription(getCellValue(row.getCell(ci++)))
+                            .setProductionCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setArrangeProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
+                            .setMaterialOrderNo(getCellValue(row.getCell(ci++)))
+                            .setCheckOrderNo(getCellValue(row.getCell(ci++)));
+                    el.add(r);
+                }
+            }
+            res
+                    .setUploadDetailCount(BigDecimal.valueOf(el.size()))
+                    .setUploadCount(BigDecimal.valueOf(el.stream().map(t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo())).distinct().count()))
+            ;
+            lockHelper.lock("material");
+            try {
+                materialMapper.delete(
+                        new LambdaUpdateWrapper<MaterialEntity>()
+                                .eq(MaterialEntity::getProductionDate, today)
+                );
+                materialDao.init();
+                final List<MaterialEntity> il = new ArrayList<>();
+                final Map<List<String>, String> orderNoMap = new HashMap<>(8);
+                final Map<List<String>, String> indexMap = new HashMap<>(8);
+                final Map<List<String>, BigDecimal> materialCountMap =
+                        el.stream().collect(Collectors.groupingBy(
+                                t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()),
+                                Collectors.reducing(
+                                        BigDecimal.ZERO,
+                                        MaterialRequest::getMaterialCount,
+                                        BigDecimal::add
+                                )
+                        ));
+                for (MaterialRequest t : el) {
+                    final List<String> key = CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo());
+                    final MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(t)
+                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextOrderNo()))
+                            .setSurplusCount(t.getOrderCount().subtract(materialCountMap.getOrDefault(key, BigDecimal.ZERO)))
+                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextIndex()))
+                            .setCreator(u.getUserId())
+                            .setModifier(u.getUserId());
+                    il.add(e);
+                }
+                materialDao.saveBatch(
+                        Stream.of(
+                                        il
+                                ).flatMap(Collection::stream)
+                                .toList()
+                );
+                final List<MaterialEntity> afterList = materialMapper.selectList(
+                        new LambdaQueryWrapper<MaterialEntity>()
+                                .eq(MaterialEntity::getProductionDate, today)
+                                .select(MaterialEntity::getSaleOrderNo,
+                                        MaterialEntity::getOrderProjectNo,
+                                        MaterialEntity::getProductionDate
+                                )
+                );
+                final Map<List<String>, Long> afterKm = afterList.stream()
+                        .collect(Collectors.groupingBy(
+                                t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()),
+                                Collectors.counting()
+                        ));
+                res
+                        .setAfterDetailCount(BigDecimal.valueOf(afterList.size()))
+                        .setAfterCount(BigDecimal.valueOf(afterKm.keySet().size()))
+                ;
+            } finally {
+                lockHelper.unlock("material");
+            }
+        } catch (Exception e) {
+            throw new BusinessException(MP_UPLOAD_EXCEL_ERROR).setOriginException(e);
+        }
+        return new DataResult<>(res);
+    }
+
+    /**
+     * 删除生产工单
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link Result}
+     */
+    @DeleteMapping("")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result delete(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaterialRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        if (!"admin".equals(u.getUsername())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        if (isNotBlank(request.getMaterialId())) {
+            materialDao.removeById(request.getMaterialId());
+        }
+        return new Result();
+    }
+
+    private List<MaterialEntity> materialList(MaterialRequest d) {
+        LambdaQueryWrapper<MaterialEntity> lambda = new LambdaQueryWrapper<>();
+        if (isNotBlank(d.getMaterialId())) {
+            lambda.eq(MaterialEntity::getId, d.getMaterialId());
+        }
+        if (isNotBlank(d.getCustomerShortName())) {
+            lambda.like(MaterialEntity::getCustomerShortName, d.getCustomerShortName());
+        }
+        if (isNotBlank(d.getCustomerOrderNo())) {
+            lambda.like(MaterialEntity::getCustomerOrderNo, d.getCustomerOrderNo());
+        }
+        if (isNotBlank(d.getCustomerProjectSequence())) {
+            lambda.like(MaterialEntity::getCustomerProjectSequence, d.getCustomerProjectSequence());
+        }
+        if (isNotBlank(d.getSaleOrderNo())) {
+            lambda.like(MaterialEntity::getSaleOrderNo, d.getSaleOrderNo());
+        }
+        if (isNotBlank(d.getOrderProjectNo())) {
+            lambda.like(MaterialEntity::getOrderProjectNo, d.getOrderProjectNo());
+        }
+        if (isNotBlank(d.getMaterialNo())) {
+            lambda.like(MaterialEntity::getMaterialNo, d.getMaterialNo());
+        }
+        if (isNotBlank(d.getDesignNumber())) {
+            lambda.like(MaterialEntity::getDesignNumber, d.getDesignNumber());
+        }
+        if (null != d.getStartPromiseDoneDate()) {
+            lambda.ge(MaterialEntity::getPromiseDoneDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartPromiseDoneDate())));
+        }
+        if (null != d.getEndPromiseDoneDate()) {
+            lambda.le(MaterialEntity::getPromiseDoneDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndPromiseDoneDate()).toJdkDate()));
+        }
+        if (null != d.getSurplusCountType()) {
+            if (d.getSurplusCountType() == 0) {
+                lambda.eq(MaterialEntity::getSurplusCount, 0);
+            } else if (d.getSurplusCountType() < 0) {
+                lambda.lt(MaterialEntity::getSurplusCount, 0);
+            } else {
+                lambda.gt(MaterialEntity::getSurplusCount, 0);
+            }
+        }
+        if (isNotBlank(d.getChargeCompany())) {
+            lambda.like(MaterialEntity::getChargeCompany, d.getChargeCompany());
+        }
+        if (isNotBlank(d.getNde())) {
+            lambda.eq(MaterialEntity::getNde, d.getNde());
+        }
+        if (isNotBlank(d.getAssemble())) {
+            lambda.eq(MaterialEntity::getAssemble, d.getAssemble());
+        }
+        if (isNotBlank(d.getTestPress())) {
+            lambda.eq(MaterialEntity::getTestPress, d.getTestPress());
+        }
+        if (isNotBlank(d.getSurfaceTreatment())) {
+            lambda.eq(MaterialEntity::getSurfaceTreatment, d.getSurfaceTreatment());
+        }
+        if (isNotBlank(d.getMaterialOrderNo())) {
+            if (Boolean.TRUE.equals(d.getAccurateMatch())) {
+                lambda.eq(MaterialEntity::getMaterialOrderNo, d.getMaterialOrderNo());
+            } else {
+                lambda.like(MaterialEntity::getMaterialOrderNo, d.getMaterialOrderNo());
+            }
+        }
+        if (isNotBlank(d.getCheckOrderNo())) {
+            if (Boolean.TRUE.equals(d.getAccurateMatch())) {
+                lambda.eq(MaterialEntity::getCheckOrderNo, d.getCheckOrderNo());
+            } else {
+                lambda.like(MaterialEntity::getCheckOrderNo, d.getCheckOrderNo());
+            }
+        }
+        return materialDao.list(lambda.orderByDesc(MaterialEntity::getCreateTime));
+    }
+
+    private List<MaterialResponse> formatMaterialList(List<MaterialEntity> list) {
+        List<MaterialResponse> rl = MATERIAL_INSTANCE.materialList(list);
+        List<String> userIdList = Stream.of(
+                        rl.stream().map(MaterialResponse::getCreator).filter(StrUtil::isNotBlank)
+                )
+                .flatMap(t -> t)
+                .distinct()
+                .collect(Collectors.toList());
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                        userIdList,
+                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getCreator())).collect(Collectors.toList()),
+                MaterialResponse::getCreator,
+                l -> userList,
+                (t, r) -> t.getCreator().equals(r.getId()),
+                (t, r) -> t.setCreatorFormat(r.getName())
+        );
+        /*MultitaskUtil.supplementList(
+                rl,
+                MaterialResponse::getOptimizeType,
+                l -> paramDao.listByCategoryId("optimizeType"),
+                (t, r) -> t.getOptimizeType().equals(r.getValue()),
+                (t, r) -> t.setOptimizeTypeFormat(r.getLabel())
+        );*/
+        return rl;
+    }
+
+    /**
+     * 生产工单分页
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialPageRequest}
+     * @return {@link PageResult <MaterialResponse>}
+     */
+    @GetMapping("page")
+    public PageResult<MaterialResponse> materialAdminPage(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaterialPageRequest request
+    ) {
+        MpUserResponse u = accountHelper.getUser(deviceId);
+        PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
+        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        return new PageResult<>(pr.getTotal(), formatMaterialList(pr.getList())
+                .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 领料单打印
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link ListResult<MaterialResponse>}
+     */
+    @GetMapping("index")
+    public ListResult<MaterialResponse> index(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaterialRequest request
+    ) {
+        final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
+        if (!r.getList().isEmpty()) {
+            materialMapper.update(
+                    null,
+                    new LambdaUpdateWrapper<MaterialEntity>()
+                            .setSql("MATERIAL_PRINT_COUNT = MATERIAL_PRINT_COUNT + 1")
+                            .eq(MaterialEntity::getMaterialOrderNo, request.getMaterialOrderNo())
+            );
+        }
+        return r;
+    }
+
+    /**
+     * 报检单打印
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link ListResult<MaterialResponse>}
+     */
+    @GetMapping("check")
+    public ListResult<MaterialResponse> check(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaterialRequest request
+    ) {
+        final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
+        if (!r.getList().isEmpty()) {
+            materialMapper.update(
+                    null,
+                    new LambdaUpdateWrapper<MaterialEntity>()
+                            .setSql("CHECK_PRINT_COUNT = CHECK_PRINT_COUNT + 1")
+                            .eq(MaterialEntity::getMaterialOrderNo, request.getCheckOrderNo())
+            );
+        }
+        return r;
+    }
+
+    public static String getCellValue(Cell cell) {
+        String cellValue = "";
+        // 以下是判断数据的类型
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    cellValue = sdf.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue()));
+                } else {
+                    DataFormatter dataFormatter = new DataFormatter();
+                    cellValue = dataFormatter.formatCellValue(cell);
+                }
+                break;
+            case STRING:
+                cellValue = cell.getStringCellValue();
+                break;
+            case BOOLEAN:
+                cellValue = cell.getBooleanCellValue() + "";
+                break;
+            case FORMULA:
+                cellValue = cell.getCellFormula();
+                break;
+            case BLANK:
+                cellValue = "";
+                break;
+            case ERROR:
+                cellValue = "非法字符";
+                break;
+            default:
+                cellValue = "未知类型";
+                break;
+        }
+        return cellValue;
+    }
+}

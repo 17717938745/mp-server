@@ -66,7 +66,7 @@ const handleFileChange = (file: UploadFile, fileList: UploadFiles) => {
   console.log('file change, length: ' + fileList.length)
 }
 const handleBeforeUpload = (file: UploadFile) => {
-  console.log('before uplaod file: ' + file.uid)
+  console.log('before upload file: ' + file.uid)
   fileMap[file.uid] = file
   return file
 }
@@ -98,7 +98,7 @@ const handleRequest = (d: any) => {
       return Promise.resolve()
     })
     .catch((err) => {
-      ElMessage.success(`Upload failed`)
+      ElMessage.error(`Upload failed`)
       return Promise.reject()
     })
     keys.forEach((k: any) => {

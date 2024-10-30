@@ -11,8 +11,6 @@
         :list="tableData"
         :handleTableRowClassName="handleTableRowClassName"
     >
-      <template #operator="row">
-      </template>
     </view-list>
   </div>
 </template>

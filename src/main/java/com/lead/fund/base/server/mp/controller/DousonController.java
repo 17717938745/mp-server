@@ -4114,6 +4114,9 @@ public class DousonController {
         if (isNotBlank(request.getUser())) {
             lambda.eq(VocationEntity::getUser, request.getUser());
         }
+        if (null != request.getCompliance()) {
+            lambda.eq(VocationEntity::getCompliance, request.getCompliance());
+        }
         if (null != request.getDate()) {
             lambda.ge(VocationEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getDate())));
             lambda.le(VocationEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getDate())));
@@ -4173,7 +4176,7 @@ public class DousonController {
         return vocationPartitionList.values()
                 .stream().map(l -> {
                     final VocationResponse t = CollUtil.getFirst(l);
-                    if (null == t && isBlank(t.getDepartment())) {
+                    if (null == t || isBlank(t.getDepartment())) {
                         log.warn("Vocation is null: {}", t);
                         return null;
                     }
@@ -5773,15 +5776,15 @@ public class DousonController {
         MultitaskUtil.supplementList(
                 rl,
                 TemplateResponse::getTemplateId,
-                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, "0")),
-                (t, r) -> 0 == r.getPhotoType(),
+                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, 0)),
+                (t, r) -> t.getTemplateId().equals(r.getTemplateId()) && 0 == r.getPhotoType(),
                 (t, r) -> t.getBorrowPhotoList().add(INDUSTRY_INSTANCE.templatePhoto(r, urlHelper.getUrlPrefix()))
         );
         MultitaskUtil.supplementList(
                 rl,
                 TemplateResponse::getTemplateId,
-                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, "1")),
-                (t, r) -> 1 == r.getPhotoType(),
+                l -> templatePhotoDao.list(new LambdaQueryWrapper<TemplatePhotoEntity>().in(TemplatePhotoEntity::getTemplateId, l).eq(TemplatePhotoEntity::getPhotoType, 1)),
+                (t, r) -> t.getTemplateId().equals(r.getTemplateId()) && 1 == r.getPhotoType(),
                 (t, r) -> t.getReturnPhotoList().add(INDUSTRY_INSTANCE.templatePhoto(r, urlHelper.getUrlPrefix()))
         );
         final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));

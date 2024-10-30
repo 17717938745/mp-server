@@ -96,6 +96,114 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '物品借出单',
         },
         {
+          value: 'material',
+          label: '生产工单',
+        },
+        {
+          value: 'designManage',
+          label: '计划管理',
+        },
+        {
+          "value": "customerOrderNo",
+          "label": "客户订单号"
+        },
+        {
+          "value": "customerProjectSequence",
+          "label": "客户项次号"
+        },
+        {
+          "value": "saleOrderNo",
+          "label": "销售订单号"
+        },
+        {
+          "value": "materialNo",
+          "label": "物料号"
+        },
+        {
+          "value": "improveMaterialDescribe",
+          "label": "加工物料描述"
+        },
+        {
+          "value": "designNumber",
+          "label": "图号"
+        },
+        {
+          "value": "orderCount",
+          "label": "订单数量"
+        },
+        {
+          "value": "productionDate",
+          "label": "投产日期"
+        },
+        {
+          "value": "promiseDoneDate",
+          "label": "承诺交期"
+        },
+        {
+          "value": "blankMaterialNo",
+          "label": "毛坯物料号"
+        },
+        {
+          "value": "blankMaterialDescribe",
+          "label": "毛坯物料描述"
+        },
+        {
+          "value": "materialCount",
+          "label": "领料数量"
+        },
+        {
+          "value": "stoveNo",
+          "label": "炉号"
+        },
+        {
+          "value": "hotBatchNo",
+          "label": "热批号"
+        },
+        {
+          "value": "serialNo",
+          "label": "序列号"
+        },
+        {
+          "value": "surplusCount",
+          "label": "欠交数量"
+        },
+        {
+          "value": "nde",
+          "label": "NDE"
+        },
+        {
+          "value": "assemble",
+          "label": "装配"
+        },
+        {
+          "value": "testPress",
+          "label": "试压"
+        },
+        {
+          "value": "surfaceTreatment",
+          "label": "表面处理"
+        },
+        {
+          "value": "chargeCompany",
+          "label": "负责单位"
+        },
+        {
+          "value": "productionCount",
+          "label": "排产数量"
+        },
+        {
+          "value": "arrangeProductionDate",
+          "label": "排产日期"
+        },
+        {
+          "value": "materialOrderNo",
+          "label": "领料单号"
+        },
+        {
+          "value": "checkOrderNo",
+          "label": "报检单号"
+        },
+        {
           value: 'date',
           label: '日期',
         },
@@ -148,10 +256,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '箱号',
         },
         {
-          value: 'serialNo',
-          label: '序列号',
-        },
-        {
           value: 'volume',
           label: '长*宽*高(MM)',
         },
@@ -192,24 +296,12 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '项次',
         },
         {
-          value: 'materialNo',
-          label: '物料号',
-        },
-        {
           value: 'materialDescribe',
           label: '物料描述',
         },
         {
           value: 'roughcastDesignNumber',
           label: '毛坯图号',
-        },
-        {
-          value: 'chargeCompany',
-          label: '负责单位',
-        },
-        {
-          value: 'assemble',
-          label: '装配',
         },
         {
           value: 'pressureTest',
@@ -222,10 +314,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'scheduleProduce',
           label: '是否排产',
-        },
-        {
-          value: 'materialOrderNo',
-          label: '领料单号',
         },
         {
           value: 'designNumber',
@@ -266,14 +354,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'fineAmount',
           label: '扣款',
-        },
-        {
-          value: 'stoveNo',
-          label: '炉号',
-        },
-        {
-          value: 'hotBatchNo',
-          label: '热批号',
         },
         {
           value: 'defectType',
@@ -712,10 +792,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '校验周期（天）',
         },
         {
-          value: 'orderCount',
-          label: '订单数量',
-        },
-        {
           value: 'manufacturers',
           label: '厂家',
         },
@@ -760,14 +836,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '当班定额产量',
         },
         {
-          value: 'customerOrderNo',
-          label: '客户订单号',
-        },
-        {
-          value: 'customerProjectSequence',
-          label: '客户项次号',
-        },
-        {
           value: 'orderProjectNo',
           label: '订单项目号',
         },
@@ -790,10 +858,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'deviceCompletePercent',
           label: '当班绩效，当台的效率/%',
-        },
-        {
-          value: 'surplusCount',
-          label: '欠交数量',
         },
         {
           value: 'clientIp',
@@ -1329,6 +1393,114 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: 'Đơn cho mượn dụng cụ',
         },
         {
+          value: 'material',
+          label: 'Product order',
+        },
+        {
+          value: 'designManage',
+          label: 'Quản lý kế hoạch',
+        },
+        {
+          "value": "customerOrderNo",
+          "label": "Đơn đặt hàng khách hàng"
+        },
+        {
+          "value": "customerProjectSequence",
+          "label": " Số hạng mục khách hàng"
+        },
+        {
+          "value": "saleOrderNo",
+          "label": "Đơn đặt hàng"
+        },
+        {
+          "value": "materialNo",
+          "label": "Mã vật liệu"
+        },
+        {
+          "value": "improveMaterialDescribe",
+          "label": "Mô tả vật liệu"
+        },
+        {
+          "value": "designNumber",
+          "label": "Bản vẽ"
+        },
+        {
+          "value": "orderCount",
+          "label": "Số lượng đơn hàng"
+        },
+        {
+          "value": "productionDate",
+          "label": "Ngày sản xuất"
+        },
+        {
+          "value": "promiseDoneDate",
+          "label": "Ngày sản xuất chịu trách nhiệm nhập kho"
+        },
+        {
+          "value": "blankMaterialNo",
+          "label": "Mã vật liệu phôi"
+        },
+        {
+          "value": "blankMaterialDescribe",
+          "label": "Mô tả vật liệu phôi"
+        },
+        {
+          "value": "materialCount",
+          "label": "Số lượng lĩnh liệu"
+        },
+        {
+          "value": "stoveNo",
+          "label": "Số lò nhiệt"
+        },
+        {
+          "value": "hotBatchNo",
+          "label": "Số lô nhiệt"
+        },
+        {
+          "value": "serialNo",
+          "label": "Số Serial"
+        },
+        {
+          "value": "surplusCount",
+          "label": "Số lượng còn thiếu"
+        },
+        {
+          "value": "nde",
+          "label": "NDE"
+        },
+        {
+          "value": "assemble",
+          "label": "Lắp ráp"
+        },
+        {
+          "value": "testPress",
+          "label": "Thử áp "
+        },
+        {
+          "value": "surfaceTreatment",
+          "label": "Xử lý bề mặt"
+        },
+        {
+          "value": "chargeCompany",
+          "label": "Đơn vị phụ trách"
+        },
+        {
+          "value": "productionCount",
+          "label": "Số lượng sắp xếp sản xuất"
+        },
+        {
+          "value": "productionDate",
+          "label": "Ngày sắp xếp sản xuất"
+        },
+        {
+          "value": "yarn",
+          "label": "Số phiếu lĩnh liệu"
+        },
+        {
+          "value": "checkOrderNo",
+          "label": "Số phiếu nhập kho"
+        },
+        {
           value: 'date',
           label: 'Ngày tháng',
         },
@@ -1354,7 +1526,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           value: 'customerShortName',
-          label: 'Customer Tên khách hàng',
+          label: 'Tên khách hàng',
         },
         {
           value: 'purchaseOrderNo',
@@ -1379,10 +1551,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'boxNumber',
           label: 'Mã thùng',
-        },
-        {
-          value: 'serialNo',
-          label: 'Số seri',
         },
         {
           value: 'volume',
@@ -1425,24 +1593,12 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: 'Hạng mục',
         },
         {
-          value: 'materialNo',
-          label: 'mã vật liệu',
-        },
-        {
           value: 'materialDescribe',
           label: 'Mô tả vật liệu',
         },
         {
           value: 'roughcastDesignNumber',
           label: 'Bản vẽ phôi',
-        },
-        {
-          value: 'chargeCompany',
-          label: '负责单位',
-        },
-        {
-          value: 'assemble',
-          label: '装配',
         },
         {
           value: 'pressureTest',
@@ -1455,10 +1611,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'scheduleProduce',
           label: '是否排产',
-        },
-        {
-          value: 'materialOrderNo',
-          label: '领料单号',
         },
         {
           value: 'promiseCompleteDate',
@@ -1603,14 +1755,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'fineAmount',
           label: 'Số tiền khấu trừ',
-        },
-        {
-          value: 'stoveNo',
-          label: 'Số nhiệt',
-        },
-        {
-          value: 'hotBatchNo',
-          label: 'Số lò',
         },
         {
           value: 'defectType',
@@ -2041,10 +2185,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: 'Chu kì hiệu chuẩn（ngày）',
         },
         {
-          value: 'orderCount',
-          label: 'Số lượng đơn đặt hàng',
-        },
-        {
           value: 'manufacturers',
           label: 'Nhà sản xuất',
         },
@@ -2089,14 +2229,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: 'Định mức sản lượng ca',
         },
         {
-          value: 'customerOrderNo',
-          label: 'Đơn đặt hàng khách',
-        },
-        {
-          value: 'customerProjectSequence',
-          label: 'Đơn đặt hàng khách',
-        },
-        {
           value: 'orderProjectNo',
           label: 'Số hạng mục đơn hàng',
         },
@@ -2119,10 +2251,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'deviceCompletePercent',
           label: 'Hiệu suất ca /%',
-        },
-        {
-          value: 'surplusCount',
-          label: 'Số lượng còn dư nợ',
         },
         {
           value: 'clientIp',
@@ -2608,6 +2736,8 @@ export const printMultipleText = (str: string): string => {
   let defaultFormData = ''
   let columnConfigString = '{value: \'expand\', label: \'\', width: 48, type: ValueType.Expand,},\n' +
       '{value: \'operator\', labelKey: \'viewAndEdit\', width: 312, type: ValueType.Operator,},\n'
+  let formString = ''
+  let formRuleString = ''
   const data = {
     'CHS': [],
     'THA': [],
@@ -2623,6 +2753,9 @@ export const printMultipleText = (str: string): string => {
     const key = arr.length > 0 && arr1.length > 0 && arr[0].value === arr1[0].value ? arr[0].value : ''
     if (key) {
       columnConfigString += ('{value: \'' + key + '\', labelKey: \'' + key + '\', width: 189},\n')
+      formString += ('        <el-form-item prop="' + key + '" :label="store.state.label.' + key + '">\n' +
+          '          <el-input v-model="formData.' + key + '"/>\n' +
+          '        </el-form-item>\n')
       defaultFormData += `${key}: '',\n`
       entityString += ('     /**\n' +
           '     * ' + chs + '\n' +
@@ -2630,7 +2763,8 @@ export const printMultipleText = (str: string): string => {
           '    @FieldRemark(value = "' + chs + '")\n' +
           '    @Size(max = 256, message = "' + chs + '长度不合法")\n' +
           '    private String ' + key + ';\n'
-      );
+      )
+      formRuleString += (key + ': [{required: true, message: \'Please check\', trigger: \'blur\'}],\n')
     } else {
       data['CHS'].push({
         value: `${i}`,
@@ -2642,16 +2776,16 @@ export const printMultipleText = (str: string): string => {
       })
     }
   }
-  if (data['CHS'].length > 0) {
-    console.log(JSON.stringify(data, null, 2))
-  }
+  console.log(JSON.stringify(data, null, 2))
   console.log(columnConfigString)
   console.log(defaultFormData)
   console.log(entityString)
+  console.log(formString)
+  console.log(formRuleString)
 }
 
-// printMultipleText('序号\t借用日期\t借用方\t物料号\t物料描述\t数量\t承诺归还日期\t经办人\t借出照片数量\t还回照片数量\t备注\t已还数量\t实际归还日期\t是否符合要求\t单号\n' +
-//     'STT\tNgày tháng\tBên Mượn\tmã vật liệu\tmiêu tả vật liệu\tsố lượng\tNgày hứa hoàn trả\tNgười cho mượn\tHình ảnh mượn\tHình ảnh trả\tGhi chú\tSố lượng đã trả\tngày trả thực tế\t có đáp ứng  yêu cầu không?\tSố phiếu')
+printMultipleText('客户简称\t客户订单号\t客户项次号\t销售订单号\t订单项目号\t物料号\t加工物料描述\t图号\t订单数量\t投产日期\t承诺交期\t毛坯物料号\t毛坯物料描述\t毛坯图号\t领料数量\t炉号\t热批号\t序列号\t欠交数量\tNDE\t装配\t试压\t表面处理\t负责单位\t备注\t排产数量\t排产日期\t领料单号\t报检单号\n' +
+    'Tên khách hàng\tĐơn đặt hàng khách hàng\t Số hạng mục khách hàng\tĐơn đặt hàng\tSố hạng mục đơn hàng\tMã vật liệu\tMô tả vật liệu\tBản vẽ\tSố lượng đơn hàng\tNgày sản xuất\tNgày sản xuất chịu trách nhiệm nhập kho\tMã vật liệu phôi\tMô tả vật liệu phôi\tBản vẽ phôi\tSố lượng lĩnh liệu\tSố lò nhiệt\tSố lô nhiệt\tSố Serial\tSố lượng còn thiếu\tNDE\tLắp ráp\tThử áp \tXử lý bề mặt\tĐơn vị phụ trách\tGhi chú\tSố lượng sắp xếp sản xuất\tNgày sắp xếp sản xuất\tSố phiếu lĩnh liệu\tSố phiếu nhập kho')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

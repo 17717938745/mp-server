@@ -62,6 +62,20 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
+      <el-select v-model="query.data.compliance"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="store.state.label.vocationCompliance"
+      >
+        <el-option
+            v-for="item in [{value: true, label: 'YES'}, {value: false, label: 'NO'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -292,6 +306,7 @@ const state = reactive({
       date: '',
       startDate: '',
       endDate: '',
+      compliance: null,
     },
     page: {
       page: DEFAULT_PAGE,

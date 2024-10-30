@@ -46,7 +46,10 @@
       />
     </el-space>
   </template>
-  <template v-if="viewConfig.type === ValueType.Video">
+  <template v-else-if="viewConfig.type === ValueType.Text">
+    {{ row[viewConfig.value] }}
+  </template>
+  <template v-else-if="viewConfig.type === ValueType.Video">
     <el-space wrap style="justify-content: center;">
       <div v-if="row[viewConfig.value] && row[viewConfig.value].length > 0">
         <video
@@ -140,8 +143,8 @@
       {{ row[viewConfig.value] }}
     </el-link>
     <span v-else>
-        {{ row[viewConfig.value] }}
-      </span>
+      {{ row[viewConfig.value] }}
+    </span>
   </template>
   <template v-else-if="viewConfig.type === ValueType.Operator">
     <el-space wrap style="justify-content: center;">
@@ -331,7 +334,17 @@
     </el-link>
     <el-switch v-else v-model="formData[viewConfig.value]" active-text="Yes" inactive-text="No" @change="handleUpdateSubmit"/>
   </template>
-  <template v-else-if="viewConfig.type === null || viewConfig.type === undefined || viewConfig.type === ValueType.Text">
+  <template v-else-if="viewConfig.type === ValueType.Link">
+    <el-link
+        v-if="viewConfig.openLink"
+        @click="viewConfig.openLink(row)"
+        type="danger"
+    >
+      {{ row[viewConfig.value] }}
+    </el-link>
+    <span v-else>{{ row[viewConfig.value] }}</span>
+  </template>
+  <template v-else-if="viewConfig.type === null || viewConfig.type === undefined">
     {{ row[viewConfig.value] }}
   </template>
 </template>

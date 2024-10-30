@@ -261,10 +261,13 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},
   {value: 'returnPhotoList', labelKey: 'returnPhoto', width: 189, type: ValueType.Image,},
 ])
-if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'manager')) {
+if (includes(roleCodeList, 'admin')) {
   columnConfigList.value = columnConfigList.value.map(t => {
-    if ('dealOpinion' === t.value) {
-      t.children = (t.children || []).filter(t1 => 'fineAmountFormat' !== t1.value)
+    if ('description' === t.value) {
+      t.type = ValueType.TextEdit
+    } else if ('returnCount' === t.value) {
+      t.width = 89
+      t.type = ValueType.NumberEdit
     }
     return t
   })
@@ -357,7 +360,6 @@ const handleDateTimeChange = () => {
   }
   handlePage()
 }
-
 const handleShowPrintDetail = (d: any) => {
   window.open(`/industry/public/template?templateId=${d.param.templateId}`)
 }
@@ -457,7 +459,6 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  console.log(row.meetRequirement)
   if (!row.meetRequirement) {
     return 'row-done'
   }

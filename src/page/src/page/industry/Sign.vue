@@ -338,6 +338,25 @@ const handleSubmit = (retry: boolean = true) => {
                       },
                       {
                         "id": "-1",
+                        "path": "design",
+                        "component": "",
+                        "nameKey": "designManage",
+                        "white": false,
+                        "showFlag": true,
+                        "children": [
+                          {
+                            "children": [],
+                            "id": "-1",
+                            "path": "material",
+                            "component": "material",
+                            "nameKey": "material",
+                            "white": false,
+                            "showFlag": true,
+                          },
+                            ]
+                      },
+                      {
+                        "id": "-1",
                         "path": "asset",
                         "component": "",
                         "nameKey": "assetManage",

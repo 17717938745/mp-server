@@ -14,6 +14,7 @@ export interface ViewConfig {
   showOverflow?: boolean,
   children?: ViewConfig[],
   managerEdit?: Function,
+  openLink?: Function,
 }
 
 export enum ViewType {
@@ -46,4 +47,5 @@ export enum ValueType {
   TextEdit,
   DateEdit,
   ValidEdit,
+  Link,
 }
