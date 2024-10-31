@@ -37,32 +37,32 @@
         </div>
       </div>
       <div class="line col-group" style="font-size: 12px;">
-        <div class="col" style="width: 260px; flex-wrap: wrap;">
-          <div class="line">
-            <div class="col col-header-up flex-column-start" style="width: 110px; align-items: flex-start;">
+        <div class="col" style="flex-wrap: wrap; width: 460px;">
+          <div class="flex-start" style="width: 100%;">
+            <div class="col-up flex-column-start" style="width: 40%; height: 40px; align-items: flex-start;">
               <div>Order No</div>
               <div>Đơn hàng tiêu thụ</div>
             </div>
-            <div class="col col-header-up flex-start" style="width: 150px;">
-              <div class="col col-header-up" style="width: 100px; justify-content: center;">
+            <div class="flex-start" style="width: 60%;">
+              <div class="col-up" style="width: 66%; justify-content: center;">
                 {{ printData.saleOrderNo }}
               </div>
-              <div class="col col-header-up" style="width: 50px; justify-content: center;">
+              <div class="col-up" style="width: 34%; justify-content: center;">
                 {{ printData.orderProjectNo }}
               </div>
             </div>
           </div>
-          <div class="line">
-            <div class="col col-header-down flex-column-start" style="width: 110px; align-items: flex-start;">
+          <div class="flex-start" style="width: 100%;">
+            <div class="col-down flex-column-start" style="width: 40%; align-items: flex-start;">
               <div>Part No</div>
               <div>Mã vật liệu</div>
             </div>
-            <div class="col col-header-down" style="width: 150px; justify-content: center;">
+            <div class="col-down flex-column-start" style="width: 60%; justify-content: center;">
               {{ printData.materialNo }}
             </div>
           </div>
         </div>
-        <div class="col col-header-merge flex-column-start" style="width:160px;">
+        <div class="col col-combine flex-column-start" style="width:270px;">
           <div>
             Description
           </div>
@@ -70,12 +70,12 @@
             Mô tả vật liệu
           </div>
         </div>
-        <div class="col col-header-merge" style="width: 320px; justify-content: center;">
+        <div class="col col-combine flex-column-start" style="width: 360px;">
           {{ printData.improveMaterialDescribe }}
         </div>
         <div class="col" style="width: 360px; flex-wrap: wrap;">
-          <div class="line">
-            <div class="col col-header-up flex-column-start" style="width: 210px;">
+          <div class="flex-start" style="width: 100%;">
+            <div class="col col-up flex-column-start" style="width: 70%;">
               <div>
                 Qty.
               </div>
@@ -83,12 +83,16 @@
                 Tổng số lượng lĩnh vật liệu
               </div>
             </div>
-            <div class="col col-header-up flex-start" style="width: 150px; justify-content: center;">
-              {{ printData.orderCount }}
+            <div class="col col-up flex-start" style="width: 30%; justify-content: center;">
+              {{
+                (printList || []).reduce((prev, cur, index, arr) => {
+                  return (prev || 0) + (cur.materialCount || 0)
+                }, 0).toFixed(0)
+              }}
             </div>
           </div>
-          <div class="line">
-            <div class="col col-header-up flex-column-start" style="width: 210px;">
+          <div class="flex-start" style="width: 100%;">
+            <div class="col col-down flex-column-start" style="width: 70%;">
               <div>
                 Drawing NO.
               </div>
@@ -96,132 +100,130 @@
                 Bản vẽ
               </div>
             </div>
-            <div class="col col-header-up flex-start" style="width: 150px; justify-content: center;">
-              {{ printData.designNumber }}
+            <div class="col col-down flex-column-start" style="width: 30%; justify-content: center;">
+              <div>{{ printData.designNumber }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="line" style="font-size: 12px;">
-        <div class="line col-group" style="font-size: 12px; text-align: center;">
-          <div class="col" style="width: 50px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Seq.
-                </div>
-                <div>
-                  STT
-                </div>
+      <div class="line col-group" style="font-size: 12px;text-align: center;">
+        <div class="col" style="width: 50px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Seq.
               </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ i + 1 }}
+              <div>
+                STT
               </div>
             </div>
-          </div>
-          <div class="col" style="width: 140px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Component No
-                </div>
-                <div>
-                  Mã vật liệu phôi
-                </div>
-              </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.blankMaterialNo }}
-              </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ i + 1 }}
             </div>
           </div>
-          <div class="col" style="width: 190px">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Component description
-                </div>
-                <div>
-                  Mô tả vật liệu phôi
-                </div>
+        </div>
+        <div class="col" style="width: 140px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Component No
               </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.blankMaterialDescribe }}
+              <div>
+                Mã vật liệu phôi
               </div>
             </div>
-          </div>
-          <div class="col" style="width: 110px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Drawing No
-                </div>
-                <div>
-                  Bản vẽ phôi
-                </div>
-              </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.roughcastDesignNumber }}
-              </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.blankMaterialNo }}
             </div>
           </div>
-          <div class="col" style="width: 90px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Qty
-                </div>
-                <div>
-                  Số lượng liệu
-                </div>
+        </div>
+        <div class="col" style="width: 190px">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Component description
               </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.materialCount }}
+              <div>
+                Mô tả vật liệu phôi
               </div>
             </div>
-          </div>
-          <div class="col" style="width: 90px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Heat No.
-                </div>
-                <div>
-                  Số lò nhiệt
-                </div>
-              </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.stoveNo }}
-              </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.blankMaterialDescribe }}
             </div>
           </div>
-          <div class="col" style="width: 113px;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Heat Lot No
-                </div>
-                <div>
-                  Số lô xử lý nhiệt
-                </div>
+        </div>
+        <div class="col" style="width: 110px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Drawing No
               </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.hotBatchNo }}
+              <div>
+                Bản vẽ phôi
               </div>
             </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.roughcastDesignNumber }}
+            </div>
           </div>
-          <div class="col" style="width: 28%;">
-            <div class="flex-column-start">
-              <div class="item-label">
-                <div>
-                  Serial No ( Số Serial )
-                </div>
-                <div>
-                  &nbsp;
-                </div>
+        </div>
+        <div class="col" style="width: 90px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Qty
               </div>
-              <div v-for="(d, i) in printList" class="item">
-                {{ d.serialNo }}
+              <div>
+                Số lượng liệu
               </div>
+            </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.materialCount }}
+            </div>
+          </div>
+        </div>
+        <div class="col" style="width: 90px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Heat No.
+              </div>
+              <div>
+                Số lò nhiệt
+              </div>
+            </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.stoveNo }}
+            </div>
+          </div>
+        </div>
+        <div class="col" style="width: 113px;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Heat Lot No
+              </div>
+              <div>
+                Số lô xử lý nhiệt
+              </div>
+            </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.hotBatchNo }}
+            </div>
+          </div>
+        </div>
+        <div class="col" style="width: 28%;">
+          <div class="flex-column-start" style="width: 100%;">
+            <div class="item-label">
+              <div>
+                Serial No ( Số Serial )
+              </div>
+              <div>
+                &nbsp;
+              </div>
+            </div>
+            <div v-for="(d, i) in printList" class="item">
+              {{ d.serialNo }}
             </div>
           </div>
         </div>
@@ -235,6 +237,12 @@
             <div>
               Người lĩnh liệu :
             </div>
+            <div>
+              Date
+            </div>
+            <div>
+              Ngày tháng :
+            </div>
           </div>
           <div class="paper-col">
             <div>
@@ -242,6 +250,12 @@
             </div>
             <div>
               Người phê duyệt :
+            </div>
+            <div>
+              Date
+            </div>
+            <div>
+              Ngày tháng :
             </div>
           </div>
           <div class="paper-col">
@@ -251,6 +265,12 @@
             <div>
               Người phát liệu :
             </div>
+            <div>
+              Date
+            </div>
+            <div>
+              Ngày tháng :
+            </div>
           </div>
           <div class="paper-col">
             <div>
@@ -259,36 +279,6 @@
             <div>
               Kế toán trưởng :
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="line" style="font-size: 12px;">
-        <div class="flex-start paper-col-group">
-          <div class="paper-col">
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
-            </div>
-          </div>
-          <div class="paper-col">
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
-            </div>
-          </div>
-          <div class="paper-col">
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
-            </div>
-          </div>
-          <div class="paper-col">
             <div>
               Date
             </div>
@@ -331,7 +321,6 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
       }, 1000)
     }
 )
-
 </script>
 
 <style scoped lang="scss">
@@ -341,7 +330,6 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
     flex-direction: column;
     justify-content: center;
     align-content: flex-start;
-    width: 100%;
   }
 
   .flex-center {
@@ -365,18 +353,6 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
     }
   }
 
-  .col-header-up {
-    height: 50px;
-  }
-
-  .col-header-down {
-    height: 50px;
-  }
-
-  .col-header-merge {
-    height: 100px;
-  }
-
   .line {
     display: flex;
     justify-content: flex-start;
@@ -398,14 +374,48 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
     border-right: 1px solid #666666;
 
     &:last-child {
-      border: none;
+      border-right: none;
     }
   }
 
-  .col-group {
-    .col {
-      padding: 0;
+  .col-up {
+    padding: 5px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-items: center;
+    align-items: center;
+    border-right: 1px solid #666666;
+
+    &:last-child {
+      border: none;
     }
+
+    height: 40px;
+  }
+
+  .col-down {
+    padding: 5px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-items: center;
+    align-items: center;
+    border-right: 1px solid #666666;
+    border-top: 1px solid #666666;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    height: 40px;
+  }
+
+  .col-combine {
+    height: 100px;
+    padding: 5px;
+  }
+
+  .col-group > .col {
+    padding: 0;
   }
 
   .item-label {
@@ -426,8 +436,9 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
   }
 
   .item {
-    padding: 5px;
+    padding: 0;
     height: 80px;
+    width: 100%;
     border-top: 1px solid #666666;
     display: flex;
     justify-content: center;

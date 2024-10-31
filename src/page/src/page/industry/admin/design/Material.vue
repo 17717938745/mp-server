@@ -138,6 +138,7 @@
             :on-change="handleFileChange"
             :before-upload="handleBeforeUpload"
             :http-request="handleRequest"
+            accept=".xlsx,.xls"
             multiple
             :drag="true"
         >
@@ -157,7 +158,7 @@
       </div>
     </div>
     <div>
-      <el-alert v-show="afterUpload" :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`" type="success" />
+      <el-alert v-show="afterUpload" :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`" type="success"/>
     </div>
     <div>
       <el-space wrap>
@@ -192,25 +193,25 @@
           <el-input v-model="formData.customerShortName"/>
         </el-form-item>
         <el-form-item prop="customerOrderNo" :label="store.state.label.customerOrderNo">
-          <el-input v-model="formData.customerOrderNo"/>
+          <el-input v-model="formData.customerOrderNo" @change="formData.customerOrderNo = (formData.customerOrderNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="customerProjectSequence" :label="store.state.label.customerProjectSequence">
           <el-input v-model="formData.customerProjectSequence"/>
         </el-form-item>
         <el-form-item prop="saleOrderNo" :label="store.state.label.saleOrderNo">
-          <el-input v-model="formData.saleOrderNo"/>
+          <el-input v-model="formData.saleOrderNo" @change="formData.saleOrderNo = (formData.saleOrderNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="orderProjectNo" :label="store.state.label.orderProjectNo">
           <el-input v-model="formData.orderProjectNo"/>
         </el-form-item>
         <el-form-item prop="materialNo" :label="store.state.label.materialNo">
-          <el-input v-model="formData.materialNo"/>
+          <el-input v-model="formData.materialNo" @change="formData.materialNo = (formData.materialNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="improveMaterialDescribe" :label="store.state.label.improveMaterialDescribe">
           <el-input v-model="formData.improveMaterialDescribe" type="textarea" :rows="4"/>
         </el-form-item>
         <el-form-item prop="designNumber" :label="store.state.label.designNumber">
-          <el-input v-model="formData.designNumber"/>
+          <el-input v-model="formData.designNumber" @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="orderCount" :label="store.state.label.orderCount">
           <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
@@ -234,25 +235,25 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="blankMaterialNo" :label="store.state.label.blankMaterialNo">
-          <el-input v-model="formData.blankMaterialNo"/>
+          <el-input v-model="formData.blankMaterialNo" @change="formData.blankMaterialNo = (formData.blankMaterialNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="blankMaterialDescribe" :label="store.state.label.blankMaterialDescribe">
           <el-input v-model="formData.blankMaterialDescribe"/>
         </el-form-item>
         <el-form-item prop="roughcastDesignNumber" :label="store.state.label.roughcastDesignNumber">
-          <el-input v-model="formData.roughcastDesignNumber"/>
+          <el-input v-model="formData.roughcastDesignNumber" @change="formData.roughcastDesignNumber = (formData.roughcastDesignNumber || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="materialCount" :label="store.state.label.materialCount">
           <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
         <el-form-item prop="stoveNo" :label="store.state.label.stoveNo">
-          <el-input v-model="formData.stoveNo"/>
+          <el-input v-model="formData.stoveNo" @change="formData.stoveNo = (formData.stoveNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="hotBatchNo" :label="store.state.label.hotBatchNo">
-          <el-input v-model="formData.hotBatchNo"/>
+          <el-input v-model="formData.hotBatchNo" @change="formData.hotBatchNo = (formData.hotBatchNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="serialNo" :label="store.state.label.serialNo">
-          <el-input v-model="formData.serialNo"/>
+          <el-input v-model="formData.serialNo" @change="formData.serialNo = (formData.serialNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="surplusCount" :label="store.state.label.surplusCount">
           <el-input-number v-model="formData.surplusCount" style="width: 60px;" :controls="false" :min="0"/>
@@ -391,12 +392,12 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 189},
   {value: 'serialNo', labelKey: 'serialNo', width: 189},
   {value: 'surplusCount', labelKey: 'surplusCount', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'nde', labelKey: 'nde', width: 189},
-  {value: 'assemble', labelKey: 'assemble', width: 189},
-  {value: 'testPress', labelKey: 'testPress', width: 189},
-  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189},
+  {value: 'nde', labelKey: 'nde', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'assemble', labelKey: 'assemble', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'testPress', labelKey: 'testPress', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'chargeCompany', labelKey: 'chargeCompany', width: 189},
-  {value: 'description', labelKey: 'description', width: 189},
+  {value: 'description', labelKey: 'description', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'productionCount', labelKey: 'productionCount', width: 189},
   {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 189},
   {
@@ -456,14 +457,6 @@ const handleRequest = (d: any) => {
       })
     })
   }
-}
-if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'manager')) {
-  columnConfigList.value = columnConfigList.value.map(t => {
-    if ('dealOpinion' === t.value) {
-      t.children = (t.children || []).filter(t1 => 'fineAmountFormat' !== t1.value)
-    }
-    return t
-  })
 }
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
@@ -626,6 +619,17 @@ const handlePageChange = (val: number) => {
 const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
+}
+
+if (user.username === 'admin' || includes(roleCodeList, 'materialManager') || includes(roleCodeList, 'material')) {
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if ('description' === t.value) {
+      t.type = ValueType.TextEdit
+    } else if ('productionCount' === t.value) {
+      t.type = ValueType.NumberEdit
+    }
+    return t
+  })
 }
 handlePage()
 const handleSaveModal = () => {

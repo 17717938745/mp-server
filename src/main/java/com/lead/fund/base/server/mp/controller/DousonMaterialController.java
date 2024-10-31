@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.controller;
 
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
@@ -114,25 +115,56 @@ public class DousonMaterialController {
      */
     @PutMapping("merge")
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
-    public Result save(
+    public Result merge(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody MaterialRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request)
-                .setModifier(u.getUserId());
-        if (isNotBlank(e.getId())) {
-            if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()) || "materialManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
-                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request);
+        lockHelper.lock("material");
+        try {
+            final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
+            final String today = DateUtil.day(new Date());
+            e
+                    .setModifier(u.getUserId());
+            // update
+            if (isNotBlank(e.getId())) {
+                if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()) || "materialManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+                    throw new BusinessException(AUTHORITY_AUTH_FAIL);
+                }
+                if (materialMapper.updateById((MaterialEntity) e
+                        .setCreator(u.getUserId())
+                ) <= 0) {
+                    throw new BusinessException(AUTHORITY_AUTH_FAIL);
+                }
+                // insert
+            } else {
+                if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+                    throw new BusinessException(AUTHORITY_AUTH_FAIL);
+                }
+                e
+                        .setMaterialOrderNo(materialDao.nextIndex())
+                        .setCheckOrderNo(materialDao.nextOrderNo());
+                materialMapper.insert(e);
             }
-            materialMapper.updateById((MaterialEntity) e
-                    .setCreator(u.getUserId())
+            final List<MaterialEntity> el = materialMapper.selectList(
+                    new LambdaQueryWrapper<MaterialEntity>()
+                            .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
+                            .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
+                            .eq(MaterialEntity::getProductionDate, request.getProductionDate())
             );
-        } else {
-            if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
-                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            final BigDecimal surplusCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
+            if (CollUtil.isNotEmpty(el)) {
+                materialMapper.update(null,
+                        new LambdaUpdateWrapper<MaterialEntity>()
+                                .set(MaterialEntity::getSurplusCount, surplusCount)
+                                .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
+                                .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
+                                .eq(MaterialEntity::getProductionDate, request.getProductionDate())
+                );
             }
-            materialMapper.insert(e);
+        } finally {
+            lockHelper.unlock("material");
         }
         return new DataResult<>(e);
     }
@@ -160,31 +192,31 @@ public class DousonMaterialController {
                     int ci = 0;
                     final MaterialRequest r = new MaterialRequest()
                             .setCustomerShortName(getCellValue(row.getCell(ci++)))
-                            .setCustomerOrderNo(getCellValue(row.getCell(ci++)))
+                            .setCustomerOrderNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
                             .setCustomerProjectSequence(getCellValue(row.getCell(ci++)))
-                            .setSaleOrderNo(getCellValue(row.getCell(ci++)))
+                            .setSaleOrderNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
                             .setOrderProjectNo(getCellValue(row.getCell(ci++)))
-                            .setMaterialNo(getCellValue(row.getCell(ci++)))
+                            .setMaterialNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
                             .setImproveMaterialDescribe(getCellValue(row.getCell(ci++)))
-                            .setDesignNumber(getCellValue(row.getCell(ci++)))
-                            .setOrderCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setDesignNumber(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
+                            .setOrderCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
                             .setProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setPromiseDoneDate(DateUtil.day(getCellValue(row.getCell(ci++))))
-                            .setBlankMaterialNo(getCellValue(row.getCell(ci++)))
+                            .setBlankMaterialNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
                             .setBlankMaterialDescribe(getCellValue(row.getCell(ci++)))
                             .setRoughcastDesignNumber(getCellValue(row.getCell(ci++)))
-                            .setMaterialCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
-                            .setStoveNo(getCellValue(row.getCell(ci++)))
-                            .setHotBatchNo(getCellValue(row.getCell(ci++)))
-                            .setSerialNo(getCellValue(row.getCell(ci++)))
-                            .setSurplusCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setMaterialCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setStoveNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
+                            .setHotBatchNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
+                            .setSerialNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
+                            .setSurplusCount(defaultDecimal(getCellValue(row.getCell(ci++))))
                             .setNde(getCellValue(row.getCell(ci++)))
                             .setAssemble(getCellValue(row.getCell(ci++)))
                             .setTestPress(getCellValue(row.getCell(ci++)))
                             .setSurfaceTreatment(getCellValue(row.getCell(ci++)))
                             .setChargeCompany(getCellValue(row.getCell(ci++)))
                             .setDescription(getCellValue(row.getCell(ci++)))
-                            .setProductionCount(NumberUtil.defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setProductionCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
                             .setArrangeProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setMaterialOrderNo(getCellValue(row.getCell(ci++)))
                             .setCheckOrderNo(getCellValue(row.getCell(ci++)));
@@ -217,9 +249,9 @@ public class DousonMaterialController {
                 for (MaterialRequest t : el) {
                     final List<String> key = CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo());
                     final MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(t)
-                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextOrderNo()))
+                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextIndex()))
                             .setSurplusCount(t.getOrderCount().subtract(materialCountMap.getOrDefault(key, BigDecimal.ZERO)))
-                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextIndex()))
+                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextOrderNo()))
                             .setCreator(u.getUserId())
                             .setModifier(u.getUserId());
                     il.add(e);

@@ -180,140 +180,193 @@
         </div>
       </div>
       <div class="line" style="font-size: 12px;">
-        <div class="col flex-column-start" style="width: 260px;">
-          <div>
-            Item (confirmed by the applicant)
+        <div class="flex-start col-group" style="width: 100%">
+          <div class="col flex-column-start" style="width: 25%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                Item (confirmed by the applicant)
+              </div>
+              <div>
+                hạng mục (do người kiểm tra tick chọn)
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                √
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Hardness┇độ cứng
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                √
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Product marking┇Khắc dâu
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                √
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Size/appearance┇Chất lượng/Ngoại quan
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                {{ printData.nde || '&nbsp;' }}
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                NDE
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                √
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Surface treatment┇Xử lý bề mặt
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                {{ printData.assemble || '&nbsp;' }}
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Assembly ┇đóng gói
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                {{ printData.testPress || '&nbsp;' }}
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Pressure test ┇thử áp suất
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                {{ printData.surfaceTreatment || '&nbsp;' }}
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                Paint ┇sơn
+              </div>
+            </div>
+            <div class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="col bottom-item flex-center" style="width: 20%;">
+                √
+              </div>
+              <div class="col bottom-item" style="width: 80%;">
+                MTR
+              </div>
+            </div>
           </div>
-          <div>
-            hạng mục (do người kiểm tra tick chọn)
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                Qty.
+              </div>
+              <div>
+                Số lượng
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col flex-column-start" style="width: 120px;">
-          <div>
-            Qty.
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                Pass
+              </div>
+              <div>
+                Số lượng phù hợp
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-          <div>
-            Số lượng
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                PassScrap
+              </div>
+              <div>
+                Báo phế
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col flex-column-start" style="width: 140px;">
-          <div>
-            Pass
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                Scrap
+              </div>
+              <div>
+                Báo phế
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-          <div>
-            Số lượng phù hợp
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                Reject
+              </div>
+              <div>
+                Trả hàng
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col flex-column-start" style="width: 110px;">
-          <div>
-            PassScrap
+          <div class="col flex-column-start" style="width: 12%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                NCR NO.
+              </div>
+              <div>
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-          <div>
-            Báo phế
+          <div class="col flex-column-start" style="width: 13%;">
+            <div class="flex-column-start" style="height: 40px;">
+              <div>
+                signature
+              </div>
+              <div>
+                Ký Tên
+              </div>
+            </div>
+            <div v-for="(d, i) in bottomColList" :key="i" class="flex-start" style="border-top: 1px solid #666666; width: 100%;">
+              <div class="bottom-item" style="width: 100%;">
+                &nbsp;
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col flex-column-start" style="width: 110px;">
-          <div>
-            Scrap
-          </div>
-          <div>
-            Báo phế
-          </div>
-        </div>
-        <div class="col flex-column-start" style="width: 110px;">
-          <div>
-            Reject
-          </div>
-          <div>
-            Trả hàng
-          </div>
-        </div>
-        <div class="col flex-column-start" style="width: 110px;">
-          <div>
-            NCR NO.
-          </div>
-          <div>
-          </div>
-        </div>
-        <div class="col flex-column-start" style="width: 13%;">
-          <div>
-            signature
-          </div>
-          <div>
-            Ký Tên
-          </div>
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          √
-        </div>
-        <div class="col">
-          Hardness┇độ cứng
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          √
-        </div>
-        <div class="col">
-          Product marking┇Khắc dâu
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          √
-        </div>
-        <div class="col">
-          Size/appearance┇Chất lượng/Ngoại quan
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          {{ printData.nde || '&nbsp;' }}
-        </div>
-        <div class="col">
-          NDE
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          √
-        </div>
-        <div class="col">
-          Surface treatment┇Xử lý bề mặt
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          {{ printData.assemble || '&nbsp;' }}
-        </div>
-        <div class="col">
-          Assembly ┇đóng gói
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          {{ printData.testPress || '&nbsp;' }}
-        </div>
-        <div class="col">
-          Pressure test ┇thử áp suất
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          {{ printData.surfaceTreatment || '&nbsp;' }}
-        </div>
-        <div class="col">
-          Paint ┇sơn
-        </div>
-      </div>
-      <div class="line">
-        <div class="col" style="width: 30px;">
-          √
-        </div>
-        <div class="col">
-          MTR
         </div>
       </div>
       <div class="line" style="font-size: 12px;">
@@ -345,6 +398,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {httpGet} from '@/util/HttpUtil'
 import {ElMessage} from "element-plus"
 
+const bottomColList = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 const router = useRouter()
 const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
@@ -421,6 +475,19 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
     }
   }
 
+  .col {
+    padding: 10px 5px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-items: center;
+    align-items: center;
+    border-right: 1px solid #666666;
+
+    &:last-child {
+      border: none;
+    }
+  }
+
   .col-group {
     .col {
       padding: 0;
@@ -439,6 +506,11 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .bottom-item {
+    height: 30px;
+    margin-left: 5px;
   }
 }
 </style>
