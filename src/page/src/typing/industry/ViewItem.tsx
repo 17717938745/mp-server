@@ -11,6 +11,7 @@ export interface ViewConfig {
   width?: number,
   align?: string,
   hide?: boolean,
+  highLight?: boolean,
   showOverflow?: boolean,
   children?: ViewConfig[],
   managerEdit?: Function,

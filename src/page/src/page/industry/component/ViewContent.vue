@@ -3,15 +3,6 @@
     <slot name="expand" :param="row"/>
   </template>
   <template v-else-if="viewConfig.type === ValueType.Image">
-    <!--    <el-image
-            v-if="row[viewConfig.value] && row[viewConfig.value].length > 0"
-            :src="fullUrl(row[viewConfig.value][0].photoCompressUrl, '')"
-            fit="cover"
-            :preview-src-list="row[viewConfig.value].map(t => fullUrl(t.photoUrl, ''))"
-            :initial-index="0"
-            teleported="false"
-            style="width: 100px;"
-        />-->
     <el-space wrap style="justify-content: center;">
       <el-image
           v-if="row[viewConfig.value] && row[viewConfig.value].length > 0"
@@ -31,11 +22,6 @@
           </div>
         </template>
       </el-image>
-      <!--<el-space><img v-if="row.photoList.length > 0"
-           v-for="t in row.photoList"
-           :key="t.photoUrl" :src="fullUrl(t.photoUrl, '')"
-           alt="picture"
-           style="width: 300px;"/></el-space>-->
       <el-empty v-else description="Empty"
                 :style="{
                   width: `${155 / scale}px`,
@@ -47,7 +33,8 @@
     </el-space>
   </template>
   <template v-else-if="viewConfig.type === ValueType.Text">
-    {{ row[viewConfig.value] }}
+    <span v-if="viewConfig.highLight" class="high-light">{{ row[viewConfig.value] }}</span>
+    <span v-else>{{ row[viewConfig.value] }}</span>
   </template>
   <template v-else-if="viewConfig.type === ValueType.Video">
     <el-space wrap style="justify-content: center;">
@@ -345,7 +332,8 @@
     <span v-else>{{ row[viewConfig.value] }}</span>
   </template>
   <template v-else-if="viewConfig.type === null || viewConfig.type === undefined">
-    {{ row[viewConfig.value] }}
+    <span v-if="viewConfig.highLight" class="high-light">{{ row[viewConfig.value] }}</span>
+    <span v-else>{{ row[viewConfig.value] }}</span>
   </template>
 </template>
 

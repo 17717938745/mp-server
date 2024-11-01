@@ -5,7 +5,7 @@
         <div style="width: 60px; margin-left: 10px;">
           <img :src="'/third/img/douson.png'" style="width: 100%; height: 100%;" alt="">
         </div>
-        <div class="flex-column-start" style="width: 100%; padding: 10px 5px; font-weight: 600; align-items: center; justify-content: center;">
+        <div class="col flex-column-start" style="width: 100%; padding: 10px 5px; font-weight: 600; align-items: center; justify-content: center;">
           <div style="font-size: 14px;">
             Production warehousing Inspection Sheet
           </div>
@@ -15,12 +15,7 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="line" style="justify-content: flex-end; width: 100%; font-size: 13px; font-weight: 600;">
-        <div class="col" style="padding: 10px;">
-          &nbsp;
-        </div>
-        <div class="flex-center" style="width: 200px;">
+        <div class="flex-center" style="width: 160px;">
           VMF47-13-05 Rev.B
         </div>
       </div>
@@ -181,7 +176,7 @@
       </div>
       <div class="line" style="font-size: 12px;">
         <div class="flex-start col-group" style="width: 100%">
-          <div class="col flex-column-start" style="width: 25%;">
+          <div class="col flex-column-start" style="width: 30%;">
             <div class="flex-column-start" style="height: 40px;">
               <div>
                 Item (confirmed by the applicant)
@@ -263,7 +258,7 @@
               </div>
             </div>
           </div>
-          <div class="col flex-column-start" style="width: 12%;">
+          <div class="col flex-column-start" style="width: 10%;">
             <div class="flex-column-start" style="height: 40px;">
               <div>
                 Qty.
@@ -500,8 +495,9 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
   }
 
   .item {
+    font-size: 10px;
     padding: 5px;
-    height: 80px;
+    height: 50px;
     border-top: 1px solid #666666;
     display: flex;
     justify-content: center;
@@ -509,8 +505,10 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
   }
 
   .bottom-item {
-    height: 30px;
+    font-size: 10px;
+    height: 25px;
     margin-left: 5px;
   }
+
 }
 </style>

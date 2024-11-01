@@ -228,5 +228,9 @@ body {
 .description-print-border {
   border: 2px #999999 solid !important;
 }
-
+.high-light {
+  background-color: #cf4d24;
+  color: #eeeeee;
+  font-weight: 600;
+}
 </style>
