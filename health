@@ -1,0 +1,8 @@
+pid=`ps aux|grep 'mysqld'|grep -v grep|awk '{print $2}'`
+if [ "${pid}" == "" ]; then
+    echo "mysqld not run, now start..."
+    systemcrl start mysqld
+else
+    echo "mysqld is running, do nothing, pid: ${pid}"
+fi
+./run check
