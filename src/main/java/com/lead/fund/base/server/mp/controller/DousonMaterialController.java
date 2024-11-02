@@ -161,7 +161,7 @@ public class DousonMaterialController {
                             .set(MaterialEntity::getSurplusCount, surplusCount)
                             .set(MaterialEntity::getArrangeProductionDate, defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
                             .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
-                            .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
+                            .eq(MaterialEntity::getOrderProjectNo, request.getOrderProjectNo())
             );
         } finally {
             lockHelper.unlock("material");
