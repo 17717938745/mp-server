@@ -581,10 +581,12 @@ const handleShowPrintDetail = (d: any) => {
 httpGet('douson/config').then(r => {
   state.config = r.data
 })
+const summaryData = ref({})
 const handlePage = () => {
   httpGet(`douson/admin/box-flag/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = res.list
+        summaryData.value = res.data || {}
         state.total = res.total
         ElMessage.success("Query success")
       }
