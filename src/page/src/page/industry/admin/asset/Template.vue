@@ -3,6 +3,7 @@
     <div class="query-container">
       <el-input v-model="query.data.templateOrderNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.templateOrderNo"
                 class="search-item"/>
       <el-select v-model="query.data.borrowTemplatePerson"
@@ -21,10 +22,12 @@
       </el-select>
       <el-input v-model="query.data.materialNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.materialNo"
                 class="search-item"/>
       <el-input v-model="query.data.materialDescription"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.materialDescription"
                 class="search-item"/>
       <el-select
@@ -58,6 +61,7 @@
       <el-date-picker
           v-model="dateTimeList"
           @change="handleDateTimeChange"
+          clearable
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
@@ -245,18 +249,18 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 45},
-  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 94},
+  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 102},
   {value: 'borrowTemplatePersonFormat', labelKey: 'borrowTemplatePerson', width: 132},
   {value: 'materialNo', labelKey: 'materialNo', width: 145},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
   {value: 'templateCount', labelKey: 'templateCount', width: 49},
-  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 94},
+  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 102},
   {value: 'operatorPersonFormat', labelKey: 'operatorPerson', width: 132},
   {value: 'borrowPhotoCount', labelKey: 'borrowPhotoCount', width: 49},
   {value: 'returnPhotoCount', labelKey: 'returnPhotoCount', width: 49},
   {value: 'description', labelKey: 'description', width: 189},
   {value: 'returnCount', labelKey: 'returnCount', width: 49},
-  {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 94},
+  {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 102},
   {value: 'meetRequirement', labelKey: 'meetRequirement', width: 59},
   {value: 'templateOrderNo', labelKey: 'templateOrderNo', width: 123},
   {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},

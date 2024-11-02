@@ -20,13 +20,13 @@
         </div>
       </div>
       <div class="line flex-start">
-        <div class="col title" style="width: 180px;">
+        <div class="col title" style="width: 200px;">
           Customer （Tên khách hàng:）
         </div>
-        <div class="col" style="justify-content: center; width: 200px;">
+        <div class="col" style="justify-content: center; width: 180px;">
           {{ printData.customerShortName }}
         </div>
-        <div class="col title" style="width: 180px;">
+        <div class="col title" style="width: 200px;">
           PO NO ( Đơn đặt hàng khách )
         </div>
         <div class="col" style="justify-content: center; width: 120px;">
@@ -38,7 +38,7 @@
         <div class="col title" style="width: 130px;">
           Số phiếu nhập kho
         </div>
-        <div class="col" style="justify-content: center; width: 18%;">
+        <div class="col" style="justify-content: center; width: 16%;">
           {{ printData.checkOrderNo }}
         </div>
       </div>

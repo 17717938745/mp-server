@@ -417,8 +417,8 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'designNumber', labelKey: 'designNumber', width: 121, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'orderCount', labelKey: 'orderCount', width: 73, highLight: true, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'productionDate', labelKey: 'productionDate', width: 92, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 92, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'productionDate', labelKey: 'productionDate', width: 102, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 102, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'blankMaterialNo', labelKey: 'blankMaterialNo', width: 168, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'blankMaterialDescribe', labelKey: 'blankMaterialDescribe', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'roughcastDesignNumber', labelKey: 'roughcastDesignNumber', width: 168, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
@@ -434,7 +434,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
   {value: 'description', labelKey: 'description', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
-  {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 92},
+  {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
   {
     value: 'materialOrderNoFormat', labelKey: 'materialOrderNo', width: 146, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d: any) => {
       window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
@@ -662,6 +662,7 @@ if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
     if ('description' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('productionCount' === t.value) {
+      t.width = 168
       t.type = ValueType.NumberEdit
     }
     return t

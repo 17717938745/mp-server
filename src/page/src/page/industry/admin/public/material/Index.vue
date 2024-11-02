@@ -19,8 +19,8 @@
         </div>
       </div>
       <div class="line line-first">
-        <div class="col" style="width: 190px;">PO NO ( Đơn đặt hàng khách ) :</div>
-        <div class="col" style="width: 170px; justify-content: center;">
+        <div class="col" style="width: 200px;">PO NO ( Đơn đặt hàng khách ) :</div>
+        <div class="col" style="width: 160px; justify-content: center;">
           {{ printData.customerOrderNo }}
         </div>
         <div class="col" style="width: 60px; justify-content: center;">
