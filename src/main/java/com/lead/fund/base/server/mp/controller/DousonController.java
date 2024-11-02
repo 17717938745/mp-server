@@ -5661,7 +5661,6 @@ public class DousonController {
             e.setReturnCount(templateMapper.selectById(request.getTemplateId()).getReturnCount());
         }
         e
-                .setActualReturnDate(NumberUtil.defaultDecimal(e.getReturnCount()).compareTo(BigDecimal.ZERO) > 0 ? DateUtil.day(new Date()) : null)
                 .setMeetRequirement(DateUtil.future(e.getActualReturnDate(), e.getPromiseReturnDate()) || defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0)
         ;
         LambdaUpdateWrapper<TemplateEntity> lambda = new LambdaUpdateWrapper<TemplateEntity>()
@@ -5669,6 +5668,7 @@ public class DousonController {
         if (templateMapper.update(
                 e,
                 lambda
+                        .set(TemplateEntity::getActualReturnDate, NumberUtil.defaultDecimal(e.getReturnCount()).compareTo(BigDecimal.ZERO) > 0 ? DateUtil.day(new Date()) : null)
         ) <= 0) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }

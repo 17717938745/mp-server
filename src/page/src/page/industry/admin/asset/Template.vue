@@ -245,18 +245,18 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 45},
-  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 92},
+  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 94},
   {value: 'borrowTemplatePersonFormat', labelKey: 'borrowTemplatePerson', width: 132},
   {value: 'materialNo', labelKey: 'materialNo', width: 145},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
   {value: 'templateCount', labelKey: 'templateCount', width: 49},
-  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 92},
+  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 94},
   {value: 'operatorPersonFormat', labelKey: 'operatorPerson', width: 132},
   {value: 'borrowPhotoCount', labelKey: 'borrowPhotoCount', width: 49},
   {value: 'returnPhotoCount', labelKey: 'returnPhotoCount', width: 49},
   {value: 'description', labelKey: 'description', width: 189},
   {value: 'returnCount', labelKey: 'returnCount', width: 49},
-  {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 89},
+  {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 94},
   {value: 'meetRequirement', labelKey: 'meetRequirement', width: 59},
   {value: 'templateOrderNo', labelKey: 'templateOrderNo', width: 123},
   {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},
@@ -460,10 +460,10 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.templateCount != row.returnCount) {
-    return 'row-done'
-  }else if (!row.meetRequirement) {
+  if (!row.meetRequirement) {
     return 'row-error'
+  } else if (row.templateCount != row.returnCount) {
+    return 'row-done'
   }
   return ''
 }

@@ -123,8 +123,7 @@ public class DousonMaterialController {
         final String today = DateUtil.day(new Date());
         final MpUserResponse u = accountHelper.getUser(deviceId);
         MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request);
-        e.setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()))
-                .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null);
+        e.setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()));
         lockHelper.lock("material");
         try {
             final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
@@ -161,6 +160,7 @@ public class DousonMaterialController {
                         new LambdaUpdateWrapper<MaterialEntity>()
                                 .set(MaterialEntity::getOrderCount, e.getOrderCount())
                                 .set(MaterialEntity::getSurplusCount, surplusCount)
+                                .set(MaterialEntity::getArrangeProductionDate, defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
                                 .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
                                 .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
                 );
