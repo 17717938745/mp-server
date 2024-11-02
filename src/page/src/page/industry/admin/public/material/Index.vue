@@ -70,12 +70,12 @@
             Mô tả vật liệu
           </div>
         </div>
-        <div class="col col-combine flex-column-start" style="width: 360px;">
+        <div class="col col-combine flex-column-start" style="width: 310px;">
           {{ printData.improveMaterialDescribe }}
         </div>
-        <div class="col" style="width: 360px; flex-wrap: wrap;">
+        <div class="col" style="width: 410px; flex-wrap: wrap;">
           <div class="flex-start" style="width: 100%;">
-            <div class="col col-up flex-column-start" style="width: 70%;">
+            <div class="col col-up flex-column-start" style="width: 65%;">
               <div>
                 Qty.
               </div>
@@ -83,7 +83,7 @@
                 Tổng số lượng lĩnh vật liệu
               </div>
             </div>
-            <div class="col col-up flex-start" style="width: 30%; justify-content: center;">
+            <div class="col col-up flex-start" style="width: 35%; justify-content: center;">
               {{
                 (printList || []).reduce((prev, cur, index, arr) => {
                   return (prev || 0) + (cur.materialCount || 0)
@@ -92,7 +92,7 @@
             </div>
           </div>
           <div class="flex-start" style="width: 100%;">
-            <div class="col col-down flex-column-start" style="width: 70%;">
+            <div class="col col-down flex-column-start" style="width: 65%;">
               <div>
                 Drawing NO.
               </div>
@@ -100,7 +100,7 @@
                 Bản vẽ
               </div>
             </div>
-            <div class="col col-down flex-column-start" style="width: 30%; justify-content: center;">
+            <div class="col col-down flex-column-start" style="width: 35%; justify-content: center;">
               <div>{{ printData.designNumber }}</div>
             </div>
           </div>

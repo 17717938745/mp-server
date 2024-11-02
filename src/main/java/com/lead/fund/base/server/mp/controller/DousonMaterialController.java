@@ -152,7 +152,7 @@ public class DousonMaterialController {
             final List<MaterialEntity> el = materialMapper.selectList(
                     new LambdaQueryWrapper<MaterialEntity>()
                             .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
-                            .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
+                            .eq(MaterialEntity::getOrderProjectNo, request.getOrderProjectNo())
             );
             final BigDecimal surplusCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
             if (CollUtil.isNotEmpty(el)) {

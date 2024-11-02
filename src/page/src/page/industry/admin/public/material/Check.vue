@@ -65,7 +65,7 @@
               Đơn hàng tiêu thụ
             </div>
           </div>
-          <div v-for="(d, i) in printList" class="item" style="width: 90px;">
+          <div v-for="(d, i) in printList" class="item" style="width: 110px;">
             {{ d.saleOrderNo }}
           </div>
         </div>
@@ -104,7 +104,7 @@
               Mô tả vật liệu
             </div>
           </div>
-          <div v-for="(d, i) in printList" class="item" style="width: 170px;">
+          <div v-for="(d, i) in printList" class="item" style="width: 150px;">
             {{ d.improveMaterialDescribe }}
           </div>
         </div>
