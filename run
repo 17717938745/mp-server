@@ -15,7 +15,7 @@ else
     if [ "${deploy_type}" == "check" ]; then
         echo "just check, ${app_jar_name} is running..."
     else
-        echo "${app_jar_name} is running, now kill pid: ${pid}, then run, app_jar_name: ${app_jar_name}, param: ${param}"
+        echo "${app_jar_name} is running, now kill pid: ${pid}, then run, param: ${param}"
         kill ${pid}
         kill -9 ${pid}
         nohup java ${param} -jar ${app_jar_name} --spring.config.location=./application-prd.yml >/dev/null 2>&1 &
