@@ -187,37 +187,8 @@ import com.lead.fund.base.server.mp.request.TroublePageRequest;
 import com.lead.fund.base.server.mp.request.TroubleRequest;
 import com.lead.fund.base.server.mp.request.VocationPageRequest;
 import com.lead.fund.base.server.mp.request.VocationRequest;
-import com.lead.fund.base.server.mp.response.AccidentResponse;
-import com.lead.fund.base.server.mp.response.BoxFlagResponse;
-import com.lead.fund.base.server.mp.response.ComputerResponse;
-import com.lead.fund.base.server.mp.response.CrashResponse;
-import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
-import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
-import com.lead.fund.base.server.mp.response.EquipmentResponse;
-import com.lead.fund.base.server.mp.response.EventResponse;
-import com.lead.fund.base.server.mp.response.ImproveResponse;
-import com.lead.fund.base.server.mp.response.MaintainResponse;
-import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
-import com.lead.fund.base.server.mp.response.MpAccountResponse;
-import com.lead.fund.base.server.mp.response.MpRoleResponse;
-import com.lead.fund.base.server.mp.response.MpUserResponse;
-import com.lead.fund.base.server.mp.response.OrderResponse;
-import com.lead.fund.base.server.mp.response.ParamConfigResponse;
-import com.lead.fund.base.server.mp.response.ParamResponse;
+import com.lead.fund.base.server.mp.response.*;
 import com.lead.fund.base.server.mp.response.ParamResponse.ParamResponseBuilder;
-import com.lead.fund.base.server.mp.response.PlanResponse;
-import com.lead.fund.base.server.mp.response.ProductResponse;
-import com.lead.fund.base.server.mp.response.QualityResponse;
-import com.lead.fund.base.server.mp.response.ReportResponse;
-import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
-import com.lead.fund.base.server.mp.response.TemplateResponse;
-import com.lead.fund.base.server.mp.response.TodoData;
-import com.lead.fund.base.server.mp.response.TodoResponse;
-import com.lead.fund.base.server.mp.response.TroubleResponse;
-import com.lead.fund.base.server.mp.response.UserDeviceResponse;
-import com.lead.fund.base.server.mp.response.VocationResponse;
-import com.lead.fund.base.server.mp.response.VocationSummaryDataResponse;
-import com.lead.fund.base.server.mp.response.VocationSummaryResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -4578,16 +4549,17 @@ public class DousonController {
      *
      * @param deviceId 设备id
      * @param request  {@link BoxFlagPageRequest}
-     * @return {@link PageResult<BoxFlagResponse>}
+     * @return {@link PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse>}
      */
     @GetMapping("admin/box-flag/page")
-    public PageResult<BoxFlagResponse> boxFlagAdminPage(
+    public PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse> boxFlagAdminPage(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute BoxFlagPageRequest request
     ) {
         accountHelper.getUser(deviceId);
-        PageResult<BoxFlagEntity> pr = DatabaseUtil.page(request, this::boxFlagList);
-        return new PageResult<>(pr.getTotal(), formatBoxFlagList(pr.getList()));
+        final PageResult<BoxFlagEntity> pr = DatabaseUtil.page(request, this::boxFlagList);
+        final List<BoxFlagResponse> rl = formatBoxFlagList(pr.getList());
+        return new PageDataResult<>(pr.getTotal(), rl, new BoxFlagSummaryResponse().setSumEachBoxCount(rl.stream().map(BoxFlagResponse::getEachBoxCount).reduce(0, Integer::sum)));
     }
 
     /**

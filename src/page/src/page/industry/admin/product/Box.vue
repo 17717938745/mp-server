@@ -90,7 +90,10 @@
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>
-
+    <div>
+      <span style="font-size: 26px; font-weight: bold;">{{ store.state.label.eachBoxCount }}（sum）:</span>
+      <span style="font-weight: bold;">{{ summaryData.sumEachBoxCount }}</span>
+    </div>
     <view-list
         idKey="boxFlagId"
         :columnConfigList="columnConfigList"
