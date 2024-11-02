@@ -151,20 +151,18 @@ public class DousonMaterialController {
             }
             final List<MaterialEntity> el = materialMapper.selectList(
                     new LambdaQueryWrapper<MaterialEntity>()
-                            .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
-                            .eq(MaterialEntity::getOrderProjectNo, request.getOrderProjectNo())
+                            .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
+                            .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
             );
             final BigDecimal surplusCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
-            if (CollUtil.isNotEmpty(el)) {
-                materialMapper.update(null,
-                        new LambdaUpdateWrapper<MaterialEntity>()
-                                .set(MaterialEntity::getOrderCount, e.getOrderCount())
-                                .set(MaterialEntity::getSurplusCount, surplusCount)
-                                .set(MaterialEntity::getArrangeProductionDate, defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
-                                .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
-                                .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
-                );
-            }
+            materialMapper.update(null,
+                    new LambdaUpdateWrapper<MaterialEntity>()
+                            .set(MaterialEntity::getOrderCount, e.getOrderCount())
+                            .set(MaterialEntity::getSurplusCount, surplusCount)
+                            .set(MaterialEntity::getArrangeProductionDate, defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
+                            .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
+                            .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
+            );
         } finally {
             lockHelper.unlock("material");
         }
