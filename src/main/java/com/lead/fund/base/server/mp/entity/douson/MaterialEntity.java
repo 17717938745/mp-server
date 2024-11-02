@@ -186,6 +186,12 @@ public class MaterialEntity extends AbstractAdmin {
     @Size(max = 16, message = "排产数量长度不合法")
     private BigDecimal productionCount;
     /**
+     * 领料数量-排产数量
+     */
+    @FieldRemark(value = "领料数量-排产数量")
+    @Size(max = 16, message = "领料数量-排产数量长度不合法")
+    private BigDecimal remainCount;
+    /**
      * 排产日期
      */
     @FieldRemark(value = "排产日期")

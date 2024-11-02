@@ -19,7 +19,6 @@ import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
-import com.lead.fund.base.common.util.NumberUtil;
 import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.MaterialDao;
 import com.lead.fund.base.server.mp.dao.MaterialDetailDao;
@@ -38,6 +37,7 @@ import com.lead.fund.base.server.mp.response.MaterialResponse;
 import com.lead.fund.base.server.mp.response.MaterialUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -119,12 +120,14 @@ public class DousonMaterialController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody MaterialRequest request
     ) {
+        final String today = DateUtil.day(new Date());
         final MpUserResponse u = accountHelper.getUser(deviceId);
         MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request);
+        e.setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()))
+                .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null);
         lockHelper.lock("material");
         try {
             final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
-            final String today = DateUtil.day(new Date());
             e
                     .setModifier(u.getUserId());
             // update
@@ -143,24 +146,23 @@ public class DousonMaterialController {
                     throw new BusinessException(AUTHORITY_AUTH_FAIL);
                 }
                 e
-                        .setMaterialOrderNo(materialDao.nextIndex())
-                        .setCheckOrderNo(materialDao.nextOrderNo());
+                        .setMaterialOrderNo(materialDao.nextMaterialOrderNo())
+                        .setCheckOrderNo(materialDao.nextCheckOrderNo());
                 materialMapper.insert(e);
             }
             final List<MaterialEntity> el = materialMapper.selectList(
                     new LambdaQueryWrapper<MaterialEntity>()
                             .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
                             .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
-                            .eq(MaterialEntity::getProductionDate, request.getProductionDate())
             );
             final BigDecimal surplusCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
             if (CollUtil.isNotEmpty(el)) {
                 materialMapper.update(null,
                         new LambdaUpdateWrapper<MaterialEntity>()
+                                .set(MaterialEntity::getOrderCount, e.getOrderCount())
                                 .set(MaterialEntity::getSurplusCount, surplusCount)
                                 .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
                                 .eq(MaterialEntity::getMaterialOrderNo, request.getOrderProjectNo())
-                                .eq(MaterialEntity::getProductionDate, request.getProductionDate())
                 );
             }
         } finally {
@@ -220,6 +222,7 @@ public class DousonMaterialController {
                             .setArrangeProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setMaterialOrderNo(getCellValue(row.getCell(ci++)))
                             .setCheckOrderNo(getCellValue(row.getCell(ci++)));
+                    r.setRemainCount(r.getMaterialCount().subtract(r.getProductionCount()));
                     el.add(r);
                 }
             }
@@ -237,21 +240,11 @@ public class DousonMaterialController {
                 final List<MaterialEntity> il = new ArrayList<>();
                 final Map<List<String>, String> orderNoMap = new HashMap<>(8);
                 final Map<List<String>, String> indexMap = new HashMap<>(8);
-                final Map<List<String>, BigDecimal> materialCountMap =
-                        el.stream().collect(Collectors.groupingBy(
-                                t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()),
-                                Collectors.reducing(
-                                        BigDecimal.ZERO,
-                                        MaterialRequest::getMaterialCount,
-                                        BigDecimal::add
-                                )
-                        ));
                 for (MaterialRequest t : el) {
                     final List<String> key = CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo());
                     final MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(t)
-                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextIndex()))
-                            .setSurplusCount(t.getOrderCount().subtract(materialCountMap.getOrDefault(key, BigDecimal.ZERO)))
-                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextOrderNo()))
+                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextMaterialOrderNo()))
+                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextCheckOrderNo()))
                             .setCreator(u.getUserId())
                             .setModifier(u.getUserId());
                     il.add(e);
@@ -279,6 +272,38 @@ public class DousonMaterialController {
                         .setAfterDetailCount(BigDecimal.valueOf(afterList.size()))
                         .setAfterCount(BigDecimal.valueOf(afterKm.keySet().size()))
                 ;
+                final Map<List<String>, BigDecimal> materialCountMap =
+                        materialMapper.selectList(
+                                DatabaseUtil.singleOr(new LambdaQueryWrapper<MaterialEntity>().select(MaterialEntity::getSaleOrderNo,
+                                        MaterialEntity::getOrderProjectNo,
+                                        MaterialEntity::getProductionDate
+                                ), el, (lam, t) -> {
+                                    lam.eq(MaterialEntity::getSaleOrderNo, t.getSaleOrderNo())
+                                            .eq(MaterialEntity::getOrderProjectNo, t.getOrderProjectNo());
+                                })
+                        ).stream().collect(Collectors.groupingBy(
+                                t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()),
+                                Collectors.reducing(
+                                        BigDecimal.ZERO,
+                                        MaterialEntity::getMaterialCount,
+                                        BigDecimal::add
+                                )
+                        ));
+                Map<ArrayList<String>, BigDecimal> materialOrderCountMap = el.stream().collect(Collectors.toMap(t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()), t -> t.getOrderCount(), (t, t1) -> t1));
+                for (Map.Entry<ArrayList<String>, BigDecimal> e : materialOrderCountMap.entrySet()) {
+                    List<String> key = e.getKey();
+                    BigDecimal orderCount = e.getValue();
+                    BigDecimal completeCount = materialCountMap.getOrDefault(key, BigDecimal.ZERO);
+                    BigDecimal surplusCount = orderCount.subtract(completeCount);
+                    materialMapper.update(
+                            null,
+                            new LambdaUpdateWrapper<MaterialEntity>()
+                                    .set(MaterialEntity::getOrderCount, orderCount)
+                                    .set(MaterialEntity::getSurplusCount, surplusCount)
+                                    .eq(MaterialEntity::getSaleOrderNo, key.get(0))
+                                    .eq(MaterialEntity::getOrderProjectNo, key.get(1))
+                    );
+                }
             } finally {
                 lockHelper.unlock("material");
             }
@@ -346,10 +371,23 @@ public class DousonMaterialController {
         if (null != d.getSurplusCountType()) {
             if (d.getSurplusCountType() == 0) {
                 lambda.eq(MaterialEntity::getSurplusCount, 0);
+            } else if (d.getSurplusCountType() == 2) {
+                lambda.ne(MaterialEntity::getSurplusCount, 0);
             } else if (d.getSurplusCountType() < 0) {
                 lambda.lt(MaterialEntity::getSurplusCount, 0);
             } else {
                 lambda.gt(MaterialEntity::getSurplusCount, 0);
+            }
+        }
+        if (null != d.getRemainCountType()) {
+            if (d.getRemainCountType() == 0) {
+                lambda.eq(MaterialEntity::getRemainCount, 0);
+            } else if (d.getRemainCountType() == 2) {
+                lambda.ne(MaterialEntity::getRemainCount, 0);
+            } else if (d.getRemainCountType() < 0) {
+                lambda.lt(MaterialEntity::getRemainCount, 0);
+            } else {
+                lambda.gt(MaterialEntity::getRemainCount, 0);
             }
         }
         if (isNotBlank(d.getChargeCompany())) {

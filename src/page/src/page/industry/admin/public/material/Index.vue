@@ -33,7 +33,7 @@
           &nbsp;
         </div>
         <div class="col" style="width: 30%; text-align: center; justify-content: center;">
-          {{ printData.checkOrderNo }}
+          {{ printData.materialOrderNo }}
         </div>
       </div>
       <div class="line col-group" style="font-size: 12px;">

@@ -35,47 +35,47 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class MaterialDaoImpl extends ServiceImpl<MaterialMapper, MaterialEntity> implements MaterialDao {
 
-    private static final AtomicInteger INDEX = new AtomicInteger(0);
-    private static final Map<String, AtomicInteger> ORDER_NO_MAP = new HashMap<>(8);
+    private static final AtomicInteger MATERIAL_ORDER_NO = new AtomicInteger(0);
+    private static final Map<String, AtomicInteger> CHECK_ORDER_NO_MAP = new HashMap<>(8);
 
     @PostConstruct
     @Override
     public void init() {
-        ORDER_NO_MAP.put(DateUtil.daySimple(new Date()), orderNo());
-        INDEX.set(
+        CHECK_ORDER_NO_MAP.put(DateUtil.daySimple(new Date()), checkOrderNo());
+        MATERIAL_ORDER_NO.set(
                 Optional.ofNullable(
                                 CollUtil.getFirst(DatabaseUtil.page(new Page(1, 1), () -> getBaseMapper().selectList(new LambdaQueryWrapper<MaterialEntity>()
                                         .orderByDesc(MaterialEntity::getMaterialOrderNo))).getList())
                         )
-                        .map(t -> NumberUtil.defaultInteger(t.getMaterialOrderNo().split("-", -1)[0])).orElse(0)
+                        .map(t -> NumberUtil.defaultInteger(t.getMaterialOrderNo())).orElse(0)
         );
-        log.info("order no: {}, index: {}", ORDER_NO_MAP, INDEX);
+        log.info("check order no: {}, material order no: {}", CHECK_ORDER_NO_MAP, MATERIAL_ORDER_NO);
     }
 
-    private AtomicInteger getOrderNo() {
-        return ORDER_NO_MAP.computeIfAbsent(DateUtil.daySimple(new Date()), k -> orderNo());
+    private AtomicInteger getCheckOrderNo() {
+        return CHECK_ORDER_NO_MAP.computeIfAbsent(DateUtil.daySimple(new Date()), k -> checkOrderNo());
     }
 
-    private AtomicInteger orderNo() {
+    private AtomicInteger checkOrderNo() {
         return new AtomicInteger(Optional.ofNullable(
                         CollUtil.getFirst(DatabaseUtil.page(new Page(1, 1), () -> getBaseMapper().selectList(new LambdaQueryWrapper<MaterialEntity>()
                                 .likeRight(MaterialEntity::getCheckOrderNo, DateUtil.daySimple(new Date()))
                                 .orderByDesc(MaterialEntity::getCheckOrderNo))).getList())
                 )
-                .map(t -> NumberUtil.defaultInteger(t.getCheckOrderNo().split("-", -1)[0].substring(8))).orElse(0)
+                .map(t -> NumberUtil.defaultInteger(t.getCheckOrderNo().substring(8))).orElse(0)
         );
     }
 
 
     @Override
-    public String nextOrderNo() {
+    public String nextCheckOrderNo() {
         final String today = DateUtil.daySimple(new Date());
-        return today + StrUtil.padPre(String.valueOf(getOrderNo().addAndGet(1)), 3, "0");
+        return today + StrUtil.padPre(String.valueOf(getCheckOrderNo().addAndGet(1)), 3, "0");
     }
 
     @Override
-    public String nextIndex() {
-        return StrUtil.padPre(String.valueOf(INDEX.addAndGet(1)), 7, "0");
+    public String nextMaterialOrderNo() {
+        return StrUtil.padPre(String.valueOf(MATERIAL_ORDER_NO.addAndGet(1)), 7, "0");
     }
 
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)

@@ -39,7 +39,7 @@
           Số phiếu nhập kho
         </div>
         <div class="col" style="justify-content: center; width: 18%;">
-          {{ printData.materialOrderNo }}
+          {{ printData.checkOrderNo }}
         </div>
       </div>
       <div class="line col-group" style="font-size: 12px; justify-content: center; align-items: center; text-align: center;">

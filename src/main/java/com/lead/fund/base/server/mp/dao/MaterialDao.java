@@ -2,7 +2,6 @@ package com.lead.fund.base.server.mp.dao;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
-import jakarta.annotation.PostConstruct;
 
 /**
  * MaterialDao
@@ -15,7 +14,7 @@ public interface MaterialDao extends IService<MaterialEntity> {
 
     void init();
 
-    String nextOrderNo();
+    String nextCheckOrderNo();
 
-    String nextIndex();
+    String nextMaterialOrderNo();
 }

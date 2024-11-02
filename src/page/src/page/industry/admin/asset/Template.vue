@@ -171,7 +171,7 @@
           <el-input type="textarea" :rows=4 v-model="formData.description"/>
         </el-form-item>
         <el-form-item prop="returnCount" :label="store.state.label.returnCount">
-          <el-input-number v-model="formData.returnCount" style="width: 60px;" :controls="false" :min="0" :disabled="!formSave && user.userId !== 'admin'"/>
+          <el-input-number v-model="formData.returnCount" style="width: 60px;" :controls="false" :min="0" :disabled="!(user.username === 'admin' || includes(roleCodeList, 'templateManager'))"/>
         </el-form-item>
         <el-form-item prop="actualReturnDate" :label="store.state.label.actualReturnDate">
           <el-date-picker
@@ -179,6 +179,7 @@
               v-model="formData.actualReturnDate"
               format="YYYY-MM-DD"
               @change="formData.actualReturnDate = formatDate(formData.actualReturnDate, 'yyyy-MM-dd')"
+              :disabled="!(user.username === 'admin' || includes(roleCodeList, 'templateManager'))"
           >
           </el-date-picker>
         </el-form-item>
@@ -244,12 +245,12 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 45},
-  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 89},
+  {value: 'borrowTemplateDate', labelKey: 'borrowTemplateDate', width: 92},
   {value: 'borrowTemplatePersonFormat', labelKey: 'borrowTemplatePerson', width: 132},
   {value: 'materialNo', labelKey: 'materialNo', width: 145},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
   {value: 'templateCount', labelKey: 'templateCount', width: 49},
-  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 89},
+  {value: 'promiseReturnDate', labelKey: 'promiseReturnDate', width: 92},
   {value: 'operatorPersonFormat', labelKey: 'operatorPerson', width: 132},
   {value: 'borrowPhotoCount', labelKey: 'borrowPhotoCount', width: 49},
   {value: 'returnPhotoCount', labelKey: 'returnPhotoCount', width: 49},
@@ -261,12 +262,12 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},
   {value: 'returnPhotoList', labelKey: 'returnPhoto', width: 189, type: ValueType.Image,},
 ])
-if (includes(roleCodeList, 'admin')) {
+if (user.username === 'admin' || includes(roleCodeList, 'templateManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('returnCount' === t.value) {
-      t.width = 89
+      t.width = 161
       t.type = ValueType.NumberEdit
     }
     return t
@@ -393,10 +394,10 @@ const handleEdit = (row: any, managerEdit: boolean = false) => {
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  if (includes(roleCodeList, 'admin') || includes(roleCodeList, 'itManager')) {
+  if (user.username === 'admin' || includes(roleCodeList, 'templateManager') || includes(roleCodeList, 'templateView')) {
     return true
   } else {
-    return row.creator === store.state.user.userId
+    return false
   }
 }
 const handleMerge = () => {
@@ -459,8 +460,10 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (!row.meetRequirement) {
+  if (row.templateCount != row.returnCount) {
     return 'row-done'
+  }else if (!row.meetRequirement) {
+    return 'row-error'
   }
   return ''
 }

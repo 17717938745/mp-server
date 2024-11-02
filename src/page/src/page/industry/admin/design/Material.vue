@@ -51,15 +51,50 @@
             v-for="item in [
                 {
                   value: 0,
-                  label: '排产剩余=0',
+                  label: '=0',
                 },
                 {
                   value: 1,
-                  label: '排产剩余>0',
+                  label: '>0',
                 },
                 {
                   value: -1,
-                  label: '排产剩余<0',
+                  label: '<0',
+                },
+                {
+                  value: 2,
+                  label: '!=0',
+                },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.remainCountType"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.materialCount + '-' +  store.state.label.productionCount"
+                 class="search-item">
+        <el-option
+            v-for="item in [
+                {
+                  value: 0,
+                  label: '=0',
+                },
+                {
+                  value: 1,
+                  label: '>0',
+                },
+                {
+                  value: -1,
+                  label: '<0',
+                },
+                {
+                  value: 2,
+                  label: '!=0',
                 },
             ]"
             :key="item.value"
@@ -71,7 +106,7 @@
                 @change="handlePage"
                 :placeholder="store.state.label.chargeCompany"
                 class="search-item"/>
-      <el-select v-model="formData.nde"
+      <el-select v-model="query.data.nde"
                  filterable
                  allow-create
                  clearable
@@ -85,7 +120,7 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="formData.assemble"
+      <el-select v-model="query.data.assemble"
                  filterable
                  allow-create
                  clearable
@@ -99,7 +134,7 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="formData.testPress"
+      <el-select v-model="query.data.testPress"
                  filterable
                  allow-create
                  clearable
@@ -113,7 +148,7 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="formData.surfaceTreatment"
+      <el-select v-model="query.data.surfaceTreatment"
                  filterable
                  allow-create
                  clearable
@@ -521,8 +556,8 @@ const state = reactive({
       orderProjectNo: '',
       materialNo: '',
       designNumber: '',
-      // surplusCountType: 1,
       surplusCountType: null,
+      remainCountType: includes(roleCodeList, 'materialManager') ? 2 : null,
       chargeCompany: '',
       nde: '',
       assemble: '',
@@ -571,7 +606,6 @@ const toggleKeyList = [
   'blankMaterialNo',
   'blankMaterialDescribe',
   'roughcastDesignNumber',
-  'materialCount',
   'stoveNo',
   'hotBatchNo',
   'serialNo',
@@ -587,6 +621,7 @@ const handleToggleMore = (v) => {
     return t
   })
 }
+handleToggleMore(showMore.value)
 const handleDateTimeChange = () => {
   if (state.dateTimeList && state.dateTimeList.length > 1) {
     state.query.data.startPromiseDoneDate = formatDate(
@@ -622,7 +657,7 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
-if (user.username === 'admin' || includes(roleCodeList, 'materialManager') || includes(roleCodeList, 'material')) {
+if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
       t.type = ValueType.TextEdit

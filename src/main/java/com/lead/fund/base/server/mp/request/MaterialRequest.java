@@ -1,13 +1,14 @@
 package com.lead.fund.base.server.mp.request;
 
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * MaterialRequest
@@ -135,6 +136,11 @@ public class MaterialRequest extends AbstractAdmin {
      * 排产数量
      */
     private BigDecimal productionCount;
+    /**
+     * 领料数量-排产数量
+     */
+    private BigDecimal remainCount;
+    private Integer remainCountType;
     /**
      * 排产日期
      */

@@ -144,6 +144,10 @@ public class MaterialResponse extends AbstractAdmin {
      */
     private BigDecimal productionCount;
     /**
+     * 领料数量-排产数量
+     */
+    private BigDecimal remainCount;
+    /**
      * 排产日期
      */
     private String arrangeProductionDate;
