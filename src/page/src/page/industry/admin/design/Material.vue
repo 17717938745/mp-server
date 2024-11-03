@@ -290,9 +290,6 @@
         <el-form-item prop="serialNo" :label="store.state.label.serialNo">
           <el-input v-model="formData.serialNo" @change="formData.serialNo = (formData.serialNo || '').toUpperCase()"/>
         </el-form-item>
-        <el-form-item prop="surplusCount" :label="store.state.label.surplusCount">
-          <el-input-number v-model="formData.surplusCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
         <el-form-item prop="nde" :label="store.state.label.nde">
           <el-select v-model="formData.nde"
                      filterable
@@ -690,7 +687,7 @@ const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
       if (state.formSave) {
-        httpPostJson('douson/material/merge', state.formData).then(() => {
+        httpPutJson('douson/material/merge', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handlePage()
