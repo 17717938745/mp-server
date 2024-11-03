@@ -154,7 +154,8 @@ public class DousonMaterialController {
                             .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                             .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
             );
-            final BigDecimal surplusCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
+            BigDecimal sumMaterialCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
+            final BigDecimal surplusCount = e.getOrderCount().subtract(sumMaterialCount);
             materialMapper.update(null,
                     new LambdaUpdateWrapper<MaterialEntity>()
                             .set(MaterialEntity::getOrderCount, e.getOrderCount())
@@ -291,8 +292,8 @@ public class DousonMaterialController {
                 for (Map.Entry<ArrayList<String>, BigDecimal> e : materialOrderCountMap.entrySet()) {
                     List<String> key = e.getKey();
                     BigDecimal orderCount = e.getValue();
-                    BigDecimal completeCount = materialCountMap.getOrDefault(key, BigDecimal.ZERO);
-                    BigDecimal surplusCount = orderCount.subtract(completeCount);
+                    BigDecimal materialCount = materialCountMap.getOrDefault(key, BigDecimal.ZERO);
+                    BigDecimal surplusCount = orderCount.subtract(materialCount);
                     materialMapper.update(
                             null,
                             new LambdaUpdateWrapper<MaterialEntity>()

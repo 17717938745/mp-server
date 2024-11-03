@@ -24,8 +24,9 @@ public interface MaterialConverter extends Serializable {
     MaterialConverter MATERIAL_INSTANCE = Mappers.getMapper(MaterialConverter.class);
 
     @Mapping(target = "id", source = "materialId")
+    @Mapping(target = "orderCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getOrderCount()))")
     @Mapping(target = "materialCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getMaterialCount()))")
-    @Mapping(target = "productionCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getMaterialCount()))")
+    @Mapping(target = "productionCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getProductionCount()))")
     MaterialEntity material(MaterialRequest request);
 
     @Mapping(target = "id", source = "materialDetailId")

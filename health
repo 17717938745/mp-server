@@ -1,3 +1,4 @@
+cd /opt/douson/mp-server/
 pid=`ps aux|grep 'mysqld'|grep -v grep|awk '{print $2}'`
 if [ "${pid}" == "" ]; then
     echo "mysqld not run, now start..."
