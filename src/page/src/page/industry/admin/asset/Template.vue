@@ -261,7 +261,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'description', labelKey: 'description', width: 189},
   {value: 'returnCount', labelKey: 'returnCount', width: 49},
   {value: 'actualReturnDate', labelKey: 'actualReturnDate', width: 102},
-  {value: 'meetRequirement', labelKey: 'meetRequirement', width: 59},
+  {value: 'meetRequirementFormat', labelKey: 'meetRequirement', width: 59},
   {value: 'templateOrderNo', labelKey: 'templateOrderNo', width: 123},
   {value: 'borrowPhotoList', labelKey: 'borrowPhoto', width: 189, type: ValueType.Image,},
   {value: 'returnPhotoList', labelKey: 'returnPhoto', width: 189, type: ValueType.Image,},
