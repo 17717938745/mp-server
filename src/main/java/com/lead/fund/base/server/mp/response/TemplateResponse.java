@@ -97,6 +97,7 @@ public class TemplateResponse extends AbstractAdministratorModel {
      * 是否符合要求
      */
     private Boolean meetRequirement;
+    private String meetRequirementFormat;
     /**
      * 单号
      */

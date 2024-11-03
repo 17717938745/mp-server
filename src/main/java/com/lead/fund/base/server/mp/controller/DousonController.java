@@ -5631,7 +5631,7 @@ public class DousonController {
                 .setIndex(templateDao.nextIndex())
                 .setTemplateOrderNo(templateDao.nextOrderNo())
                 .setActualReturnDate(NumberUtil.defaultDecimal(e.getReturnCount()).compareTo(BigDecimal.ZERO) > 0 ? DateUtil.day(new Date()) : null)
-                .setMeetRequirement(!DateUtil.past(e.getActualReturnDate(), e.getPromiseReturnDate()) || defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0)
+                .setMeetRequirement(!DateUtil.past(e.getPromiseReturnDate()) || (DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true) && defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0))
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
         mergeRelevance(request, e);
@@ -5661,8 +5661,9 @@ public class DousonController {
             e.setReturnCount(templateMapper.selectById(request.getTemplateId()).getReturnCount());
         }
         e
-                .setMeetRequirement(!DateUtil.past(e.getActualReturnDate(), e.getPromiseReturnDate()) || defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0)
+                .setMeetRequirement(!DateUtil.past(e.getPromiseReturnDate()) || (DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true) && defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0))
         ;
+
         LambdaUpdateWrapper<TemplateEntity> lambda = new LambdaUpdateWrapper<TemplateEntity>()
                 .eq(TemplateEntity::getId, e.getId());
         if (templateMapper.update(
