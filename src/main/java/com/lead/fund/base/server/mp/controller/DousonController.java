@@ -424,8 +424,7 @@ public class DousonController {
                                 .collect(Collectors.toList())
                 );
                 case "storage" -> builder.storageList(paramDao.listByCategoryId(categoryId));
-                case "deviceCheckLedgerState" ->
-                        builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
+                case "deviceCheckLedgerState" -> builder.deviceCheckLedgerStateList(paramDao.listByCategoryId(categoryId));
                 case "userProperty" -> builder.userPropertyList(paramDao.listByCategoryId(categoryId));
                 case "computerName" -> builder.computerNameList(paramDao.listByCategoryId(categoryId));
                 case "companyPosition" -> builder.companyPositionList(paramDao.listByCategoryId(categoryId));
@@ -1090,7 +1089,7 @@ public class DousonController {
      */
     @PostMapping("admin/param")
     public Result paramSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                            @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.insert(request);
@@ -1107,7 +1106,7 @@ public class DousonController {
      */
     @PutMapping("admin/param")
     public Result paramUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody ParamEntity request
+            @RequestBody ParamEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         paramMapper.updateByMultiId(request);
@@ -1124,7 +1123,7 @@ public class DousonController {
      */
     @DeleteMapping("admin/param")
     public Result paramDelete(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername())) {
@@ -1152,7 +1151,7 @@ public class DousonController {
      */
     @GetMapping("admin/param/list")
     public ListResult<ParamEntity> paramAdminPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                  @ModelAttribute ParamEntity request
+            @ModelAttribute ParamEntity request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(paramList(request));
@@ -1167,7 +1166,7 @@ public class DousonController {
      */
     @PostMapping("admin/device")
     public Result deviceSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                             @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.insert(request);
@@ -1183,7 +1182,7 @@ public class DousonController {
      */
     @PutMapping("admin/device")
     public Result deviceUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                               @RequestBody DeviceEntity request
+            @RequestBody DeviceEntity request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         deviceMapper.updateById(request);
@@ -1210,7 +1209,7 @@ public class DousonController {
      */
     @GetMapping("admin/device/list")
     public ListResult<DeviceEntity> deviceAdminList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                                    @ModelAttribute DeviceQueryRequest request
+            @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(deviceList(request));
@@ -1225,7 +1224,7 @@ public class DousonController {
      */
     @PostMapping("admin/order")
     public Result ordrSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                           @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.insert(INDUSTRY_INSTANCE.order(request));
@@ -1241,7 +1240,7 @@ public class DousonController {
      */
     @PutMapping("admin/order")
     public Result orderUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                              @RequestBody OrderRequest request
+            @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
         orderMapper.updateById(INDUSTRY_INSTANCE.order(request));
@@ -1332,7 +1331,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/list")
     public ListResult<OrderResponse> orderList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderQueryRequest request
+            @ModelAttribute OrderQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         return new ListResult<>(formatOrderList(orderList(request)));
@@ -1347,7 +1346,7 @@ public class DousonController {
      */
     @GetMapping("admin/order/page")
     public PageResult<OrderResponse> orderPage(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
-                                               @ModelAttribute OrderPageRequest request
+            @ModelAttribute OrderPageRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
         if (isNotBlank(request.getData().getDesignNumber())) {
@@ -5657,7 +5656,7 @@ public class DousonController {
         TemplateEntity e = (TemplateEntity) INDUSTRY_INSTANCE.template(request)
                 .setModifier(u.getUserId());
         BigDecimal returnCount = e.getReturnCount();
-        if (!"admin".equals(u.getUsername())) {
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t))) {
             e.setReturnCount(templateMapper.selectById(request.getTemplateId()).getReturnCount());
         }
         e
