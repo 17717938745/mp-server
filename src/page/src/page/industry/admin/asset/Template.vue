@@ -467,9 +467,9 @@ const handleTableRowClassName = ({
   if (!row.meetRequirement) {
     return 'row-error'
   } else if (row.templateCount != row.returnCount) {
-    return 'row-done'
+    return ''
   }
-  return ''
+  return 'row-done'
 }
 
 </script>
