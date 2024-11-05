@@ -1,5 +1,5 @@
 <template>
-  <router-view v-if="initialized" />
+  <router-view v-if="initialized"/>
   <div v-else>
     页面正在加载中...
     <button @click="initialized = true">继续跳转</button>
@@ -7,37 +7,38 @@
 </template>
 
 <script lang="tsx" setup>
-  import { initClient, registerInterceptor } from './util/HttpUtil';
-  import { ref } from 'vue';
-  import { DataResult } from '@/typing/ma/System';
-  import { getFullSignUri, getDistributionSignUrl } from '@/util/RouterUtil';
-  import { useRouter } from 'vue-router';
-  import { getCookie } from './util/StorageUtil';
-  import { jsCallNative } from './util/jsBridge';
-  import { toast } from './component/lead/toast';
-  import { Toast } from 'vant';
-  import { getMerchantId } from '@/util/EnvUtil';
-  import { netNoData } from '@/util/Platform';
+import {initClient, registerInterceptor} from './util/HttpUtil';
+import {ref} from 'vue';
+import {DataResult} from '@/typing/ma/System';
+import {getFullSignUri, getDistributionSignUrl} from '@/util/RouterUtil';
+import {useRouter} from 'vue-router';
+import {getCookie} from './util/StorageUtil';
+import {jsCallNative} from './util/jsBridge';
+import {toast} from './component/lead/toast';
+import {Toast} from 'vant';
+import {getMerchantId} from '@/util/EnvUtil';
+import {netNoData} from '@/util/Platform';
 
-  try {
-    // @ts-ignore
-    console.log(
+try {
+  // @ts-ignore
+  console.log(
       `--------========<<<<<<<<>>>>>>>>========--------\n${JSON.stringify(
-        GLOBAL_LEAD_GIT_INFO,
-        null,
-        2
+          GLOBAL_LEAD_GIT_INFO,
+          null,
+          2
       )}--------========<<<<<<<<>>>>>>>>========--------`
-    );
-  } catch (e) {}
+  );
+} catch (e) {
+}
 
-  const router = useRouter();
-  const initialized = ref(false /*location && location.pathname && location.pathname.length <= 1*/);
-  if (!initialized.value) {
-    initClient().then((result: DataResult<any>) => {
-      initialized.value = true;
-    });
-  }
-  registerInterceptor(
+const router = useRouter();
+const initialized = ref(false /*location && location.pathname && location.pathname.length <= 1*/);
+if (!initialized.value) {
+  initClient().then((result: DataResult<any>) => {
+    initialized.value = true;
+  });
+}
+registerInterceptor(
     (result: any) => {
       // Toast("哈哈哈哈哈");
       if (result) {
@@ -70,10 +71,10 @@
                 toast(errorMsg, 4000);
               }
               switch (data.code) {
-                // html5未登录，自动跳转
+                  // html5未登录，自动跳转
                 case 70000:
                 case 73015:
-                // 分销客户迁移完成
+                  // 分销客户迁移完成
                 case 72024:
                   // console.log('这里')
                   setTimeout(() => {
@@ -86,7 +87,7 @@
                     }
                   }, 1500);
                   break;
-                // ma未登录
+                  // ma未登录
                 case 74007:
                 case 140000:
                   router.replace(getFullSignUri());
@@ -114,23 +115,81 @@
       toast(`系统错误或网络异常： ${error}`);
       return Promise.reject(error);
     }
-  );
+);
 </script>
 
 <style lang="scss">
-  html,
-  body {
+$print_border_color: #ddd;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: auto;
+
+  #app {
     margin: 0;
     padding: 0;
     height: 100vh;
     overflow: auto;
 
-    #app {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: auto;
-      //background-color: #9a6e3a;
+    .douson-row {
+      border-bottom: 1px solid $print_border_color;
+
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .douson-column {
+      border-right: 1px solid $print_border_color;
+      padding: 5px;
+
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .douson-container {
+      border: 1px solid $print_border_color;
+    }
+
+    .douson-flex {
+      display: flex;
+    }
+
+    .douson-flex-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .douson-flex-item-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .douson-flex-item-center-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .douson-flex-center-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .douson-flex-item {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .douson-flex-item-column {
+      display: flex;
+      flex-direction: column;
     }
   }
+}
 </style>

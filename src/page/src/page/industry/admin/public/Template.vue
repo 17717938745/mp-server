@@ -1,141 +1,127 @@
 <template>
-  <div id="printDescription">
-    <div
-        style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
-        <h1 style="text-align: center;height: 90px; position: relative;width: 100%;">
-          <img :src="fullUrl('/third/img/douson.png', '')"
-               style="position: absolute; height: 50px;left: 10px;top: 20px;">
-          <div style="font-size: 36px; color: #222222; ">物品借出单</div>
-          <div style="font-size: 36px; color: #222222; ">Đơn cho mượn dụng cụ</div>
-          <br>
-        </h1>
-<!--        <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>-->
-        <div class="print-container">
-          <div class="print-center-content">
-            <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content  flex-no-wrap">
-                <div class="padding">
-                  <div>借用人签字：</div>
-                  <div>Người mượn：</div>
-                </div>
-                <div></div>
-              </div>
-              <div>
-              </div>
-              <div class="right-content flex-no-wrap">
-                <div class="padding">
-                  <div>借用方(单位) Đơn vị：</div>
-                </div>
-                <div>
-                  {{ printData.borrowTemplatePersonFormat }}
-                </div>
-              </div>
+  <div id="printDescription" class="douson-flex douson-flex-item-center">
+    <div style="width: 585px;">
+      <div class="douson-flex-item-center" style="justify-content: space-between; position: relative; font-size: 36px; color: #222222; margin-top: 20px;">
+        <img src="/third/img/douson.png"
+             style="height: 50px;"
+             alt="logo"
+        />
+        <div class="douson-flex-item-center-column">
+          <div>物品借出单</div>
+          <div>Đơn cho mượn dụng cụ</div>
+        </div>
+        <br>
+      </div>
+      <div class="douson-container" style="font-size: 12px; margin-top: 10px;">
+        <div class="douson-flex douson-row">
+          <div class="douson-flex-item-column douson-column" style="width: 50%;">
+            <div>借用人签字：</div>
+            <div>Người mượn：</div>
+          </div>
+          <div class="douson-flex-item douson-column" style="width: 50%;">
+            <div class="douson-flex-item-center">
+              借用方(单位) Đơn vị：{{ printData.borrowTemplatePersonFormat }}
             </div>
-            <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap">
-                <div class="padding">
-                  <div>借用时间 Ngày mượn：</div>
-                </div>
-                <div>
-                  {{ printData.borrowTemplateDate }}
-                </div>
-              </div>
-              <div class="right-content flex-no-wrap">
-                <div class="padding">
-                  <div>承诺归还时间 Ngày trả：</div>
-                </div>
-                <div>
-                  {{ printData.promiseReturnDate }}
-                </div>
-              </div>
+          </div>
+        </div>
+        <div class="douson-flex douson-row">
+          <div class="douson-flex-item douson-column" style="width: 50%;">
+            <div>借用时间 Ngày mượn：</div>
+            <div>
+              {{ printData.borrowTemplateDate }}
             </div>
-            <div class="flex-no-wrap border-bottom print-line">
-              <div class="center col padding" style="width: 10%;">
-                <div>序号</div>
-                <div>STT</div>
-              </div>
-              <div class="center col padding" style="width: 20%">
-                <div>物料号</div>
-                <div>Mã vật liệu</div>
-              </div>
-              <div class="center col padding" style="width: 40%;">
-                <div>物品名称</div>
-                <div>Miêu tả vật liệu</div>
-              </div>
-              <div class="center col padding" style="width: 10%;">
-                <div>数量</div>
-                <div>Số lượng</div>
-              </div>
-              <div class="center col padding" style="width: 20%;">
-                <div>单号</div>
-                <div>Số phiếu</div>
-              </div>
+          </div>
+          <div class="douson-flex-item douson-column" style="width: 50%;">
+            <div>
+              承诺归还时间 Ngày trả：
             </div>
-            <div v-for="printData in printList" :key="printData.templateId" class="flex-no-wrap border-bottom print-line">
-              <div class="center col table-content padding" style="width: 10%;">
-                {{ printData.index || '1' }}
-              </div>
-              <div class="center col table-content padding" style="width: 20%;">
-                {{ printData.materialNo }}
-              </div>
-              <div class="center col table-content padding" style="width: 40%;">
-                {{ printData.materialDescription }}
-              </div>
-              <div class="center col table-content padding" style="width: 10%;">
-                {{ printData.templateCount }}
-              </div>
-              <div class="center col table-content padding" style="width: 20%;">
-                {{ printData.templateOrderNo }}
-              </div>
+            <div>
+              {{ printData.promiseReturnDate }}
             </div>
-            <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap">
-                <div class="padding">
-                  <div>经办人签字：</div>
-                  <div>Người cho mượn：</div>
-                </div>
-                <div class="padding flex-wrap" style="width: 100px; height: 60px;">
-                  {{ printData.operatorPersonFormat }}
-                </div>
-              </div>
-              <div class="right-content flex-no-wrap">
-                <div class="border-right padding flex-wrap" style="width: 208px; height: 60px;">
-                  <div>
-                    <div>部门负责人：</div>
-                    <div>Người phụ trách bộ phận：</div>
-                  </div>
-                  <div></div>
-                </div>
-                <div>
-                  <div class="padding">
-                    <div>仓管签字:</div>
-                    <div>Kho：</div>
-                  </div>
-                  <div></div>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div class="douson-flex douson-row">
+          <div class="douson-flex-item-center-column douson-column" style="width: 10%;">
+            <div>序号</div>
+            <div>STT</div>
+          </div>
+          <div class="douson-flex-item-center-column douson-column" style="width: 20%">
+            <div>物料号</div>
+            <div>Mã vật liệu</div>
+          </div>
+          <div class="douson-flex-item-center-column douson-column" style="width: 40%;">
+            <div>物品名称</div>
+            <div>Miêu tả vật liệu</div>
+          </div>
+          <div class="douson-flex-item-center-column douson-column" style="width: 10%;">
+            <div>数量</div>
+            <div>Số lượng</div>
+          </div>
+          <div class="douson-flex-item-center-column douson-column" style="width: 20%;">
+            <div>单号</div>
+            <div>Số phiếu</div>
+          </div>
+        </div>
+        <div v-for="printData in printList" :key="printData.templateId" class="douson-flex douson-row">
+          <div class="douson-flex-item-center douson-column" style="width: 10%;">
+            {{ printData.index || '1' }}
+          </div>
+          <div class="douson-flex-item-center douson-column" style="width: 20%;">
+            {{ printData.materialNo }}
+          </div>
+          <div class="douson-flex-item-center douson-column" style="width: 40%;">
+            {{ printData.materialDescription }}
+          </div>
+          <div class="douson-flex-item-center douson-column" style="width: 10%;">
+            {{ printData.templateCount }}
+          </div>
+          <div class="douson-flex-item-center douson-column" style="width: 20%;">
+            {{ printData.templateOrderNo }}
+          </div>
+        </div>
+        <div class="douson-flex douson-row">
+          <div class="douson-flex-item douson-column" style="width: 34%;">
+            <div>
+              <div>经办人签字：</div>
+              <div>Người cho mượn：</div>
             </div>
-            <div class="flex-no-wrap print-line">
-              <div class="flex-wrap padding">
-                <div style="width: 100%;">备注 Ghi chú：</div>
-                <pre>{{ printData.description }}</pre>
-                <div>
-                  1.借用说明：采购专员参与协调外协所借用工具、量具、刀具、刀片等物品型号，并通知流程中相关参与人员以作备案。原则上仓管员不直接与外协人员打交道。
-                </div>
-                <div> 1. Mượn đồ: Đối với dụng cụ, dao cụ, chip... Tất cả đều do người phụ trách nhà cung cấp mượn và
-                  nhận trả, đồng thời thông báo cho kho, nhà cung cấp không được tự ý liên hệ trực tiếp với kho.
-                </div>
-                <div>
-                  2.归还说明：外协归还的物品需由采购专员、仓管员共同验收，并拍照入系统。如有损坏、遗失则按规定价格赔偿，采购专员执行跟踪落实。
-                </div>
-                <div>2. Trả đồ: Khi nhà cung cấp trả đồ phải thông báo cho người phụ trách nhà cung cấp, nhân viên kho
-                  nhận đồ từ người phụ trách đồng thời tiến hành kiểm tra dụng cụ, chụp ảnh nhập vào hệ thống. Nếu như
-                  dụng cụ hỏng hóc và có tổn hại, nhà cung cấp dựa vào giá tiền quy định của công ty để bồi thường,
-                  người phụ trách nhà cung cấp tiến hành theo dõi và thực hiện.
-                </div>
-              </div>
+            <div class="douson-flex-item-center">
+              {{ printData.operatorPersonFormat }}
             </div>
+          </div>
+          <div class="douson-flex-item douson-column" style="width: 33%;">
+            <div>
+              <div>部门负责人：</div>
+              <div>Người phụ trách bộ phận：</div>
+            </div>
+            <div>
+            </div>
+          </div>
+          <div class="douson-flex-item douson-column" style="width: 33%;">
+            <div>
+              <div>仓管签字:</div>
+              <div>Kho：</div>
+            </div>
+            <div>
+            </div>
+          </div>
+        </div>
+        <div class="douson-flex-column douson-row">
+          <div style="width: 100%;">备注 Ghi chú：</div>
+          <pre>{{ printData.description }}</pre>
+          <div>
+            1.借用说明：采购专员参与协调外协所借用工具、量具、刀具、刀片等物品型号，并通知流程中相关参与人员以作备案。原则上仓管员不直接与外协人员打交道。
+          </div>
+          <div> 1. Mượn đồ: Đối với dụng cụ, dao cụ, chip... Tất cả đều do người phụ trách nhà cung cấp mượn và
+            nhận trả, đồng thời thông báo cho kho, nhà cung cấp không được tự ý liên hệ trực tiếp với kho.
+          </div>
+          <div>
+            2.归还说明：外协归还的物品需由采购专员、仓管员共同验收，并拍照入系统。如有损坏、遗失则按规定价格赔偿，采购专员执行跟踪落实。
+          </div>
+          <div>2. Trả đồ: Khi nhà cung cấp trả đồ phải thông báo cho người phụ trách nhà cung cấp, nhân viên kho
+            nhận đồ từ người phụ trách đồng thời tiến hành kiểm tra dụng cụ, chụp ảnh nhập vào hệ thống. Nếu như
+            dụng cụ hỏng hóc và có tổn hại, nhà cung cấp dựa vào giá tiền quy định của công ty để bồi thường,
+            người phụ trách nhà cung cấp tiến hành theo dõi và thực hiện.
           </div>
         </div>
       </div>
@@ -170,8 +156,9 @@ httpGet(`douson/admin/template/page`, {
   }
 }).then(
     (res: any) => {
-      printData.value = res.data || {}
+
       printList.value = res.list || []
+      printData.value = printList.value[0]
       ElMessage.success("Query success")
       setTimeout(() => {
         const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
@@ -186,71 +173,4 @@ httpGet(`douson/admin/template/page`, {
 </script>
 
 <style scoped lang="scss">
-$print_border_color: #ddd;
-.print-container {
-  width: 100%;
-  font-size: 12px;
-  margin-top: 20px;
-  border: 1px solid $print_border_color;
-  word-break: break-all;
-
-  .print-line {
-    width: 100%;
-  }
-
-  .padding {
-    padding: 5px;
-  }
-
-  .flex-no-wrap {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .border-bottom {
-    border-bottom: 1px solid $print_border_color;
-  }
-
-  .border-right {
-    border-right: 1px solid $print_border_color;
-  }
-
-  .col {
-    border-right: 1px solid $print_border_color;
-
-    &:last-child {
-      border-right: none;
-    }
-  }
-
-  .table-content {
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .flex-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .left-content {
-    width: 228px;
-    border-right: 1px solid $print_border_color;
-  }
-
-  .right-content {
-    width: 357px;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-}
 </style>
