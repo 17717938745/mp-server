@@ -559,7 +559,6 @@ public interface IndustryConverter extends Serializable {
     TemplateEntity template(TemplateRequest t);
 
     @Mapping(target = "templateId", source = "id")
-    @Mapping(target = "meetRequirementFormat", expression = "java(com.lead.fund.base.common.basic.cons.frame.Bool.match(t.getMeetRequirement()).getName())")
     TemplateResponse template(TemplateEntity t);
 
     List<TemplateResponse> templateList(List<TemplateEntity> t);
