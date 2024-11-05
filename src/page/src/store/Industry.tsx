@@ -1493,7 +1493,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Ngày sắp xếp sản xuất"
         },
         {
-          "value": "yarn",
+          "value": "yarnyarn",
           "label": "Số phiếu lĩnh liệu"
         },
         {

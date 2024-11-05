@@ -230,60 +230,69 @@
       </div>
       <div class="line" style="font-size: 12px;">
         <div class="flex-start">
-          <div class="paper-col">
-            <div>
-              Preparer
+          <div class="flex-start paper" style="width: 250px;">
+            <div class="paper-label" style="width: 100px;">
+              <div>
+                Preparer
+              </div>
+              <div>
+                Người lĩnh liệu :
+              </div>
+              <div>
+                Date
+              </div>
+              <div>
+                Ngày tháng :
+              </div>
             </div>
-            <div>
-              Người lĩnh liệu :
-            </div>
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
+            <div class="paper-content">{{ printData.creatorFormat }}</div>
+          </div>
+          <div class="flex-start paper" style="width: 250px;">
+            <div class="paper-label">
+              <div>
+                Approver
+              </div>
+              <div>
+                Người phê duyệt :
+              </div>
+              <div>
+                Date
+              </div>
+              <div>
+                Ngày tháng :
+              </div>
             </div>
           </div>
-          <div class="paper-col">
-            <div>
-              Approver
-            </div>
-            <div>
-              Người phê duyệt :
-            </div>
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
-            </div>
-          </div>
-          <div class="paper-col">
-            <div>
-              Warehouse
-            </div>
-            <div>
-              Người phát liệu :
-            </div>
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
+          <div class="flex-start paper" style="width: 250px;">
+            <div class="paper-label">
+              <div>
+                Warehouse
+              </div>
+              <div>
+                Người phát liệu :
+              </div>
+              <div>
+                Date
+              </div>
+              <div>
+                Ngày tháng :
+              </div>
             </div>
           </div>
-          <div class="paper-col">
-            <div>
-              Chief Accountant
-            </div>
-            <div>
-              Kế toán trưởng :
-            </div>
-            <div>
-              Date
-            </div>
-            <div>
-              Ngày tháng :
+          <div class="flex-start paper">
+            <div class="paper-label">
+              <div>
+                Chief Accountant
+              </div>
+              <div>
+                Kế toán trưởng :
+              </div>
+              <div>
+                Date
+              </div>
+              <div>
+                Ngày tháng :
+              </div>
             </div>
           </div>
         </div>
@@ -445,18 +454,28 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
     align-items: center;
   }
 
-  .paper-col {
+  .paper-label {
     padding: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-content: flex-start;
-    width: 250px;
+  }
+
+  .paper {
     border-right: 1px solid #666666;
 
     &:last-child {
       border: none;
     }
+  }
+
+  .paper-content {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: flex-start;
   }
 }
 </style>

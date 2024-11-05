@@ -365,17 +365,18 @@
         </div>
       </div>
       <div class="line" style="font-size: 12px;">
-        <div class="col" style="width: 34%;">
+        <div class="col" style="width: 40%;">
           <div>
             applicant┇người nộp đơn: Ngân Trang
           </div>
+          <div style="margin-left:20px">{{printData.creatorFormat}}</div>
         </div>
-        <div class="col" style="width: 33%;">
+        <div class="col" style="width: 30%;">
           <div>
             Warehouse┇kho:
           </div>
         </div>
-        <div class="col" style="width: 33%;">
+        <div class="col" style="width: 30%;">
           <div>
             Accountant┇Kế toán:
           </div>
