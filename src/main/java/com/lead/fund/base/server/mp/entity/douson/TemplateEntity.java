@@ -98,12 +98,6 @@ public class TemplateEntity extends AbstractAdmin {
     @Size(max = 32, message = "实际归还日期长度不合法")
     private String actualReturnDate;
     /**
-     * 是否符合要求，承诺归还日期时，归还数量等于借用数量
-     */
-    @FieldRemark(value = "是否符合要求")
-    @Size(max = 1, message = "是否符合要求长度不合法")
-    private Boolean meetRequirement;
-    /**
      * 单号
      */
     @FieldRemark(value = "单号")

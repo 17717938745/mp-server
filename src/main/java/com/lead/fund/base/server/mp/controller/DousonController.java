@@ -187,11 +187,40 @@ import com.lead.fund.base.server.mp.request.TroublePageRequest;
 import com.lead.fund.base.server.mp.request.TroubleRequest;
 import com.lead.fund.base.server.mp.request.VocationPageRequest;
 import com.lead.fund.base.server.mp.request.VocationRequest;
-import com.lead.fund.base.server.mp.response.*;
+import com.lead.fund.base.server.mp.response.AccidentResponse;
+import com.lead.fund.base.server.mp.response.BoxFlagResponse;
+import com.lead.fund.base.server.mp.response.BoxFlagSummaryResponse;
+import com.lead.fund.base.server.mp.response.ComputerResponse;
+import com.lead.fund.base.server.mp.response.CrashResponse;
+import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
+import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
+import com.lead.fund.base.server.mp.response.EquipmentResponse;
+import com.lead.fund.base.server.mp.response.EventResponse;
+import com.lead.fund.base.server.mp.response.ImproveResponse;
+import com.lead.fund.base.server.mp.response.MaintainResponse;
+import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
+import com.lead.fund.base.server.mp.response.MpAccountResponse;
+import com.lead.fund.base.server.mp.response.MpRoleResponse;
+import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.OrderResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
+import com.lead.fund.base.server.mp.response.ParamResponse;
 import com.lead.fund.base.server.mp.response.ParamResponse.ParamResponseBuilder;
+import com.lead.fund.base.server.mp.response.PlanResponse;
+import com.lead.fund.base.server.mp.response.ProductResponse;
+import com.lead.fund.base.server.mp.response.QualityResponse;
+import com.lead.fund.base.server.mp.response.ReportResponse;
+import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
+import com.lead.fund.base.server.mp.response.TemplateResponse;
+import com.lead.fund.base.server.mp.response.TodoData;
+import com.lead.fund.base.server.mp.response.TodoResponse;
+import com.lead.fund.base.server.mp.response.TroubleResponse;
+import com.lead.fund.base.server.mp.response.UserDeviceResponse;
+import com.lead.fund.base.server.mp.response.VocationResponse;
+import com.lead.fund.base.server.mp.response.VocationSummaryDataResponse;
+import com.lead.fund.base.server.mp.response.VocationSummaryResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -210,7 +239,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -4549,7 +4577,7 @@ public class DousonController {
      *
      * @param deviceId 设备id
      * @param request  {@link BoxFlagPageRequest}
-     * @return {@link PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse>}
+     * @return {@link PageDataResult}
      */
     @GetMapping("admin/box-flag/page")
     public PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse> boxFlagAdminPage(
@@ -5630,7 +5658,6 @@ public class DousonController {
                 .setIndex(templateDao.nextIndex())
                 .setTemplateOrderNo(templateDao.nextOrderNo())
                 .setActualReturnDate(NumberUtil.defaultDecimal(e.getReturnCount()).compareTo(BigDecimal.ZERO) > 0 ? DateUtil.day(new Date()) : null)
-                .setMeetRequirement(!DateUtil.past(e.getPromiseReturnDate()) || (DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true) && defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0))
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
         mergeRelevance(request, e);
@@ -5656,13 +5683,9 @@ public class DousonController {
         TemplateEntity e = (TemplateEntity) INDUSTRY_INSTANCE.template(request)
                 .setModifier(u.getUserId());
         BigDecimal returnCount = e.getReturnCount();
-        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t))) {
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch("templateManager"::equals)) {
             e.setReturnCount(templateMapper.selectById(request.getTemplateId()).getReturnCount());
         }
-        e
-                .setMeetRequirement(!DateUtil.past(e.getPromiseReturnDate()) || (DateUtil.compareLargeMaybeEqual(e.getPromiseReturnDate(), e.getActualReturnDate(), true) && defaultDecimal(e.getReturnCount()).compareTo(defaultDecimal(e.getTemplateCount())) != 0))
-        ;
-
         LambdaUpdateWrapper<TemplateEntity> lambda = new LambdaUpdateWrapper<TemplateEntity>()
                 .eq(TemplateEntity::getId, e.getId());
         if (templateMapper.update(

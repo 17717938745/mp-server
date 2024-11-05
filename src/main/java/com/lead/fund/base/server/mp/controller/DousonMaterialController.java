@@ -275,7 +275,8 @@ public class DousonMaterialController {
                         materialMapper.selectList(
                                 DatabaseUtil.singleOr(new LambdaQueryWrapper<MaterialEntity>().select(MaterialEntity::getSaleOrderNo,
                                         MaterialEntity::getOrderProjectNo,
-                                        MaterialEntity::getProductionDate
+                                        MaterialEntity::getProductionDate,
+                                        MaterialEntity::getMaterialCount
                                 ), el, (lam, t) -> {
                                     lam.eq(MaterialEntity::getSaleOrderNo, t.getSaleOrderNo())
                                             .eq(MaterialEntity::getOrderProjectNo, t.getOrderProjectNo());
@@ -284,11 +285,11 @@ public class DousonMaterialController {
                                 t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()),
                                 Collectors.reducing(
                                         BigDecimal.ZERO,
-                                        MaterialEntity::getMaterialCount,
+                                        t -> defaultDecimal(t.getMaterialCount()),
                                         BigDecimal::add
                                 )
                         ));
-                Map<ArrayList<String>, BigDecimal> materialOrderCountMap = el.stream().collect(Collectors.toMap(t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()), t -> t.getOrderCount(), (t, t1) -> t1));
+                Map<ArrayList<String>, BigDecimal> materialOrderCountMap = el.stream().collect(Collectors.toMap(t -> CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo()), MaterialRequest::getOrderCount, (t, t1) -> t1));
                 for (Map.Entry<ArrayList<String>, BigDecimal> e : materialOrderCountMap.entrySet()) {
                     List<String> key = e.getKey();
                     BigDecimal orderCount = e.getValue();
