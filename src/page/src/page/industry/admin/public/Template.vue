@@ -159,7 +159,7 @@ const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const printData = ref<any>({})
-const templateId = route.query.equipmentId
+const templateId = route.query.templateId
 httpGet(`douson/template`, {templateId: templateId}).then(
     (res: any) => {
       printData.value = res.data || {}
