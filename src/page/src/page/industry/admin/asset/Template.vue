@@ -82,6 +82,12 @@
             type="success"
         >Add
         </el-button>
+        <el-button
+            :icon="Printer"
+            @click="handleShowPrintList"
+            type="warning"
+        >Print
+        </el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>
@@ -98,6 +104,7 @@
         :handleTableRowClassName="handleTableRowClassName"
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
+        :handleSelectionChange="handleSelectionChange"
     >
       <template #operator="row">
         <el-link
@@ -241,12 +248,14 @@ import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
 import ImageUpload from "../../component/ImageUpload.vue";
 
+const selectIdList = ref([])
+const handleSelectionChange = (arr: any[]) => {
+  selectIdList.value = arr.map(t=> t.templateId)
+}
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
-const showPrint = ref<boolean>(false)
-const printData = ref<any>(null)
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
@@ -372,6 +381,13 @@ const handleDateTimeChange = () => {
 }
 const handleShowPrintDetail = (d: any) => {
   window.open(`/industry/public/template?templateId=${d.param.templateId}`)
+}
+const handleShowPrintList = () => {
+  if(selectIdList.value.length <= 0) {
+    ElMessage.error('Please select')
+  } else {
+    window.open(`/industry/public/template?templateIdList=${selectIdList.value}`)
+  }
 }
 const handlePage = () => {
   httpGet(`douson/admin/template/page`, state.query).then(

@@ -443,7 +443,6 @@ const columnConfigList = ref<ViewConfig[]>([
     },
   },
 ])
-
 const fileMap: any = {}
 const handleFileChange = (file: UploadFile, fileList: UploadFiles) => {
   console.log('file change, length: ' + fileList.length)

@@ -75,7 +75,9 @@
           marginTop: `${tableHeight * (1 - scale)  / -2}px`,
           display: scale === 1 ? '' : 'block',
         }"
+      @selection-change="props.handleSelectionChange"
   >
+    <el-table-column v-if="props.handleSelectionChange" type="selection" :width="55" />
     <table-view-content
         :idKey="props.idKey"
         :viewConfigList="columnConfigList"
@@ -227,6 +229,7 @@ interface PropType {
   handlePageChange?: (i: number) => {};
   handleLimitChange?: (i: number) => {};
   handleTableRowClassName?: (row: any) => {};
+  handleSelectionChange?: (row: any) => {};
   detailLink?: boolean;
 }
 

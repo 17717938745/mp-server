@@ -31,6 +31,7 @@ public class TemplateRequest extends AbstractAdministratorModel {
      * 供应商刀具模板ID
      */
     private String templateId;
+    private List<String> templateIdList;
     /**
      * 借用方
      */

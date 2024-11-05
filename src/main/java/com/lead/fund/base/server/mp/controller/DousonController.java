@@ -5727,6 +5727,9 @@ public class DousonController {
 
     private LambdaQueryWrapper<TemplateEntity> templateLambda(TemplateRequest request) {
         final LambdaQueryWrapper<TemplateEntity> lambda = new LambdaQueryWrapper<>();
+        if (CollUtil.isNotEmpty(request.getTemplateIdList())) {
+            DatabaseUtil.or(lambda, request.getTemplateIdList(), (lam, l) -> lam.in(TemplateEntity::getId, l));
+        }
         if (isNotBlank(request.getTemplateId())) {
             lambda.eq(TemplateEntity::getId, request.getTemplateId());
         }
@@ -5764,8 +5767,7 @@ public class DousonController {
     }
 
     private List<TemplateEntity> templateList(TemplateRequest request) {
-        return templateMapper.selectList(templateLambda(request)
-        );
+        return templateMapper.selectList(templateLambda(request));
     }
 
     private List<TemplateResponse> formatTemplateList(List<TemplateEntity> list) {

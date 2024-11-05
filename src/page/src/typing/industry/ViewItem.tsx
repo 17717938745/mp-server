@@ -49,4 +49,5 @@ export enum ValueType {
   DateEdit,
   ValidEdit,
   Link,
+  Selection,
 }

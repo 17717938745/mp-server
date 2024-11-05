@@ -10,7 +10,7 @@
           <div style="font-size: 36px; color: #222222; ">Đơn cho mượn dụng cụ</div>
           <br>
         </h1>
-        <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>
+<!--        <div style="width: 100%; text-align: right; color: #ff0000;">单号 Số phiếu：{{ printData.templateOrderNo }}</div>-->
         <div class="print-container">
           <div class="print-center-content">
             <div class="flex-no-wrap border-bottom print-line">
@@ -51,43 +51,42 @@
               </div>
             </div>
             <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap">
-                <div class="center left border-right padding">
-                  <div>序号</div>
-                  <div>STT</div>
-                </div>
-                <div class="right center padding">
-                  <div>物料号</div>
-                  <div>Mã vật liệu</div>
-                </div>
+              <div class="center col padding" style="width: 10%;">
+                <div>序号</div>
+                <div>STT</div>
               </div>
-              <div class="right-content flex-no-wrap">
-                <div class="left center border-right padding">
-                  <div>物品名称</div>
-                  <div>Miêu tả vật liệu</div>
-                </div>
-                <div class="right center padding">
-                  <div>数量</div>
-                  <div>Số lượng</div>
-                </div>
+              <div class="center col padding" style="width: 20%">
+                <div>物料号</div>
+                <div>Mã vật liệu</div>
+              </div>
+              <div class="center col padding" style="width: 40%;">
+                <div>物品名称</div>
+                <div>Miêu tả vật liệu</div>
+              </div>
+              <div class="center col padding" style="width: 10%;">
+                <div>数量</div>
+                <div>Số lượng</div>
+              </div>
+              <div class="center col padding" style="width: 20%;">
+                <div>单号</div>
+                <div>Số phiếu</div>
               </div>
             </div>
-            <div class="flex-no-wrap border-bottom print-line">
-              <div class="left-content flex-no-wrap">
-                <div class="center left border-right padding large-content">
-                  {{ printData.index || '1' }}
-                </div>
-                <div class="center right padding">
-                  {{ printData.materialNo }}
-                </div>
+            <div v-for="printData in printList" :key="printData.templateId" class="flex-no-wrap border-bottom print-line">
+              <div class="center col table-content padding" style="width: 10%;">
+                {{ printData.index || '1' }}
               </div>
-              <div class="right-content flex-no-wrap">
-                <div class="center left border-right padding large-content">
-                  {{ printData.materialDescription }}
-                </div>
-                <div class="center right padding">
-                  {{ printData.templateCount }}
-                </div>
+              <div class="center col table-content padding" style="width: 20%;">
+                {{ printData.materialNo }}
+              </div>
+              <div class="center col table-content padding" style="width: 40%;">
+                {{ printData.materialDescription }}
+              </div>
+              <div class="center col table-content padding" style="width: 10%;">
+                {{ printData.templateCount }}
+              </div>
+              <div class="center col table-content padding" style="width: 20%;">
+                {{ printData.templateOrderNo }}
               </div>
             </div>
             <div class="flex-no-wrap border-bottom print-line">
@@ -158,11 +157,21 @@ const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
+const printList = ref<any>([])
 const printData = ref<any>({})
-const templateId = route.query.templateId
-httpGet(`douson/template`, {templateId: templateId}).then(
+const templateIdList = route.query.templateIdList
+httpGet(`douson/admin/template/page`, {
+  page: {
+    page: 1,
+    limit: 9999,
+  },
+  data: {
+    templateIdList: templateIdList,
+  }
+}).then(
     (res: any) => {
       printData.value = res.data || {}
+      printList.value = res.list || []
       ElMessage.success("Query success")
       setTimeout(() => {
         const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
@@ -208,6 +217,21 @@ $print_border_color: #ddd;
     border-right: 1px solid $print_border_color;
   }
 
+  .col {
+    border-right: 1px solid $print_border_color;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  .table-content {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .flex-wrap {
     display: flex;
     flex-wrap: wrap;
@@ -218,33 +242,10 @@ $print_border_color: #ddd;
   .left-content {
     width: 228px;
     border-right: 1px solid $print_border_color;
-
-    .left {
-      width: 60px;
-    }
-
-    .right {
-      width: 178px;
-    }
-  }
-
-  .large-content {
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .right-content {
     width: 357px;
-
-    .left {
-      width: 287px;
-    }
-
-    .right {
-      width: 60px;
-    }
   }
 
   .center {

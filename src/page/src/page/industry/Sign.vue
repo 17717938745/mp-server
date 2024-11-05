@@ -33,10 +33,9 @@
         </el-form-item>
         <el-button class="login-btn" type="primary" @click="handleSubmit" :disabled="loginState">登录</el-button>
         <span class="login-tips">Tips：欢迎使用后台管理系统</span>
-        <el-link class="login-helper" @click="handleToWhatYouWant"
-        >已登录直接跳转
-        </el-link
-        >
+        <el-link class="login-helper" @click="handleToWhatYouWant">
+          已登录直接跳转
+        </el-link>
       </el-form>
     </div>
   </div>
