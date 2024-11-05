@@ -45,17 +45,21 @@
         />
       </el-select>
       <el-select
-          v-model="query.data.meetRequirement"
+          v-model="query.data.meetRequirementType"
           @change="handlePage"
           clearable
           :placeholder="store.state.label.meetRequirement">
         <el-option
             label="Yes"
-            :value="true"
+            :value="1"
         />
         <el-option
             label="No"
-            :value="false"
+            :value="0"
+        />
+        <el-option
+            label="--"
+            :value="-1"
         />
       </el-select>
       <el-date-picker
@@ -321,6 +325,7 @@ const state = reactive({
       materialDescription: '',
       alreadyReturn: null,
       meetRequirement: null,
+      meetRequirementType: null,
       startPromiseReturnDate: '',
       endPromiseReturnDate: '',
     },
@@ -466,7 +471,7 @@ const handleTableRowClassName = ({
 }) => {
   if (row.returnCount >= row.templateCount) {
     return 'row-done'
-  } else if (!row.meetRequirement) {
+  } else if (null != row.meetRequirement && !row.meetRequirement) {
     return 'row-error'
   }
   return ''

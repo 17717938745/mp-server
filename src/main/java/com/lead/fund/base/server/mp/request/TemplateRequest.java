@@ -100,6 +100,10 @@ public class TemplateRequest extends AbstractAdministratorModel {
      */
     private Boolean meetRequirement;
     /**
+     * 0:false 1:true -1:--
+     */
+    private Integer meetRequirementType;
+    /**
      * 单号
      */
     private String templateOrderNo;

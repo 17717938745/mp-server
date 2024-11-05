@@ -5554,7 +5554,7 @@ public class DousonController {
                 (t, r) -> t.setComputerStateFormat(r.getLabel())
         );
         for (ComputerResponse t : rl) {
-            t.setDetailedFormat(Boolean.TRUE.equals(t.getDetailed()) ? "是" : "否");
+            t.setDetailedFormat(Boolean.TRUE.equals(t.getDetailed()) ? "Yes" : "No");
         }
         return rl;
     }
@@ -5722,8 +5722,14 @@ public class DousonController {
         if (null != request.getAlreadyReturn()) {
             lambda.apply(request.getAlreadyReturn() ? "TEMPLATE_COUNT <= RETURN_COUNT" : "TEMPLATE_COUNT > RETURN_COUNT");
         }
-        if (null != request.getMeetRequirement()) {
-            lambda.eq(TemplateEntity::getMeetRequirement, request.getMeetRequirement());
+        if (null != request.getMeetRequirementType()) {
+            if (1 == request.getMeetRequirementType()) {
+                lambda.apply("(TEMPLATE_COUNT = RETURN_COUNT AND ACTUAL_RETURN_DATE <= PROMISE_RETURN_DATE)");
+            } else if (0 == request.getMeetRequirementType()) {
+                lambda.apply("(ACTUAL_RETURN_DATE IS NOT NULL AND (TEMPLATE_COUNT != RETURN_COUNT OR ACTUAL_RETURN_DATE > PROMISE_RETURN_DATE))");
+            } else {
+                lambda.apply("(ACTUAL_RETURN_DATE IS NULL)");
+            }
         }
         if (null != request.getStartPromiseReturnDate()) {
             lambda.ge(TemplateEntity::getPromiseReturnDate, DateUtil.day(request.getStartPromiseReturnDate()));
@@ -5772,8 +5778,8 @@ public class DousonController {
         for (TemplateResponse t : rl) {
             t.setBorrowTemplatePersonFormat(um.getOrDefault(t.getBorrowTemplatePerson(), t.getBorrowTemplatePerson()));
             t.setOperatorPersonFormat(um.getOrDefault(t.getOperatorPerson(), t.getOperatorPerson()));
-            t.setMeetRequirement(!DateUtil.past(t.getPromiseReturnDate()) || (DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) != 0));
-            t.setMeetRequirementFormat(Boolean.TRUE.equals(t.getMeetRequirement()) ? "是" : "否");
+            t.setMeetRequirement(isBlank(t.getActualReturnDate()) ? null : DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) == 0);
+            t.setMeetRequirementFormat(null == t.getMeetRequirement() ? "--" : Boolean.TRUE.equals(t.getMeetRequirement()) ? "是" : "否");
         }
         return rl;
     }
