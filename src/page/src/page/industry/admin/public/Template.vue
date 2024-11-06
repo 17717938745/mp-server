@@ -6,10 +6,11 @@
              style="height: 50px;"
              alt="logo"
         />
-        <div class="douson-flex-item-column-center">
+        <div class="douson-flex-item-column-center" style="font-family: 'Times New Roman',serif;">
           <div>物品借出单</div>
           <div>Đơn cho mượn dụng cụ</div>
         </div>
+        <div style="width: 50px;"></div>
       </div>
       <div class="douson-container" style="font-size: 12px; margin-top: 10px;">
         <div class="douson-flex douson-row">
