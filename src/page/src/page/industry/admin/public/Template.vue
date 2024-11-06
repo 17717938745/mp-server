@@ -2,7 +2,7 @@
   <div id="printDescription" class="douson-flex douson-flex-item-center">
     <div style="width: 585px;">
       <div class="douson-flex-item-center" style="justify-content: space-between; position: relative; font-size: 36px; color: #222222; margin-top: 20px;">
-        <img src="/third/img/douson.png"
+        <img :src="fullUrl('/third/img/douson.png', '')"
              style="height: 50px;"
              alt="logo"
         />
