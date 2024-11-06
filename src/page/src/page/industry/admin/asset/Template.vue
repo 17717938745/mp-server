@@ -380,7 +380,8 @@ const handleDateTimeChange = () => {
   handlePage()
 }
 const handleShowPrintDetail = (d: any) => {
-  window.open(`/industry/public/template?templateId=${d.param.templateId}`)
+  selectIdList.value = [d.param.templateId]
+  handleShowPrintList()
 }
 const handleShowPrintList = () => {
   if(selectIdList.value.length <= 0) {

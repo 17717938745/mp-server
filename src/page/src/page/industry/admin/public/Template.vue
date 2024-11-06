@@ -135,7 +135,7 @@ import {StoreType,} from '@/store'
 import {useRoute, useRouter} from 'vue-router'
 import {fullUrl} from '@/util/EnvUtil'
 import {httpGet} from '@/util/HttpUtil'
-import {ElMessage} from "element-plus";
+import {ElMessage} from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
