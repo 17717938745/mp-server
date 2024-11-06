@@ -6,11 +6,10 @@
              style="height: 50px;"
              alt="logo"
         />
-        <div class="douson-flex-item-center-column">
+        <div class="douson-flex-item-column-center">
           <div>物品借出单</div>
           <div>Đơn cho mượn dụng cụ</div>
         </div>
-        <br>
       </div>
       <div class="douson-container" style="font-size: 12px; margin-top: 10px;">
         <div class="douson-flex douson-row">
@@ -41,23 +40,23 @@
           </div>
         </div>
         <div class="douson-flex douson-row">
-          <div class="douson-flex-item-center-column douson-column" style="width: 10%;">
+          <div class="douson-flex-item-column-center douson-column" style="width: 10%;">
             <div>序号</div>
             <div>STT</div>
           </div>
-          <div class="douson-flex-item-center-column douson-column" style="width: 20%">
+          <div class="douson-flex-item-column-center douson-column" style="width: 20%">
             <div>物料号</div>
             <div>Mã vật liệu</div>
           </div>
-          <div class="douson-flex-item-center-column douson-column" style="width: 40%;">
+          <div class="douson-flex-item-column-center douson-column" style="width: 40%;">
             <div>物品名称</div>
             <div>Miêu tả vật liệu</div>
           </div>
-          <div class="douson-flex-item-center-column douson-column" style="width: 10%;">
+          <div class="douson-flex-item-column-center douson-column" style="width: 10%;">
             <div>数量</div>
             <div>Số lượng</div>
           </div>
-          <div class="douson-flex-item-center-column douson-column" style="width: 20%;">
+          <div class="douson-flex-item-column-center douson-column" style="width: 20%;">
             <div>单号</div>
             <div>Số phiếu</div>
           </div>

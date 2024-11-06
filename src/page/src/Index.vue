@@ -133,23 +133,6 @@ body {
     height: 100vh;
     overflow: auto;
 
-    .douson-row {
-      border-bottom: 1px solid $print_border_color;
-
-      &:last-child {
-        border: none;
-      }
-    }
-
-    .douson-column {
-      border-right: 1px solid $print_border_color;
-      padding: 5px;
-
-      &:last-child {
-        border: none;
-      }
-    }
-
     .douson-container {
       border: 1px solid $print_border_color;
     }
@@ -163,32 +146,69 @@ body {
       flex-direction: column;
     }
 
+    .douson-column {
+      border-right: 1px solid $print_border_color;
+      padding: 5px;
+
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .douson-column-height-10 > .douson-column {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .douson-column-height-0 > .douson-column {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .douson-column-width-0 > .douson-column {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .douson-column-padding-0 > .douson-column {
+      padding: 0;
+    }
+
+    .douson-table > .douson-column {
+      border-bottom: 1px solid $print_border_color;
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .douson-row {
+      border-bottom: 1px solid $print_border_color;
+
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .douson-flex-item {
+      display: flex;
+    }
+
+    .douson-flex-item-column {
+      display: flex;
+      flex-direction: column;
+    }
+
     .douson-flex-item-center {
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .douson-flex-item-center-column {
+    .douson-flex-item-column-center {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-    }
-
-    .douson-flex-center-column {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .douson-flex-item {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .douson-flex-item-column {
-      display: flex;
-      flex-direction: column;
     }
   }
 }

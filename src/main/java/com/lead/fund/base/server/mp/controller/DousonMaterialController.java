@@ -182,6 +182,7 @@ public class DousonMaterialController {
             @RequestParam(value = "file", required = false) MultipartFile file
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
+        boolean material = u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()));
         final MaterialUploadResponse res = new MaterialUploadResponse();
         final String today = DateUtil.day(new Date());
         try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
@@ -217,8 +218,8 @@ public class DousonMaterialController {
                             .setSurfaceTreatment(getCellValue(row.getCell(ci++)))
                             .setChargeCompany(getCellValue(row.getCell(ci++)))
                             .setDescription(getCellValue(row.getCell(ci++)))
-                            .setProductionCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
-                            .setArrangeProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
+                            .setProductionCount(material ? BigDecimal.ZERO : defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setArrangeProductionDate(material ? null : DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setMaterialOrderNo(getCellValue(row.getCell(ci++)))
                             .setCheckOrderNo(getCellValue(row.getCell(ci++)));
                     r.setRemainCount(r.getMaterialCount().subtract(r.getProductionCount()));
