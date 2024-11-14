@@ -1,6 +1,6 @@
 <template>
   <div id="printDescription" class="douson-flex-item-center" style="width: 100%;">
-    <div class="douson-container douson-flex-column" style=" width: 987px; border: 2px solid #ee1111; margin-top: 20px; font-size: 12px; word-break: break-all;">
+    <div class="douson-container douson-flex-column" style=" width: 987px; border: 2px solid #ee1111; margin-top: 20px; font-size: 10px; word-break: break-all;">
       <div class="douson-row douson-flex-item-center" style="width: 100%;">
         <img :src="fullUrl('/third/img/douson.png', '')"
              style="height: 50px;"
@@ -41,7 +41,7 @@
           {{ printData.checkOrderNo }}
         </div>
       </div>
-      <div class="douson-row douson-flex-item" style="width: 100%;">
+      <div class="douson-row douson-flex-item" style="width: 100%; font-size: 10px; text-align: center;">
         <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           <div>
             Seq.
@@ -50,7 +50,7 @@
             STT
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Order No
           </div>
@@ -58,7 +58,7 @@
             Đơn hàng tiêu thụ
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 5%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           <div>
             Item
           </div>
@@ -66,7 +66,7 @@
             Mục
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 19%;">
           <div>
             Part No
           </div>
@@ -74,7 +74,7 @@
             Mã vật liệu
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 20%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           <div>
             Description
           </div>
@@ -82,7 +82,7 @@
             Mô tả vật liệu
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 13%;">
           <div>
             Drawing NO.
           </div>
@@ -90,7 +90,7 @@
             Bản vẽ
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
           <div>
             Heat No.
           </div>
@@ -98,7 +98,7 @@
             Số lò nhiệt
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
           <div>
             Heat Lot No
           </div>
@@ -106,7 +106,7 @@
             Số lô xử lý nhiệt
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 5%;">
           <div>
             Qty
           </div>
@@ -114,7 +114,7 @@
             Số lượng liệu
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 14%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Serial No
           </div>
@@ -123,40 +123,40 @@
           </div>
         </div>
       </div>
-      <div v-for="(d, i) in printList" :key="`item-${i}`" class="douson-row douson-flex-item" style="width: 100%;">
+      <div v-for="(d, i) in printList" :key="`item-${i}`" class="douson-row douson-flex-item" style="width: 100%; font-size: 10px; text-align: center;">
         <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           {{ i + 1 }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           {{ d.saleOrderNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 5%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           {{ d.orderProjectNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 19%;">
           {{ d.materialNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 20%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           {{ d.improveMaterialDescribe }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 13%;">
           {{ d.designNumber }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
           {{ d.stoveNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
           {{ d.hotBatchNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 5%;">
           {{ d.materialCount }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 14%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           {{ d.serialNo }}
         </div>
       </div>
       <div class="douson-row douson-flex-item" style="width: 100%;">
-        <div class="douson-column douson-flex-item-column-center" style="width: 30%; padding: 0;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 44%; padding: 0;">
           <div>
             Item (confirmed by the applicant)
           </div>
@@ -164,7 +164,7 @@
             hạng mục (do người kiểm tra tick chọn)
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Qty.
           </div>
@@ -172,7 +172,7 @@
             Số lượng
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Pass
           </div>
@@ -180,7 +180,7 @@
             Số lượng phù hợp
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             PassScrap
           </div>
@@ -188,7 +188,7 @@
             Báo phế
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Scrap
           </div>
@@ -196,7 +196,7 @@
             Báo phế
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             Reject
           </div>
@@ -204,12 +204,12 @@
             Trả hàng
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             NCR NO.
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 10%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
           <div>
             signature
           </div>
@@ -218,30 +218,30 @@
           </div>
         </div>
       </div>
-      <div v-for="(d, i) in bottomColList" :key="`bottom-${i}`" class="douson-row douson-flex-item" style="width: 100%;">
-        <div class="douson-column douson-flex-item-column-center" style="width: 30%; padding: 0;">
+      <div v-for="(d, i) in bottomColList" :key="`bottom-${i}`" class="douson-row douson-flex-item" style="width: 100%; text-align: center;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 44%; padding: 0;">
           <div class="douson-flex-item" style="width: 100%; padding: 0; border: none;">
-            <div class="douson-column douson-flex-item-center" style="width: 15%;">
+            <div class="douson-column douson-flex-item-center" style="width: 10%;">
               {{ d.valueFunction(printData) }}
             </div>
-            <div class="douson-column douson-flex-item-center" style="width: 85%">
+            <div class="douson-column douson-flex-item-center" style="width: 90%">
               {{ d.label }}
             </div>
           </div>
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 10%;">
+        <div class="douson-column" style="width: 8%;">
         </div>
       </div>
       <div class="douson-row douson-flex-item douson-column-height-10" style="width: 100%;">

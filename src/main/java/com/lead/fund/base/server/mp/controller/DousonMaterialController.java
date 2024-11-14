@@ -218,11 +218,14 @@ public class DousonMaterialController {
                             .setSurfaceTreatment(getCellValue(row.getCell(ci++)))
                             .setChargeCompany(getCellValue(row.getCell(ci++)))
                             .setDescription(getCellValue(row.getCell(ci++)))
-                            .setProductionCount(material ? BigDecimal.ZERO : defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
-                            .setArrangeProductionDate(material ? null : DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
+                            .setProductionCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP))
+                            .setArrangeProductionDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setMaterialOrderNo(getCellValue(row.getCell(ci++)))
                             .setCheckOrderNo(getCellValue(row.getCell(ci++)));
-                    r.setRemainCount(r.getMaterialCount().subtract(r.getProductionCount()));
+                    r.setRemainCount(r.getMaterialCount().subtract(r.getProductionCount()))
+                            .setProductionCount(null)
+                            .setArrangeProductionDate(null)
+                    ;
                     el.add(r);
                 }
             }
