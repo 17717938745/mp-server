@@ -219,11 +219,11 @@ public class DousonMaterialController {
             ;
             lockHelper.lock("material");
             try {
-                materialMapper.delete(
+                /*materialMapper.delete(
                         new LambdaUpdateWrapper<MaterialEntity>()
                                 .eq(MaterialEntity::getProductionDate, today)
                 );
-                materialDao.init();
+                materialDao.init();*/
                 final List<MaterialEntity> il = new ArrayList<>();
                 final Map<List<String>, String> orderNoMap = new HashMap<>(8);
                 final Map<List<String>, String> indexMap = new HashMap<>(8);
