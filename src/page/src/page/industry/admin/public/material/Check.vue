@@ -66,7 +66,7 @@
             Mục
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 19%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           <div>
             Part No
           </div>
@@ -114,7 +114,7 @@
             Số lượng liệu
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
           <div>
             Serial No
           </div>
@@ -133,7 +133,7 @@
         <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           {{ d.orderProjectNo }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 19%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           {{ d.materialNo }}
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
@@ -151,7 +151,7 @@
         <div class="douson-column douson-flex-item-column-center" style="width: 5%;">
           {{ d.materialCount }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
           {{ d.serialNo }}
         </div>
       </div>
