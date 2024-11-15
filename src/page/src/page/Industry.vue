@@ -254,15 +254,15 @@ body {
   height: 9px !important;
 }
 
-.el-scrollbar__bar .is-horizontal {
+.el-scrollbar__bar.is-horizontal {
   height: 9px !important;
 }
 
-.el-scrollbar__bar .is-horizontal .el-scrollbar__thumb {
+.el-scrollbar__bar.is-horizontal .el-scrollbar__thumb {
   height: 9px !important;
 }
 
-.el-scrollbar__bar .is-vertical .el-scrollbar__thumb {
+.el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
   width: 9px !important;
 }
 </style>
