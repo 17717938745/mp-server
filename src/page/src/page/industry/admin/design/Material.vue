@@ -565,7 +565,7 @@ const state = reactive({
     },
     page: {
       page: DEFAULT_PAGE,
-      limit: DEFAULT_LIMIT,
+      limit: 20,
     },
   },
   tableData: new Array<any>(),

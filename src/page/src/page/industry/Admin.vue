@@ -220,8 +220,8 @@ $avatarLength: 24px;
     height: 100vh;
 
     ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
+      width: 24px;
+      height: 24px;
     }
 
     .sidebar {
