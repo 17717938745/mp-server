@@ -113,22 +113,6 @@ $largeMiddleWidth: 1536px;
 $largeWidth: 2048px;
 $avatarLength: 24px;
 
-::-webkit-scrollbar-track-piece {
-  background-color: #324157;
-  -webkit-border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:vertical {
-  background-color: #9ca3ad;
-  -webkit-border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:horizontal {
-  width: 5px;
-  background-color: #9ca3ad;
-  -webkit-border-radius: 6px;
-}
-
 .main {
   display: flex;
   flex-wrap: wrap;
@@ -219,15 +203,6 @@ $avatarLength: 24px;
     align-items: flex-start;
     height: 100vh;
 
-    ::-webkit-scrollbar {
-      width: 9px !important;
-      height: 9px !important;
-    }
-
-    .el-table__body-wrapper::-webkit-scrollbar .el-scrollbar::-webkit-scrollbar .scrollbar__wrap::-webkit-scrollbar {
-      width: 9px !important;
-      height: 9px !important;
-    }
 
     .sidebar {
       height: 100%;

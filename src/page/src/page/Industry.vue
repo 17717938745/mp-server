@@ -88,6 +88,7 @@ $containerLeftGap: 5px;
   .row-done {
     background-color: #e4e7ed;
   }
+
   .row-error {
     background-color: #f1f15b;
   }
@@ -142,9 +143,6 @@ body {
   --el-component-size: 36px;
   --el-menu-item-height: 40px;
   --el-menu-sub-item-height: 40px;
-  //  --el-menu-level-padding:0px;
-  //  --el-menu-base-level-padding:16px;
-  //  --el-menu-level:10px;
   --el-radio-input-width: 16px;
   --el-radio-input-height: 16px;
 }
@@ -228,9 +226,45 @@ body {
 .description-print-border {
   border: 2px #999999 solid !important;
 }
+
 .high-light {
   background-color: #cf4d24;
   color: #eeeeee;
   font-weight: 600;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: #324157;
+  -webkit-border-radius: 9px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  background-color: #9ca3ad;
+  -webkit-border-radius: 9px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  width: 8px;
+  background-color: #9ca3ad;
+  -webkit-border-radius: 9px;
+}
+
+::-webkit-scrollbar {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+.el-scrollbar {
+  .el-scrollbar__bar .is-horizontal {
+    height: 9px !important;
+  }
+
+  .el-scrollbar__bar .is-horizontal .el-scrollbar__thumb {
+    height: 9px !important;
+  }
+
+  .el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
+    width: 9px !important;
+  }
 }
 </style>
