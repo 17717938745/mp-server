@@ -193,7 +193,9 @@
       </div>
     </div>
     <div>
-      <el-alert v-show="afterUpload" :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`" type="success"/>
+      <el-alert v-show="afterUpload"
+                :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`"
+                type="success"/>
     </div>
     <div>
       <el-space wrap>
@@ -228,25 +230,29 @@
           <el-input v-model="formData.customerShortName"/>
         </el-form-item>
         <el-form-item prop="customerOrderNo" :label="store.state.label.customerOrderNo">
-          <el-input v-model="formData.customerOrderNo" @change="formData.customerOrderNo = (formData.customerOrderNo || '').toUpperCase()"/>
+          <el-input v-model="formData.customerOrderNo"
+                    @change="formData.customerOrderNo = (formData.customerOrderNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="customerProjectSequence" :label="store.state.label.customerProjectSequence">
           <el-input v-model="formData.customerProjectSequence"/>
         </el-form-item>
         <el-form-item prop="saleOrderNo" :label="store.state.label.saleOrderNo">
-          <el-input v-model="formData.saleOrderNo" @change="formData.saleOrderNo = (formData.saleOrderNo || '').toUpperCase()"/>
+          <el-input v-model="formData.saleOrderNo"
+                    @change="formData.saleOrderNo = (formData.saleOrderNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="orderProjectNo" :label="store.state.label.orderProjectNo">
           <el-input v-model="formData.orderProjectNo"/>
         </el-form-item>
         <el-form-item prop="materialNo" :label="store.state.label.materialNo">
-          <el-input v-model="formData.materialNo" @change="formData.materialNo = (formData.materialNo || '').toUpperCase()"/>
+          <el-input v-model="formData.materialNo"
+                    @change="formData.materialNo = (formData.materialNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="improveMaterialDescribe" :label="store.state.label.improveMaterialDescribe">
           <el-input v-model="formData.improveMaterialDescribe" type="textarea" :rows="4"/>
         </el-form-item>
         <el-form-item prop="designNumber" :label="store.state.label.designNumber">
-          <el-input v-model="formData.designNumber" @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
+          <el-input v-model="formData.designNumber"
+                    @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="orderCount" :label="store.state.label.orderCount">
           <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
@@ -270,13 +276,15 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="blankMaterialNo" :label="store.state.label.blankMaterialNo">
-          <el-input v-model="formData.blankMaterialNo" @change="formData.blankMaterialNo = (formData.blankMaterialNo || '').toUpperCase()"/>
+          <el-input v-model="formData.blankMaterialNo"
+                    @change="formData.blankMaterialNo = (formData.blankMaterialNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="blankMaterialDescribe" :label="store.state.label.blankMaterialDescribe">
           <el-input v-model="formData.blankMaterialDescribe"/>
         </el-form-item>
         <el-form-item prop="roughcastDesignNumber" :label="store.state.label.roughcastDesignNumber">
-          <el-input v-model="formData.roughcastDesignNumber" @change="formData.roughcastDesignNumber = (formData.roughcastDesignNumber || '').toUpperCase()"/>
+          <el-input v-model="formData.roughcastDesignNumber"
+                    @change="formData.roughcastDesignNumber = (formData.roughcastDesignNumber || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="materialCount" :label="store.state.label.materialCount">
           <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
@@ -285,7 +293,8 @@
           <el-input v-model="formData.stoveNo" @change="formData.stoveNo = (formData.stoveNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="hotBatchNo" :label="store.state.label.hotBatchNo">
-          <el-input v-model="formData.hotBatchNo" @change="formData.hotBatchNo = (formData.hotBatchNo || '').toUpperCase()"/>
+          <el-input v-model="formData.hotBatchNo"
+                    @change="formData.hotBatchNo = (formData.hotBatchNo || '').toUpperCase()"/>
         </el-form-item>
         <el-form-item prop="serialNo" :label="store.state.label.serialNo">
           <el-input v-model="formData.serialNo" @change="formData.serialNo = (formData.serialNo || '').toUpperCase()"/>
@@ -357,7 +366,8 @@
           <el-input v-model="formData.description" type="textarea" :rows="4"/>
         </el-form-item>
         <el-form-item prop="productionCount" :label="store.state.label.productionCount">
-          <el-input-number v-model="formData.productionCount" style="width: 60px;" :controls="false" :min="0" :disabled="!includes(roleCodeList, 'materialManager') && 'admin' !== user.username"/>
+          <el-input-number v-model="formData.productionCount" style="width: 60px;" :controls="false" :min="0"
+                           :disabled="!includes(roleCodeList, 'materialManager') && 'admin' !== user.username"/>
         </el-form-item>
         <el-form-item prop="arrangeProductionDate" :label="store.state.label.arrangeProductionDate">
           <el-date-picker
@@ -405,40 +415,142 @@ const uploadData = ref({})
 const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 165, type: ValueType.Operator,},
-  {value: 'customerShortName', labelKey: 'customerShortName', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'customerOrderNo', labelKey: 'customerOrderNo', width: 101, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'customerProjectSequence', labelKey: 'customerProjectSequence', width: 72, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 89, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 72, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'materialNo', labelKey: 'materialNo', width: 138, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'designNumber', labelKey: 'designNumber', width: 121, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'orderCount', labelKey: 'orderCount', width: 73, highLight: true, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'productionDate', labelKey: 'productionDate', width: 102, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 102, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'blankMaterialNo', labelKey: 'blankMaterialNo', width: 168, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'blankMaterialDescribe', labelKey: 'blankMaterialDescribe', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'roughcastDesignNumber', labelKey: 'roughcastDesignNumber', width: 168, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {
+    value: 'customerShortName',
+    labelKey: 'customerShortName',
+    width: 189,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'customerOrderNo',
+    labelKey: 'customerOrderNo',
+    width: 101,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'customerProjectSequence',
+    labelKey: 'customerProjectSequence',
+    width: 72,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'saleOrderNo',
+    labelKey: 'saleOrderNo',
+    width: 89,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'orderProjectNo',
+    labelKey: 'orderProjectNo',
+    width: 72,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'materialNo',
+    labelKey: 'materialNo',
+    width: 138,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'improveMaterialDescribe',
+    labelKey: 'improveMaterialDescribe',
+    width: 189,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'designNumber',
+    labelKey: 'designNumber',
+    width: 121,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'orderCount',
+    labelKey: 'orderCount',
+    width: 73,
+    highLight: true,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'productionDate',
+    labelKey: 'productionDate',
+    width: 102,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'promiseDoneDate',
+    labelKey: 'promiseDoneDate',
+    width: 102,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'blankMaterialNo',
+    labelKey: 'blankMaterialNo',
+    width: 168,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'blankMaterialDescribe',
+    labelKey: 'blankMaterialDescribe',
+    width: 189,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'roughcastDesignNumber',
+    labelKey: 'roughcastDesignNumber',
+    width: 168,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
   {value: 'materialCount', labelKey: 'materialCount', highLight: true, width: 82},
   {value: 'stoveNo', labelKey: 'stoveNo', width: 87},
   {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 87},
   {value: 'serialNo', labelKey: 'serialNo', width: 189},
-  {value: 'surplusCount', labelKey: 'surplusCount', highLight: true, width: 72, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {
+    value: 'surplusCount',
+    labelKey: 'surplusCount',
+    highLight: true,
+    width: 72,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
   {value: 'nde', labelKey: 'nde', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {value: 'assemble', labelKey: 'assemble', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'testPress', labelKey: 'testPress', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {
+    value: 'testPress',
+    labelKey: 'testPress',
+    width: 68,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
+  {
+    value: 'surfaceTreatment',
+    labelKey: 'surfaceTreatment',
+    width: 68,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
   {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
-  {value: 'description', labelKey: 'description', width: 189, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {
+    value: 'description',
+    labelKey: 'description',
+    width: 189,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+  },
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
   {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
   {
-    value: 'materialOrderNoFormat', labelKey: 'materialOrderNo', width: 146, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d: any) => {
+    value: 'materialOrderNoFormat',
+    labelKey: 'materialOrderNo',
+    width: 146,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    type: ValueType.Link,
+    openLink: (d: any) => {
       window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
     },
   },
   {
-    value: 'checkOrderNoFormat', labelKey: 'checkOrderNo', width: 146, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'], type: ValueType.Link, openLink: (d: any) => {
+    value: 'checkOrderNoFormat',
+    labelKey: 'checkOrderNo',
+    width: 146,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    type: ValueType.Link,
+    openLink: (d: any) => {
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
     },
   },
@@ -461,32 +573,29 @@ const handleRequest = (d: any) => {
       delete fileMap[k]
     })
   } else if (keys.length > 0) {
-    ElMessageBox.confirm('上传会先删除当日数据，确定上传？', 'Tips', {
-      type: 'warning',
-    }).then(() => {
-      Promise.all(keys.map((k: any) => {
-        const t = fileMap[k]
-        const formData = new FormData()
-        formData.set("filename", t.name)
-        formData.set("file", t)
-        return httpUpload(`douson/material/upload`, formData)
-      }))
-      .then((l: any[]) => {
-        afterUpload.value = true
-        uploadData.value = (l[0] || {}).data || {}
-        handlePage()
-        return Promise.resolve()
-      })
-      .catch((err) => {
-        ElMessage.error(`Upload failed`)
-        return Promise.reject()
-      })
-    })
-    .finally(() => {
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-    })
+    Promise.all(keys.map((k: any) => {
+      const t = fileMap[k]
+      const formData = new FormData()
+      formData.set("filename", t.name)
+      formData.set("file", t)
+      return httpUpload(`douson/material/upload`, formData)
+    }))
+        .then((l: any[]) => {
+          afterUpload.value = true
+          uploadData.value = (l[0] || {}).data || {}
+          handlePage()
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.resolve()
+        })
+        .catch((err) => {
+          ElMessage.error(`Upload failed`)
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.reject()
+        })
   }
 }
 httpGet(`system/user/config/list`, {}).then(
@@ -711,10 +820,10 @@ const handleDelete = (row: any) => {
     httpDelete('douson/material', {
       materialId: row.materialId,
     })
-    .then(() => {
-      ElMessage.success('Delete success')
-      handlePage()
-    })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handlePage()
+        })
   })
 }
 const {
