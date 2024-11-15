@@ -741,10 +741,10 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.surplusCount < 0) {
-    return 'row-error'
-  } else if (row.productionCount === row.materialCount) {
+  if (row.productionCount === row.materialCount) {
     return 'row-done'
+  } else if (row.surplusCount < 0) {
+    return 'row-error'
   }
   return ''
 }
