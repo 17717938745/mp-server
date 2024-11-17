@@ -156,12 +156,15 @@
         </div>
       </div>
       <div class="douson-row douson-flex-item" style="width: 100%;">
-        <div class="douson-column douson-flex-item-column-center" style="width: 44%; padding: 0;">
-          <div>
-            Item (confirmed by the applicant)
-          </div>
-          <div>
-            hạng mục (do người kiểm tra tick chọn)
+        <div class="douson-column douson-flex-item" style="width: 44%; padding: 0;">
+          <div class="douson-column douson-flex-item-center" style="width: 10%;"></div>
+          <div class="douson-column douson-flex-item-column-center" style="width: 90%; align-items: flex-start;">
+            <div>
+              Item (confirmed by the applicant)
+            </div>
+            <div>
+              hạng mục (do người kiểm tra tick chọn)
+            </div>
           </div>
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
@@ -224,7 +227,7 @@
             <div class="douson-column douson-flex-item-center" style="width: 10%;">
               {{ d.valueFunction(printData) }}
             </div>
-            <div class="douson-column douson-flex-item-center" style="width: 90%">
+            <div class="douson-column douson-flex-item-column-center" style="width: 90%; align-items: flex-start;">
               {{ d.label }}
             </div>
           </div>
