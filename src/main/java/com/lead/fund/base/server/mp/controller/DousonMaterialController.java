@@ -37,6 +37,7 @@ import com.lead.fund.base.server.mp.response.MaterialResponse;
 import com.lead.fund.base.server.mp.response.MaterialUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -126,6 +128,7 @@ public class DousonMaterialController {
         try {
             final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
             e
+                    .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
                     .setModifier(u.getUserId());
             // update
             if (isNotBlank(e.getId())) {
@@ -219,11 +222,11 @@ public class DousonMaterialController {
             ;
             lockHelper.lock("material");
             try {
-                materialMapper.delete(
+                /*materialMapper.delete(
                         new LambdaUpdateWrapper<MaterialEntity>()
                                 .eq(MaterialEntity::getProductionDate, today)
                 );
-                materialDao.init();
+                materialDao.init();*/
                 final List<MaterialEntity> il = new ArrayList<>();
                 final Map<List<String>, String> orderNoMap = new HashMap<>(8);
                 final Map<List<String>, String> indexMap = new HashMap<>(8);
@@ -565,7 +568,6 @@ public class DousonMaterialController {
                 new LambdaUpdateWrapper<MaterialEntity>()
                         .set(MaterialEntity::getOrderCount, e.getOrderCount())
                         .set(MaterialEntity::getSurplusCount, surplusCount)
-                        .set(MaterialEntity::getArrangeProductionDate, defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
                         .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                         .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
         );
