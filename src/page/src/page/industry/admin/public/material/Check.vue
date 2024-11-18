@@ -175,7 +175,7 @@
             Số lượng
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
           <div>
             Pass
           </div>
@@ -183,7 +183,7 @@
             Số lượng phù hợp
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 7%;">
           <div>
             PassScrap
           </div>
@@ -191,7 +191,7 @@
             Báo phế
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 7%;">
           <div>
             Scrap
           </div>
@@ -199,7 +199,7 @@
             Báo phế
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 7%;">
           <div>
             Reject
           </div>
@@ -207,7 +207,7 @@
             Trả hàng
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 8%;">
+        <div class="douson-column douson-flex-item-column-center" style="width: 7%;">
           <div>
             NCR NO.
           </div>
@@ -234,15 +234,15 @@
         </div>
         <div class="douson-column" style="width: 8%;">
         </div>
-        <div class="douson-column" style="width: 8%;">
+        <div class="douson-column" style="width: 12%;">
         </div>
-        <div class="douson-column" style="width: 8%;">
+        <div class="douson-column" style="width: 7%;">
         </div>
-        <div class="douson-column" style="width: 8%;">
+        <div class="douson-column" style="width: 7%;">
         </div>
-        <div class="douson-column" style="width: 8%;">
+        <div class="douson-column" style="width: 7%;">
         </div>
-        <div class="douson-column" style="width: 8%;">
+        <div class="douson-column" style="width: 7%;">
         </div>
         <div class="douson-column" style="width: 8%;">
         </div>
