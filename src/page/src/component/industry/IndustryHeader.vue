@@ -1,9 +1,9 @@
 <template>
   <div class="header">
     <div class="header-left">
-      <a href="https://vn.douson.cn/" style="color: #10bf8a; display: flex; align-items: center;">
+      <a href="http://192.168.9.14:8081/#/main-dashboard2" style="color: #10bf8a; display: flex; align-items: center;">
         <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
-        https://vn.douson.cn/
+        http://192.168.9.14:8081/#/main-dashboard2
       </a>
     </div>
     <el-space class="header-right">
