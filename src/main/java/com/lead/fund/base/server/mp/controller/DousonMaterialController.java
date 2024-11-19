@@ -37,7 +37,6 @@ import com.lead.fund.base.server.mp.response.MaterialResponse;
 import com.lead.fund.base.server.mp.response.MaterialUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -50,7 +49,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -472,9 +470,9 @@ public class DousonMaterialController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute MaterialPageRequest request
     ) {
-        MpUserResponse u = accountHelper.getUser(deviceId);
+        final MpUserResponse u = accountHelper.getUser(deviceId);
         PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
-        if (u.getRoleCodeList().stream().anyMatch(t -> "materialManager".equals(t))) {
+        if (u.getRoleList().stream().anyMatch(t -> "materialManager".equals(t.getRoleCode()))) {
             request.getData().setOrderByPromiseDoneDate(1);
         }
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
