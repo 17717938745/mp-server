@@ -7,7 +7,7 @@
              alt="logo"
         />
         <div class="douson-column douson-flex-item-column-center" style="width: 70%;">
-          <div class="douson-row douson-flex-item-center" style="font-size: 12px; padding: 5px 0; width: 100%;">
+          <div class="douson-row douson-flex-item-center" style="font-size: 14px; padding: 5px 0; width: 100%;">
             THE REQUISITION OF PRODUCTION MATERIAL
           </div>
           <div class="douson-row douson-flex-item-column-center" style="font-size: 14px; ">
