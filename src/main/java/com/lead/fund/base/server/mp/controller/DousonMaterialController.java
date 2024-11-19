@@ -471,10 +471,10 @@ public class DousonMaterialController {
             @ModelAttribute MaterialPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
         if (u.getRoleList().stream().anyMatch(t -> "materialManager".equals(t.getRoleCode()))) {
             request.getData().setOrderByPromiseDoneDate(1);
         }
+        PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatMaterialList(pr.getList())
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
