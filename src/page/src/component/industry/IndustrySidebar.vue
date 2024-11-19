@@ -13,9 +13,10 @@
         active-text-color="#20a0ff"
         router
     >
-      <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center;">
+      <a href="/industry/admin/dashboard" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;">
           <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
-          https://vn.douson.cn/
+<!--          https://vn.douson.cn/-->
+        Welcome
       </a>
       <template v-for="sidebarTree in sidebarTreeList">
         <Industry-sidebar-item class="leadSidebarItem" :sidebar-tree="sidebarTree"/>

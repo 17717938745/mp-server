@@ -1,6 +1,10 @@
 <template>
   <div class="header">
     <div class="header-left">
+      <a href="https://vn.douson.cn/" style="color: #10bf8a; display: flex; align-items: center;">
+        <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
+        https://vn.douson.cn/
+      </a>
     </div>
     <el-space class="header-right">
       <span style="color: #303133; margin-right: 10px;font-size: 14px;">
