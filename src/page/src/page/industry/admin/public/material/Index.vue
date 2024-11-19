@@ -7,11 +7,11 @@
              alt="logo"
         />
         <div class="douson-column douson-flex-item-column-center" style="width: 70%;">
-          <div class="douson-row douson-flex-item-center" style="font-size: 12px; color: #00aa00; padding: 5px 0; width: 100%;">
-            DOUSON VIETNAM WELLHEAD EQUIPMENT CO.,LTD
+          <div class="douson-row douson-flex-item-center" style="font-size: 12px; padding: 5px 0; width: 100%;">
+            THE REQUISITION OF PRODUCTION MATERIAL
           </div>
           <div class="douson-row douson-flex-item-column-center" style="font-size: 14px; ">
-            <div style="padding: 2px;">THE REQUISITION OF PRODUCTION MATERIAL</div>
+            <div style="padding: 2px;"></div>
             <div style="padding: 2px;">ĐƠN LĨNH LIỆU</div>
           </div>
         </div>
@@ -24,11 +24,8 @@
         <div class="douson-column douson-flex-item-center" style="width: 15%;">
           {{ printData.customerOrderNo }}
         </div>
-        <div class="douson-column douson-flex-item-center" style="width: 5%;">
+        <div class="douson-column douson-flex-item-center" style="width: 20%;">
           {{ printData.customerProjectSequence }}
-        </div>
-        <div class="douson-column douson-flex-item-center" style="width: 15%;">
-
         </div>
         <div class="douson-column douson-flex-item-center" style="width: 20%;">
           Số phiếu lĩnh liệu&nbsp;

@@ -168,4 +168,8 @@ public class MaterialRequest extends AbstractAdmin {
      * 是否精确匹配
      */
     private Boolean accurateMatch;
+    /**
+     * 0-不排，1-正序，2-倒叙
+     */
+    private int orderByPromiseDoneDate;
 }

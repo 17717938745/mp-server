@@ -412,7 +412,14 @@ public class DousonMaterialController {
                 lambda.like(MaterialEntity::getCheckOrderNo, d.getCheckOrderNo());
             }
         }
-        return materialDao.list(lambda.orderByDesc(MaterialEntity::getCreateTime));
+        if (0 == d.getOrderByPromiseDoneDate()) {
+            lambda.orderByDesc(MaterialEntity::getCreateTime);
+        } else if (1 == d.getOrderByPromiseDoneDate()) {
+            lambda.orderByAsc(MaterialEntity::getPromiseDoneDate);
+        } else {
+            lambda.orderByDesc(MaterialEntity::getPromiseDoneDate);
+        }
+        return materialDao.list(lambda);
     }
 
     private List<MaterialResponse> formatMaterialList(List<MaterialEntity> list) {
@@ -467,6 +474,9 @@ public class DousonMaterialController {
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
+        if (u.getRoleCodeList().stream().anyMatch(t -> "materialManager".equals(t))) {
+            request.getData().setOrderByPromiseDoneDate(1);
+        }
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatMaterialList(pr.getList())
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
