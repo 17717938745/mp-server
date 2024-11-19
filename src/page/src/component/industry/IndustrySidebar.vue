@@ -13,7 +13,7 @@
         active-text-color="#20a0ff"
         router
     >
-      <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;">
+      <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;" target="_blank">
         <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
         https://vn.douson.cn/
       </a>
