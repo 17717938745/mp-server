@@ -134,7 +134,7 @@ body {
     overflow: auto;
 
     .douson-container {
-      border: 1px solid $print_border_color;
+      border: 2px solid $print_border_color;
     }
 
     .douson-flex {
@@ -147,7 +147,7 @@ body {
     }
 
     .douson-column {
-      border-right: 1px solid $print_border_color;
+      border-right: 2px solid $print_border_color;
       padding: 5px;
 
       &:last-child {
@@ -175,14 +175,14 @@ body {
     }
 
     .douson-table > .douson-column {
-      border-bottom: 1px solid $print_border_color;
+      border-bottom: 2px solid $print_border_color;
       &:last-child {
         border: none;
       }
     }
 
     .douson-row {
-      border-bottom: 1px solid $print_border_color;
+      border-bottom: 2px solid $print_border_color;
 
       &:last-child {
         border: none;

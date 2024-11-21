@@ -41,7 +41,7 @@
           {{ printData.checkOrderNo }}
         </div>
       </div>
-      <div class="douson-row douson-flex-item" style="width: 100%; font-size: 10px; text-align: center;">
+      <div class="douson-row douson-flex-item" style="width: 100%; text-align: center;">
         <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           <div>
             Seq.
@@ -123,7 +123,7 @@
           </div>
         </div>
       </div>
-      <div v-for="(d, i) in printList" :key="`item-${i}`" class="douson-row douson-flex-item" style="width: 100%; font-size: 10px; text-align: center;">
+      <div v-for="(d, i) in printList" :key="`item-${i}`" class="douson-row douson-flex-item" style="width: 100%; text-align: center;">
         <div class="douson-column douson-flex-item-column-center" style="width: 4%;">
           {{ i + 1 }}
         </div>
@@ -434,7 +434,6 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
 }
 
 .item {
-  font-size: 10px;
   padding: 5px;
   height: 50px;
   border-top: 1px solid #666666;
@@ -444,7 +443,6 @@ httpGet(`douson/material/check`, {checkOrderNo: route.query.checkOrderNo}).then(
 }
 
 .bottom-item {
-  font-size: 10px;
   height: 25px;
   margin-left: 5px;
 }
