@@ -287,7 +287,10 @@ httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo})
     (res: any) => {
       printList.value = res.list || []
       printData.value = printList.value.length > 0 ? printList.value[0] : {}
-      ElMessage.success("Query success")
+      ElMessage.success({
+        message: 'Query success',
+        duration: 1000,
+      })
       setTimeout(() => {
         const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
         const printContainer = document.getElementById('printContainer')

@@ -525,13 +525,13 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 68,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
-  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
   {
     value: 'description',
     labelKey: 'description',
     width: 189,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
+  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
   {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
   {
@@ -765,6 +765,8 @@ const handleLimitChange = (val: number) => {
 if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
+      t.type = ValueType.TextEdit
+    } else if ('chargeCompany' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('productionCount' === t.value) {
       t.width = 168
