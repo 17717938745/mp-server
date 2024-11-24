@@ -3800,7 +3800,7 @@ public class DousonController {
                 .setModifier(u.getUserId());
         LambdaUpdateWrapper<MaintainEntity> lambda = new LambdaUpdateWrapper<MaintainEntity>()
                 .eq(MaintainEntity::getId, e.getId());
-        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "maintainView".equals(t))) {
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "maintainView".equals(t) || "equipmentManager".equals(t))) {
             lambda.eq(MaintainEntity::getPartyUser, u.getUserId());
         }
         if (!"admin".equals(u.getUsername())) {

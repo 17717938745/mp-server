@@ -173,10 +173,10 @@ public class SystemController {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO
         };
         l = l.stream().peek(t -> {
-
                     t.setIndex(index.addAndGet(1))
                             .setDepartmentFormat(m.getOrDefault(t.getDepartment(), t.getDepartment()))
                     ;
@@ -188,6 +188,7 @@ public class SystemController {
                     bl[5] = bl[5].add(t.getScheduleDayTime12());
                     bl[6] = bl[6].add(t.getScheduleEvening());
                     bl[7] = bl[7].add(t.getScheduleEvening12());
+                    bl[8] = bl[8].add(t.getScheduleMiddle());
                 }).sorted(Comparator.comparingInt(t -> m1.getOrDefault(t.getDepartment(), 0)))
                 .collect(Collectors.toList());
         l.add(
@@ -203,6 +204,7 @@ public class SystemController {
                         .setScheduleDayTime12(bl[5])
                         .setScheduleEvening(bl[6])
                         .setScheduleEvening12(bl[7])
+                        .setScheduleMiddle(bl[8])
         );
         return new ListResult<>(l);
     }

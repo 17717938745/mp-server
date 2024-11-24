@@ -43,6 +43,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'scheduleNull', labelKey: 'scheduleNull', width: 128},
   {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 128},
   {value: 'scheduleDayTime12', labelKey: 'scheduleDayTime12', width: 128},
+  {value: 'scheduleMiddle', labelKey: 'scheduleMiddle', width: 128},
   {value: 'scheduleEvening', labelKey: 'scheduleEvening', width: 128},
   {value: 'scheduleEvening12', labelKey: 'scheduleEvening12', width: 128},
 ])

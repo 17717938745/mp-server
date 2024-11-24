@@ -588,6 +588,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           label: '夜班12H',
         },
         {
+          value: 'scheduleMiddle',
+          label: '中班',
+        },
+        {
           value: 'departmentAndSchedule',
           label: '部门和班次',
         },
@@ -1987,6 +1991,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           value: 'scheduleEvening12',
           label: 'Ca đêm 12H',
+        },
+        {
+          value: 'scheduleMiddle',
+          label: 'Ca hai',
         },
         {
           value: 'departmentAndSchedule',

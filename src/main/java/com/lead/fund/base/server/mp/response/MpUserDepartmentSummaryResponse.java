@@ -32,4 +32,5 @@ public class MpUserDepartmentSummaryResponse extends AbstractAdministratorModel 
     private BigDecimal scheduleDayTime12;
     private BigDecimal scheduleEvening;
     private BigDecimal scheduleEvening12;
+    private BigDecimal scheduleMiddle;
 }
