@@ -10,7 +10,7 @@
           <div class="douson-row douson-flex-item-center" style="font-size: 14px; padding: 5px 0; width: 100%;">
             Production warehousing Inspection Sheet
           </div>
-          <div class="douson-row douson-flex-item-column-center" style="font-size: 14px; color: #222222; margin-top: 10px">
+          <div class="douson-row douson-flex-item-column-center" style="font-size: 14px; margin-top: 10px">
             Biểu báo cáo sản xuất nhập kho
           </div>
         </div>
@@ -19,13 +19,13 @@
         </div>
       </div>
       <div class="douson-row douson-flex-item-center douson-column-height-10" style="width: 100%;">
-        <div class="douson-column douson-flex-item" style="color: #1f63e1; width: 18%;">
+        <div class="douson-column douson-flex-item" style="width: 18%;">
           Customer （Tên khách hàng:）
         </div>
         <div class="douson-column douson-flex-item-center" style="width: 15%;">
           {{ printData.customerShortName }}
         </div>
-        <div class="douson-column douson-flex-item" style="color: #1f63e1; width: 18%;">
+        <div class="douson-column douson-flex-item" style="width: 18%;">
           PO NO ( Đơn đặt hàng khách )
         </div>
         <div class="douson-column douson-flex-item-center" style="width: 13%;">
@@ -34,7 +34,7 @@
         <div class="douson-column douson-flex-item-center" style="width: 5%;">
           {{ printData.customerProjectSequence }}
         </div>
-        <div class="douson-column douson-flex-item" style="color: #1f63e1; width: 16%;">
+        <div class="douson-column douson-flex-item" style="width: 16%;">
           Số phiếu nhập kho
         </div>
         <div class="douson-column douson-flex-item-center" style="width: 15%;">
