@@ -529,7 +529,7 @@ const columnConfigList = ref<ViewConfig[]>([
     value: 'description',
     labelKey: 'description',
     width: 189,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    // mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
