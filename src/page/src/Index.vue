@@ -119,7 +119,7 @@ registerInterceptor(
 </script>
 
 <style lang="scss">
-$print_border_color: #ddd;
+$print_border_color: #333333;
 html,
 body {
   margin: 0;
