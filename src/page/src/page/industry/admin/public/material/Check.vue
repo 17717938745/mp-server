@@ -1,5 +1,5 @@
 <template>
-  <div id="printDescription" class="douson-flex-item-center" style="width: 100%;">
+  <div id="printDescription" class="douson-flex-item-center" style="width: 100%; font-family: 'Times New Roman',serif;">
     <div class="douson-container douson-flex-column" style=" width: 987px; border: 2px solid #ee1111; margin-top: 20px; font-size: 12px; word-break: break-all;">
       <div class="douson-row douson-flex-item-center" style="width: 100%;">
         <img :src="fullUrl('/third/img/douson.png', '')"
