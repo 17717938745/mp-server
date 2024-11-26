@@ -5805,7 +5805,7 @@ public class DousonController {
         for (TemplateResponse t : rl) {
             t.setBorrowTemplatePersonFormat(um.getOrDefault(t.getBorrowTemplatePerson(), t.getBorrowTemplatePerson()));
             t.setOperatorPersonFormat(um.getOrDefault(t.getOperatorPerson(), t.getOperatorPerson()));
-            t.setMeetRequirement(DateUtil.past(today, t.getPromiseReturnDate()) && isBlank(t.getActualReturnDate()) ? null : DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) == 0);
+            t.setMeetRequirement(DateUtil.future(today, t.getPromiseReturnDate()) && isBlank(t.getActualReturnDate()) ? null : DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) == 0);
             t.setMeetRequirementFormat(null == t.getMeetRequirement() ? "--" : Boolean.TRUE.equals(t.getMeetRequirement()) ? "是" : "否");
         }
         return rl;
