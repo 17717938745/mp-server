@@ -193,6 +193,7 @@ import com.lead.fund.base.server.mp.response.BoxFlagSummaryResponse;
 import com.lead.fund.base.server.mp.response.ComputerResponse;
 import com.lead.fund.base.server.mp.response.CrashResponse;
 import com.lead.fund.base.server.mp.response.DeviceCheckLedgerResponse;
+import com.lead.fund.base.server.mp.response.DeviceResponse;
 import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
 import com.lead.fund.base.server.mp.response.EquipmentResponse;
 import com.lead.fund.base.server.mp.response.EventResponse;
@@ -1233,14 +1234,14 @@ public class DousonController {
      *
      * @param deviceId 设备id
      * @param request  {@link DeviceQueryRequest}
-     * @return {@link ListResult<DeviceEntity>}
+     * @return {@link ListResult<DeviceResponse>}
      */
     @GetMapping("admin/device/list")
-    public ListResult<DeviceEntity> deviceAdminList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
+    public ListResult<DeviceResponse> deviceAdminList(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
             @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
-        return new ListResult<>(deviceList(request));
+        return new ListResult<>(INDUSTRY_INSTANCE.deviceList(deviceList(request)));
     }
 
     /**
@@ -1251,7 +1252,7 @@ public class DousonController {
      * @return {@link Result}
      */
     @PostMapping("admin/order")
-    public Result ordrSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
+    public Result orderSave(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID, required = false) String deviceId,
             @RequestBody OrderRequest request
     ) {
         accountHelper.checkUserAdmin(deviceId);
@@ -5752,9 +5753,9 @@ public class DousonController {
             if (1 == request.getMeetRequirementType()) {
                 lambda.apply("(TEMPLATE_COUNT = RETURN_COUNT AND ACTUAL_RETURN_DATE <= PROMISE_RETURN_DATE)");
             } else if (0 == request.getMeetRequirementType()) {
-                lambda.apply("(ACTUAL_RETURN_DATE IS NOT NULL AND (TEMPLATE_COUNT != RETURN_COUNT OR ACTUAL_RETURN_DATE > PROMISE_RETURN_DATE))");
+                lambda.apply("(TEMPLATE_COUNT != RETURN_COUNT OR ACTUAL_RETURN_DATE > PROMISE_RETURN_DATE)");
             } else {
-                lambda.apply("(ACTUAL_RETURN_DATE IS NULL)");
+                lambda.apply("(ACTUAL_RETURN_DATE IS NULL AND PROMISE_RETURN_DATE < '" + DateUtil.day(new Date()) + "')");
             }
         }
         if (null != request.getStartPromiseReturnDate()) {
@@ -5800,10 +5801,11 @@ public class DousonController {
                 (t, r) -> t.getReturnPhotoList().add(INDUSTRY_INSTANCE.templatePhoto(r, urlHelper.getUrlPrefix()))
         );
         final Map<String, String> um = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1));
+        final String today = DateUtil.daySimple();
         for (TemplateResponse t : rl) {
             t.setBorrowTemplatePersonFormat(um.getOrDefault(t.getBorrowTemplatePerson(), t.getBorrowTemplatePerson()));
             t.setOperatorPersonFormat(um.getOrDefault(t.getOperatorPerson(), t.getOperatorPerson()));
-            t.setMeetRequirement(isBlank(t.getActualReturnDate()) ? null : DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) == 0);
+            t.setMeetRequirement(DateUtil.past(today, t.getPromiseReturnDate()) && isBlank(t.getActualReturnDate()) ? null : DateUtil.compareLargeMaybeEqual(t.getPromiseReturnDate(), t.getActualReturnDate(), true) && defaultDecimal(t.getReturnCount()).compareTo(defaultDecimal(t.getTemplateCount())) == 0);
             t.setMeetRequirementFormat(null == t.getMeetRequirement() ? "--" : Boolean.TRUE.equals(t.getMeetRequirement()) ? "是" : "否");
         }
         return rl;

@@ -1,6 +1,5 @@
-package com.lead.fund.base.server.mp.entity.douson;
+package com.lead.fund.base.server.mp.response;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
@@ -13,9 +12,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
- * DeviceEntity
+ * DeviceResponse
  *
  * @author panchaohui
  * @version 1.0
@@ -27,40 +27,41 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@TableName("MP_INDUSTRY_DEVICE")
-@ClassFunction("设备")
-public class DeviceEntity extends AbstractPrimaryKey {
+@Accessors(chain = true)
+public class DeviceResponse extends AbstractPrimaryKey {
 
-    private static final long serialVersionUID = 1290544322994587440L;
+    private static final long serialVersionUID = 1290544322994587150L;
+    /**
+     * 设备ID
+     */
+    private String id;
+    /**
+     * 设备ID
+     */
+    private String deviceId;
     /**
      * 设备名称
      */
-    @FieldRemark(value = "设备名称")
     private String deviceName;
     /**
      * 单价
      */
-    @FieldRemark(value = "单价", defaultValue = "0")
     private BigDecimal unitPrice;
     /**
      * 运行小时
      */
-    @FieldRemark(value = "运行小时", defaultValue = "0")
     private BigDecimal runningHour;
     /**
      * 运行分钟
      */
-    @FieldRemark(value = "运行分钟", defaultValue = "0")
     private BigDecimal runningMinute;
     /**
      * 是否归属供应商，供应商和自己公司计算逻辑不一样
      */
-    @FieldRemark(value = "是否归属供应商", defaultValue = "0")
     private Boolean supplier;
+    private String supplierFormat;
     /**
      * 排序
      */
-    @FieldRemark(value = "排序", defaultValue = "0")
-    @Size(max = 8, message = "排序长度最大为8")
     private Integer sorter;
 }

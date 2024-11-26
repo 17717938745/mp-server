@@ -563,4 +563,9 @@ public interface IndustryConverter extends Serializable {
 
     List<TemplateResponse> templateList(List<TemplateEntity> t);
 
+    @Mapping(target = "deviceId", source = "id")
+    @Mapping(target = "supplierFormat", expression = "java(Boolean.TRUE.equals(e.getSupplier()) ? \"Yes\" : \"No\")")
+    DeviceResponse device(DeviceEntity e);
+
+    List<DeviceResponse> deviceList(List<DeviceEntity> deviceEntities);
 }
