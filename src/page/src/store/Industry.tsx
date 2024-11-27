@@ -67,7 +67,8 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "meetRequirement",
           "label": "是否符合要求"
-        }, {
+        },
+        {
           "value": "borrowTemplateDate",
           "label": "借用日期"
         },
@@ -92,16 +93,20 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "单号"
         },
         {
-          value: 'templateManage',
-          label: '物品借出单',
+          "value": "templateManage",
+          "label": "物品借出单"
         },
         {
-          value: 'material',
-          label: '生产工单',
+          "value": "material",
+          "label": "生产工单"
         },
         {
-          value: 'designManage',
-          label: '计划管理',
+          "value": "designManage",
+          "label": "计划管理"
+        },
+        {
+          "value": "generateTask",
+          "label": "是否生成计划"
         },
         {
           "value": "customerOrderNo",
@@ -137,7 +142,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "promiseDoneDate",
-          "label": "承诺交期"
+          "label": "承诺完成日期"
         },
         {
           "value": "blankMaterialNo",
@@ -184,6 +189,38 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "表面处理"
         },
         {
+          "value": "deliverCount",
+          "label": "发货数量"
+        },
+        {
+          "value": "deliverDate",
+          "label": "发货日期"
+        },
+        {
+          "value": "receiptCount",
+          "label": "收货数量"
+        },
+        {
+          "value": "receiptDate",
+          "label": "收货日期"
+        },
+        {
+          "value": "scrapCount",
+          "label": "报废数量"
+        },
+        {
+          "value": "taskManage",
+          "label": "作业计划"
+        },
+        {
+          "value": "supplierPromiseDoneDate",
+          "label": "外协承诺完成时间"
+        },
+        {
+          "value": "supplierDoneDate",
+          "label": "要求外协完成交期"
+        },
+        {
           "value": "chargeCompany",
           "label": "负责单位"
         },
@@ -204,1128 +241,1198 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "报检单号"
         },
         {
-          value: 'date',
-          label: '日期',
+          "value": "date",
+          "label": "日期"
         },
         {
-          value: 'person',
-          label: '人员',
+          "value": "person",
+          "label": "人员"
         },
         {
-          value: 'reportDate',
-          label: '日期',
+          "value": "reportDate",
+          "label": "日期"
         },
         {
-          value: 'user',
-          label: '人员',
+          "value": "user",
+          "label": "人员"
         },
         {
-          value: 'partyUser',
-          label: '当事人',
+          "value": "partyUser",
+          "label": "当事人"
         },
         {
-          value: 'directLeader',
-          label: '上级领导',
+          "value": "directLeader",
+          "label": "上级领导"
         },
         {
-          value: 'customerShortName',
-          label: '客户简称',
+          "value": "customerShortName",
+          "label": "客户简称"
         },
         {
-          value: 'purchaseOrderNo',
-          label: '采购订单编号',
+          "value": "purchaseOrderNo",
+          "label": "采购订单编号"
         },
         {
-          value: 'poProject',
-          label: 'PO项目',
+          "value": "poProject",
+          "label": "PO项目"
         },
         {
-          value: 'saleOrderNo',
-          label: '销售订单',
+          "value": "saleOrderNo",
+          "label": "销售订单"
         },
         {
-          value: 'orderProject',
-          label: '订单项目',
+          "value": "orderProject",
+          "label": "订单项目"
         },
         {
-          value: 'eachBoxCount',
-          label: '每箱数量',
+          "value": "eachBoxCount",
+          "label": "每箱数量"
         },
         {
-          value: 'boxNumber',
-          label: '箱号',
+          "value": "boxNumber",
+          "label": "箱号"
         },
         {
-          value: 'volume',
-          label: '长*宽*高(MM)',
+          "value": "volume",
+          "label": "长*宽*高(MM)"
         },
         {
-          value: 'unitWeight',
-          label: '单件重量',
+          "value": "unitWeight",
+          "label": "单件重量"
         },
         {
-          value: 'eachBoxWeight',
-          label: '每箱重量',
+          "value": "eachBoxWeight",
+          "label": "每箱重量"
         },
         {
-          value: 'orderNo',
-          label: '订单号',
+          "value": "orderNo",
+          "label": "订单号"
         },
         {
-          value: 'remark',
-          label: '备注',
+          "value": "remark",
+          "label": "备注"
         },
         {
-          value: 'photo',
-          label: '拍照',
+          "value": "photo",
+          "label": "拍照"
         },
         {
-          value: 'photoUnit',
-          label: '张',
+          "value": "photoUnit",
+          "label": "张"
         },
         {
-          value: 'disqualificationOrderNo',
-          label: '不合格单号',
+          "value": "disqualificationOrderNo",
+          "label": "不合格单号"
         },
         {
-          value: 'inspector',
-          label: '检验人员',
+          "value": "inspector",
+          "label": "检验人员"
         },
         {
-          value: 'projectSequence',
-          label: '项次',
+          "value": "projectSequence",
+          "label": "项次"
         },
         {
-          value: 'materialDescribe',
-          label: '物料描述',
+          "value": "materialDescribe",
+          "label": "物料描述"
         },
         {
-          value: 'roughcastDesignNumber',
-          label: '毛坯图号',
+          "value": "roughcastDesignNumber",
+          "label": "毛坯图号"
         },
         {
-          value: 'pressureTest',
-          label: '试压',
+          "value": "pressureTest",
+          "label": "试压"
         },
         {
-          value: 'dealSurface',
-          label: '表面处理',
+          "value": "dealSurface",
+          "label": "表面处理"
         },
         {
-          value: 'scheduleProduce',
-          label: '是否排产',
+          "value": "scheduleProduce",
+          "label": "是否排产"
         },
         {
-          value: 'designNumber',
-          label: '图号',
+          "value": "planReformCount",
+          "label": "计划加工数量"
         },
         {
-          value: 'process',
-          label: '流程',
+          "value": "supplierRemark",
+          "label": "外协工序备注"
         },
         {
-          value: 'disqualificationContent',
-          label: '不合格内容',
+          "value": "productCountHour8",
+          "label": "8H班产量/件"
+        }, {
+          "value": "productCountHour12",
+          "label": "12小时班产量/件"
+        }, {
+          "value": "processWorkingHour",
+          "label": "工序工时/件"
         },
         {
-          value: 'count',
-          label: '数量',
+          "value": "designNumber",
+          "label": "图号"
         },
         {
-          value: 'orderUnit',
-          label: '件',
+          "value": "process",
+          "label": "流程"
         },
         {
-          value: 'checkPoint',
-          label: '检验节点',
+          "value": "disqualificationContent",
+          "label": "不合格内容"
         },
         {
-          value: 'dutyPerson',
-          label: '责任人员',
+          "value": "count",
+          "label": "数量"
         },
         {
-          value: 'qualityDealOpinion',
-          label: '质量处理意见',
+          "value": "orderUnit",
+          "label": "件"
         },
         {
-          value: 'skillDealOpinion',
-          label: '技术处理意见',
+          "value": "checkPoint",
+          "label": "检验节点"
         },
         {
-          value: 'fineAmount',
-          label: '扣款',
+          "value": "dutyPerson",
+          "label": "责任人员"
         },
         {
-          value: 'defectType',
-          label: '缺陷类型',
+          "value": "qualityDealOpinion",
+          "label": "质量处理意见"
         },
         {
-          value: 'createDate',
-          label: '创建日期',
+          "value": "skillDealOpinion",
+          "label": "技术处理意见"
         },
         {
-          value: 'department',
-          label: '部门',
+          "value": "fineAmount",
+          "label": "扣款"
         },
         {
-          value: 'optimizeType',
-          label: '精益类型',
+          "value": "defectType",
+          "label": "缺陷类型"
         },
         {
-          value: 'existsProblem',
-          label: '存在问题',
+          "value": "createDate",
+          "label": "创建日期"
         },
         {
-          value: 'solveScheme',
-          label: '解决方案',
+          "value": "department",
+          "label": "部门"
         },
         {
-          value: 'responsiblePerson',
-          label: '负责人',
+          "value": "optimizeType",
+          "label": "精益类型"
         },
         {
-          value: 'planCompleteTime',
-          label: '计划完成时间',
+          "value": "existsProblem",
+          "label": "存在问题"
         },
         {
-          value: 'awardAmount',
-          label: '奖励金额',
+          "value": "solveScheme",
+          "label": "解决方案"
         },
         {
-          value: 'valid',
-          label: '结案',
+          "value": "responsiblePerson",
+          "label": "负责人"
         },
         {
-          value: 'boxFlagCard',
-          label: '装箱标识卡',
+          "value": "planCompleteTime",
+          "label": "计划完成时间"
         },
         {
-          value: 'boxFlagId',
-          label: '装箱标识卡',
+          "value": "awardAmount",
+          "label": "奖励金额"
         },
         {
-          value: 'reportManage',
-          label: '报告管理',
+          "value": "valid",
+          "label": "结案"
         },
         {
-          value: 'accidentReport',
-          label: '事故报告',
+          "value": "boxFlagCard",
+          "label": "装箱标识卡"
         },
         {
-          value: 'accidentReportBackup',
-          label: '事故报告（Backup）',
+          "value": "boxFlagId",
+          "label": "装箱标识卡"
         },
         {
-          value: 'accidentEvent',
-          label: 'EHS安全',
+          "value": "reportManage",
+          "label": "报告管理"
         },
         {
-          value: 'accidentQuality',
-          label: '质量事故报告',
+          "value": "accidentReport",
+          "label": "事故报告"
         },
         {
-          value: 'accidentCrash',
-          label: '设备撞机',
+          "value": "accidentReportBackup",
+          "label": "事故报告（Backup）"
         },
         {
-          value: 'accidentTrouble',
-          label: '量具损坏',
+          "value": "accidentEvent",
+          "label": "EHS安全"
         },
         {
-          value: 'userRunReport',
-          label: '人员运行日报',
+          "value": "accidentQuality",
+          "label": "质量事故报告"
         },
         {
-          value: 'productQuotaManage',
-          label: '产品定额管理',
+          "value": "accidentCrash",
+          "label": "设备撞机"
         },
         {
-          value: 'orderManage',
-          label: '订单管理',
+          "value": "accidentTrouble",
+          "label": "量具损坏"
         },
         {
-          value: 'deviceManage',
-          label: '设备管理',
+          "value": "userRunReport",
+          "label": "人员运行日报"
         },
         {
-          value: 'device',
-          label: '设备',
+          "value": "productQuotaManage",
+          "label": "产品定额管理"
         },
         {
-          value: 'paramManage',
-          label: '参数管理',
+          "value": "orderManage",
+          "label": "订单管理"
         },
         {
-          value: 'productManage',
-          label: '产品管理',
+          "value": "deviceManage",
+          "label": "设备管理"
         },
         {
-          value: 'dashboard',
-          label: '首页',
+          "value": "device",
+          "label": "设备"
         },
         {
-          value: 'forum',
-          label: '道森心声社区',
+          "value": "paramManage",
+          "label": "参数管理"
         },
         {
-          value: 'agree',
-          label: '赞同',
+          "value": "productManage",
+          "label": "产品管理"
         },
         {
-          value: 'comment',
-          label: '评论',
+          "value": "dashboard",
+          "label": "首页"
         },
         {
-          value: 'delete',
-          label: '删除',
+          "value": "forum",
+          "label": "道森心声社区"
         },
         {
-          value: 'pleaseInputTitle',
-          label: '请输入标题',
+          "value": "agree",
+          "label": "赞同"
         },
         {
-          value: 'readAll',
-          label: '阅读全文',
+          "value": "comment",
+          "label": "评论"
         },
         {
-          value: 'readSummary',
-          label: '收起',
+          "value": "delete",
+          "label": "删除"
         },
         {
-          value: 'admin',
-          label: '管理页面',
+          "value": "pleaseInputTitle",
+          "label": "请输入标题"
         },
         {
-          value: 'processProcedure',
-          label: '加工工序',
+          "value": "readAll",
+          "label": "阅读全文"
         },
         {
-          value: 'processType',
-          label: '加工类型',
+          "value": "readSummary",
+          "label": "收起"
         },
         {
-          value: 'schedule',
-          label: '班次',
+          "value": "admin",
+          "label": "管理页面"
         },
         {
-          value: 'userProperty',
-          label: '人员属性',
+          "value": "processProcedure",
+          "label": "加工工序"
         },
         {
-          value: 'workMinute',
-          label: '工作时间（分钟）',
+          "value": "processType",
+          "label": "加工类型"
         },
         {
-          value: 'stopWorkingContent1',
-          label: '停机内容1',
+          "value": "schedule",
+          "label": "班次"
         },
         {
-          value: 'stopWorkingContent2',
-          label: '停机内容2',
+          "value": "userProperty",
+          "label": "人员属性"
         },
         {
-          value: 'stopWorkingContent3',
-          label: '停机内容3',
+          "value": "workMinute",
+          "label": "工作时间（分钟）"
         },
         {
-          value: 'accidentType',
-          label: '事故报告类型',
+          "value": "stopWorkingContent1",
+          "label": "停机内容1"
         },
         {
-          value: 'most',
-          label: '最多',
+          "value": "stopWorkingContent2",
+          "label": "停机内容2"
         },
         {
-          value: 'mostFourPhoto',
-          label: '最多四张',
+          "value": "stopWorkingContent3",
+          "label": "停机内容3"
         },
         {
-          value: 'mostThreePhoto',
-          label: '最多三张',
+          "value": "accidentType",
+          "label": "事故报告类型"
         },
         {
-          value: 'mostFourFile',
-          label: '最多四个',
+          "value": "most",
+          "label": "最多"
         },
         {
-          value: 'systemManage',
-          label: '系统管理',
+          "value": "mostFourPhoto",
+          "label": "最多四张"
         },
         {
-          value: 'userManage',
-          label: '用户管理',
+          "value": "mostThreePhoto",
+          "label": "最多三张"
         },
         {
-          value: 'workShop',
-          label: '车间',
+          "value": "mostFourFile",
+          "label": "最多四个"
         },
         {
-          value: 'office',
-          label: '科室',
+          "value": "systemManage",
+          "label": "系统管理"
         },
         {
-          value: 'total',
-          label: '总计',
+          "value": "userManage",
+          "label": "用户管理"
         },
         {
-          value: 'scheduleNull',
-          label: '-',
+          "value": "workShop",
+          "label": "车间"
         },
         {
-          value: 'scheduleDayTime',
-          label: '白班',
+          "value": "office",
+          "label": "科室"
         },
         {
-          value: 'scheduleDayTime12',
-          label: '白班12H',
+          "value": "total",
+          "label": "总计"
         },
         {
-          value: 'scheduleEvening',
-          label: '夜班',
+          "value": "scheduleNull",
+          "label": "-"
         },
         {
-          value: 'scheduleEvening12',
-          label: '夜班12H',
+          "value": "scheduleDayTime",
+          "label": "白班"
         },
         {
-          value: 'scheduleMiddle',
-          label: '中班',
+          "value": "scheduleDayTime12",
+          "label": "白班12H"
         },
         {
-          value: 'departmentAndSchedule',
-          label: '部门和班次',
+          "value": "scheduleEvening",
+          "label": "夜班"
         },
         {
-          value: 'accountManage',
-          label: '人员管理',
+          "value": "scheduleEvening12",
+          "label": "夜班12H"
         },
         {
-          value: 'disqualificationOrder',
-          label: '不合格单',
+          "value": "scheduleMiddle",
+          "label": "中班"
         },
         {
-          value: 'keepImprove',
-          label: '精益持续改善',
+          "value": "departmentAndSchedule",
+          "label": "部门和班次"
         },
         {
-          value: 'disqualificationOrderId',
-          label: '不合格单ID',
+          "value": "accountManage",
+          "label": "人员管理"
         },
         {
-          value: 'disqualificationOrderId',
-          label: '不合格单ID',
+          "value": "disqualificationOrder",
+          "label": "不合格单"
         },
         {
-          value: 'beforePlanThreePhoto',
-          label: '改善前照片3张',
+          "value": "keepImprove",
+          "label": "精益持续改善"
         },
         {
-          value: 'afterPlanThreePhoto',
-          label: '改善后照片3张',
+          "value": "disqualificationOrderId",
+          "label": "不合格单ID"
         },
         {
-          value: 'supportAttachment',
-          label: '支持的附件',
+          "value": "disqualificationOrderId",
+          "label": "不合格单ID"
         },
         {
-          value: 'attachment',
-          label: '支持的附件',
+          "value": "beforePlanThreePhoto",
+          "label": "改善前照片3张"
         },
         {
-          value: 'profession',
-          label: '职务',
+          "value": "afterPlanThreePhoto",
+          "label": "改善后照片3张"
         },
         {
-          value: 'productInfo',
-          label: '产品信息',
+          "value": "supportAttachment",
+          "label": "支持的附件"
         },
         {
-          value: 'disqualificationInfo',
-          label: '不合格信息',
+          "value": "attachment",
+          "label": "支持的附件"
         },
         {
-          value: 'dealOpinion',
-          label: '处理意见',
+          "value": "profession",
+          "label": "职务"
         },
         {
-          value: 'username',
-          label: '用户',
+          "value": "productInfo",
+          "label": "产品信息"
         },
         {
-          value: 'computerName',
-          label: '设备名称',
+          "value": "disqualificationInfo",
+          "label": "不合格信息"
         },
         {
-          value: 'companyPosition',
-          label: '位置',
+          "value": "dealOpinion",
+          "label": "处理意见"
         },
         {
-          value: 'computerState',
-          label: 'IT设备状态',
+          "value": "username",
+          "label": "用户"
         },
         {
-          value: 'computerManage',
-          label: '电脑管理',
+          "value": "computerName",
+          "label": "设备名称"
         },
         {
-          value: 'brand',
-          label: '品牌',
+          "value": "companyPosition",
+          "label": "位置"
         },
         {
-          value: 'computerModel',
-          label: '设备型号及描述',
+          "value": "computerState",
+          "label": "IT设备状态"
         },
         {
-          value: 'position',
-          label: '位置',
+          "value": "computerManage",
+          "label": "电脑管理"
         },
         {
-          value: 'storageDate',
-          label: '入库日期',
+          "value": "brand",
+          "label": "品牌"
         },
         {
-          value: 'detailed',
-          label: '是否有账',
+          "value": "computerModel",
+          "label": "设备型号及描述"
         },
         {
-          value: 'productPlace',
-          label: '设备原产地',
+          "value": "position",
+          "label": "位置"
         },
         {
-          value: 'supplier',
-          label: '供应商',
+          "value": "storageDate",
+          "label": "入库日期"
         },
         {
-          value: 'name',
-          label: '名称',
+          "value": "detailed",
+          "label": "是否有账"
         },
         {
-          value: 'chineseName',
-          label: '中文名称',
+          "value": "productPlace",
+          "label": "设备原产地"
         },
         {
-          value: 'mobile',
-          label: '手机号',
+          "value": "supplier",
+          "label": "供应商"
         },
         {
-          value: 'role',
-          label: '角色',
+          "value": "name",
+          "label": "名称"
         },
         {
-          value: 'operator',
-          label: '操作',
+          "value": "chineseName",
+          "label": "中文名称"
         },
         {
-          value: 'viewAndEdit',
-          label: '预览编辑',
+          "value": "mobile",
+          "label": "手机号"
         },
         {
-          value: 'index',
-          label: '序号',
+          "value": "role",
+          "label": "角色"
         },
         {
-          value: 'state',
-          label: '状态',
+          "value": "operator",
+          "label": "操作"
         },
         {
-          value: 'portrait',
-          label: '头像',
+          "value": "viewAndEdit",
+          "label": "预览编辑"
         },
         {
-          value: 'leaveCompany',
-          label: '离职',
+          "value": "index",
+          "label": "序号"
         },
         {
-          value: 'normal',
-          label: '正常',
+          "value": "state",
+          "label": "状态"
         },
         {
-          value: 'testDevice',
-          label: '调试设备',
+          "value": "portrait",
+          "label": "头像"
         },
         {
-          value: 'deviceNumber',
-          label: '设备编号',
+          "value": "leaveCompany",
+          "label": "离职"
         },
         {
-          value: 'deviceCheckLedgerState',
-          label: '检测设备台账状态',
+          "value": "normal",
+          "label": "正常"
         },
         {
-          value: 'assetManage',
-          label: '资产管理',
+          "value": "testDevice",
+          "label": "调试设备"
         },
         {
-          value: 'deviceCheckLedger',
-          label: '检测设备台帐',
+          "value": "deviceNumber",
+          "label": "设备编号"
         },
         {
-          value: 'equipmentNo',
-          label: '设备编号',
+          "value": "deviceCheckLedgerState",
+          "label": "检测设备台账状态"
         },
         {
-          value: 'chineseVietnamName',
-          label: '中越文名称',
+          "value": "assetManage",
+          "label": "资产管理"
         },
         {
-          value: 'englishName',
-          label: '英文名称',
+          "value": "deviceCheckLedger",
+          "label": "检测设备台帐"
         },
         {
-          value: 'specification',
-          label: '规格',
+          "value": "equipmentNo",
+          "label": "设备编号"
         },
         {
-          value: 'calibrationUnit',
-          label: '校准单位',
+          "value": "chineseVietnamName",
+          "label": "中越文名称"
         },
         {
-          value: 'calibrationDate',
-          label: '校准日期',
+          "value": "englishName",
+          "label": "英文名称"
         },
         {
-          value: 'dueDate',
-          label: '有效期(下次校验日期)',
+          "value": "specification",
+          "label": "规格"
         },
         {
-          value: 'calibrationPeriod',
-          label: '校验周期（天）',
+          "value": "calibrationUnit",
+          "label": "校准单位"
         },
         {
-          value: 'calibrationPeriod',
-          label: '校验周期（天）',
+          "value": "calibrationDate",
+          "label": "校准日期"
         },
         {
-          value: 'manufacturers',
-          label: '厂家',
+          "value": "dueDate",
+          "label": "有效期(下次校验日期)"
         },
         {
-          value: 'acceptanceStandard',
-          label: '验收标准',
+          "value": "calibrationPeriod",
+          "label": "校验周期（天）"
         },
         {
-          value: 'storage',
-          label: '库位',
+          "value": "calibrationPeriod",
+          "label": "校验周期（天）"
         },
         {
-          value: 'outOfStock',
-          label: '是否出库',
+          "value": "manufacturers",
+          "label": "厂家"
         },
         {
-          value: 'borrower',
-          label: '借用人',
+          "value": "acceptanceStandard",
+          "label": "验收标准"
         },
         {
-          value: 'borrowDate',
-          label: '借用日期',
+          "value": "storage",
+          "label": "库位"
         },
         {
-          value: 'clampingMinute',
-          label: '装夹时间/分钟',
+          "value": "outOfStock",
+          "label": "是否出库"
         },
         {
-          value: 'assistMinute',
-          label: '辅助时间/分钟',
+          "value": "borrower",
+          "label": "借用人"
         },
         {
-          value: 'runningMinute',
-          label: '程式运行时间/分钟',
+          "value": "borrowDate",
+          "label": "借用日期"
         },
         {
-          value: 'productStandMinute',
-          label: '产品标准工时',
+          "value": "clampingMinute",
+          "label": "装夹时间/分钟"
         },
         {
-          value: 'shouldCompleteCount',
-          label: '当班定额产量',
+          "value": "assistMinute",
+          "label": "辅助时间/分钟"
         },
         {
-          value: 'orderProjectNo',
-          label: '订单项目号',
+          "value": "runningMinute",
+          "label": "程式运行时间/分钟"
         },
         {
-          value: 'roughcastExpireDate',
-          label: '毛坯到货日期',
+          "value": "productStandMinute",
+          "label": "产品标准工时"
         },
         {
-          value: 'actualCompleteCount',
-          label: '当班完成数量',
+          "value": "shouldCompleteCount",
+          "label": "当班定额产量"
         },
         {
-          value: 'completeMinute',
-          label: '完成工时',
+          "value": "orderProjectNo",
+          "label": "订单项目号"
         },
         {
-          value: 'leaderSubsidyMinute',
-          label: '主管补贴工时',
+          "value": "roughcastExpireDate",
+          "label": "毛坯到货日期"
         },
         {
-          value: 'deviceCompletePercent',
-          label: '当班绩效，当台的效率/%',
+          "value": "actualCompleteCount",
+          "label": "当班完成数量"
         },
         {
-          value: 'clientIp',
-          label: '客户端IP',
+          "value": "completeMinute",
+          "label": "完成工时"
         },
         {
-          value: 'signInTime',
-          label: '登录时间',
+          "value": "leaderSubsidyMinute",
+          "label": "主管补贴工时"
         },
         {
-          value: 'isSuccess',
-          label: '是否成功',
+          "value": "deviceCompletePercent",
+          "label": "当班绩效，当台的效率/%"
         },
         {
-          value: 'errorMessage',
-          label: '异常信息',
+          "value": "clientIp",
+          "label": "客户端IP"
         },
         {
-          value: 'deviceUnitPrice',
-          label: '设备工时单价/VND',
+          "value": "signInTime",
+          "label": "登录时间"
         },
         {
-          value: 'salary',
-          label: '当天考核金额/VND',
+          "value": "isSuccess",
+          "label": "是否成功"
         },
         {
-          value: 'deviceRunningTime',
-          label: '设备运行时间',
+          "value": "errorMessage",
+          "label": "异常信息"
         },
         {
-          value: 'deviceUsePercent',
-          label: '当班设备利用率%',
+          "value": "deviceUnitPrice",
+          "label": "设备工时单价/VND"
         },
         {
-          value: 'stopWorkingMinute1',
-          label: '停机时间1',
+          "value": "salary",
+          "label": "当天考核金额/VND"
         },
         {
-          value: 'stopWorkingMinute2',
-          label: '停机时间2',
+          "value": "deviceRunningTime",
+          "label": "设备运行时间"
         },
         {
-          value: 'stopWorkingMinute3',
-          label: '停机时间3',
+          "value": "deviceUsePercent",
+          "label": "当班设备利用率%"
         },
         {
-          value: 'improveSuggestion',
-          label: '明天的改善意见（未完成85%）',
+          "value": "stopWorkingMinute1",
+          "label": "停机时间1"
         },
         {
-          value: 'programNumber',
-          label: '程序号',
+          "value": "stopWorkingMinute2",
+          "label": "停机时间2"
         },
         {
-          value: 'debugMinute',
-          label: '调试时间/分钟',
+          "value": "stopWorkingMinute3",
+          "label": "停机时间3"
         },
         {
-          value: 'countHour8',
-          label: '8小时加工件数/分子435',
+          "value": "improveSuggestion",
+          "label": "明天的改善意见（未完成85%）"
         },
         {
-          value: 'countHour12',
-          label: '12小时加工件数/分子585',
+          "value": "programNumber",
+          "label": "程序号"
         },
         {
-          value: 'productId',
-          label: '产品ID',
+          "value": "debugMinute",
+          "label": "调试时间/分钟"
         },
         {
-          value: 'openId',
-          label: 'Open ID',
+          "value": "countHour8",
+          "label": "8小时加工件数/分子435"
         },
         {
-          value: 'password',
-          label: '密码',
+          "value": "countHour12",
+          "label": "12小时加工件数/分子585"
         },
         {
-          value: 'normalInfo',
-          label: '一般信息',
+          "value": "productId",
+          "label": "产品ID"
         },
         {
-          value: 'groupLeader',
-          label: '班组长',
+          "value": "openId",
+          "label": "Open ID"
         },
         {
-          value: 'chargePerson',
-          label: '主管',
+          "value": "password",
+          "label": "密码"
         },
         {
-          value: 'manager',
-          label: '经理',
+          "value": "normalInfo",
+          "label": "一般信息"
         },
         {
-          value: 'devicePhoto',
-          label: '机（设备）',
+          "value": "groupLeader",
+          "label": "班组长"
         },
         {
-          value: 'deviceDescribe',
-          label: '机（设备）描述',
+          "value": "chargePerson",
+          "label": "主管"
         },
         {
-          value: 'toolDescribe',
-          label: '刀具描述',
+          "value": "manager",
+          "label": "经理"
         },
         {
-          value: 'designNumberPhoto',
-          label: '产品图号',
+          "value": "devicePhoto",
+          "label": "机（设备）"
         },
         {
-          value: 'designNumberDescribe',
-          label: '产品图号描述',
+          "value": "deviceDescribe",
+          "label": "机（设备）描述"
         },
         {
-          value: 'productWeight',
-          label: '产品重量（KG）',
+          "value": "toolDescribe",
+          "label": "刀具描述"
         },
         {
-          value: 'accidentDescribe',
-          label: '问题描述',
+          "value": "designNumberPhoto",
+          "label": "产品图号"
         },
         {
-          value: 'accidentEventDescribe',
-          label: '发生过程描述，人员受伤情况，财产损失情况',
+          "value": "designNumberDescribe",
+          "label": "产品图号描述"
         },
         {
-          value: 'accidentQualityDescribe',
-          label: '发生过程描述，财产损失情况',
+          "value": "productWeight",
+          "label": "产品重量（KG）"
         },
         {
-          value: 'accidentImproveDescribe',
-          label: '发生过程描述，人员受伤情况，财产损失情况',
+          "value": "accidentDescribe",
+          "label": "问题描述"
         },
         {
-          value: 'sceneAndAccidentDescribe',
-          label: '场景和问题描述',
+          "value": "accidentEventDescribe",
+          "label": "发生过程描述，人员受伤情况，财产损失情况"
         },
         {
-          value: 'video',
-          label: '视频',
+          "value": "accidentQualityDescribe",
+          "label": "发生过程描述，财产损失情况"
         },
         {
-          value: 'damagePhotoList',
-          label: '人受伤情况',
+          "value": "accidentImproveDescribe",
+          "label": "发生过程描述，人员受伤情况，财产损失情况"
         },
         {
-          value: 'damageDescribe',
-          label: '人受伤情况描述',
+          "value": "sceneAndAccidentDescribe",
+          "label": "场景和问题描述"
         },
         {
-          value: 'propertyLossDescribe',
-          label: '财产损失情况描述',
+          "value": "video",
+          "label": "视频"
         },
         {
-          value: 'propertyLossPhotoList',
-          label: '财产损失情况',
+          "value": "damagePhotoList",
+          "label": "人受伤情况"
         },
         {
-          value: 'humanFactorReason',
-          label: '原因分析',
+          "value": "damageDescribe",
+          "label": "人受伤情况描述"
         },
         {
-          value: 'eventReason',
-          label: 'EHS原因分析',
+          "value": "propertyLossDescribe",
+          "label": "财产损失情况描述"
         },
         {
-          value: 'qualityReason',
-          label: '原因分析',
+          "value": "propertyLossPhotoList",
+          "label": "财产损失情况"
         },
         {
-          value: 'crashReason',
-          label: '撞机原因分析',
+          "value": "humanFactorReason",
+          "label": "原因分析"
         },
         {
-          value: 'troubleReason',
-          label: '量具事故原因分析',
+          "value": "eventReason",
+          "label": "EHS原因分析"
         },
         {
-          value: 'improveReason',
-          label: '原因分析',
+          "value": "qualityReason",
+          "label": "原因分析"
         },
         {
-          value: 'humanFactorSolve',
-          label: '解决方法',
+          "value": "crashReason",
+          "label": "撞机原因分析"
         },
         {
-          value: 'eventSolve',
-          label: '解决方法',
+          "value": "troubleReason",
+          "label": "量具事故原因分析"
         },
         {
-          value: 'qualitySolve',
-          label: '解决方法',
+          "value": "improveReason",
+          "label": "原因分析"
         },
         {
-          value: 'improveSolve',
-          label: '解决方法',
+          "value": "humanFactorSolve",
+          "label": "解决方法"
         },
         {
-          value: 'improveDescribe',
-          label: '改善后的证据描述',
+          "value": "eventSolve",
+          "label": "解决方法"
         },
         {
-          value: 'eventOpinion',
-          label: '奖惩意见',
+          "value": "qualitySolve",
+          "label": "解决方法"
         },
         {
-          value: 'qualityOpinion',
-          label: '奖惩意见',
+          "value": "improveSolve",
+          "label": "解决方法"
         },
         {
-          value: 'improveOpinion',
-          label: '奖惩意见',
+          "value": "improveDescribe",
+          "label": "改善后的证据描述"
         },
         {
-          value: 'eventPhoto',
-          label: '问题照片',
+          "value": "eventOpinion",
+          "label": "奖惩意见"
         },
         {
-          value: 'qualityPhoto',
-          label: '问题照片',
+          "value": "qualityOpinion",
+          "label": "奖惩意见"
         },
         {
-          value: 'improvePhoto',
-          label: '问题照片',
+          "value": "improveOpinion",
+          "label": "奖惩意见"
         },
         {
-          value: 'eventFile',
-          label: '问题附件',
+          "value": "eventPhoto",
+          "label": "问题照片"
         },
         {
-          value: 'qualityFile',
-          label: '问题附件',
+          "value": "qualityPhoto",
+          "label": "问题照片"
         },
         {
-          value: 'improveFile',
-          label: '问题附件',
+          "value": "improvePhoto",
+          "label": "问题照片"
         },
         {
-          value: 'improveEventPhoto',
-          label: '改善照片',
+          "value": "eventFile",
+          "label": "问题附件"
         },
         {
-          value: 'improveQualityPhoto',
-          label: '改善照片',
+          "value": "qualityFile",
+          "label": "问题附件"
         },
         {
-          value: 'improveImprovePhoto',
-          label: '改善照片',
+          "value": "improveFile",
+          "label": "问题附件"
         },
         {
-          value: 'improveEventFile',
-          label: '改善后附件',
+          "value": "improveEventPhoto",
+          "label": "改善照片"
         },
         {
-          value: 'improveQualityFile',
-          label: '改善后附件',
+          "value": "improveQualityPhoto",
+          "label": "改善照片"
         },
         {
-          value: 'improveImproveFile',
-          label: '改善后附件',
+          "value": "improveImprovePhoto",
+          "label": "改善照片"
         },
         {
-          value: 'awardOption',
-          label: '奖惩意见',
+          "value": "improveEventFile",
+          "label": "改善后附件"
         },
         {
-          value: 'dutyPerson1',
-          label: '责任人1',
+          "value": "improveQualityFile",
+          "label": "改善后附件"
         },
         {
-          value: 'fineAmount1',
-          label: '金额1',
+          "value": "improveImproveFile",
+          "label": "改善后附件"
         },
         {
-          value: 'dutyPerson2',
-          label: '责任人2',
+          "value": "awardOption",
+          "label": "奖惩意见"
         },
         {
-          value: 'fineAmount2',
-          label: '金额2',
+          "value": "dutyPerson1",
+          "label": "责任人1"
         },
         {
-          value: 'dutyPerson3',
-          label: '责任人3',
+          "value": "fineAmount1",
+          "label": "金额1"
         },
         {
-          value: 'fineAmount3',
-          label: '金额3',
+          "value": "dutyPerson2",
+          "label": "责任人2"
         },
         {
-          value: 'preventAndTracePlan',
-          label: '预防措施跟踪',
+          "value": "fineAmount2",
+          "label": "金额2"
         },
         {
-          value: 'improveEvidencePhotoList',
-          label: '改善后的证据',
+          "value": "dutyPerson3",
+          "label": "责任人3"
         },
         {
-          value: 'improveEvidenceDescribe',
-          label: '改善后的证据描述',
+          "value": "fineAmount3",
+          "label": "金额3"
         },
         {
-          value: 'interviewResume',
-          label: '面试履历',
+          "value": "preventAndTracePlan",
+          "label": "预防措施跟踪"
         },
         {
-          value: 'signInHistory',
-          label: '登录历史',
+          "value": "improveEvidencePhotoList",
+          "label": "改善后的证据"
         },
         {
-          value: 'productMachine',
-          label: '生产设备',
+          "value": "improveEvidenceDescribe",
+          "label": "改善后的证据描述"
         },
         {
-          value: 'machineEquipment',
-          label: '生产设备台帐',
+          "value": "interviewResume",
+          "label": "面试履历"
         },
         {
-          value: 'machineMaintainRepair',
-          label: '生产设备维修履历',
+          "value": "signInHistory",
+          "label": "登录历史"
         },
         {
-          value: 'equipmentNo',
-          label: '设备编号',
+          "value": "productMachine",
+          "label": "生产设备"
         },
         {
-          value: 'accidentImprove',
-          label: '工艺刀具事故',
+          "value": "machineEquipment",
+          "label": "生产设备台帐"
         },
         {
-          value: 'accidentImproveReason',
-          label: '刀具事故原因分析',
+          "value": "machineMaintainRepair",
+          "label": "生产设备维修履历"
         },
         {
-          value: 'equipmentPosition',
-          label: '位置',
+          "value": "equipmentNo",
+          "label": "设备编号"
         },
         {
-          value: 'equipmentId',
-          label: '设备ID',
+          "value": "accidentImprove",
+          "label": "工艺刀具事故"
         },
         {
-          value: 'equipmentName',
-          label: '设备名称',
+          "value": "accidentImproveReason",
+          "label": "刀具事故原因分析"
         },
         {
-          value: 'specification',
-          label: '规格',
+          "value": "equipmentPosition",
+          "label": "位置"
         },
         {
-          value: 'useUser',
-          label: '使用人员',
+          "value": "equipmentId",
+          "label": "设备ID"
         },
         {
-          value: 'equipmentDetailDescribe',
-          label: '设备细节描述',
+          "value": "equipmentName",
+          "label": "设备名称"
         },
         {
-          value: 'gasolineType',
-          label: '设备加油类型',
+          "value": "specification",
+          "label": "规格"
         },
         {
-          value: 'chargeUser',
-          label: '负责人',
+          "value": "useUser",
+          "label": "使用人员"
         },
         {
-          value: 'chargeUser',
-          label: '负责人',
+          "value": "equipmentDetailDescribe",
+          "label": "设备细节描述"
         },
         {
-          value: 'brokenReason',
-          label: '故障原因',
+          "value": "gasolineType",
+          "label": "设备加油类型"
         },
         {
-          value: 'brokenContent',
-          label: '故障内容',
+          "value": "chargeUser",
+          "label": "负责人"
         },
         {
-          value: 'repairContent',
-          label: '修理内容',
+          "value": "chargeUser",
+          "label": "负责人"
         },
         {
-          value: 'replacePair',
-          label: '更换配件',
+          "value": "brokenReason",
+          "label": "故障原因"
         },
         {
-          value: 'repairType',
-          label: '维修类型',
+          "value": "brokenContent",
+          "label": "故障内容"
         },
         {
-          value: 'stopHour',
-          label: '停机时长H',
+          "value": "repairContent",
+          "label": "修理内容"
         },
         {
-          value: 'sendCount',
-          label: '已发运数量',
+          "value": "replacePair",
+          "label": "更换配件"
         },
         {
-          value: 'sendDate',
-          label: '发运日期',
+          "value": "repairType",
+          "label": "维修类型"
         },
         {
-          value: 'photoCount',
-          label: '照片数量',
+          "value": "stopHour",
+          "label": "停机时长H"
         },
         {
-          value: 'vocationRecord',
-          label: '请假记录',
+          "value": "sendCount",
+          "label": "已发运数量"
         },
         {
-          value: 'vocationSummary',
-          label: '请假汇总分析',
+          "value": "sendDate",
+          "label": "发运日期"
         },
         {
-          value: 'vocationType',
-          label: '请假类型',
+          "value": "photoCount",
+          "label": "照片数量"
         },
         {
-          value: 'vocationDate',
-          label: '申请日期',
+          "value": "vocationRecord",
+          "label": "请假记录"
         },
         {
-          value: 'vocationUser',
-          label: '请假人',
+          "value": "vocationSummary",
+          "label": "请假汇总分析"
         },
         {
-          value: 'vocationChargeUser',
-          label: '主管领导',
+          "value": "vocationType",
+          "label": "请假类型"
         },
         {
-          value: 'vocationStartDate',
-          label: '请假开始日期',
+          "value": "vocationDate",
+          "label": "申请日期"
         },
         {
-          value: 'vocationEndDate',
-          label: '请假结束日期',
+          "value": "vocationUser",
+          "label": "请假人"
         },
         {
-          value: 'vocationReason',
-          label: '请假理由',
+          "value": "vocationChargeUser",
+          "label": "主管领导"
         },
         {
-          value: 'vocationDays',
-          label: '请假天数',
+          "value": "vocationStartDate",
+          "label": "请假开始日期"
         },
         {
-          value: 'vocationCompliance',
-          label: '是否符合请假规定',
+          "value": "vocationEndDate",
+          "label": "请假结束日期"
         },
         {
-          value: 'violationReason',
-          label: '不符合理由',
+          "value": "vocationReason",
+          "label": "请假理由"
         },
         {
-          value: 'violationUserCount',
-          label: '请假人次',
+          "value": "vocationDays",
+          "label": "请假天数"
         },
         {
-          value: 'violationViolationCount',
-          label: '不合格',
+          "value": "vocationCompliance",
+          "label": "是否符合请假规定"
         },
         {
-          value: 'violationComplianceRate',
-          label: '合格率',
+          "value": "violationReason",
+          "label": "不符合理由"
+        },
+        {
+          "value": "violationUserCount",
+          "label": "请假人次"
+        },
+        {
+          "value": "violationViolationCount",
+          "label": "不合格"
+        },
+        {
+          "value": "violationComplianceRate",
+          "label": "合格率"
+        },
+        {
+          "value": "pressureTest",
+          "label": "试压"
+        },
+        {
+          "value": "scheduleProduce",
+          "label": "是否排产"
+        },
+        {
+          "value": "externalProcedureRemark",
+          "label": "外协工序备注"
+        },
+        {
+          "value": "procedureCountHour8",
+          "label": "8H班产量/件"
+        },
+        {
+          "value": "procedureCountHour12",
+          "label": "12小时班产量/件"
+        },
+        {
+          "value": "processManHour",
+          "label": "工序工时/件"
+        },
+        {
+          "value": "processManHour",
+          "label": "工序工时/件"
+        },
+        {
+          "value": "onlineDate",
+          "label": "上线时间"
+        },
+        {
+          "value": "offlineDate",
+          "label": "下线时间"
+        },
+        {
+          "value": "delay",
+          "label": "是否拖期"
+        },
+        {
+          "value": "processCount",
+          "label": "已加工数量"
+        },
+        {
+          "value": "procedureSketch",
+          "label": "工序简述"
+        },
+        {
+          "value": "surplus",
+          "label": "剩余"
         },
       ],
       'THA': [
@@ -1364,7 +1471,8 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "actualReturnDate",
           "label": "ngày trả thực tế"
-        }, {
+        },
+        {
           "value": "borrowTemplateDate",
           "label": "Ngày tháng"
         },
@@ -1393,16 +1501,20 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": " có đáp ứng  yêu cầu không?"
         },
         {
-          value: 'templateManage',
-          label: 'Đơn cho mượn dụng cụ',
+          "value": "templateManage",
+          "label": "Đơn cho mượn dụng cụ"
         },
         {
-          value: 'material',
-          label: 'Product order',
+          "value": "material",
+          "label": "Product order"
         },
         {
-          value: 'designManage',
-          label: 'Quản lý kế hoạch',
+          "value": "designManage",
+          "label": "Quản lý kế hoạch"
+        },
+        {
+          "value": "generateTask",
+          "label": "Already generate job"
         },
         {
           "value": "customerOrderNo",
@@ -1478,11 +1590,43 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "testPress",
-          "label": "Thử áp "
+          "label": "Thử áp"
         },
         {
           "value": "surfaceTreatment",
           "label": "Xử lý bề mặt"
+        },
+        {
+          "value": "deliverCount",
+          "label": "Số lượng xuất GC"
+        },
+        {
+          "value": "deliverDate",
+          "label": "Ngày xuất"
+        },
+        {
+          "value": "receiptCount",
+          "label": "Số lượng nhập"
+        },
+        {
+          "value": "receiptDate",
+          "label": "Ngày nhập"
+        },
+        {
+          "value": "scrapCount",
+          "label": "Số lượng báo phế"
+        },
+        {
+          "value": "taskManage",
+          "label": "kế hoạch làm việc"
+        },
+        {
+          "value": "supplierPromiseDoneDate",
+          "label": "Thời gian cam kết giao hàng của nhà GC"
+        },
+        {
+          "value": "supplierDoneDate",
+          "label": "Ngày yêu cầu Nhà GC giao hàng"
         },
         {
           "value": "chargeCompany",
@@ -1505,1222 +1649,1169 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Số phiếu nhập kho"
         },
         {
-          value: 'date',
-          label: 'Ngày tháng',
+          "value": "date",
+          "label": "Ngày tháng"
         },
         {
-          value: 'person',
-          label: 'Nhân viên',
+          "value": "person",
+          "label": "Nhân viên"
         },
         {
-          value: 'reportDate',
-          label: 'Ngày tháng',
+          "value": "reportDate",
+          "label": "Ngày tháng"
         },
         {
-          value: 'user',
-          label: 'Nhân viên',
+          "value": "user",
+          "label": "Nhân viên"
         },
         {
-          value: 'partyUser',
-          label: 'Người phụ trách',
+          "value": "partyUser",
+          "label": "Người phụ trách"
         },
         {
-          value: 'directLeader',
-          label: 'Quản lí bên trên',
+          "value": "directLeader",
+          "label": "Quản lí bên trên"
         },
         {
-          value: 'customerShortName',
-          label: 'Tên khách hàng',
+          "value": "customerShortName",
+          "label": "Tên khách hàng"
         },
         {
-          value: 'purchaseOrderNo',
-          label: 'mã đơn đặt hàng của khách hàng',
+          "value": "purchaseOrderNo",
+          "label": "mã đơn đặt hàng của khách hàng"
         },
         {
-          value: 'poProject',
-          label: 'hạng mục đơn đặt hàng',
+          "value": "poProject",
+          "label": "hạng mục đơn đặt hàng"
         },
         {
-          value: 'saleOrderNo',
-          label: 'đơn đặt hàng',
+          "value": "saleOrderNo",
+          "label": "đơn đặt hàng"
         },
         {
-          value: 'orderProject',
-          label: 'số mục hàng',
+          "value": "orderProject",
+          "label": "số mục hàng"
         },
         {
-          value: 'eachBoxCount',
-          label: 'Số lượng mỗi thùng',
+          "value": "eachBoxCount",
+          "label": "Số lượng mỗi thùng"
         },
         {
-          value: 'boxNumber',
-          label: 'Mã thùng',
+          "value": "boxNumber",
+          "label": "Mã thùng"
         },
         {
-          value: 'volume',
-          label: 'Dài*rộng*cao',
+          "value": "volume",
+          "label": "Dài*rộng*cao"
         },
         {
-          value: 'unitWeight',
-          label: 'Trọng lượng mỗi con KG',
+          "value": "unitWeight",
+          "label": "Trọng lượng mỗi con KG"
         },
         {
-          value: 'eachBoxWeight',
-          label: 'Trọng lượng mỗi thùng',
+          "value": "eachBoxWeight",
+          "label": "Trọng lượng mỗi thùng"
         },
         {
-          value: 'orderNo',
-          label: 'Số phiếu',
+          "value": "orderNo",
+          "label": "Số phiếu"
         },
         {
-          value: 'remark',
-          label: 'chú giải',
+          "value": "remark",
+          "label": "chú giải"
         },
         {
-          value: 'photo',
-          label: 'Hình ảnh',
+          "value": "photo",
+          "label": "Hình ảnh"
         },
         {
-          value: 'photoUnit',
-          label: 'tấm',
+          "value": "photoUnit",
+          "label": "tấm"
         },
         {
-          value: 'disqualificationOrderNo',
-          label: 'Số NCR',
+          "value": "disqualificationOrderNo",
+          "label": "Số NCR"
         },
         {
-          value: 'inspector',
-          label: 'Người kiểm tra',
+          "value": "inspector",
+          "label": "Người kiểm tra"
         },
         {
-          value: 'projectSequence',
-          label: 'Hạng mục',
+          "value": "projectSequence",
+          "label": "Hạng mục"
         },
         {
-          value: 'materialDescribe',
-          label: 'Mô tả vật liệu',
+          "value": "materialDescribe",
+          "label": "Mô tả vật liệu"
         },
         {
-          value: 'roughcastDesignNumber',
-          label: 'Bản vẽ phôi',
+          "value": "roughcastDesignNumber",
+          "label": "Bản vẽ phôi"
         },
         {
-          value: 'pressureTest',
-          label: '试压',
+          "value": "procedureCountHour12",
+          "label": "Sản lượng của 12h/ con"
         },
         {
-          value: 'dealSurface',
-          label: '表面处理',
+          "value": "processManHour",
+          "label": "Thời gian/ cái"
         },
         {
-          value: 'scheduleProduce',
-          label: '是否排产',
+          "value": "onlineDate",
+          "label": "Ngày hàng lên máy SX"
         },
         {
-          value: 'promiseCompleteDate',
-          label: '承诺完成日期',
+          "value": "offlineDate",
+          "label": "Ngày SX xong"
         },
         {
-          value: 'planReformCount',
-          label: '计划加工数量',
+          "value": "delay",
+          "label": "Có quá hạn hay không"
         },
         {
-          value: 'externalProcedureRemark',
-          label: '外协工序备注',
+          "value": "processCount",
+          "label": "Số lượng đã SX"
         },
         {
-          value: 'procedureCountHour8',
-          label: '8H班产量/件',
+          "value": "procedureSketch",
+          "label": "Công đoạn gia công"
         },
         {
-          value: 'procedureCountHour12',
-          label: '12小时班产量/件',
+          "value": "surplus",
+          "label": "Còn lại"
         },
         {
-          value: 'processManHour',
-          label: '工序工时/件',
+          "value": "procedureCountHour8",
+          "label": "Sản lượng của 8h/ con"
         },
         {
-          value: 'processManHour',
-          label: '工序工时/件',
+          "value": "materialCount",
+          "label": "Số lượng lĩnh liệu"
         },
         {
-          value: 'onlineDate',
-          label: '上线时间',
+          "value": "planReformCount",
+          "label": "Kế hoạch số lượng gia công"
         },
         {
-          value: 'offlineDate',
-          label: '下线时间',
+          "value": "supplierRemark",
+          "label": "Ghi chú công đoạn nhà gia công"
         },
         {
-          value: 'delay',
-          label: '是否拖期',
+          "value": "productCountHour8",
+          "label": "Sản lượng của 8h/con"
+        }, {
+          "value": "productCountHour12",
+          "label": "Sản lượng của 12h/con"
         },
         {
-          value: 'processCount',
-          label: '已加工数量',
+          "value": "processWorkingHour",
+          "label": "Thời gian/cái"
         },
         {
-          value: 'procedureSketch',
-          label: '工序简述',
+          "value": "externalProcedureRemark",
+          "label": "Ghi chú công đoạn nhà gia công"
         },
         {
-          value: 'surplus',
-          label: '剩余',
+          "value": "designNumber",
+          "label": "Số bản vẽ"
         },
         {
-          value: 'procedureCountHour12',
-          label: 'Sản lượng của 12h/ con',
+          "value": "process",
+          "label": "Quá trình"
         },
         {
-          value: 'processManHour',
-          label: 'Thời gian/ cái',
+          "value": "disqualificationContent",
+          "label": "Nội dung của sự không phù hợp"
         },
         {
-          value: 'onlineDate',
-          label: 'Ngày hàng lên máy SX',
+          "value": "count",
+          "label": "Số lượng"
         },
         {
-          value: 'offlineDate',
-          label: 'Ngày SX xong',
+          "value": "orderUnit",
+          "label": "PCS"
         },
         {
-          value: 'delay',
-          label: 'Có quá hạn hay không',
+          "value": "checkPoint",
+          "label": "Điểm phát hiện"
         },
         {
-          value: 'processCount',
-          label: 'Số lượng đã SX',
+          "value": "dutyPerson",
+          "label": "Người chịu trách nhiệm"
         },
         {
-          value: 'procedureSketch',
-          label: 'Công đoạn gia công',
+          "value": "qualityDealOpinion",
+          "label": "Ý kiến xử lí bp chất lượng"
         },
         {
-          value: 'surplus',
-          label: 'Còn lại',
+          "value": "skillDealOpinion",
+          "label": "Ý kiến xử lí bp thiết kế"
         },
         {
-          value: 'procedureCountHour8',
-          label: 'Sản lượng của 8h/ con',
+          "value": "fineAmount",
+          "label": "Số tiền khấu trừ"
         },
         {
-          value: 'materialCount',
-          label: 'Số lượng lĩnh liệu',
+          "value": "defectType",
+          "label": "Phân loại sai lỗi"
         },
         {
-          value: 'promiseCompleteDate',
-          label: 'Ngày sản xuất chịu trách nhiệm nhập kho',
+          "value": "createDate",
+          "label": "Ngày lập"
         },
         {
-          value: 'planReformCount',
-          label: 'Kế hoạch số lượng gia công',
+          "value": "department",
+          "label": "Bộ phận"
         },
         {
-          value: 'externalProcedureRemark',
-          label: 'Ghi chú công đoạn nhà gia công',
+          "value": "optimizeType",
+          "label": "Hạng mục cần cải tiến"
         },
         {
-          value: 'designNumber',
-          label: 'Số bản vẽ',
+          "value": "existsProblem",
+          "label": "Vấn đề tồn đọng"
         },
         {
-          value: 'process',
-          label: 'Quá trình',
+          "value": "solveScheme",
+          "label": "Phương án xử lý"
         },
         {
-          value: 'disqualificationContent',
-          label: 'Nội dung của sự không phù hợp',
+          "value": "responsiblePerson",
+          "label": "Người phụ trách"
         },
         {
-          value: 'count',
-          label: 'Số lượng',
+          "value": "planCompleteTime",
+          "label": "Kế hoạch hoàn thành"
         },
         {
-          value: 'orderUnit',
-          label: 'PCS',
+          "value": "awardAmount",
+          "label": "Tiền thưởng"
         },
         {
-          value: 'checkPoint',
-          label: 'Điểm phát hiện',
+          "value": "valid",
+          "label": "Kết thúc"
         },
         {
-          value: 'dutyPerson',
-          label: 'Người chịu trách nhiệm',
+          "value": "boxFlagCard",
+          "label": "Biểu đóng thùng"
         },
         {
-          value: 'qualityDealOpinion',
-          label: 'Ý kiến xử lí bp chất lượng',
+          "value": "boxFlagId",
+          "label": "Biểu đóng thùng"
         },
         {
-          value: 'skillDealOpinion',
-          label: 'Ý kiến xử lí bp thiết kế',
+          "value": "reportManage",
+          "label": "quản lý báo cáo"
         },
         {
-          value: 'fineAmount',
-          label: 'Số tiền khấu trừ',
+          "value": "accidentReport",
+          "label": "Báo cáo sự cố"
         },
         {
-          value: 'defectType',
-          label: 'Phân loại sai lỗi',
+          "value": "accidentReportBackup",
+          "label": "Báo cáo sự cố（Backup）"
         },
         {
-          value: 'createDate',
-          label: 'Ngày lập',
+          "value": "accidentEvent",
+          "label": "An toànEHS"
         },
         {
-          value: 'department',
-          label: 'Bộ phận',
+          "value": "accidentQuality",
+          "label": "Báo cáo sự cố chất lượng"
         },
         {
-          value: 'optimizeType',
-          label: 'Hạng mục cần cải tiến',
+          "value": "accidentCrash",
+          "label": "Va đập thiết bị"
         },
         {
-          value: 'existsProblem',
-          label: 'Vấn đề tồn đọng',
+          "value": "accidentTrouble",
+          "label": "Dụng cụ đo bị hỏng"
         },
         {
-          value: 'solveScheme',
-          label: 'Phương án xử lý',
+          "value": "userRunReport",
+          "label": "Báo cáo vận hành theo ngày"
         },
         {
-          value: 'responsiblePerson',
-          label: 'Người phụ trách',
+          "value": "productQuotaManage",
+          "label": "Quản lý định mức sản phẩm"
         },
         {
-          value: 'planCompleteTime',
-          label: 'Kế hoạch hoàn thành',
+          "value": "orderManage",
+          "label": "Đơn hàng"
         },
         {
-          value: 'awardAmount',
-          label: 'Tiền thưởng',
+          "value": "deviceManage",
+          "label": "Thiết bị manage"
         },
         {
-          value: 'valid',
-          label: 'Kết thúc',
+          "value": "device",
+          "label": "Thiết bị"
         },
         {
-          value: 'boxFlagCard',
-          label: 'Biểu đóng thùng',
+          "value": "paramManage",
+          "label": "Tham số"
         },
         {
-          value: 'boxFlagId',
-          label: 'Biểu đóng thùng',
+          "value": "productManage",
+          "label": "Quản lý Sản phẩm"
         },
         {
-          value: 'reportManage',
-          label: 'quản lý báo cáo',
+          "value": "dashboard",
+          "label": "Home"
         },
         {
-          value: 'accidentReport',
-          label: 'Báo cáo sự cố',
+          "value": "forum",
+          "label": "Bạn đang nghĩ gì vậy?"
         },
         {
-          value: 'accidentReportBackup',
-          label: 'Báo cáo sự cố（Backup）',
+          "value": "agree",
+          "label": "Like"
         },
         {
-          value: 'accidentEvent',
-          label: 'An toànEHS',
+          "value": "comment",
+          "label": "Bình luận"
         },
         {
-          value: 'accidentQuality',
-          label: 'Báo cáo sự cố chất lượng',
+          "value": "delete",
+          "label": "Xóa"
         },
         {
-          value: 'accidentCrash',
-          label: 'Va đập thiết bị',
+          "value": "pleaseInputTitle",
+          "label": "Nhập tiêu đề"
         },
         {
-          value: 'accidentTrouble',
-          label: 'Dụng cụ đo bị hỏng',
+          "value": "readAll",
+          "label": "Nội dung bài đăng"
         },
         {
-          value: 'userRunReport',
-          label: 'Báo cáo vận hành theo ngày',
+          "value": "readSummary",
+          "label": "Thu gọn"
         },
         {
-          value: 'productQuotaManage',
-          label: 'Quản lý định mức sản phẩm',
+          "value": "admin",
+          "label": "Admin"
         },
         {
-          value: 'orderManage',
-          label: 'Đơn hàng',
+          "value": "processProcedure",
+          "label": "Công đoạn gia công"
         },
         {
-          value: 'deviceManage',
-          label: 'Thiết bị',
+          "value": "processType",
+          "label": "Phân loại gia công"
         },
         {
-          value: 'device',
-          label: 'Thiết bị',
+          "value": "schedule",
+          "label": "Ca loại"
         },
         {
-          value: 'paramManage',
-          label: 'Tham số',
+          "value": "userProperty",
+          "label": "Nhân viên thuộc bộ phận"
         },
         {
-          value: 'productManage',
-          label: 'Quản lý Sản phẩm',
+          "value": "workMinute",
+          "label": "Thời gian làm việc"
         },
         {
-          value: 'dashboard',
-          label: 'Home',
+          "value": "stopWorkingContent1",
+          "label": "Nội dung dừng máy 1"
         },
         {
-          value: 'forum',
-          label: 'Bạn đang nghĩ gì vậy?',
+          "value": "stopWorkingContent2",
+          "label": "Nội dung dừng máy 2"
         },
         {
-          value: 'agree',
-          label: 'Like',
+          "value": "stopWorkingContent3",
+          "label": "Nội dung dừng máy 3"
         },
         {
-          value: 'comment',
-          label: 'Bình luận',
+          "value": "accidentType",
+          "label": "Loại hình báo cáo"
         },
         {
-          value: 'delete',
-          label: 'Xóa',
+          "value": "most",
+          "label": "Nhiều nhất"
         },
         {
-          value: 'pleaseInputTitle',
-          label: 'Nhập tiêu đề',
+          "value": "mostFourPhoto",
+          "label": "Hình ảnh (Nhiều nhất 4 tấm)"
         },
         {
-          value: 'readAll',
-          label: 'Nội dung bài đăng',
+          "value": "mostThreePhoto",
+          "label": "Hình ảnh (Nhiều nhất 3 tấm)"
         },
         {
-          value: 'readSummary',
-          label: 'Thu gọn',
+          "value": "mostFourFile",
+          "label": "Hình ảnh (Nhiều nhất 4)"
         },
         {
-          value: 'admin',
-          label: 'Admin',
+          "value": "systemManage",
+          "label": "Quản lý hệ thống"
         },
         {
-          value: 'processProcedure',
-          label: 'Công đoạn gia công',
+          "value": "userManage",
+          "label": "Người quản trị"
         },
         {
-          value: 'processType',
-          label: 'Phân loại gia công',
+          "value": "workShop",
+          "label": "Xưởng SX"
         },
         {
-          value: 'schedule',
-          label: 'Ca loại',
+          "value": "office",
+          "label": "Văn phòng"
         },
         {
-          value: 'userProperty',
-          label: 'Nhân viên thuộc bộ phận',
+          "value": "total",
+          "label": "total"
         },
         {
-          value: 'workMinute',
-          label: 'Thời gian làm việc',
+          "value": "scheduleNull",
+          "label": "-"
         },
         {
-          value: 'stopWorkingContent1',
-          label: 'Nội dung dừng máy 1',
+          "value": "scheduleDayTime",
+          "label": "Ca ngày"
         },
         {
-          value: 'stopWorkingContent2',
-          label: 'Nội dung dừng máy 2',
+          "value": "scheduleDayTime12",
+          "label": "Ca ngày 12H"
         },
         {
-          value: 'stopWorkingContent3',
-          label: 'Nội dung dừng máy 3',
+          "value": "scheduleEvening",
+          "label": "Ca đêm"
         },
         {
-          value: 'accidentType',
-          label: 'Loại hình báo cáo',
+          "value": "scheduleEvening12",
+          "label": "Ca đêm 12H"
         },
         {
-          value: 'most',
-          label: 'Nhiều nhất',
+          "value": "scheduleMiddle",
+          "label": "Ca hai"
         },
         {
-          value: 'mostFourPhoto',
-          label: 'Hình ảnh (Nhiều nhất 4 tấm)',
+          "value": "departmentAndSchedule",
+          "label": "Bộ phận và Ca loại"
         },
         {
-          value: 'mostThreePhoto',
-          label: 'Hình ảnh (Nhiều nhất 3 tấm)',
+          "value": "accountManage",
+          "label": "Thành viên"
         },
         {
-          value: 'mostFourFile',
-          label: 'Hình ảnh (Nhiều nhất 4)',
+          "value": "disqualificationOrder",
+          "label": "Số NCR"
         },
         {
-          value: 'systemManage',
-          label: 'Quản lý hệ thống',
+          "value": "keepImprove",
+          "label": "Cải thiện sai lệch"
         },
         {
-          value: 'userManage',
-          label: 'Người quản trị',
+          "value": "disqualificationOrderId",
+          "label": "Số NCR ID"
         },
         {
-          value: 'workShop',
-          label: 'Xưởng SX',
+          "value": "beforePlanThreePhoto",
+          "label": "3 tấm ảnh trước khi cải tiến"
         },
         {
-          value: 'office',
-          label: 'Văn phòng',
+          "value": "afterPlanThreePhoto",
+          "label": "3 tấm Hình ảnh sau khi cải tiến"
         },
         {
-          value: 'total',
-          label: 'total',
+          "value": "supportAttachment",
+          "label": "Nơi lưu trữ văn kiện"
         },
         {
-          value: 'scheduleNull',
-          label: '-',
+          "value": "attachment",
+          "label": "Nơi lưu trữ văn kiện"
         },
         {
-          value: 'scheduleDayTime',
-          label: 'Ca ngày',
+          "value": "profession",
+          "label": "chức vụ"
         },
         {
-          value: 'scheduleDayTime12',
-          label: 'Ca ngày 12H',
+          "value": "productInfo",
+          "label": "Thông tin sản phẩm"
         },
         {
-          value: 'scheduleEvening',
-          label: 'Ca đêm',
+          "value": "disqualificationInfo",
+          "label": "Thông tin sản phẩm không hợp lệ"
         },
         {
-          value: 'scheduleEvening12',
-          label: 'Ca đêm 12H',
+          "value": "dealOpinion",
+          "label": "Ý kiến xử lý"
         },
         {
-          value: 'scheduleMiddle',
-          label: 'Ca hai',
+          "value": "username",
+          "label": "người sử dụng"
         },
         {
-          value: 'departmentAndSchedule',
-          label: 'Bộ phận và Ca loại',
+          "value": "computerName",
+          "label": "Tên thiết bị"
         },
         {
-          value: 'accountManage',
-          label: 'Thành viên',
+          "value": "companyPosition",
+          "label": "Vị trí"
         },
         {
-          value: 'disqualificationOrder',
-          label: 'Số NCR',
+          "value": "computerManage",
+          "label": "Mẫu theo dõi máy tính"
         },
         {
-          value: 'keepImprove',
-          label: 'Cải thiện sai lệch',
+          "value": "brand",
+          "label": "Thương hiệu"
         },
         {
-          value: 'disqualificationOrderId',
-          label: 'Số NCR ID',
+          "value": "computerModel",
+          "label": "Model thiết bị"
         },
         {
-          value: 'beforePlanThreePhoto',
-          label: '3 tấm ảnh trước khi cải tiến',
+          "value": "position",
+          "label": "Vị trí"
         },
         {
-          value: 'afterPlanThreePhoto',
-          label: '3 tấm Hình ảnh sau khi cải tiến',
+          "value": "storageDate",
+          "label": "Ngày nhập kho"
         },
         {
-          value: 'supportAttachment',
-          label: 'Nơi lưu trữ văn kiện',
+          "value": "computerState",
+          "label": "IT device status"
         },
         {
-          value: 'attachment',
-          label: 'Nơi lưu trữ văn kiện',
+          "value": "detailed",
+          "label": "Có hoặc không có HĐ"
         },
         {
-          value: 'profession',
-          label: 'chức vụ',
+          "value": "productPlace",
+          "label": "Xuất xứ"
         },
         {
-          value: 'productInfo',
-          label: 'Thông tin sản phẩm',
+          "value": "supplier",
+          "label": "Nhà cung cấp"
         },
         {
-          value: 'disqualificationInfo',
-          label: 'Thông tin sản phẩm không hợp lệ',
+          "value": "state",
+          "label": "tình trạng"
         },
         {
-          value: 'dealOpinion',
-          label: 'Ý kiến xử lý',
+          "value": "name",
+          "label": "tên gọi"
         },
         {
-          value: 'username',
-          label: 'người sử dụng',
+          "value": "chineseName",
+          "label": "Tên trung quốc "
         },
         {
-          value: 'computerName',
-          label: 'Tên thiết bị',
+          "value": "mobile",
+          "label": "SDT"
         },
         {
-          value: 'companyPosition',
-          label: 'Vị trí',
+          "value": "role",
+          "label": "vai trò"
         },
         {
-          value: 'computerManage',
-          label: 'Mẫu theo dõi máy tính',
+          "value": "operator",
+          "label": "thao tác "
         },
         {
-          value: 'brand',
-          label: 'Thương hiệu',
+          "value": "viewAndEdit",
+          "label": "Tùy chỉnh xem trước"
         },
         {
-          value: 'computerModel',
-          label: 'Model thiết bị',
+          "value": "index",
+          "label": "STT"
         },
         {
-          value: 'position',
-          label: 'Vị trí',
+          "value": "portrait",
+          "label": "Portrait"
         },
         {
-          value: 'storageDate',
-          label: 'Ngày nhập kho',
+          "value": "leaveCompany",
+          "label": "nghỉ việc"
         },
         {
-          value: 'computerState',
-          label: 'IT device status',
+          "value": "normal",
+          "label": "bình thường"
         },
         {
-          value: 'detailed',
-          label: 'Có hoặc không có HĐ',
+          "value": "testDevice",
+          "label": "Điểu chỉnh máy số"
         },
         {
-          value: 'productPlace',
-          label: 'Xuất xứ',
+          "value": "deviceNumber",
+          "label": "Mã máy"
         },
         {
-          value: 'supplier',
-          label: 'Nhà cung cấp',
+          "value": "deviceCheckLedgerState",
+          "label": "Sổ nhật ký thiết bị thí nghiệm tình trạng"
         },
         {
-          value: 'state',
-          label: 'tình trạng',
+          "value": "assetManage",
+          "label": "Quản lí tài sản"
         },
         {
-          value: 'name',
-          label: 'tên gọi',
+          "value": "deviceCheckLedger",
+          "label": "Sổ nhật ký thiết bị thí nghiệm"
         },
         {
-          value: 'chineseName',
-          label: 'Tên trung quốc ',
+          "value": "equipmentNo",
+          "label": "Mã thiết bị"
         },
         {
-          value: 'mobile',
-          label: 'SDT',
+          "value": "chineseVietnamName",
+          "label": "Tên trung quốc"
         },
         {
-          value: 'role',
-          label: 'vai trò',
+          "value": "englishName",
+          "label": "Tên tiếng anh"
         },
         {
-          value: 'operator',
-          label: 'thao tác ',
+          "value": "specification",
+          "label": "Quy phạm"
         },
         {
-          value: 'viewAndEdit',
-          label: 'Tùy chỉnh xem trước',
+          "value": "calibrationUnit",
+          "label": "Đơn vị hiệu chuẩn"
         },
         {
-          value: 'index',
-          label: 'STT',
+          "value": "calibrationDate",
+          "label": "Ngày hiệu chuẩn"
         },
         {
-          value: 'portrait',
-          label: 'Portrait',
+          "value": "dueDate",
+          "label": "Ngày hết hạn"
         },
         {
-          value: 'leaveCompany',
-          label: 'nghỉ việc',
+          "value": "calibrationPeriod",
+          "label": "Chu kì hiệu chuẩn（ngày）"
         },
         {
-          value: 'normal',
-          label: 'bình thường',
+          "value": "manufacturers",
+          "label": "Nhà sản xuất"
         },
         {
-          value: 'testDevice',
-          label: 'Điểu chỉnh máy số',
+          "value": "acceptanceStandard",
+          "label": "Tiêu chuẩn chấp nhận"
         },
         {
-          value: 'deviceNumber',
-          label: 'Mã máy',
+          "value": "storage",
+          "label": "Khu vực lưu trữ"
         },
         {
-          value: 'deviceCheckLedgerState',
-          label: 'Sổ nhật ký thiết bị thí nghiệm tình trạng',
+          "value": "outOfStock",
+          "label": "Đã rời kho"
         },
         {
-          value: 'assetManage',
-          label: 'Quản lí tài sản',
+          "value": "borrower",
+          "label": "Người mượn"
         },
         {
-          value: 'deviceCheckLedger',
-          label: 'Sổ nhật ký thiết bị thí nghiệm',
+          "value": "borrowDate",
+          "label": "Ngày mượn"
         },
         {
-          value: 'equipmentNo',
-          label: 'Mã thiết bị',
+          "value": "clampingMinute",
+          "label": "Thời gian gá/phút"
         },
         {
-          value: 'chineseVietnamName',
-          label: 'Tên trung quốc',
+          "value": "assistMinute",
+          "label": "Thời gian hỗ trợ/phút"
         },
         {
-          value: 'englishName',
-          label: 'Tên tiếng anh',
+          "value": "runningMinute",
+          "label": "Thời gian vận hành chương trình/phút"
         },
         {
-          value: 'specification',
-          label: 'Quy phạm',
+          "value": "productStandMinute",
+          "label": "Tiêu chuẩn công thức sản phẩm"
         },
         {
-          value: 'calibrationUnit',
-          label: 'Đơn vị hiệu chuẩn',
+          "value": "shouldCompleteCount",
+          "label": "Định mức sản lượng ca"
         },
         {
-          value: 'calibrationDate',
-          label: 'Ngày hiệu chuẩn',
+          "value": "orderProjectNo",
+          "label": "Số hạng mục đơn hàng"
         },
         {
-          value: 'dueDate',
-          label: 'Ngày hết hạn',
+          "value": "roughcastExpireDate",
+          "label": "Ngày phôi về"
         },
         {
-          value: 'calibrationPeriod',
-          label: 'Chu kì hiệu chuẩn（ngày）',
+          "value": "actualCompleteCount",
+          "label": "Định mức số lượng hoàn thành ca"
         },
         {
-          value: 'manufacturers',
-          label: 'Nhà sản xuất',
+          "value": "completeMinute",
+          "label": "Số giờ hoàn thành"
         },
         {
-          value: 'acceptanceStandard',
-          label: 'Tiêu chuẩn chấp nhận',
+          "value": "leaderSubsidyMinute",
+          "label": "Số giờ trợ cấp chủ quản"
         },
         {
-          value: 'storage',
-          label: 'Khu vực lưu trữ',
+          "value": "deviceCompletePercent",
+          "label": "Hiệu suất ca /%"
         },
         {
-          value: 'outOfStock',
-          label: 'Đã rời kho',
+          "value": "clientIp",
+          "label": "Client IP"
         },
         {
-          value: 'borrower',
-          label: 'Người mượn',
+          "value": "signInTime",
+          "label": "Sign in time"
         },
         {
-          value: 'borrowDate',
-          label: 'Ngày mượn',
+          "value": "isSuccess",
+          "label": "Is success"
         },
         {
-          value: 'clampingMinute',
-          label: 'Thời gian gá/phút',
+          "value": "errorMessage",
+          "label": "Error message"
         },
         {
-          value: 'assistMinute',
-          label: 'Thời gian hỗ trợ/phút',
+          "value": "deviceUnitPrice",
+          "label": "Đơn giá số giờ thiết bị"
         },
         {
-          value: 'runningMinute',
-          label: 'Thời gian vận hành chương trình/phút',
+          "value": "salary",
+          "label": "Thành tiền hiệu suất ca"
         },
         {
-          value: 'productStandMinute',
-          label: 'Tiêu chuẩn công thức sản phẩm',
+          "value": "deviceRunningTime",
+          "label": "Thời gian bắt đầu vận hành máy lúc làm"
         },
         {
-          value: 'shouldCompleteCount',
-          label: 'Định mức sản lượng ca',
+          "value": "deviceUsePercent",
+          "label": "Tỷ lệ % hiệu suất máy ca%"
         },
         {
-          value: 'orderProjectNo',
-          label: 'Số hạng mục đơn hàng',
+          "value": "stopWorkingMinute1",
+          "label": "Time dừng 1"
         },
         {
-          value: 'roughcastExpireDate',
-          label: 'Ngày phôi về',
+          "value": "stopWorkingMinute2",
+          "label": "Time dừng 2"
         },
         {
-          value: 'actualCompleteCount',
-          label: 'Định mức số lượng hoàn thành ca',
+          "value": "stopWorkingMinute3",
+          "label": "Time dừng 3"
         },
         {
-          value: 'completeMinute',
-          label: 'Số giờ hoàn thành',
+          "value": "improveSuggestion",
+          "label": "Đề xuất cải tiến hàng ngày ( Không hoàn thành từ 85% )"
         },
         {
-          value: 'leaderSubsidyMinute',
-          label: 'Số giờ trợ cấp chủ quản',
+          "value": "programNumber",
+          "label": "số chương trình"
         },
         {
-          value: 'deviceCompletePercent',
-          label: 'Hiệu suất ca /%',
+          "value": "debugMinute",
+          "label": "thời gian set hàng/phút"
         },
         {
-          value: 'clientIp',
-          label: 'Client IP',
+          "value": "countHour8",
+          "label": "Số lượng sản phẩm gia công trong 8h/ 435"
         },
         {
-          value: 'signInTime',
-          label: 'Sign in time',
+          "value": "countHour12",
+          "label": "Số lượng sản phẩm gia công trong 12h/ 585"
         },
         {
-          value: 'isSuccess',
-          label: 'Is success',
+          "value": "productId",
+          "label": "Product ID"
         },
         {
-          value: 'errorMessage',
-          label: 'Error message',
+          "value": "openId",
+          "label": "Open ID"
         },
         {
-          value: 'deviceUnitPrice',
-          label: 'Đơn giá số giờ thiết bị',
+          "value": "password",
+          "label": "Password"
         },
         {
-          value: 'salary',
-          label: 'Thành tiền hiệu suất ca',
+          "value": "normalInfo",
+          "label": "Thông tin chung"
         },
         {
-          value: 'deviceRunningTime',
-          label: 'Thời gian bắt đầu vận hành máy lúc làm',
+          "value": "groupLeader",
+          "label": "Tổ trưởng"
         },
         {
-          value: 'deviceUsePercent',
-          label: 'Tỷ lệ % hiệu suất máy ca%',
+          "value": "chargePerson",
+          "label": "Chủ quản BP"
         },
         {
-          value: 'stopWorkingMinute1',
-          label: 'Time dừng 1',
+          "value": "manager",
+          "label": "Giám đốc BP"
         },
         {
-          value: 'stopWorkingMinute2',
-          label: 'Time dừng 2',
+          "value": "devicePhoto",
+          "label": "Máy ( Thiết bị & công cụ )"
         },
         {
-          value: 'stopWorkingMinute3',
-          label: 'Time dừng 3',
+          "value": "deviceDescribe",
+          "label": "Máy ( Thiết bị & công cụ )"
         },
         {
-          value: 'improveSuggestion',
-          label: 'Đề xuất cải tiến hàng ngày ( Không hoàn thành từ 85% )',
+          "value": "toolDescribe",
+          "label": "Tool describe"
         },
         {
-          value: 'programNumber',
-          label: 'số chương trình',
+          "value": "designNumberPhoto",
+          "label": "Số bản vẽ"
         },
         {
-          value: 'debugMinute',
-          label: 'thời gian set hàng/phút',
+          "value": "designNumberDescribe",
+          "label": "Số bản vẽ"
         },
         {
-          value: 'countHour8',
-          label: 'Số lượng sản phẩm gia công trong 8h/ 435',
+          "value": "productWeight",
+          "label": "Trọng lượng sản phẩm"
         },
         {
-          value: 'countHour12',
-          label: 'Số lượng sản phẩm gia công trong 12h/ 585',
+          "value": "accidentDescribe",
+          "label": "Tóm tắt sự cố"
         },
         {
-          value: 'productId',
-          label: 'Product ID',
+          "value": "accidentEventDescribe",
+          "label": "Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản"
         },
         {
-          value: 'openId',
-          label: 'Open ID',
+          "value": "accidentQualityDescribe",
+          "label": "Tóm tắt sự cố，Tình trạng tổn thất tài sản"
         },
         {
-          value: 'password',
-          label: 'Password',
+          "value": "accidentImproveDescribe",
+          "label": "Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản"
         },
         {
-          value: 'normalInfo',
-          label: 'Thông tin chung',
+          "value": "accidentImproveDescribe",
+          "label": "Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản"
         },
         {
-          value: 'groupLeader',
-          label: 'Tổ trưởng',
+          "value": "sceneAndAccidentDescribe",
+          "label": "Tóm tắt sơ bộ hiện trường và sự cố"
         },
         {
-          value: 'chargePerson',
-          label: 'Chủ quản BP',
+          "value": "video",
+          "label": "Video"
         },
         {
-          value: 'manager',
-          label: 'Giám đốc BP',
+          "value": "damagePhotoList",
+          "label": "Tình trạng người bị thương"
         },
         {
-          value: 'devicePhoto',
-          label: 'Máy ( Thiết bị & công cụ )',
+          "value": "damageDescribe",
+          "label": "Tình trạng người bị thương"
         },
         {
-          value: 'deviceDescribe',
-          label: 'Máy ( Thiết bị & công cụ )',
+          "value": "propertyLossDescribe",
+          "label": "Tình trạng tổn thất tài sản"
         },
         {
-          value: 'toolDescribe',
-          label: 'Tool describe',
+          "value": "propertyLossPhotoList",
+          "label": "Tình trạng tổn thất tài sản"
         },
         {
-          value: 'designNumberPhoto',
-          label: 'Số bản vẽ',
+          "value": "humanFactorReason",
+          "label": "Phân tích nguyên nhân"
         },
         {
-          value: 'designNumberDescribe',
-          label: 'Số bản vẽ',
+          "value": "eventReason",
+          "label": "EHS Phân tích nguyên nhân"
         },
         {
-          value: 'productWeight',
-          label: 'Trọng lượng sản phẩm',
+          "value": "qualityReason",
+          "label": "Phân tích nguyên nhân"
         },
         {
-          value: 'accidentDescribe',
-          label: 'Tóm tắt sự cố',
+          "value": "crashReason",
+          "label": "Phân tích nguyên nhân（Va đập thiết bị）"
         },
         {
-          value: 'accidentEventDescribe',
-          label: 'Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản',
+          "value": "troubleReason",
+          "label": "Phân tích nguyên nhân（Dụng cụ đo bị hỏng）"
         },
         {
-          value: 'accidentQualityDescribe',
-          label: 'Tóm tắt sự cố，Tình trạng tổn thất tài sản',
+          "value": "improveReason",
+          "label": "Phân tích nguyên nhân"
         },
         {
-          value: 'accidentImproveDescribe',
-          label: 'Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản',
+          "value": "humanFactorSolve",
+          "label": "Giải pháp xử lý"
         },
         {
-          value: 'accidentImproveDescribe',
-          label: 'Tóm tắt sự cố，Tình trạng người bị thương，Tình trạng tổn thất tài sản',
+          "value": "eventSolve",
+          "label": "Giải pháp xử lý"
         },
         {
-          value: 'sceneAndAccidentDescribe',
-          label: 'Tóm tắt sơ bộ hiện trường và sự cố',
+          "value": "qualitySolve",
+          "label": "Giải pháp xử lý"
         },
         {
-          value: 'video',
-          label: 'Video',
+          "value": "improveSolve",
+          "label": "Giải pháp xử lý"
         },
         {
-          value: 'damagePhotoList',
-          label: 'Tình trạng người bị thương',
+          "value": "improveDescribe",
+          "label": "chi tiết sau khi cải thiện"
         },
         {
-          value: 'damageDescribe',
-          label: 'Tình trạng người bị thương',
+          "value": "eventOpinion",
+          "label": "Đề xuất Thưởng Phạt"
         },
         {
-          value: 'propertyLossDescribe',
-          label: 'Tình trạng tổn thất tài sản',
+          "value": "qualityOpinion",
+          "label": "Đề xuất Thưởng Phạt"
         },
         {
-          value: 'propertyLossPhotoList',
-          label: 'Tình trạng tổn thất tài sản',
+          "value": "improveOpinion",
+          "label": "Đề xuất Thưởng Phạt"
         },
         {
-          value: 'humanFactorReason',
-          label: 'Phân tích nguyên nhân',
+          "value": "eventPhoto",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'eventReason',
-          label: 'EHS Phân tích nguyên nhân',
+          "value": "qualityPhoto",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'qualityReason',
-          label: 'Phân tích nguyên nhân',
+          "value": "improvePhoto",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'crashReason',
-          label: 'Phân tích nguyên nhân（Va đập thiết bị）',
+          "value": "eventFile",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'troubleReason',
-          label: 'Phân tích nguyên nhân（Dụng cụ đo bị hỏng）',
+          "value": "qualityFile",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'improveReason',
-          label: 'Phân tích nguyên nhân',
+          "value": "improveFile",
+          "label": "Ảnh vấn đề minh hoạ"
         },
         {
-          value: 'humanFactorSolve',
-          label: 'Giải pháp xử lý',
+          "value": "improveEventPhoto",
+          "label": "hỉnh ảnh sau khi cải thiện"
         },
         {
-          value: 'eventSolve',
-          label: 'Giải pháp xử lý',
+          "value": "improveQualityPhoto",
+          "label": "hỉnh ảnh sau khi cải thiện"
         },
         {
-          value: 'qualitySolve',
-          label: 'Giải pháp xử lý',
+          "value": "improveImprovePhoto",
+          "label": "hỉnh ảnh sau khi cải thiện"
         },
         {
-          value: 'improveSolve',
-          label: 'Giải pháp xử lý',
+          "value": "improveEventFile",
+          "label": "văn kiện sau khi cải thiện"
         },
         {
-          value: 'improveDescribe',
-          label: 'chi tiết sau khi cải thiện',
+          "value": "improveQualityFile",
+          "label": "văn kiện sau khi cải thiện"
         },
         {
-          value: 'eventOpinion',
-          label: 'Đề xuất Thưởng Phạt',
+          "value": "improveImproveFile",
+          "label": "văn kiện sau khi cải thiện"
         },
         {
-          value: 'qualityOpinion',
-          label: 'Đề xuất Thưởng Phạt',
+          "value": "awardOption",
+          "label": "Đề xuất Thưởng Phạt"
         },
         {
-          value: 'improveOpinion',
-          label: 'Đề xuất Thưởng Phạt',
+          "value": "dutyPerson1",
+          "label": "Người phụ trách 1"
         },
         {
-          value: 'eventPhoto',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "fineAmount1",
+          "label": "Số tiền 1"
         },
         {
-          value: 'qualityPhoto',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "dutyPerson2",
+          "label": "Người phụ trách 2"
         },
         {
-          value: 'improvePhoto',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "fineAmount2",
+          "label": "Số tiền 2"
         },
         {
-          value: 'eventFile',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "dutyPerson3",
+          "label": "Người phụ trách 3"
         },
         {
-          value: 'qualityFile',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "fineAmount3",
+          "label": "Số tiền 3"
         },
         {
-          value: 'improveFile',
-          label: 'Ảnh vấn đề minh hoạ',
+          "value": "preventAndTracePlan",
+          "label": "Giám sát quá trình phòng ngừa"
         },
         {
-          value: 'improveEventPhoto',
-          label: 'hỉnh ảnh sau khi cải thiện',
+          "value": "improveEvidencePhotoList",
+          "label": "Sau cái tiến"
         },
         {
-          value: 'improveQualityPhoto',
-          label: 'hỉnh ảnh sau khi cải thiện',
+          "value": "improveEvidenceDescribe",
+          "label": "Sau cái tiến"
         },
         {
-          value: 'improveImprovePhoto',
-          label: 'hỉnh ảnh sau khi cải thiện',
+          "value": "interviewResume",
+          "label": "Interview resume"
         },
         {
-          value: 'improveEventFile',
-          label: 'văn kiện sau khi cải thiện',
+          "value": "signInHistory",
+          "label": "Sign In History"
         },
         {
-          value: 'improveQualityFile',
-          label: 'văn kiện sau khi cải thiện',
+          "value": "productMachine",
+          "label": "thiết bị sản xuất"
         },
         {
-          value: 'improveImproveFile',
-          label: 'văn kiện sau khi cải thiện',
+          "value": "machineEquipment",
+          "label": "Danh sách máy móc sản xuất"
         },
         {
-          value: 'awardOption',
-          label: 'Đề xuất Thưởng Phạt',
+          "value": "machineMaintainRepair",
+          "label": "Lịch sử bảo trì thiết bị sản xuất"
         },
         {
-          value: 'dutyPerson1',
-          label: 'Người phụ trách 1',
+          "value": "equipmentNo",
+          "label": "Mã máy"
         },
         {
-          value: 'fineAmount1',
-          label: 'Số tiền 1',
+          "value": "accidentImprove",
+          "label": "Sự cố về công cụ dụng cụ , quy trình công nghệ"
         },
         {
-          value: 'dutyPerson2',
-          label: 'Người phụ trách 2',
+          "value": "accidentImproveReason",
+          "label": "Phân tích sự cố dao cụ"
         },
         {
-          value: 'fineAmount2',
-          label: 'Số tiền 2',
+          "value": "equipmentPosition",
+          "label": "Vị trí"
         },
         {
-          value: 'dutyPerson3',
-          label: 'Người phụ trách 3',
+          "value": "equipmentId",
+          "label": "Equipment ID"
         },
         {
-          value: 'fineAmount3',
-          label: 'Số tiền 3',
+          "value": "equipmentName",
+          "label": "Tên máy móc"
         },
         {
-          value: 'preventAndTracePlan',
-          label: 'Giám sát quá trình phòng ngừa',
+          "value": "specification",
+          "label": "Quy cách"
         },
         {
-          value: 'improveEvidencePhotoList',
-          label: 'Sau cái tiến',
+          "value": "useUser",
+          "label": "Người sử dụng"
         },
         {
-          value: 'improveEvidenceDescribe',
-          label: 'Sau cái tiến',
+          "value": "equipmentDetailDescribe",
+          "label": "Mô tả chi tiết thiết bị"
         },
         {
-          value: 'interviewResume',
-          label: 'Interview resume',
+          "value": "gasolineType",
+          "label": "Loại dầu thêm vào thiết bị"
         },
         {
-          value: 'signInHistory',
-          label: 'Sign In History',
+          "value": "chargeUser",
+          "label": "Người sử dụng"
         },
         {
-          value: 'productMachine',
-          label: 'thiết bị sản xuất',
+          "value": "brokenReason",
+          "label": "Lý do lỗi"
         },
         {
-          value: 'machineEquipment',
-          label: 'Danh sách máy móc sản xuất',
+          "value": "brokenContent",
+          "label": "Nội dung lỗi"
         },
         {
-          value: 'machineMaintainRepair',
-          label: 'Lịch sử bảo trì thiết bị sản xuất',
+          "value": "repairContent",
+          "label": "Nội dung sửa chữa"
         },
         {
-          value: 'equipmentNo',
-          label: 'Mã máy',
+          "value": "replacePair",
+          "label": "Phụ kiện thay thế"
         },
         {
-          value: 'accidentImprove',
-          label: 'Sự cố về công cụ dụng cụ , quy trình công nghệ',
+          "value": "repairType",
+          "label": "Loại sửa chữa"
         },
         {
-          value: 'accidentImproveReason',
-          label: 'Phân tích sự cố dao cụ',
+          "value": "sendCount",
+          "label": "Số lương đã xuất"
         },
         {
-          value: 'equipmentPosition',
-          label: 'Vị trí',
+          "value": "sendDate",
+          "label": "Ngày xuất"
         },
         {
-          value: 'equipmentId',
-          label: 'Equipment ID',
+          "value": "photoCount",
+          "label": "Photo count"
         },
         {
-          value: 'equipmentName',
-          label: 'Tên máy móc',
+          "value": "vocationRecord",
+          "label": "Ghi chú xin nghỉ"
         },
         {
-          value: 'specification',
-          label: 'Quy cách',
+          "value": "vocationSummary",
+          "label": "Phân tích báo cáo xin nghỉ"
         },
         {
-          value: 'useUser',
-          label: 'Người sử dụng',
+          "value": "vocationType",
+          "label": "Phân loại xin nghỉ"
         },
         {
-          value: 'equipmentDetailDescribe',
-          label: 'Mô tả chi tiết thiết bị',
+          "value": "vocationDate",
+          "label": "Ngày xin nghỉ"
         },
         {
-          value: 'gasolineType',
-          label: 'Loại dầu thêm vào thiết bị',
+          "value": "vocationUser",
+          "label": "Người xin nghỉ"
         },
         {
-          value: 'chargeUser',
-          label: 'Người sử dụng',
+          "value": "vocationChargeUser",
+          "label": "Chủ quản ca"
         },
         {
-          value: 'brokenReason',
-          label: 'Lý do lỗi',
+          "value": "vocationStartDate",
+          "label": "Ngày bắt đầu nghỉ"
         },
         {
-          value: 'brokenContent',
-          label: 'Nội dung lỗi',
+          "value": "vocationEndDate",
+          "label": "Ngày kết thúc"
         },
         {
-          value: 'repairContent',
-          label: 'Nội dung sửa chữa',
+          "value": "vocationReason",
+          "label": " Lý do"
         },
         {
-          value: 'replacePair',
-          label: 'Phụ kiện thay thế',
+          "value": "vocationDays",
+          "label": " Tổng số  ngày nghỉ"
         },
         {
-          value: 'repairType',
-          label: 'Loại sửa chữa',
+          "value": "vocationCompliance",
+          "label": "Hợp lệ/ Không hợp lệ"
         },
         {
-          value: 'sendCount',
-          label: 'Số lương đã xuất',
+          "value": "violationReason",
+          "label": "Lý do nghỉ không hợp lệ"
         },
         {
-          value: 'sendDate',
-          label: 'Ngày xuất',
+          "value": "violationUserCount",
+          "label": "Số lần xin nghỉ"
         },
         {
-          value: 'photoCount',
-          label: 'Photo count',
+          "value": "violationViolationCount",
+          "label": "không hợp lệ "
         },
         {
-          value: 'vocationRecord',
-          label: 'Ghi chú xin nghỉ',
-        },
-        {
-          value: 'vocationSummary',
-          label: 'Phân tích báo cáo xin nghỉ',
-        },
-        {
-          value: 'vocationType',
-          label: 'Phân loại xin nghỉ',
-        },
-        {
-          value: 'vocationDate',
-          label: 'Ngày xin nghỉ',
-        },
-        {
-          value: 'vocationUser',
-          label: 'Người xin nghỉ',
-        },
-        {
-          value: 'vocationChargeUser',
-          label: 'Chủ quản ca',
-        },
-        {
-          value: 'vocationStartDate',
-          label: 'Ngày bắt đầu nghỉ',
-        },
-        {
-          value: 'vocationEndDate',
-          label: 'Ngày kết thúc',
-        },
-        {
-          value: 'vocationReason',
-          label: ' Lý do',
-        },
-        {
-          value: 'vocationDays',
-          label: ' Tổng số  ngày nghỉ',
-        },
-        {
-          value: 'vocationCompliance',
-          label: 'Hợp lệ/ Không hợp lệ',
-        },
-        {
-          value: 'violationReason',
-          label: 'Lý do nghỉ không hợp lệ',
-        },
-        {
-          value: 'violationUserCount',
-          label: 'Số lần xin nghỉ',
-        },
-        {
-          value: 'violationViolationCount',
-          label: 'không hợp lệ ',
-        },
-        {
-          value: 'violationComplianceRate',
-          label: 'Tỷ lệ hợp lệ',
-        },
-      ]
+          "value": "violationComplianceRate",
+          "label": "Tỷ lệ hợp lệ"
+        }
+      ],
     },
     CHS: Label = {},
     THA: Label = {}
@@ -2739,7 +2830,7 @@ MULTIPLE_TEXT_LIST['CHS|THA'] = (MULTIPLE_TEXT_LIST['CHS'] || []).map((t: Text) 
 })
 
 
-export const printMultipleText = (str: string): string => {
+export const printMultipleText = (str: string, split: stirng = ''): string => {
   let entityString = ''
   let defaultFormData = ''
   let columnConfigString = '{value: \'expand\', label: \'\', width: 48, type: ValueType.Expand,},\n' +
@@ -2750,15 +2841,32 @@ export const printMultipleText = (str: string): string => {
     'CHS': [],
     'THA': [],
   }
-  const arr = str.split('\n')
-  const chsArr = arr[0].split('\t')
-  const thaArr = arr[1].split('\t')
+  let chsArr = []
+  let thaArr = []
+  if (split) {
+    const arr = str.split('\t')
+    for (let i = 0; i < arr.length; i++) {
+      const a = arr[i] || ''
+      const index = a.indexOf(split)
+      if (index > -1) {
+        chsArr[i] = a.substring(0, index)
+        thaArr[i] = a.substring(index + 1)
+      } else {
+        chsArr[i] = a
+        thaArr[i] = ''
+      }
+    }
+  } else {
+    const arr = str.split('\n')
+    chsArr = arr[0].split('\t')
+    thaArr = arr[1].split('\t')
+  }
   for (let i = 0; i < chsArr.length; i++) {
     const chs = chsArr[i]
     const tha = thaArr[i]
     const arr = MULTIPLE_TEXT_LIST['CHS'].filter(t => chs === t.label)
     const arr1 = MULTIPLE_TEXT_LIST['THA'].filter(t => tha === t.label)
-    const key = arr.length > 0 && arr1.length > 0 && arr[0].value === arr1[0].value ? arr[0].value : ''
+    const key = arr.length > 0 && arr1.length > 0 && arr1.filter(k => k.value === arr[0].value).length > 0 ? arr[0].value : ''
     if (key) {
       columnConfigString += ('{value: \'' + key + '\', labelKey: \'' + key + '\', width: 189},\n')
       formString += ('        <el-form-item prop="' + key + '" :label="store.state.label.' + key + '">\n' +
@@ -2794,6 +2902,7 @@ export const printMultipleText = (str: string): string => {
 
 // printMultipleText('客户简称\t客户订单号\t客户项次号\t销售订单号\t订单项目号\t物料号\t加工物料描述\t图号\t订单数量\t投产日期\t承诺交期\t毛坯物料号\t毛坯物料描述\t毛坯图号\t领料数量\t炉号\t热批号\t序列号\t欠交数量\tNDE\t装配\t试压\t表面处理\t负责单位\t备注\t排产数量\t排产日期\t领料单号\t报检单号\n' +
 //     'Tên khách hàng\tĐơn đặt hàng khách hàng\t Số hạng mục khách hàng\tĐơn đặt hàng\tSố hạng mục đơn hàng\tMã vật liệu\tMô tả vật liệu\tBản vẽ\tSố lượng đơn hàng\tNgày sản xuất\tNgày sản xuất chịu trách nhiệm nhập kho\tMã vật liệu phôi\tMô tả vật liệu phôi\tBản vẽ phôi\tSố lượng lĩnh liệu\tSố lò nhiệt\tSố lô nhiệt\tSố Serial\tSố lượng còn thiếu\tNDE\tLắp ráp\tThử áp \tXử lý bề mặt\tĐơn vị phụ trách\tGhi chú\tSố lượng sắp xếp sản xuất\tNgày sắp xếp sản xuất\tSố phiếu lĩnh liệu\tSố phiếu nhập kho')
+printMultipleText('设备|Thiết bị\t客户简称|Tên khách hàng\t销售订单|đơn đặt hàng\t订单项目|số mục hàng\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Bản vẽ\t订单数量|Số lượng đơn hàng\t毛坯到货日期|Ngày phôi về\t领料数量|Số lượng lĩnh liệu\t承诺完成日期|Ngày sản xuất chịu trách nhiệm nhập kho\t计划加工数量|Kế hoạch số lượng gia công\t外协工序备注|Ghi chú công đoạn nhà gia công\t8H班产量/件|Sản lượng của 8h/con\t12小时班产量/件|Sản lượng của 12h/con\t工序工时/件|Thời gian/cái\t下线时间|Ngày SX xong\t是否拖期|Có quá hạn hay không\t已加工数量|Số lượng đã SX\t加工工序|Công đoạn gia công\tNDE|NDE\t装配|Lắp ráp\t试压|Thử áp\t表面处理|Xử lý bề mặt\t剩余|Còn lại\t领料单号|Số phiếu lĩnh liệu\t报检单号|Số phiếu nhập kho\t要求外协完成交期|Ngày yêu cầu Nhà GC giao hàng\t发货数量|Số lượng xuất GC\t发货日期|Ngày xuất\t收货数量|Số lượng nhập\t收货日期|Ngày nhập\t报废数量|Số lượng báo phế\t外协承诺完成时间|Thời gian cam kết giao hàng của nhà GC', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

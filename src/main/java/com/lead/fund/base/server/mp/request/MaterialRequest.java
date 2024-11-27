@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.request;
 
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -28,6 +29,7 @@ public class MaterialRequest extends AbstractAdmin {
      * 生产工单ID
      */
     private String materialId;
+    private List<String> materialIdList;
     /**
      * 生产工单明细ID
      */

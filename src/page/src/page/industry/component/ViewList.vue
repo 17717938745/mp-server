@@ -77,7 +77,6 @@
         }"
       @selection-change="props.handleSelectionChange"
   >
-    <el-table-column v-if="props.handleSelectionChange" type="selection" :width="55" />
     <table-view-content
         :idKey="props.idKey"
         :viewConfigList="columnConfigList"

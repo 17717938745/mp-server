@@ -1,6 +1,6 @@
 <template>
   <el-table-column
-      :type="viewConfig.type === ValueType.Expand ? 'expand' : ''"
+      :type="viewConfig.type === ValueType.Expand ? 'expand' : viewConfig.type === ValueType.Selection ? 'selection' : ''"
       :key="viewConfig.value"
       :prop="viewConfig.value"
       :label="viewConfig.labelKey ? store.state.label[viewConfig.labelKey] : viewConfig.label"
@@ -8,7 +8,7 @@
       :align="viewConfig.align || 'center'"
       :show-overflow-tooltip="viewConfig.showOverflow"
   >
-    <template v-if="(viewConfig.children || []).length <= 0" #default="{row}">
+    <template v-if="viewConfig.type !== ValueType.Selection && (viewConfig.children || []).length <= 0" #default="{row}">
       <view-content
           :idKey="props.idKey"
           :viewConfig="viewConfig"
@@ -55,7 +55,7 @@
       </view-content>
     </template>
     <table-column-view-content
-        v-if="(viewConfig.children|| []).length > 0"
+        v-if="viewConfig.type !== ValueType.Selection && (viewConfig.children|| []).length > 0"
         v-for="(cv, i ) in handleColumnConfigList(viewConfig.children, [ValueType.Image, ValueType.Video], false, true)"
         :key="cv.value"
         :idKey="props.idKey"

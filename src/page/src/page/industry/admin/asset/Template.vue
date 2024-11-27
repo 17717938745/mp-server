@@ -259,6 +259,7 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
+  {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 45},

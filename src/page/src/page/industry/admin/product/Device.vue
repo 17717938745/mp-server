@@ -50,6 +50,12 @@
           align="center"
       ></el-table-column>
       <el-table-column
+          prop="supplierFormat"
+          label="是否供应商"
+          width="256"
+          align="center"
+      ></el-table-column>
+      <el-table-column
           prop="sorter"
           label="排序"
           width="64"
@@ -79,7 +85,7 @@
       </el-table-column>
     </el-table>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
-      <el-form :rules="formRuleList" :model="formData" ref="formRef" label-width="128px">\
+      <el-form :rules="formRuleList" :model="formData" ref="formRef" label-width="128px">
         <el-form-item prop="deviceName" label="设备名称">
           <el-input v-model="formData.deviceName"/>
         </el-form-item>
@@ -90,6 +96,23 @@
           <el-input-number v-model="formData.runningHour" style="width: 60px;" :min="0" :controls="false"/>
           :
           <el-input-number v-model="formData.runningMinute" style="width: 60px;" :controls="false" :min="0" :max="59"/>
+        </el-form-item>
+        <el-form-item prop="supplier" :label="store.state.label.supplier">
+          <el-select
+              v-model="formData.supplier"
+              filterable
+              allow-create
+              clearable
+              :placeholder="store.state.label.supplier">
+            <el-option
+                label="Yes"
+                :value="true"
+            />
+            <el-option
+                label="No"
+                :value="false"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item prop="sorter" label="排序">
           <el-input v-model="formData.sorter"/>
@@ -140,6 +163,7 @@ const state = reactive({
     unitPrice: 0,
     runningHour: 0,
     runningMinute: 0,
+    supplier: false,
     sorter: 0,
   },
   formSave: false,
@@ -149,6 +173,7 @@ const state = reactive({
     unitPrice: [{required: true, message: '请输入', trigger: 'blur'}],
     runningHour: [{required: true, message: '请输入', trigger: 'blur'}],
     runningMinute: [{required: true, message: '请输入', trigger: 'blur'}],
+    supplier: [{required: true, message: 'Please select', trigger: 'blur'}],
   },
 })
 

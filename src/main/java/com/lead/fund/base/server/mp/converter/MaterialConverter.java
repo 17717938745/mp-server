@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.converter;
 
 import com.lead.fund.base.server.mp.entity.douson.MaterialDetailEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
+import com.lead.fund.base.server.mp.entity.douson.TaskEntity;
 import com.lead.fund.base.server.mp.request.MaterialRequest;
 import com.lead.fund.base.server.mp.response.MaterialResponse;
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * AccountConverter
+ * MaterialConverter
  *
  * @author panchaohui
  * @version 1.0
@@ -33,8 +34,11 @@ public interface MaterialConverter extends Serializable {
     MaterialDetailEntity materialDetail(MaterialRequest request);
 
     @Mapping(target = "materialId", source = "id")
+    @Mapping(target = "generateTaskFormat", expression = "java(Boolean.TRUE.equals(d.getGenerateTask()) ? \"Yes\" : \"No\")")
     MaterialResponse material(MaterialEntity d);
 
     List<MaterialResponse> materialList(List<MaterialEntity> list);
 
+    @Mapping(target = "roughcastExpireDate", source = "productionDate")
+    TaskEntity generateTask(MaterialEntity e);
 }

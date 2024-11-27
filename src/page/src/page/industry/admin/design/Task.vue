@@ -191,15 +191,9 @@
         </el-button>
         <el-button
             :icon="Printer"
-            @click="handleShowCheckOrderPrintList"
+            @click="handleShowPrintList"
             type="warning"
-        >Print check
-        </el-button>
-        <el-button
-            :icon="Printer"
-            @click="handleShowMaterialOrderPrintList"
-            type="warning"
-        >Print plan
+        >Print
         </el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
@@ -428,169 +422,60 @@ const uploadData = ref({})
 const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 165, type: ValueType.Operator,},
-  {
-    value: 'customerShortName',
-    labelKey: 'customerShortName',
-    width: 189,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'customerOrderNo',
-    labelKey: 'customerOrderNo',
-    width: 101,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'customerProjectSequence',
-    labelKey: 'customerProjectSequence',
-    width: 72,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'saleOrderNo',
-    labelKey: 'saleOrderNo',
-    width: 89,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'orderProjectNo',
-    labelKey: 'orderProjectNo',
-    width: 72,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'materialNo',
-    labelKey: 'materialNo',
-    width: 138,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'improveMaterialDescribe',
-    labelKey: 'improveMaterialDescribe',
-    width: 189,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'designNumber',
-    labelKey: 'designNumber',
-    width: 121,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'orderCount',
-    labelKey: 'orderCount',
-    width: 73,
-    highLight: true,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'productionDate',
-    labelKey: 'productionDate',
-    width: 102,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'promiseDoneDate',
-    labelKey: 'promiseDoneDate',
-    width: 102,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'blankMaterialNo',
-    labelKey: 'blankMaterialNo',
-    width: 168,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'blankMaterialDescribe',
-    labelKey: 'blankMaterialDescribe',
-    width: 189,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'roughcastDesignNumber',
-    labelKey: 'roughcastDesignNumber',
-    width: 168,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {value: 'materialCount', labelKey: 'materialCount', highLight: true, width: 82},
-  {value: 'stoveNo', labelKey: 'stoveNo', width: 87},
-  {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 87},
-  {value: 'serialNo', labelKey: 'serialNo', width: 189},
-  {
-    value: 'surplusCount',
-    labelKey: 'surplusCount',
-    highLight: true,
-    width: 72,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {value: 'nde', labelKey: 'nde', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'assemble', labelKey: 'assemble', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {
-    value: 'testPress',
-    labelKey: 'testPress',
-    width: 68,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'surfaceTreatment',
-    labelKey: 'surfaceTreatment',
-    width: 68,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {
-    value: 'description',
-    labelKey: 'description',
-    width: 189,
-    // mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-  },
-  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
-  {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
-  {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
-  {
-    value: 'materialOrderNoFormat',
-    labelKey: 'materialOrderNo',
-    width: 146,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-    type: ValueType.Link,
-    openLink: (d: any) => {
-      window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
-    },
-  },
-  {
-    value: 'checkOrderNoFormat',
-    labelKey: 'checkOrderNo',
-    width: 146,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
-    type: ValueType.Link,
-    openLink: (d: any) => {
-      window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
-    },
-  },
-  {
-    value: 'generateTaskFormat',
-    labelKey: 'generateTask',
-    width: 189,
-  },
+  {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
+  {value: 'device', labelKey: 'device', width: 189},
+  {value: 'customerShortName', labelKey: 'customerShortName', width: 189},
+  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 189},
+  {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 189},
+  {value: 'materialNo', labelKey: 'materialNo', width: 189},
+  {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189},
+  {value: 'designNumber', labelKey: 'designNumber', width: 189},
+  {value: 'orderCount', labelKey: 'orderCount', width: 189},
+  {value: 'roughcastExpireDate', labelKey: 'roughcastExpireDate', width: 189},
+  {value: 'materialCount', labelKey: 'materialCount', width: 189},
+  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 189},
+  {value: 'planReformCount', labelKey: 'planReformCount', width: 189},
+  {value: 'supplierRemark', labelKey: 'supplierRemark', width: 189},
+  {value: 'productCountHour8', labelKey: 'productCountHour8', width: 189},
+  {value: 'productCountHour12', labelKey: 'productCountHour12', width: 189},
+  {value: 'processWorkingHour', labelKey: 'processWorkingHour', width: 189},
+  {value: 'offlineDate', labelKey: 'offlineDate', width: 189},
+  {value: 'delay', labelKey: 'delay', width: 189},
+  {value: 'processCount', labelKey: 'processCount', width: 189},
+  {value: 'processProcedure', labelKey: 'processProcedure', width: 189},
+  {value: 'nde', labelKey: 'nde', width: 189},
+  {value: 'assemble', labelKey: 'assemble', width: 189},
+  {value: 'testPress', labelKey: 'testPress', width: 189},
+  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189},
+  {value: 'surplus', labelKey: 'surplus', width: 189},
+  {value: 'materialOrderNo', labelKey: 'materialOrderNo', width: 189},
+  {value: 'checkOrderNo', labelKey: 'checkOrderNo', width: 189},
+  {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 189},
+  {value: 'deliverCount', labelKey: 'deliverCount', width: 189},
+  {value: 'deliverDate', labelKey: 'deliverDate', width: 189},
+  {value: 'receiptCount', labelKey: 'receiptCount', width: 189},
+  {value: 'receiptDate', labelKey: 'receiptDate', width: 189},
+  {value: 'scrapCount', labelKey: 'scrapCount', width: 189},
+  {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 189},
 ])
 
 const selectIdList = ref([])
 const handleSelectionChange = (arr: any[]) => {
-  selectIdList.value = arr.map(t => t.materialId)
-}
-const handleShowCheckOrderPrintList = () => {
-  if (selectIdList.value.length <= 0) {
-    ElMessage.error('Please select')
-  } else {
-    window.open(`/industry/public/material/check?materialIdList=${selectIdList.value}`)
-  }
+  selectIdList.value = arr.map(t=> t.materialId)
 }
 const handleShowMaterialOrderPrintList = () => {
-  if (selectIdList.value.length <= 0) {
+  if(selectIdList.value.length <= 0) {
     ElMessage.error('Please select')
   } else {
-    window.open(`/industry/public/material/index?materialIdList=${selectIdList.value}`)
+    window.open(`/industry/public/material/index?materialOrderNoList=${selectIdList.value}`)
+  }
+}
+const handleShowCheckOrderPrintList = () => {
+  if(selectIdList.value.length <= 0) {
+    ElMessage.error('Please select')
+  } else {
+    window.open(`/industry/public/material/check?checkOrderNoList=${selectIdList.value}`)
   }
 }
 const fileMap: any = {}
@@ -618,22 +503,22 @@ const handleRequest = (d: any) => {
       formData.set("file", t)
       return httpUpload(`douson/material/upload`, formData)
     }))
-    .then((l: any[]) => {
-      afterUpload.value = true
-      uploadData.value = (l[0] || {}).data || {}
-      handlePage()
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.resolve()
-    })
-    .catch((err) => {
-      ElMessage.error(`Upload failed`)
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.reject()
-    })
+        .then((l: any[]) => {
+          afterUpload.value = true
+          uploadData.value = (l[0] || {}).data || {}
+          handlePage()
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.resolve()
+        })
+        .catch((err) => {
+          ElMessage.error(`Upload failed`)
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.reject()
+        })
   }
 }
 httpGet(`system/user/config/list`, {}).then(
@@ -648,35 +533,40 @@ httpGet(`system/user/config/list`, {}).then(
     })
 const defaultFormData = {
   creator: user.userId,
+  device: '',
   customerShortName: '',
-  customerOrderNo: '',
-  customerProjectSequence: '',
   saleOrderNo: '',
-  orderProjectNo: '',
+  orderProject: '',
   materialNo: '',
-  improveMaterialDescribe: '',
+  materialDescription: '',
   designNumber: '',
-  orderCount: 0,
-  productionDate: formatDate(new Date(), 'yyyy-MM-dd'),
+  orderCount: '',
+  roughcastExpireDate: '',
+  materialCount: '',
   promiseDoneDate: '',
-  blankMaterialNo: '',
-  blankMaterialDescribe: '',
-  roughcastDesignNumber: '',
-  materialCount: 0,
-  stoveNo: '',
-  hotBatchNo: '',
-  serialNo: '',
-  surplusCount: 0,
+  planReformCount: '',
+  supplierRemark: '',
+  productCountHour8: '',
+  productCountHour12: '',
+  processWorkingHour: '',
+  offlineDate: '',
+  delay: '',
+  processCount: '',
+  processProcedure: '',
   nde: '',
   assemble: '',
   testPress: '',
   surfaceTreatment: '',
-  chargeCompany: '',
-  description: '',
-  arrangeProductionDate: '',
+  surplus: '',
   materialOrderNo: '',
-  productionCount: 0,
   checkOrderNo: '',
+  supplierDoneDate: '',
+  deliverCount: '',
+  deliverDate: '',
+  receiptCount: '',
+  receiptDate: formatDate(new Date(), 'yyyy-MM-dd'),
+  scrapCount: '',
+  supplierPromiseDoneDate: '',
 }
 const checkOrNotList = ref([
   {
@@ -755,7 +645,7 @@ const toggleKeyList = [
   'materialOrderNo',
   'checkOrderNo',
 ]
-const showMore = ref(!includes(roleCodeList, 'materialManager'))
+const showMore = ref(true)
 const handleToggleMore = (v) => {
   columnConfigList.value = columnConfigList.value.map(t => {
     if (toggleKeyList.indexOf(t.value) >= 0) {
@@ -783,7 +673,7 @@ const handleDateTimeChange = () => {
 }
 
 const handlePage = () => {
-  httpGet(`douson/material/page`, state.query).then(
+  httpGet(`douson/task/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = res.list
         state.total = res.total
@@ -835,7 +725,7 @@ const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
       if (state.formSave) {
-        httpPutJson('douson/material/merge', state.formData).then(() => {
+        httpPutJson('douson/task/merge', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handlePage()
@@ -847,7 +737,7 @@ const handleMerge = () => {
   })
 }
 const handleUpdate = (row: any) => {
-  return httpPutJson('douson/material/merge', row).then(() => {
+  return httpPutJson('douson/task/merge', row).then(() => {
     state.formVisible = false
     ElMessage.success('Update success')
     handlePage()
@@ -857,13 +747,13 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/material', {
+    httpDelete('douson/task', {
       materialId: row.materialId,
     })
-    .then(() => {
-      ElMessage.success('Delete success')
-      handlePage()
-    })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handlePage()
+        })
   })
 }
 const {

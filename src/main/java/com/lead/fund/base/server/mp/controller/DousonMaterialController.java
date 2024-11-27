@@ -5,12 +5,14 @@ import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY
 import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_DATA_QUERY_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
 import static com.lead.fund.base.server.mp.converter.MaterialConverter.MATERIAL_INSTANCE;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.lead.fund.base.common.basic.cons.frame.AdminState;
 import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.ListResult;
@@ -26,11 +28,13 @@ import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
+import com.lead.fund.base.server.mp.entity.douson.TaskEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.LockHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.MaterialDetailMapper;
 import com.lead.fund.base.server.mp.mapper.douson.MaterialMapper;
+import com.lead.fund.base.server.mp.mapper.douson.TaskMapper;
 import com.lead.fund.base.server.mp.request.MaterialPageRequest;
 import com.lead.fund.base.server.mp.request.MaterialRequest;
 import com.lead.fund.base.server.mp.response.MaterialResponse;
@@ -72,7 +76,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * IndustryController
+ * DousonMaterialController
  *
  * @author panchaohui
  * @version 1.0
@@ -91,6 +95,8 @@ public class DousonMaterialController {
     private TemplatePhotoDao templatePhotoDao;
     @Resource
     private MaterialMapper materialMapper;
+    @Resource
+    private TaskMapper taskMapper;
     @Resource
     private MaterialDao materialDao;
     @Resource
@@ -118,7 +124,8 @@ public class DousonMaterialController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody MaterialRequest request
     ) {
-        final String today = DateUtil.day(new Date());
+        final Date now = new Date();
+        final String today = DateUtil.day(now);
         final MpUserResponse u = accountHelper.getUser(deviceId);
         MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request);
         e.setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()));
@@ -127,7 +134,9 @@ public class DousonMaterialController {
             final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
             e
                     .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
+                    .setGenerateTask(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? true : null)
                     .setModifier(u.getUserId());
+            final boolean alreadyGenerateTask = isNotBlank(e.getId()) && Boolean.TRUE.equals(materialMapper.selectById(e.getId()).getGenerateTask());
             // update
             if (isNotBlank(e.getId())) {
                 if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()) || "materialManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
@@ -149,6 +158,17 @@ public class DousonMaterialController {
                 materialMapper.insert(e);
             }
             updateSummaryInfo(e, today);
+
+            if (!alreadyGenerateTask && Boolean.TRUE.equals(e.getGenerateTask())) {
+                final TaskEntity t = (TaskEntity) MATERIAL_INSTANCE.generateTask(e)
+                        .setCreator(u.getUserId())
+                        .setModifier(u.getUserId())
+                        .setState(AdminState.NORMAL.getCode())
+                        .setCreateTime(now)
+                        .setModifyTime(now)
+                        .setId(null);
+                taskMapper.insert(t);
+            }
         } finally {
             lockHelper.unlock("material");
         }
@@ -332,6 +352,9 @@ public class DousonMaterialController {
         if (isNotBlank(d.getMaterialId())) {
             lambda.eq(MaterialEntity::getId, d.getMaterialId());
         }
+        if (CollUtil.isNotEmpty(d.getMaterialIdList())) {
+            DatabaseUtil.or(lambda, d.getMaterialIdList(), (lam, l) -> lam.in(MaterialEntity::getId, d.getMaterialIdList()));
+        }
         if (isNotBlank(d.getCustomerShortName())) {
             lambda.like(MaterialEntity::getCustomerShortName, d.getCustomerShortName());
         }
@@ -482,30 +505,6 @@ public class DousonMaterialController {
     }
 
     /**
-     * 领料单打印
-     *
-     * @param deviceId 设备id
-     * @param request  {@link MaterialRequest}
-     * @return {@link ListResult<MaterialResponse>}
-     */
-    @GetMapping("index")
-    public ListResult<MaterialResponse> index(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @ModelAttribute MaterialRequest request
-    ) {
-        final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
-        if (!r.getList().isEmpty()) {
-            materialMapper.update(
-                    null,
-                    new LambdaUpdateWrapper<MaterialEntity>()
-                            .setSql("MATERIAL_PRINT_COUNT = MATERIAL_PRINT_COUNT + 1")
-                            .eq(MaterialEntity::getMaterialOrderNo, request.getMaterialOrderNo())
-            );
-        }
-        return r;
-    }
-
-    /**
      * 报检单打印
      *
      * @param deviceId 设备id
@@ -519,11 +518,41 @@ public class DousonMaterialController {
     ) {
         final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
         if (!r.getList().isEmpty()) {
+            if (r.getList().stream().map(MaterialResponse::getCheckOrderNo).distinct().count() != 1) {
+                throw new BusinessException(MP_DATA_QUERY_ERROR);
+            }
             materialMapper.update(
                     null,
                     new LambdaUpdateWrapper<MaterialEntity>()
                             .setSql("CHECK_PRINT_COUNT = CHECK_PRINT_COUNT + 1")
-                            .eq(MaterialEntity::getCheckOrderNo, request.getCheckOrderNo())
+                            .eq(MaterialEntity::getCheckOrderNo, CollUtil.getFirst(r.getList()).getCheckOrderNo())
+            );
+        }
+        return r;
+    }
+
+    /**
+     * 领料单打印
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link ListResult<MaterialResponse>}
+     */
+    @GetMapping("index")
+    public ListResult<MaterialResponse> index(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute MaterialRequest request
+    ) {
+        final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
+        if (!r.getList().isEmpty()) {
+            if (r.getList().stream().map(MaterialResponse::getMaterialOrderNo).distinct().count() != 1) {
+                throw new BusinessException(MP_DATA_QUERY_ERROR);
+            }
+            materialMapper.update(
+                    null,
+                    new LambdaUpdateWrapper<MaterialEntity>()
+                            .setSql("MATERIAL_PRINT_COUNT = MATERIAL_PRINT_COUNT + 1")
+                            .eq(MaterialEntity::getMaterialOrderNo, CollUtil.getFirst(r.getList()).getMaterialOrderNo())
             );
         }
         return r;
@@ -574,7 +603,12 @@ public class DousonMaterialController {
         final BigDecimal surplusCount = e.getOrderCount().subtract(sumMaterialCount);
         materialMapper.update(null,
                 new LambdaUpdateWrapper<MaterialEntity>()
+                        .set(MaterialEntity::getNde, e.getNde())
+                        .set(MaterialEntity::getAssemble, e.getAssemble())
+                        .set(MaterialEntity::getTestPress, e.getTestPress())
+                        .set(MaterialEntity::getSurfaceTreatment, e.getSurfaceTreatment())
                         .set(MaterialEntity::getOrderCount, e.getOrderCount())
+                        .set(MaterialEntity::getGenerateTask, e.getGenerateTask())
                         .set(MaterialEntity::getSurplusCount, surplusCount)
                         .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                         .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())

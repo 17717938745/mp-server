@@ -163,4 +163,9 @@ public class MaterialResponse extends AbstractAdmin {
     private String checkOrderNo;
     private BigDecimal checkPrintCount;
     private String checkOrderNoFormat;
+    /**
+     * 是否生成计划
+     */
+    private Boolean generateTask;
+    private String generateTaskFormat;
 }

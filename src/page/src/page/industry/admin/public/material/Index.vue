@@ -283,7 +283,7 @@ const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const printList = ref<any>([])
 const printData = ref<any>({})
-httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo}).then(
+httpGet(`douson/material/index`, {materialOrderNo: route.query.materialOrderNo, materialIdList: route.query.materialIdList, }).then(
     (res: any) => {
       printList.value = res.list || []
       printData.value = printList.value.length > 0 ? printList.value[0] : {}

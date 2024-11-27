@@ -33,6 +33,7 @@ public enum MpExceptionType implements TypeApi<Integer> {
     MP_PASSWORD_ERROR(310014, "密码不正确"),
     MP_SAVE_H5_ERROR(310015, "H5保存失败"),
     MP_UPLOAD_EXCEL_ERROR(310016, "上传Excel失败"),
+    MP_DATA_QUERY_ERROR(310017, "数据查询异常"),
     ;
 
     private final Integer code;

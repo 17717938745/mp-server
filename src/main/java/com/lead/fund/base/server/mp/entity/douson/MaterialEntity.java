@@ -13,7 +13,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * TemplateEntity
+ * MaterialEntity
  *
  * @author panchaohui
  * @version 1.0
@@ -211,4 +211,10 @@ public class MaterialEntity extends AbstractAdmin {
     @Size(max = 64, message = "报检单号长度不合法")
     private String checkOrderNo;
     private BigDecimal checkPrintCount;
+    /**
+     * 是否生成计划
+     */
+    @FieldRemark(value = "是否生成计划")
+    @Size(max = 2, message = "是否生成计划长度不合法")
+    private Boolean generateTask;
 }
