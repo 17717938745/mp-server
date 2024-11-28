@@ -126,6 +126,12 @@ public class TaskEntity extends AbstractAdmin {
     @Size(max = 16, message = "工序工时/件长度不合法")
     private BigDecimal processWorkingHour;
     /**
+     * 上线时间
+     */
+    @FieldRemark(value = "上线时间")
+    @Size(max = 32, message = "上线时间长度不合法")
+    private String onlineDate;
+    /**
      * 下线时间
      */
     @FieldRemark(value = "下线时间")
@@ -136,7 +142,7 @@ public class TaskEntity extends AbstractAdmin {
      */
     @FieldRemark(value = "是否拖期")
     @Size(max = 2, message = "是否拖期长度不合法")
-    private Boolean delay;
+    private BigDecimal delay;
     /**
      * 已加工数量
      */

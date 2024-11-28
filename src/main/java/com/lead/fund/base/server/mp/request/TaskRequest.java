@@ -1,6 +1,8 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -92,13 +94,17 @@ public class TaskRequest extends AbstractAdmin {
      */
     private BigDecimal processWorkingHour;
     /**
+     * 上线时间
+     */
+    private String onlineDate;
+    /**
      * 下线时间
      */
     private String offlineDate;
     /**
      * 是否拖期
      */
-    private Boolean delay;
+    private BigDecimal delay;
     /**
      * 已加工数量
      */

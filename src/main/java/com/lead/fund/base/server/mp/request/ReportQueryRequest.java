@@ -88,4 +88,5 @@ public class ReportQueryRequest implements Serializable {
      * 是否生效
      */
     private Boolean valid;
+    private Integer surplusCountType;
 }

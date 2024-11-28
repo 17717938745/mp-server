@@ -167,20 +167,6 @@
                 :placeholder="store.state.label.checkOrderNo"
                 class="search-item"/>
       <div class="query-btn">
-        <el-upload
-            action="#"
-            :show-file-list="false"
-            :on-change="handleFileChange"
-            :before-upload="handleBeforeUpload"
-            :http-request="handleRequest"
-            accept=".xlsx,.xls"
-            multiple
-            :drag="true"
-        >
-          <div>
-            <el-button :icon="UploadFilled" @click="handlePage" type="danger">Upload</el-button>
-          </div>
-        </el-upload>
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
             :icon="Plus"
@@ -189,19 +175,7 @@
             :disabled="!includes(roleCodeList, 'material')"
         >Add
         </el-button>
-        <el-button
-            :icon="Printer"
-            @click="handleShowPrintList"
-            type="warning"
-        >Print
-        </el-button>
-        <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
-    </div>
-    <div>
-      <el-alert v-show="afterUpload"
-                :title="`上传总记录数：${uploadData.uploadDetailCount}, 订单数：${uploadData.uploadCount}；最终总记录：${uploadData.afterDetailCount}, 订单数：${uploadData.afterCount}`"
-                type="success"/>
     </div>
     <div>
       <el-space wrap>
@@ -209,7 +183,7 @@
       </el-space>
     </div>
     <view-list
-        idKey="materialId"
+        idKey="taskId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -222,7 +196,6 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
-        :handleSelectionChange="handleSelectionChange"
     >
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
@@ -233,6 +206,136 @@
           label-width="auto"
           label-position="top"
       >
+        <el-form-item prop="testDevice" :label="store.state.label.testDevice">
+          <el-select v-model="formData.testDevice"
+                     filterable
+                     clearable
+                     :placeholder="store.state.label.testDevice"
+                     class="search-item">
+            <el-option
+                v-for="item in config.testDeviceList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="planReformCount" :label="store.state.label.planReformCount">
+          <el-input-number v-model="formData.planReformCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="supplierRemark" :label="store.state.label.supplierRemark">
+          <el-input v-model="formData.supplierRemark" type="textarea" :rows="4"/>
+        </el-form-item>
+        <el-form-item prop="productCountHour8" :label="store.state.label.productCountHour8">
+          <el-input-number v-model="formData.productCountHour8" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="productCountHour12" :label="store.state.label.productCountHour12">
+          <el-input-number v-model="formData.productCountHour12" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="processWorkingHour" :label="store.state.label.processWorkingHour">
+          <el-input-number v-model="formData.processWorkingHour" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="onlineDate" :label="store.state.label.onlineDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.onlineDate"
+              format="YYYY-MM-DD"
+              @change="formData.onlineDate = formatDate(formData.onlineDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="offlineDate" :label="store.state.label.offlineDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.offlineDate"
+              format="YYYY-MM-DD"
+              @change="formData.offlineDate = formatDate(formData.offlineDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="delay" :label="store.state.label.delay">
+          <el-select
+              v-model="formData.delay"
+              filterable
+              allow-create
+              clearable
+              :placeholder="store.state.label.delay">
+            <el-option
+                label="Yes"
+                :value="true"
+            />
+            <el-option
+                label="No"
+                :value="false"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="processCount" :label="store.state.label.processCount">
+          <el-input-number v-model="formData.processCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure">
+          <el-select v-model="formData.processProcedure"
+                     filterable
+                     clearable
+                     :placeholder="store.state.label.processProcedure"
+                     class="search-item">
+            <el-option
+                v-for="item in config.processProcedureList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="surplus" :label="store.state.label.surplus">
+          <el-input-number v-model="formData.surplus" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="supplierDoneDate" :label="store.state.label.supplierDoneDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.supplierDoneDate"
+              format="YYYY-MM-DD"
+              @change="formData.supplierDoneDate = formatDate(formData.supplierDoneDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="deliverCount" :label="store.state.label.deliverCount">
+          <el-input-number v-model="formData.deliverCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="deliverDate" :label="store.state.label.deliverDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.deliverDate"
+              format="YYYY-MM-DD"
+              @change="formData.deliverDate = formatDate(formData.deliverDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="receiptCount" :label="store.state.label.receiptCount">
+          <el-input-number v-model="formData.receiptCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="receiptDate" :label="store.state.label.receiptDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.receiptDate"
+              format="YYYY-MM-DD"
+              @change="formData.receiptDate = formatDate(formData.receiptDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="scrapCount" :label="store.state.label.scrapCount">
+          <el-input-number v-model="formData.scrapCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.supplierPromiseDoneDate"
+              format="YYYY-MM-DD"
+              @change="formData.supplierPromiseDoneDate = formatDate(formData.supplierPromiseDoneDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+
         <el-form-item prop="customerShortName" :label="store.state.label.customerShortName">
           <el-input v-model="formData.customerShortName"/>
         </el-form-item>
@@ -418,12 +521,8 @@ const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
-const uploadData = ref({})
-const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
-  {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 235, type: ValueType.Operator,},
   {value: 'device', labelKey: 'device', width: 189},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 189},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 189},
@@ -440,17 +539,11 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'productCountHour8', labelKey: 'productCountHour8', width: 189},
   {value: 'productCountHour12', labelKey: 'productCountHour12', width: 189},
   {value: 'processWorkingHour', labelKey: 'processWorkingHour', width: 189},
+  {value: 'onlineDate', labelKey: 'onlineDate', width: 189},
   {value: 'offlineDate', labelKey: 'offlineDate', width: 189},
   {value: 'delay', labelKey: 'delay', width: 189},
   {value: 'processCount', labelKey: 'processCount', width: 189},
   {value: 'processProcedure', labelKey: 'processProcedure', width: 189},
-  {value: 'nde', labelKey: 'nde', width: 189},
-  {value: 'assemble', labelKey: 'assemble', width: 189},
-  {value: 'testPress', labelKey: 'testPress', width: 189},
-  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189},
-  {value: 'surplus', labelKey: 'surplus', width: 189},
-  {value: 'materialOrderNo', labelKey: 'materialOrderNo', width: 189},
-  {value: 'checkOrderNo', labelKey: 'checkOrderNo', width: 189},
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 189},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 189},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 189},
@@ -458,69 +551,32 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'receiptDate', labelKey: 'receiptDate', width: 189},
   {value: 'scrapCount', labelKey: 'scrapCount', width: 189},
   {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 189},
+  {value: 'nde', labelKey: 'nde', width: 189},
+  {value: 'assemble', labelKey: 'assemble', width: 189},
+  {value: 'testPress', labelKey: 'testPress', width: 189},
+  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189},
+  {value: 'surplus', labelKey: 'surplus', width: 189},
+  {
+    value: 'materialOrderNoFormat',
+    labelKey: 'materialOrderNo',
+    width: 146,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    type: ValueType.Link,
+    openLink: (d: any) => {
+      window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
+    },
+  },
+  {
+    value: 'checkOrderNoFormat',
+    labelKey: 'checkOrderNo',
+    width: 146,
+    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    type: ValueType.Link,
+    openLink: (d: any) => {
+      window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
+    },
+  },
 ])
-
-const selectIdList = ref([])
-const handleSelectionChange = (arr: any[]) => {
-  selectIdList.value = arr.map(t=> t.materialId)
-}
-const handleShowMaterialOrderPrintList = () => {
-  if(selectIdList.value.length <= 0) {
-    ElMessage.error('Please select')
-  } else {
-    window.open(`/industry/public/material/index?materialOrderNoList=${selectIdList.value}`)
-  }
-}
-const handleShowCheckOrderPrintList = () => {
-  if(selectIdList.value.length <= 0) {
-    ElMessage.error('Please select')
-  } else {
-    window.open(`/industry/public/material/check?checkOrderNoList=${selectIdList.value}`)
-  }
-}
-const fileMap: any = {}
-const handleFileChange = (file: UploadFile, fileList: UploadFiles) => {
-  console.log('file change, length: ' + fileList.length)
-}
-const handleBeforeUpload = (file: UploadFile) => {
-  console.log('before upload file: ' + file.uid)
-  fileMap[file.uid] = file
-  return file
-}
-const handleRequest = (d: any) => {
-  const keys = Object.keys(fileMap)
-  const limit = 1
-  if (keys.length > limit) {
-    ElMessage.error(`Too many upload`)
-    keys.forEach((k: any) => {
-      delete fileMap[k]
-    })
-  } else if (keys.length > 0) {
-    Promise.all(keys.map((k: any) => {
-      const t = fileMap[k]
-      const formData = new FormData()
-      formData.set("filename", t.name)
-      formData.set("file", t)
-      return httpUpload(`douson/material/upload`, formData)
-    }))
-        .then((l: any[]) => {
-          afterUpload.value = true
-          uploadData.value = (l[0] || {}).data || {}
-          handlePage()
-          keys.forEach((k: any) => {
-            delete fileMap[k]
-          })
-          return Promise.resolve()
-        })
-        .catch((err) => {
-          ElMessage.error(`Upload failed`)
-          keys.forEach((k: any) => {
-            delete fileMap[k]
-          })
-          return Promise.reject()
-        })
-  }
-}
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -534,6 +590,7 @@ httpGet(`system/user/config/list`, {}).then(
 const defaultFormData = {
   creator: user.userId,
   device: '',
+  testDevice: '',
   customerShortName: '',
   saleOrderNo: '',
   orderProject: '',
@@ -549,23 +606,24 @@ const defaultFormData = {
   productCountHour8: '',
   productCountHour12: '',
   processWorkingHour: '',
+  onlineDate: '',
   offlineDate: '',
-  delay: '',
-  processCount: '',
+  delay: 0,
+  processCount: 0,
   processProcedure: '',
   nde: '',
   assemble: '',
   testPress: '',
   surfaceTreatment: '',
-  surplus: '',
+  surplus: 0,
   materialOrderNo: '',
   checkOrderNo: '',
   supplierDoneDate: '',
-  deliverCount: '',
+  deliverCount: 0,
   deliverDate: '',
-  receiptCount: '',
+  receiptCount: 0,
   receiptDate: formatDate(new Date(), 'yyyy-MM-dd'),
-  scrapCount: '',
+  scrapCount: 0,
   supplierPromiseDoneDate: '',
 }
 const checkOrNotList = ref([
@@ -690,6 +748,15 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
+const supplierManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const materialManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView')) {
+  if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'materialManager')) {
+    columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
+  } else if (includes(roleCodeList, 'materialManager') && !includes(roleCodeList, 'supplierManager')) {
+    columnConfigList.value = materialManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
+  }
+}
 if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
@@ -750,12 +817,30 @@ const handleDelete = (row: any) => {
     httpDelete('douson/task', {
       materialId: row.materialId,
     })
-        .then(() => {
-          ElMessage.success('Delete success')
-          handlePage()
-        })
+    .then(() => {
+      ElMessage.success('Delete success')
+      handlePage()
+    })
   })
 }
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'device',
+      'processProcedure',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data || {}
+  // userOptionList.value = (l[1].list || []).map((t: any) => {
+  //   return {
+  //     value: t.userId,
+  //     label: t.name,
+  //   }
+  // })
+  // handlePage()
+})
 const {
   expandRowKeys,
   query,

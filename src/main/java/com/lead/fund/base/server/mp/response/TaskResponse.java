@@ -96,13 +96,17 @@ public class TaskResponse extends AbstractAdmin {
      */
     private BigDecimal processWorkingHour;
     /**
+     * 上线时间
+     */
+    private String onlineDate;
+    /**
      * 下线时间
      */
     private String offlineDate;
     /**
-     * 是否拖期
+     * 是否拖期（天）
      */
-    private Boolean delay;
+    private BigDecimal delay;
     /**
      * 已加工数量
      */

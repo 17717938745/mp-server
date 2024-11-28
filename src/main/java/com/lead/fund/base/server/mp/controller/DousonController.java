@@ -1901,7 +1901,21 @@ public class DousonController {
             }
             request.setProductIdList(productIdList);
         }
-        List<ReportResponse> rl = formatReportList(reportList(request));
+        List<ReportResponse> rl = formatReportList(reportList(request))
+                .stream().filter(t -> {
+                    if (null != request.getSurplusCountType()) {
+                        if (request.getSurplusCountType() == 0) {
+                            return t.getSurplusCount().compareTo(BigDecimal.ZERO) == 0;
+                        } else if (request.getSurplusCountType() == 2) {
+                            return t.getSurplusCount().compareTo(BigDecimal.ZERO) != 0;
+                        } else if (request.getSurplusCountType() < 0) {
+                            return t.getSurplusCount().compareTo(BigDecimal.ZERO) < 0;
+                        } else {
+                            return t.getSurplusCount().compareTo(BigDecimal.ZERO) > 0;
+                        }
+                    }
+                    return true;
+                }).collect(Collectors.toList());
         BigDecimal totalSalary = rl.stream().map(ReportResponse::getSalary).reduce(BigDecimal.ZERO, BigDecimal::add);
         return new DataListResult<>(
                 new ReportSummaryResponse()

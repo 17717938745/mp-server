@@ -86,6 +86,33 @@
             :value="false"
         />
       </el-select>
+      <el-select v-model="query.data.surplusCountType"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.surplusCount"
+                 class="search-item">
+        <el-option
+            v-for="item in [
+                {
+                  value: 0,
+                  label: '=0',
+                },
+                {
+                  value: 1,
+                  label: '>0',
+                },
+                {
+                  value: -1,
+                  label: '<0',
+                },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button v-if="route.query.productId" :icon="Tools" @click="handleStart" type="warning">Start</el-button>
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
@@ -405,6 +432,7 @@ const state = reactive({
       processType: '',
       processProcedure: '',
       valid: null,
+      surplusCountType: null,
     },
     page: {
       page: DEFAULT_PAGE,
