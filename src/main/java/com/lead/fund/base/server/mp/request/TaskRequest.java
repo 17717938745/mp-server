@@ -4,11 +4,15 @@ import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * TaskRequest
@@ -32,7 +36,15 @@ public class TaskRequest extends AbstractAdmin {
     /**
      * 设备
      */
-    private String device;
+    private String deviceId;
+    /**
+     * 设备排序
+     */
+    private Integer deviceSorter;
+    /**
+     * 排序
+     */
+    private Integer sorter;
     /**
      * 客户简称
      */
@@ -73,6 +85,10 @@ public class TaskRequest extends AbstractAdmin {
      * 承诺完成日期
      */
     private String promiseDoneDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startPromiseDoneDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endPromiseDoneDate;
     /**
      * 计划加工数量
      */
@@ -112,7 +128,7 @@ public class TaskRequest extends AbstractAdmin {
     /**
      * 加工工序
      */
-    private String processProcedure;
+    private List<String> processProcedureList = new ArrayList<>();
     /**
      * NDE
      */
@@ -169,4 +185,12 @@ public class TaskRequest extends AbstractAdmin {
      * 外协承诺完成时间
      */
     private String supplierPromiseDoneDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startSupplierPromiseDoneDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endSupplierPromiseDoneDate;
+    /**
+     * 加工状态，1-已完成（加工数量=领料数量）
+     */
+    private Integer processType;
 }

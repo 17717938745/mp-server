@@ -27,6 +27,7 @@ public interface TaskConverter extends Serializable {
     TaskEntity task(TaskRequest request);
 
     @Mapping(target = "taskId", source = "id")
+    @Mapping(target = "processProcedureList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(d.getProcessProcedure()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     TaskResponse task(TaskEntity d);
 
     List<TaskResponse> taskList(List<TaskEntity> list);

@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.response;
 
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,24 @@ public class TaskResponse extends AbstractAdmin {
     /**
      * 设备
      */
-    private String device;
+    private String deviceId;
+    private String deviceIdFormat;
+    /**
+     * 设备排序
+     */
+    private Integer deviceSorter;
+    /**
+     * 是否可以往上
+     */
+    private boolean up;
+    /**
+     * 排序
+     */
+    private Integer sorter;
+    /**
+     * 是否可以往下
+     */
+    private boolean down;
     /**
      * 客户简称
      */
@@ -114,7 +132,8 @@ public class TaskResponse extends AbstractAdmin {
     /**
      * 加工工序
      */
-    private String processProcedure;
+    private List<String> processProcedureList;
+    private String processProcedureFormat;
     /**
      * NDE
      */
@@ -139,10 +158,12 @@ public class TaskResponse extends AbstractAdmin {
      * 领料单号
      */
     private String materialOrderNo;
+    private String materialOrderNoFormat;
     /**
      * 报检单号
      */
     private String checkOrderNo;
+    private String checkOrderNoFormat;
     /**
      * 要求外协完成交期
      */

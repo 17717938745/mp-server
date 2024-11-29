@@ -36,6 +36,7 @@
           :handleEdit="props.handleEdit"
           :handleUpdate="props.handleUpdate"
           :handleEditShow="props.handleEditShow"
+          :handleDeleteShow="props.handleDeleteShow"
           :handleDelete="props.handleDelete"
       >
         <template #expand="row">
@@ -84,6 +85,7 @@
         :handleEdit="props.handleEdit"
         :handleUpdate="props.handleUpdate"
         :handleEditShow="props.handleEditShow"
+        :handleDeleteShow="props.handleDeleteShow"
         :handleDelete="props.handleDelete"
         :groupList="groupList"
         :checkedGroupList="checkedGroupList"
@@ -223,6 +225,7 @@ interface PropType {
   handleEdit?: (row: any) => {};
   handleUpdate?: (row: any) => {};
   handleEditShow?: (row: any) => {};
+  handleDeleteShow?: (row: any) => {};
   handleDelete?: (row: any) => {};
   page?: Page;
   handlePageChange?: (i: number) => {};

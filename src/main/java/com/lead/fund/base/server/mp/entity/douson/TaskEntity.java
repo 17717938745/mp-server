@@ -34,7 +34,19 @@ public class TaskEntity extends AbstractAdmin {
      */
     @FieldRemark(value = "设备")
     @Size(max = 256, message = "设备长度不合法")
-    private String device;
+    private String deviceId;
+    /**
+     * 设备排序
+     */
+    @FieldRemark(value = "设备排序")
+    @Size(max = 16, message = "设备排序长度不合法")
+    private Integer deviceSorter;
+    /**
+     * 排序
+     */
+    @FieldRemark(value = "排序")
+    @Size(max = 16, message = "排序长度不合法")
+    private Integer sorter;
     /**
      * 客户简称
      */

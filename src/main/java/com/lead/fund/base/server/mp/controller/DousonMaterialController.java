@@ -25,6 +25,7 @@ import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.MaterialDao;
 import com.lead.fund.base.server.mp.dao.MaterialDetailDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
+import com.lead.fund.base.server.mp.dao.TaskDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
@@ -34,7 +35,6 @@ import com.lead.fund.base.server.mp.helper.LockHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.MaterialDetailMapper;
 import com.lead.fund.base.server.mp.mapper.douson.MaterialMapper;
-import com.lead.fund.base.server.mp.mapper.douson.TaskMapper;
 import com.lead.fund.base.server.mp.request.MaterialPageRequest;
 import com.lead.fund.base.server.mp.request.MaterialRequest;
 import com.lead.fund.base.server.mp.response.MaterialResponse;
@@ -96,7 +96,7 @@ public class DousonMaterialController {
     @Resource
     private MaterialMapper materialMapper;
     @Resource
-    private TaskMapper taskMapper;
+    private TaskDao taskDao;
     @Resource
     private MaterialDao materialDao;
     @Resource
@@ -158,16 +158,14 @@ public class DousonMaterialController {
                 materialMapper.insert(e);
             }
             updateSummaryInfo(e, today);
-
             if (!alreadyGenerateTask && Boolean.TRUE.equals(e.getGenerateTask())) {
-                final TaskEntity t = (TaskEntity) MATERIAL_INSTANCE.generateTask(e)
+                taskDao.merge((TaskEntity) MATERIAL_INSTANCE.generateTask(e)
                         .setCreator(u.getUserId())
                         .setModifier(u.getUserId())
                         .setState(AdminState.NORMAL.getCode())
                         .setCreateTime(now)
                         .setModifyTime(now)
-                        .setId(null);
-                taskMapper.insert(t);
+                        .setId(null));
             }
         } finally {
             lockHelper.unlock("material");
@@ -497,8 +495,9 @@ public class DousonMaterialController {
         if (u.getRoleList().stream().anyMatch(t -> "materialManager".equals(t.getRoleCode()))) {
             request.getData().setOrderByPromiseDoneDate(1);
         }
-        PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
-        AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        final PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
+        final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+
         return new PageResult<>(pr.getTotal(), formatMaterialList(pr.getList())
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
         );

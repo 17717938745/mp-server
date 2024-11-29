@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * DeviceEntity
@@ -29,6 +30,7 @@ import lombok.ToString;
 @Builder
 @TableName("MP_INDUSTRY_DEVICE")
 @ClassFunction("设备")
+@Accessors(chain = true)
 public class DeviceEntity extends AbstractPrimaryKey {
 
     private static final long serialVersionUID = 1290544322994587440L;

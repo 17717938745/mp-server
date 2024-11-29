@@ -1,8 +1,7 @@
 <template>
   <div class="header">
-    <div class="header-left">
+    <div class="header-left" style="padding-left: 10px;">
       <a href="http://192.168.9.14:8081/#/dashboard" style="color: #10bf8a; display: flex; align-items: center;" target="_blank">
-        <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
         http://192.168.9.14:8081/#/dashboard
       </a>
     </div>

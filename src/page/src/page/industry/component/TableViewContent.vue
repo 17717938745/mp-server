@@ -9,6 +9,7 @@
       :handleEdit="props.handleEdit"
       :handleUpdate="props.handleUpdate"
       :handleEditShow="props.handleEditShow"
+      :handleDeleteShow="props.handleDeleteShow"
       :handleDelete="props.handleDelete"
       :scale="scale"
   >
@@ -47,6 +48,7 @@ interface PropType {
   handleEdit?: (row: any) => {};
   handleUpdate?: (row: any) => {};
   handleEditShow?: (row: any) => {};
+  handleDeleteShow?: (row: any) => {};
   handleDelete?: (row: any) => {};
   scale?: number;
 }

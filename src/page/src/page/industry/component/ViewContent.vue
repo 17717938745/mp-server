@@ -164,7 +164,7 @@
         Edit
       </el-link>
       <el-link
-          v-if="handleDelete && !row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))"
+          v-if="(!handleDeleteShow || handleDeleteShow(row)) && handleDelete && !row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))"
           :icon="Delete"
           @click="handleDelete(row)"
           type="danger">
@@ -365,6 +365,7 @@ interface Config {
   handleEdit?: (row: any) => {};
   handleUpdate?: (row: any) => {};
   handleEditShow?: (row: any) => {};
+  handleDeleteShow?: (row: any) => {};
   handleDelete?: (row: any) => {};
   handleShowDetail?: (row: any) => {};
   scale?: number;
@@ -485,6 +486,7 @@ const viewConfig = ref(props.viewConfig)
 const row = ref(props.row)
 const handleEdit = props.handleEdit
 const handleEditShow = props.handleEditShow
+const handleDeleteShow = props.handleDeleteShow
 const handleDelete = props.handleDelete
 const scale = ref(props.scale || 1)
 defineExpose({})

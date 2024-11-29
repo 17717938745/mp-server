@@ -1,37 +1,60 @@
 <template>
   <div>
     <div class="query-container">
+      <el-select v-model="query.data.deviceId"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.device"
+                 class="search-item">
+        <el-option
+            v-for="item in config.testDeviceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <el-input v-model="query.data.customerShortName"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.customerShortName"
-                class="search-item"/>
-      <el-input v-model="query.data.customerOrderNo"
-                @change="handlePage"
-                :placeholder="store.state.label.customerOrderNo"
-                class="search-item"/>
-      <el-input v-model="query.data.customerProjectSequence"
-                @change="handlePage"
-                :placeholder="store.state.label.customerProjectSequence"
                 class="search-item"/>
       <el-input v-model="query.data.saleOrderNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.saleOrderNo"
                 class="search-item"/>
       <el-input v-model="query.data.orderProjectNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.orderProjectNo"
                 class="search-item"/>
       <el-input v-model="query.data.materialNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.materialNo"
+                class="search-item"/>
+      <el-input v-model="query.data.improveMaterialDescribe"
+                @change="handlePage"
+                clearable
+                :placeholder="store.state.label.improveMaterialDescribe"
                 class="search-item"/>
       <el-input v-model="query.data.designNumber"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.designNumber"
+                class="search-item"/>
+      <el-input v-model="query.data.orderCount"
+                @change="handlePage"
+                clearable
+                :placeholder="store.state.label.orderCount"
+                type="number"
                 class="search-item"/>
       <el-date-picker
           v-model="dateTimeList"
           @change="handleDateTimeChange"
+          clearable
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
@@ -40,72 +63,30 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
-      <el-select v-model="query.data.surplusCountType"
-                 @change="handlePage"
-                 filterable
-                 allow-create
-                 clearable
-                 :placeholder="store.state.label.surplusCount"
-                 class="search-item">
-        <el-option
-            v-for="item in [
-                {
-                  value: 0,
-                  label: '=0',
-                },
-                {
-                  value: 1,
-                  label: '>0',
-                },
-                {
-                  value: -1,
-                  label: '<0',
-                },
-                {
-                  value: 2,
-                  label: '!=0',
-                },
-            ]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>
-      <el-select v-model="query.data.remainCountType"
-                 @change="handlePage"
-                 filterable
-                 allow-create
-                 clearable
-                 :placeholder="store.state.label.materialCount + '-' +  store.state.label.productionCount"
-                 class="search-item">
-        <el-option
-            v-for="item in [
-                {
-                  value: 0,
-                  label: '=0',
-                },
-                {
-                  value: 1,
-                  label: '>0',
-                },
-                {
-                  value: -1,
-                  label: '<0',
-                },
-                {
-                  value: 2,
-                  label: '!=0',
-                },
-            ]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>
-      <el-input v-model="query.data.chargeCompany"
+      <el-input v-model="query.data.delay"
                 @change="handlePage"
-                :placeholder="store.state.label.chargeCompany"
+                clearable
+                :placeholder="store.state.label.delay"
+                type="number"
                 class="search-item"/>
+      <el-input v-model="query.data.scrapCount"
+                @change="handlePage"
+                clearable
+                :placeholder="store.state.label.scrapCount"
+                type="number"
+                class="search-item"/>
+      <el-date-picker
+          v-model="dateTimeListSupplier"
+          @change="handleDateTimeChangeSupplier"
+          clearable
+          type="daterange"
+          format="YYYY-MM-DD"
+          range-separator="-"
+          start-placeholder="Start supplier promise done date"
+          end-placeholder="End supplier promise done date"
+          style="width: 180px; margin-right: 20px;"
+      >
+      </el-date-picker>
       <el-select v-model="query.data.nde"
                  filterable
                  allow-create
@@ -162,10 +143,30 @@
             :value="item.value"
         />
       </el-select>
+      <el-input v-model="query.data.materialOrderNo"
+                @change="handlePage"
+                clearable
+                :placeholder="store.state.label.materialOrderNo"
+                class="search-item"/>
       <el-input v-model="query.data.checkOrderNo"
                 @change="handlePage"
+                clearable
                 :placeholder="store.state.label.checkOrderNo"
                 class="search-item"/>
+      <el-select v-model="query.data.processType"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="store.state.label.processType"
+      >
+        <el-option
+            v-for="item in [{value: 0, label: 'Undone',}, {value: 1, label: 'Done',}, {value: null, label: 'All',}, ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -189,7 +190,8 @@
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
-        :handleDelete="includes(roleCodeList, 'admin') ? handleDelete : null"
+        :handleDeleteShow="handleDeleteShow"
+        :handleDelete="taskShow ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
@@ -197,6 +199,37 @@
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
     >
+      <template #operator="row">
+        <el-link
+            v-if="row.param.taskId"
+            :icon="DocumentCopy"
+            @click="handleCopy(row)"
+            class="mr10"
+            type="info"
+        >
+          Copy
+        </el-link>
+        <el-link
+            v-if="row.param.taskId"
+            :icon="ArrowUp"
+            @click="handleUp(row)"
+            class="mr10"
+            type="info"
+            :disabled="!(row.param.up)"
+        >
+          Up
+        </el-link>
+        <el-link
+            v-if="row.param.taskId"
+            :icon="ArrowDown"
+            @click="handleDown(row)"
+            class="mr10"
+            type="info"
+            :disabled="!(row.param.down)"
+        >
+          Down
+        </el-link>
+      </template>
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
       <el-form
@@ -206,11 +239,11 @@
           label-width="auto"
           label-position="top"
       >
-        <el-form-item prop="testDevice" :label="store.state.label.testDevice">
-          <el-select v-model="formData.testDevice"
+        <el-form-item prop="deviceId" :label="store.state.label.device">
+          <el-select v-model="formData.deviceId"
                      filterable
                      clearable
-                     :placeholder="store.state.label.testDevice"
+                     :placeholder="store.state.label.device"
                      class="search-item">
             <el-option
                 v-for="item in config.testDeviceList"
@@ -220,22 +253,16 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="planReformCount" :label="store.state.label.planReformCount">
+        <el-form-item prop="planReformCount" :label="store.state.label.planReformCount" v-if="taskShow">
           <el-input-number v-model="formData.planReformCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="supplierRemark" :label="store.state.label.supplierRemark">
+        <el-form-item prop="supplierRemark" :label="store.state.label.supplierRemark" v-if="taskShow">
           <el-input v-model="formData.supplierRemark" type="textarea" :rows="4"/>
         </el-form-item>
-        <el-form-item prop="productCountHour8" :label="store.state.label.productCountHour8">
-          <el-input-number v-model="formData.productCountHour8" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
-        <el-form-item prop="productCountHour12" :label="store.state.label.productCountHour12">
-          <el-input-number v-model="formData.productCountHour12" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
-        <el-form-item prop="processWorkingHour" :label="store.state.label.processWorkingHour">
+        <el-form-item prop="processWorkingHour" :label="store.state.label.processWorkingHour" v-if="taskShow">
           <el-input-number v-model="formData.processWorkingHour" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="onlineDate" :label="store.state.label.onlineDate">
+        <el-form-item prop="onlineDate" :label="store.state.label.onlineDate" v-if="taskShow">
           <el-date-picker
               type="date"
               v-model="formData.onlineDate"
@@ -244,39 +271,14 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="offlineDate" :label="store.state.label.offlineDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.offlineDate"
-              format="YYYY-MM-DD"
-              @change="formData.offlineDate = formatDate(formData.offlineDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item prop="delay" :label="store.state.label.delay">
-          <el-select
-              v-model="formData.delay"
-              filterable
-              allow-create
-              clearable
-              :placeholder="store.state.label.delay">
-            <el-option
-                label="Yes"
-                :value="true"
-            />
-            <el-option
-                label="No"
-                :value="false"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="processCount" :label="store.state.label.processCount">
+        <el-form-item prop="processCount" :label="store.state.label.processCount" v-if="taskShow">
           <el-input-number v-model="formData.processCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure">
-          <el-select v-model="formData.processProcedure"
+        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure" v-if="taskShow">
+          <el-select v-model="formData.processProcedureList"
                      filterable
                      clearable
+                     multiple
                      :placeholder="store.state.label.processProcedure"
                      class="search-item">
             <el-option
@@ -287,10 +289,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="surplus" :label="store.state.label.surplus">
-          <el-input-number v-model="formData.surplus" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
-        <el-form-item prop="supplierDoneDate" :label="store.state.label.supplierDoneDate">
+        <el-form-item prop="supplierDoneDate" :label="store.state.label.supplierDoneDate" v-if="supplierShow">
           <el-date-picker
               type="date"
               v-model="formData.supplierDoneDate"
@@ -299,10 +298,10 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="deliverCount" :label="store.state.label.deliverCount">
+        <el-form-item prop="deliverCount" :label="store.state.label.deliverCount" v-if="supplierShow">
           <el-input-number v-model="formData.deliverCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="deliverDate" :label="store.state.label.deliverDate">
+        <el-form-item prop="deliverDate" :label="store.state.label.deliverDate" v-if="supplierShow">
           <el-date-picker
               type="date"
               v-model="formData.deliverDate"
@@ -311,10 +310,10 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="receiptCount" :label="store.state.label.receiptCount">
+        <el-form-item prop="receiptCount" :label="store.state.label.receiptCount" v-if="supplierShow">
           <el-input-number v-model="formData.receiptCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="receiptDate" :label="store.state.label.receiptDate">
+        <el-form-item prop="receiptDate" :label="store.state.label.receiptDate" v-if="supplierShow">
           <el-date-picker
               type="date"
               v-model="formData.receiptDate"
@@ -323,169 +322,15 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="scrapCount" :label="store.state.label.scrapCount">
+        <el-form-item prop="scrapCount" :label="store.state.label.scrapCount" v-if="supplierShow">
           <el-input-number v-model="formData.scrapCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate">
+        <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate" v-if="supplierShow">
           <el-date-picker
               type="date"
               v-model="formData.supplierPromiseDoneDate"
               format="YYYY-MM-DD"
               @change="formData.supplierPromiseDoneDate = formatDate(formData.supplierPromiseDoneDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item prop="customerShortName" :label="store.state.label.customerShortName">
-          <el-input v-model="formData.customerShortName"/>
-        </el-form-item>
-        <el-form-item prop="customerOrderNo" :label="store.state.label.customerOrderNo">
-          <el-input v-model="formData.customerOrderNo"
-                    @change="formData.customerOrderNo = (formData.customerOrderNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="customerProjectSequence" :label="store.state.label.customerProjectSequence">
-          <el-input v-model="formData.customerProjectSequence"/>
-        </el-form-item>
-        <el-form-item prop="saleOrderNo" :label="store.state.label.saleOrderNo">
-          <el-input v-model="formData.saleOrderNo"
-                    @change="formData.saleOrderNo = (formData.saleOrderNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="orderProjectNo" :label="store.state.label.orderProjectNo">
-          <el-input v-model="formData.orderProjectNo"/>
-        </el-form-item>
-        <el-form-item prop="materialNo" :label="store.state.label.materialNo">
-          <el-input v-model="formData.materialNo"
-                    @change="formData.materialNo = (formData.materialNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="improveMaterialDescribe" :label="store.state.label.improveMaterialDescribe">
-          <el-input v-model="formData.improveMaterialDescribe" type="textarea" :rows="4"/>
-        </el-form-item>
-        <el-form-item prop="designNumber" :label="store.state.label.designNumber">
-          <el-input v-model="formData.designNumber"
-                    @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="orderCount" :label="store.state.label.orderCount">
-          <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
-        <el-form-item prop="productionDate" :label="store.state.label.productionDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.productionDate"
-              format="YYYY-MM-DD"
-              @change="formData.productionDate = formatDate(formData.productionDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item prop="promiseDoneDate" :label="store.state.label.promiseDoneDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.promiseDoneDate"
-              format="YYYY-MM-DD"
-              @change="formData.promiseDoneDate = formatDate(formData.promiseDoneDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item prop="blankMaterialNo" :label="store.state.label.blankMaterialNo">
-          <el-input v-model="formData.blankMaterialNo"
-                    @change="formData.blankMaterialNo = (formData.blankMaterialNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="blankMaterialDescribe" :label="store.state.label.blankMaterialDescribe">
-          <el-input v-model="formData.blankMaterialDescribe"/>
-        </el-form-item>
-        <el-form-item prop="roughcastDesignNumber" :label="store.state.label.roughcastDesignNumber">
-          <el-input v-model="formData.roughcastDesignNumber"
-                    @change="formData.roughcastDesignNumber = (formData.roughcastDesignNumber || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="materialCount" :label="store.state.label.materialCount">
-          <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
-        <el-form-item prop="stoveNo" :label="store.state.label.stoveNo">
-          <el-input v-model="formData.stoveNo" @change="formData.stoveNo = (formData.stoveNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="hotBatchNo" :label="store.state.label.hotBatchNo">
-          <el-input v-model="formData.hotBatchNo"
-                    @change="formData.hotBatchNo = (formData.hotBatchNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="serialNo" :label="store.state.label.serialNo">
-          <el-input v-model="formData.serialNo" @change="formData.serialNo = (formData.serialNo || '').toUpperCase()"/>
-        </el-form-item>
-        <el-form-item prop="nde" :label="store.state.label.nde">
-          <el-select v-model="formData.nde"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.nde"
-          >
-            <el-option
-                v-for="item in checkOrNotList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="assemble" :label="store.state.label.assemble">
-          <el-select v-model="formData.assemble"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.assemble"
-          >
-            <el-option
-                v-for="item in checkOrNotList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="testPress" :label="store.state.label.testPress">
-          <el-select v-model="formData.testPress"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.testPress"
-          >
-            <el-option
-                v-for="item in checkOrNotList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="surfaceTreatment" :label="store.state.label.surfaceTreatment">
-          <el-select v-model="formData.surfaceTreatment"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.surfaceTreatment"
-          >
-            <el-option
-                v-for="item in checkOrNotList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="chargeCompany" :label="store.state.label.chargeCompany">
-          <el-input v-model="formData.chargeCompany"/>
-        </el-form-item>
-        <el-form-item prop="description" :label="store.state.label.description">
-          <el-input v-model="formData.description" type="textarea" :rows="4"/>
-        </el-form-item>
-        <el-form-item prop="productionCount" :label="store.state.label.productionCount">
-          <el-input-number v-model="formData.productionCount" style="width: 60px;" :controls="false" :min="0"
-                           :disabled="!includes(roleCodeList, 'materialManager') && 'admin' !== user.username"/>
-        </el-form-item>
-        <el-form-item prop="arrangeProductionDate" :label="store.state.label.arrangeProductionDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.arrangeProductionDate"
-              format="YYYY-MM-DD"
-              @change="formData.arrangeProductionDate = formatDate(formData.arrangeProductionDate, 'yyyy-MM-dd')"
-              :disabled="!includes(roleCodeList, 'materialManager') && 'admin' !== user.username"
           >
           </el-date-picker>
         </el-form-item>
@@ -505,7 +350,7 @@ import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType,} from '@/store'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Search, UploadFilled,} from '@element-plus/icons-vue'
+import {Plus, Printer, Search, UploadFilled, DocumentCopy, ArrowUp, ArrowDown,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
@@ -522,45 +367,45 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'operator', labelKey: 'viewAndEdit', width: 235, type: ValueType.Operator,},
-  {value: 'device', labelKey: 'device', width: 189},
-  {value: 'customerShortName', labelKey: 'customerShortName', width: 189},
-  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 189},
-  {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 189},
-  {value: 'materialNo', labelKey: 'materialNo', width: 189},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 378, type: ValueType.Operator,},
+  {value: 'index', labelKey: 'index', width: 56,},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 121},
+  {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
+  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
+  {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 56},
+  {value: 'materialNo', labelKey: 'materialNo', width: 146},
   {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189},
-  {value: 'designNumber', labelKey: 'designNumber', width: 189},
-  {value: 'orderCount', labelKey: 'orderCount', width: 189},
-  {value: 'roughcastExpireDate', labelKey: 'roughcastExpireDate', width: 189},
-  {value: 'materialCount', labelKey: 'materialCount', width: 189},
-  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 189},
-  {value: 'planReformCount', labelKey: 'planReformCount', width: 189},
+  {value: 'designNumber', labelKey: 'designNumber', width: 154},
+  {value: 'orderCount', labelKey: 'orderCount', width: 65},
+  {value: 'roughcastExpireDate', labelKey: 'roughcastExpireDate', width: 102},
+  {value: 'materialCount', labelKey: 'materialCount', width: 65},
+  {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 102},
+  {value: 'planReformCount', labelKey: 'planReformCount', width: 65},
   {value: 'supplierRemark', labelKey: 'supplierRemark', width: 189},
-  {value: 'productCountHour8', labelKey: 'productCountHour8', width: 189},
-  {value: 'productCountHour12', labelKey: 'productCountHour12', width: 189},
-  {value: 'processWorkingHour', labelKey: 'processWorkingHour', width: 189},
-  {value: 'onlineDate', labelKey: 'onlineDate', width: 189},
-  {value: 'offlineDate', labelKey: 'offlineDate', width: 189},
-  {value: 'delay', labelKey: 'delay', width: 189},
-  {value: 'processCount', labelKey: 'processCount', width: 189},
-  {value: 'processProcedure', labelKey: 'processProcedure', width: 189},
-  {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 189},
-  {value: 'deliverCount', labelKey: 'deliverCount', width: 189},
-  {value: 'deliverDate', labelKey: 'deliverDate', width: 189},
-  {value: 'receiptCount', labelKey: 'receiptCount', width: 189},
-  {value: 'receiptDate', labelKey: 'receiptDate', width: 189},
-  {value: 'scrapCount', labelKey: 'scrapCount', width: 189},
-  {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 189},
-  {value: 'nde', labelKey: 'nde', width: 189},
-  {value: 'assemble', labelKey: 'assemble', width: 189},
-  {value: 'testPress', labelKey: 'testPress', width: 189},
-  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 189},
-  {value: 'surplus', labelKey: 'surplus', width: 189},
+  {value: 'productCountHour8', labelKey: 'productCountHour8', width: 68},
+  {value: 'productCountHour12', labelKey: 'productCountHour12', width: 68},
+  {value: 'processWorkingHour', labelKey: 'processWorkingHour', width: 68},
+  {value: 'onlineDate', labelKey: 'onlineDate', width: 102},
+  {value: 'offlineDate', labelKey: 'offlineDate', width: 102},
+  {value: 'delay', labelKey: 'delay', width: 68},
+  {value: 'processCount', labelKey: 'processCount', width: 68},
+  {value: 'processProcedureFormat', labelKey: 'processProcedure', width: 131},
+  {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
+  {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
+  {value: 'deliverDate', labelKey: 'deliverDate', width: 102},
+  {value: 'receiptCount', labelKey: 'receiptCount', width: 68},
+  {value: 'receiptDate', labelKey: 'receiptDate', width: 102},
+  {value: 'scrapCount', labelKey: 'scrapCount', width: 68},
+  {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 102},
+  {value: 'nde', labelKey: 'nde', width: 56},
+  {value: 'assemble', labelKey: 'assemble', width: 56},
+  {value: 'testPress', labelKey: 'testPress', width: 56},
+  {value: 'surfaceTreatment', labelKey: 'surfaceTreatment', width: 56},
+  {value: 'surplus', labelKey: 'surplus', width: 68},
   {
     value: 'materialOrderNoFormat',
     labelKey: 'materialOrderNo',
-    width: 146,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    width: 86,
     type: ValueType.Link,
     openLink: (d: any) => {
       window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
@@ -569,8 +414,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'checkOrderNoFormat',
     labelKey: 'checkOrderNo',
-    width: 146,
-    mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
+    width: 103,
     type: ValueType.Link,
     openLink: (d: any) => {
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
@@ -589,8 +433,7 @@ httpGet(`system/user/config/list`, {}).then(
     })
 const defaultFormData = {
   creator: user.userId,
-  device: '',
-  testDevice: '',
+  deviceId: '',
   customerShortName: '',
   saleOrderNo: '',
   orderProject: '',
@@ -610,7 +453,7 @@ const defaultFormData = {
   offlineDate: '',
   delay: 0,
   processCount: 0,
-  processProcedure: '',
+  processProcedureList: [],
   nde: '',
   assemble: '',
   testPress: '',
@@ -634,13 +477,16 @@ const checkOrNotList = ref([
 ])
 const state = reactive({
   dateTimeList: [],
+  dateTimeListSupplier: [],
   photoVisible: false,
   photoList: new Array<any>(),
   userConfigList: new Array<any>(),
   expandRowKeys: new Array<string>(),
   query: {
     data: {
+      deviceId: '',
       customerShortName: '',
+      materialOrderNo: '',
       customerOrderNo: '',
       customerProjectSequence: '',
       saleOrderNo: '',
@@ -648,7 +494,6 @@ const state = reactive({
       materialNo: '',
       designNumber: '',
       surplusCountType: null,
-      remainCountType: includes(roleCodeList, 'materialManager') ? 2 : null,
       chargeCompany: '',
       nde: '',
       assemble: '',
@@ -657,10 +502,19 @@ const state = reactive({
       checkOrderNo: '',
       startPromiseDoneDate: '',
       endPromiseDoneDate: '',
+      startSupplierDoneDate: '',
+      endSupplierDoneDate: '',
+      startSupplierPromiseDoneDate: '',
+      endSupplierPromiseDoneDate: '',
+      improveMaterialDescribe: '',
+      orderCount: null,
+      delay: null,
+      scrapCount: null,
+      processType: 0,
     },
     page: {
       page: DEFAULT_PAGE,
-      limit: 20,
+      limit: 120,
     },
   },
   tableData: new Array<any>(),
@@ -692,16 +546,13 @@ const state = reactive({
   },
 })
 const toggleKeyList = [
-  'customerOrderNo',
-  'customerProjectSequence',
-  'blankMaterialNo',
-  'blankMaterialDescribe',
-  'roughcastDesignNumber',
-  'stoveNo',
-  'hotBatchNo',
-  'serialNo',
-  'materialOrderNo',
-  'checkOrderNo',
+  'customerShortName',
+  'saleOrderNo',
+  'orderProjectNo',
+  'materialNo',
+  'improveMaterialDescribe',
+  'designNumber',
+  'orderCount',
 ]
 const showMore = ref(true)
 const handleToggleMore = (v) => {
@@ -729,6 +580,22 @@ const handleDateTimeChange = () => {
   }
   handlePage()
 }
+const handleDateTimeChangeSupplier = () => {
+  if (state.dateTimeListSupplier && state.dateTimeListSupplier.length > 1) {
+    state.query.data.startSupplierPromiseDoneDate = formatDate(
+        state.dateTimeListSupplier[0],
+        'yyyy-MM-dd hh:mm:ss'
+    );
+    state.query.data.endSupplierPromiseDoneDate = formatDate(
+        state.dateTimeListSupplier[1],
+        'yyyy-MM-dd hh:mm:ss'
+    );
+  } else {
+    state.query.data.startSupplierPromiseDoneDate = ''
+    state.query.data.endSupplierPromiseDoneDate = ''
+  }
+  handlePage()
+}
 
 const handlePage = () => {
   httpGet(`douson/task/page`, state.query).then(
@@ -748,9 +615,11 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
-const supplierManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const taskShow = 'admin' === user.username || (includes(roleCodeList, 'materialManager') && !includes(roleCodeList, 'supplierManager'))
+const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'materialManager'))
+const supplierManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const materialManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView')) {
+if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
   if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'materialManager')) {
     columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
   } else if (includes(roleCodeList, 'materialManager') && !includes(roleCodeList, 'supplierManager')) {
@@ -782,11 +651,50 @@ const handleEdit = (row: any) => {
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  if (includes(roleCodeList, 'admin') || includes(roleCodeList, 'material') || includes(roleCodeList, 'materialManager')) {
-    return true
-  } else {
-    return false
-  }
+  return row.taskId && ('admin' === user.username || includes(roleCodeList, 'materialManager') || includes(roleCodeList, 'supplierManager'))
+}
+const handleDeleteShow = (row: any) => {
+  return row.taskId
+}
+const handleCopy = (d) => {
+  const request = Object.assign({}, d.param, {
+    taskId: '', id: '', sorter: (d.param.sorter || 0) + 1,
+    supplierRemark: null,
+    productCountHour8: null,
+    productCountHour12: null,
+    processWorkingHour: null,
+    onlineDate: null,
+    offlineDate: null,
+    delay: null,
+    processCount: null,
+    processProcedureList: [],
+    supplierDoneDate: null,
+    deliverCount: null,
+    deliverDate: null,
+    receiptCount: null,
+    receiptDate: null,
+    scrapCount: null,
+    supplierPromiseDoneDate: null,
+    surplus: null,
+  })
+  httpPutJson('douson/task/merge', request).then(() => {
+    ElMessage.success('Copy success')
+    handlePage()
+  })
+}
+const handleUp = (d) => {
+  const request = Object.assign({}, d.param, {sorter: (d.param.sorter || 0) - 1})
+  httpPutJson('douson/task/merge', request).then(() => {
+    ElMessage.success('Up success')
+    handlePage()
+  })
+}
+const handleDown = (d) => {
+  const request = Object.assign({}, d.param, {sorter: (d.param.sorter || 0) + 2})
+  httpPutJson('douson/task/merge', request).then(() => {
+    ElMessage.success('Down success')
+    handlePage()
+  })
 }
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {
@@ -815,7 +723,7 @@ const handleDelete = (row: any) => {
     type: 'warning',
   }).then(() => {
     httpDelete('douson/task', {
-      materialId: row.materialId,
+      taskId: row.taskId,
     })
     .then(() => {
       ElMessage.success('Delete success')
@@ -849,6 +757,7 @@ const {
   userConfigList,
   total,
   dateTimeList,
+  dateTimeListSupplier,
   formData,
   formSave,
   formVisible,
@@ -865,10 +774,8 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.productionCount === row.materialCount) {
+  if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'
-  } else if (row.surplusCount < 0) {
-    return 'row-error'
   }
   return ''
 }
