@@ -517,9 +517,9 @@ public class DousonMaterialController {
     ) {
         final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
         if (!r.getList().isEmpty()) {
-            if (r.getList().stream().map(MaterialResponse::getCheckOrderNo).distinct().count() != 1) {
+            /*if (r.getList().stream().map(MaterialResponse::getCheckOrderNo).distinct().count() != 1) {
                 throw new BusinessException(MP_DATA_QUERY_ERROR);
-            }
+            }*/
             materialMapper.update(
                     null,
                     new LambdaUpdateWrapper<MaterialEntity>()
@@ -544,9 +544,9 @@ public class DousonMaterialController {
     ) {
         final ListResult<MaterialResponse> r = new ListResult<>(formatMaterialList(materialList(request.setAccurateMatch(true))));
         if (!r.getList().isEmpty()) {
-            if (r.getList().stream().map(MaterialResponse::getMaterialOrderNo).distinct().count() != 1) {
+            /*if (r.getList().stream().map(MaterialResponse::getMaterialOrderNo).distinct().count() != 1) {
                 throw new BusinessException(MP_DATA_QUERY_ERROR);
-            }
+            }*/
             materialMapper.update(
                     null,
                     new LambdaUpdateWrapper<MaterialEntity>()
