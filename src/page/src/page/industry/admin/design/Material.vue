@@ -428,41 +428,41 @@ const uploadData = ref({})
 const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 165, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 136, type: ValueType.Operator,},
   {
     value: 'customerShortName',
     labelKey: 'customerShortName',
-    width: 189,
+    width: 121,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'customerOrderNo',
     labelKey: 'customerOrderNo',
-    width: 101,
+    width: 89,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'customerProjectSequence',
     labelKey: 'customerProjectSequence',
-    width: 72,
+    width: 66,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'saleOrderNo',
     labelKey: 'saleOrderNo',
-    width: 89,
+    width: 78,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'orderProjectNo',
     labelKey: 'orderProjectNo',
-    width: 72,
+    width: 54,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'materialNo',
     labelKey: 'materialNo',
-    width: 138,
+    width: 112,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -474,13 +474,13 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'designNumber',
     labelKey: 'designNumber',
-    width: 121,
+    width: 109,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'orderCount',
     labelKey: 'orderCount',
-    width: 73,
+    width: 46,
     highLight: true,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
@@ -514,7 +514,7 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 168,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
-  {value: 'materialCount', labelKey: 'materialCount', highLight: true, width: 82},
+  {value: 'materialCount', labelKey: 'materialCount', highLight: true, width: 46},
   {value: 'stoveNo', labelKey: 'stoveNo', width: 87},
   {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 87},
   {value: 'serialNo', labelKey: 'serialNo', width: 189},
@@ -522,21 +522,21 @@ const columnConfigList = ref<ViewConfig[]>([
     value: 'surplusCount',
     labelKey: 'surplusCount',
     highLight: true,
-    width: 72,
+    width: 63,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
-  {value: 'nde', labelKey: 'nde', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
-  {value: 'assemble', labelKey: 'assemble', width: 68, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'nde', labelKey: 'nde', width: 56, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
+  {value: 'assemble', labelKey: 'assemble', width: 56, mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],},
   {
     value: 'testPress',
     labelKey: 'testPress',
-    width: 68,
+    width: 56,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
     value: 'surfaceTreatment',
     labelKey: 'surfaceTreatment',
-    width: 68,
+    width: 56,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -545,13 +545,13 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 189,
     // mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
-  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 137},
+  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 116},
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
   {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
   {
     value: 'materialOrderNoFormat',
     labelKey: 'materialOrderNo',
-    width: 146,
+    width: 69,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
     type: ValueType.Link,
     openLink: (d: any) => {
@@ -561,7 +561,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'checkOrderNoFormat',
     labelKey: 'checkOrderNo',
-    width: 146,
+    width: 76,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
     type: ValueType.Link,
     openLink: (d: any) => {
@@ -571,7 +571,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'generateTaskFormat',
     labelKey: 'generateTask',
-    width: 189,
+    width: 61,
   },
 ])
 
@@ -807,7 +807,7 @@ if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
     } else if ('chargeCompany' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('productionCount' === t.value) {
-      t.width = 168
+      t.width = 125
       t.type = ValueType.NumberEdit
     }
     return t
