@@ -463,6 +463,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "报告管理"
         },
         {
+          "value": "reportSummaryAccount",
+          "label": "机加工KPI数据汇总表"
+        },
+        {
+          "value": "reportSummaryDevice",
+          "label": "机加工设备数据汇总表"
+        },
+        {
           "value": "accidentReport",
           "label": "事故报告"
         },
@@ -1902,6 +1910,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "reportManage",
           "label": "quản lý báo cáo"
+        },
+        {
+          "value": "reportSummaryAccount",
+          "label": "Bảng tổng kết số liệu KPI các máy gia công"
+        },
+        {
+          "value": "reportSummaryDevice",
+          "label": "Bảng tổng kết số liệu  các máy gia công"
         },
         {
           "value": "accidentReport",

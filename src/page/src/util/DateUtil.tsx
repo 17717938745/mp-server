@@ -136,7 +136,7 @@ export const getMonthEnd = () => {
   const now = new Date()
   const y = now.getFullYear()
   const m = now.getMonth()
-  return new Date(new Date(m < 11 ? y : (y + 1),  m < 11 ? (m + 1) : m, 1).getTime() - 24 * 3600 * 1000)
+  return new Date(new Date(m <= 11 ? y : (y + 1),  m <= 11 ? (m + 1) : m, 1).getTime() - 24 * 3600 * 1000)
 }
 
 // 格式化日期：yyyy-MM-dd

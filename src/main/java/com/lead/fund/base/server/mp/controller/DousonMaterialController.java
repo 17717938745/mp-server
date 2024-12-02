@@ -497,7 +497,6 @@ public class DousonMaterialController {
         }
         final PageResult<MaterialEntity> pr = DatabaseUtil.page(request, this::materialList);
         final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
-
         return new PageResult<>(pr.getTotal(), formatMaterialList(pr.getList())
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
         );

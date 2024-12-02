@@ -5,7 +5,7 @@ import com.lead.fund.base.server.mp.entity.douson.ReportEntity;
 import org.springframework.stereotype.Repository;
 
 /**
- * IndustryReportMapper
+ * ReportMapper
  *
  * @author panchaohui
  * @version 1.0
