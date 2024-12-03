@@ -64,8 +64,8 @@ const state = reactive({
       vocationType: '',
       user: '',
       date: '',
-      startDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
-      endDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
+      startReportDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
+      endReportDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
     },
     page: {
       page: DEFAULT_PAGE,
@@ -81,17 +81,17 @@ const state = reactive({
 
 const handleDateTimeChange = () => {
   if (state.dateTimeList && state.dateTimeList.length > 1) {
-    state.query.data.startDate = formatDate(
+    state.query.data.startReportDate = formatDate(
         state.dateTimeList[0],
         'yyyy-MM-dd'
     );
-    state.query.data.endDate = formatDate(
+    state.query.data.endReportDate = formatDate(
         state.dateTimeList[1],
         'yyyy-MM-dd'
     );
   } else {
-    state.query.data.startDate = ''
-    state.query.data.endDate = ''
+    state.query.data.startReportDate = ''
+    state.query.data.endReportDate = ''
   }
   handleList()
 }
