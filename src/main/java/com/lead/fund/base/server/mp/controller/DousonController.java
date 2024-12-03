@@ -131,7 +131,6 @@ import com.lead.fund.base.server.mp.mapper.douson.QualityMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TemplateMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TemplatePhotoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TroubleAttachmentMapper;
@@ -266,7 +265,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @date 2024-04-30 16:11
  */
-@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused"})
+@SuppressWarnings({"SqlResolve"})
 @RestController
 @RequestMapping("/douson")
 @Slf4j
@@ -309,8 +308,6 @@ public class DousonController {
     private ReportSerialNoDao reportSerialNoDao;
     @Resource
     private MpUserMapper userMapper;
-    @Resource
-    private ReportUserMapper reportUserMapper;
     @Resource
     private AccidentMapper accidentMapper;
     @Resource

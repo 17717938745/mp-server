@@ -136,4 +136,8 @@ public class ReportEntity extends AbstractAdministrator {
      * 程式运行时间/分钟
      */
     private Integer runningMinute;
+    /**
+     * 工作时间
+     */
+    private Integer workMinute;
 }

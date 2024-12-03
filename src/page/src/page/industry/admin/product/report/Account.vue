@@ -101,6 +101,7 @@ const handleList = () => {
       }
   )
 }
+handleList()
 const {
   query,
   tableData,

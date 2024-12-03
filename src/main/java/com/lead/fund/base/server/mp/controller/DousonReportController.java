@@ -52,7 +52,6 @@ import com.lead.fund.base.server.mp.mapper.douson.ProductMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportPhotoMapper;
 import com.lead.fund.base.server.mp.mapper.douson.ReportSerialNoMapper;
-import com.lead.fund.base.server.mp.mapper.douson.ReportUserMapper;
 import com.lead.fund.base.server.mp.request.ProductRequest;
 import com.lead.fund.base.server.mp.request.ReportQueryRequest;
 import com.lead.fund.base.server.mp.request.ReportRequest;
@@ -141,8 +140,6 @@ public class DousonReportController {
     @Resource
     private ReportSerialNoDao reportSerialNoDao;
     @Resource
-    private ReportUserMapper reportUserMapper;
-    @Resource
     private UrlHelper urlHelper;
 
     private ReportEntity mergeRelevance(ReportRequest request, ReportEntity e) {
@@ -168,12 +165,14 @@ public class DousonReportController {
                                 .reduce(BigDecimal.ZERO, BigDecimal::add))
                         .eq(OrderEntity::getId, e.getOrderId())
         );
+        reportMapper.update(
+                null,
+                new LambdaUpdateWrapper<ReportEntity>()
+                        .set(ReportEntity::getWorkMinute, defaultDecimal(request.getWorkMinute(), new BigDecimal("435")))
+                        .eq(ReportEntity::getReportDate, e.getReportDate())
+                        .eq(ReportEntity::getUserId, e.getUserId())
+        );
         final ReportUserEntity ru = new ReportUserEntity().setReportDate(e.getReportDate()).setUserId(e.getUserId()).setWorkMinute(request.getWorkMinute());
-        try {
-            reportUserMapper.insert(ru);
-        } catch (Exception ex) {
-            reportUserMapper.updateByMultiId(ru);
-        }
         return e;
     }
 
@@ -350,22 +349,6 @@ public class DousonReportController {
                 (r, t) -> r.setUserId(t.getId())
                         .setUsername(t.getUsername())
                         .setUserFormat(t.getName())
-        );
-        // 工人当日工作情况（工时、...）
-        MultitaskUtil.supplementList(
-                list,
-                t -> CollUtil.toList(t.getReportDate(), t.getUserId()),
-                l1 -> reportUserMapper.selectList(
-                        DatabaseUtil.singleOr(
-                                new LambdaQueryWrapper<>(),
-                                l1,
-                                (lam, p) -> lam
-                                        .eq(ReportUserEntity::getReportDate, p.get(0))
-                                        .eq(ReportUserEntity::getUserId, p.get(1))
-                        )
-                ),
-                (t, r) -> t.getReportDate().equals(DateUtil.day(r.getReportDate())) && t.getUserId().equals(r.getUserId()),
-                (t, r) -> t.setWorkMinute(r.getWorkMinute())
         );
         // 产品
         MultitaskUtil.supplementList(
