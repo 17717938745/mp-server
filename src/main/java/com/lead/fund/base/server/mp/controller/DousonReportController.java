@@ -65,9 +65,7 @@ import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,7 +87,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * DousonMaterialController
+ * DousonReportController
  *
  * @author panchaohui
  * @version 1.0
@@ -625,12 +623,12 @@ public class DousonReportController {
                         t -> CollUtil.toList(t.getUserId(), t.getReportDateList()),
                         Collectors.reducing(
                                 (t, t1) -> new ReportSummaryAccountResponse()
+                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
+                                        .setSalary(t.getSalary().add(t1.getSalary()))
                                         .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
                                         .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
                                         .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
                                         .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
-                                        .setSalary(t.getSalary().add(t1.getSalary()))
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
                         )
                 ))
                 .values()
@@ -639,16 +637,13 @@ public class DousonReportController {
                 .collect(Collectors.groupingBy(
                         ReportSummaryAccountResponse::getUserId,
                         Collectors.reducing(
-                                (t, t1) -> {
-                                    final ReportSummaryAccountResponse r = new ReportSummaryAccountResponse()
-                                            .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
-                                            .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
-                                            .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
-                                            .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
-                                            .setSalary(t.getSalary().add(t1.getSalary()))
-                                            .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP));
-                                    return r;
-                                }
+                                (t, t1) -> new ReportSummaryAccountResponse()
+                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
+                                        .setSalary(t.getSalary().add(t1.getSalary()))
+                                        .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
+                                        .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
+                                        .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                        .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
                         )
                 ))
                 .values()
@@ -705,12 +700,12 @@ public class DousonReportController {
                         ReportSummaryDeviceResponse::getDeviceId,
                         Collectors.reducing(
                                 (t, t1) -> new ReportSummaryDeviceResponse()
+                                        .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
+                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                                         .setDeviceId(defaultIfBlank(t.getDeviceId(), t1.getDeviceId()))
                                         .setDeviceIdFormat(defaultIfBlank(t.getDeviceIdFormat(), t1.getDeviceIdFormat()))
                                         .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
                                         .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
-                                        .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                         )
                 ))
                 .values()
