@@ -330,13 +330,16 @@ public class DousonReportController {
     }
 
     private List<ReportResponse> formatReportList(List<ReportEntity> l) {
+        return formatReportList(l, false);
+    }
+
+    private List<ReportResponse> formatReportList(List<ReportEntity> l, boolean pure) {
         if (CollUtil.isEmpty(l)) {
             return new ArrayList<>();
         }
-        final List<ReportResponse> list = INDUSTRY_INSTANCE.reportList(l);
-        for (ReportResponse t : list) {
+        final List<ReportResponse> list = INDUSTRY_INSTANCE.reportList(l).stream().peek(t -> {
             t.setCurrentDeviceUseMinute((t.getDeviceRunningEndHour() - t.getDeviceRunningStartHour()) * 60 + (t.getDeviceRunningEndMinute() - t.getDeviceRunningStartMinute()));
-        }
+        }).collect(Collectors.toList());
         // 用户
         MultitaskUtil.supplementList(
                 list,
@@ -383,74 +386,76 @@ public class DousonReportController {
                 (r, t) -> defaultIfBlank(r.getTestDevice()).equals(t.getId()),
                 INDUSTRY_INSTANCE::formatReport
         );
-        // 照片
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getReportId,
-                l1 -> reportPhotoMapper.selectList(
-                        new LambdaQueryWrapper<ReportPhotoEntity>()
-                                .in(ReportPhotoEntity::getReportId, l1)
-                ),
-                (r, t) -> r.getReportId().equals(t.getReportId()),
-                (r, t) -> INDUSTRY_INSTANCE.reportPhoto(r, t, urlHelper.getUrlPrefix())
-        );
-        // 序列号
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getReportId,
-                l1 -> reportSerialNoMapper.selectList(
-                        new LambdaQueryWrapper<ReportSerialNoEntity>()
-                                .in(ReportSerialNoEntity::getReportId, l1)
-                ),
-                (t, r) -> t.getReportId().equals(r.getReportId()),
-                (t, r) -> t.getSerialNoList().add(r.getSerialNo())
-        );
-        // 加工工序
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getProcessProcedure,
-                l1 -> paramDao.listByCategoryId("processProcedure"),
-                (t, r) -> defaultIfBlank(t.getProcessProcedure()).equals(r.getValue()),
-                (t, r) -> t.setProcessProcedureFormat(r.getLabel())
-        );
-        // 加工类型
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getProcessType,
-                l1 -> paramDao.listByCategoryId("processType"),
-                (t, r) -> defaultIfBlank(t.getProcessType()).equals(r.getValue()),
-                (t, r) -> t.setProcessTypeFormat(r.getLabel())
-        );
-        // 班次
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getSchedule,
-                l1 -> paramDao.listByCategoryId("schedule"),
-                (t, r) -> defaultIfBlank(t.getSchedule()).equals(r.getValue()),
-                (t, r) -> t.setScheduleFormat(r.getLabel())
-        );
-        // 停机内容
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getStopWorkingContent1,
-                l1 -> paramDao.listByCategoryId("stopWorkingContent1"),
-                (t, r) -> defaultIfBlank(t.getStopWorkingContent1()).equals(r.getValue()),
-                (t, r) -> t.setStopWorkingContent1Format(r.getLabel())
-        );
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getStopWorkingContent2,
-                l1 -> paramDao.listByCategoryId("stopWorkingContent2"),
-                (t, r) -> defaultIfBlank(t.getStopWorkingContent2()).equals(r.getValue()),
-                (t, r) -> t.setStopWorkingContent2Format(r.getLabel())
-        );
-        MultitaskUtil.supplementList(
-                list,
-                ReportResponse::getStopWorkingContent3,
-                l1 -> paramDao.listByCategoryId("stopWorkingContent3"),
-                (t, r) -> defaultIfBlank(t.getStopWorkingContent3()).equals(r.getValue()),
-                (t, r) -> t.setStopWorkingContent3Format(r.getLabel())
-        );
+        if (!pure) {
+            // 照片
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getReportId,
+                    l1 -> reportPhotoMapper.selectList(
+                            new LambdaQueryWrapper<ReportPhotoEntity>()
+                                    .in(ReportPhotoEntity::getReportId, l1)
+                    ),
+                    (r, t) -> r.getReportId().equals(t.getReportId()),
+                    (r, t) -> INDUSTRY_INSTANCE.reportPhoto(r, t, urlHelper.getUrlPrefix())
+            );
+            // 序列号
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getReportId,
+                    l1 -> reportSerialNoMapper.selectList(
+                            new LambdaQueryWrapper<ReportSerialNoEntity>()
+                                    .in(ReportSerialNoEntity::getReportId, l1)
+                    ),
+                    (t, r) -> t.getReportId().equals(r.getReportId()),
+                    (t, r) -> t.getSerialNoList().add(r.getSerialNo())
+            );
+            // 加工工序
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getProcessProcedure,
+                    l1 -> paramDao.listByCategoryId("processProcedure"),
+                    (t, r) -> defaultIfBlank(t.getProcessProcedure()).equals(r.getValue()),
+                    (t, r) -> t.setProcessProcedureFormat(r.getLabel())
+            );
+            // 加工类型
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getProcessType,
+                    l1 -> paramDao.listByCategoryId("processType"),
+                    (t, r) -> defaultIfBlank(t.getProcessType()).equals(r.getValue()),
+                    (t, r) -> t.setProcessTypeFormat(r.getLabel())
+            );
+            // 班次
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getSchedule,
+                    l1 -> paramDao.listByCategoryId("schedule"),
+                    (t, r) -> defaultIfBlank(t.getSchedule()).equals(r.getValue()),
+                    (t, r) -> t.setScheduleFormat(r.getLabel())
+            );
+            // 停机内容
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getStopWorkingContent1,
+                    l1 -> paramDao.listByCategoryId("stopWorkingContent1"),
+                    (t, r) -> defaultIfBlank(t.getStopWorkingContent1()).equals(r.getValue()),
+                    (t, r) -> t.setStopWorkingContent1Format(r.getLabel())
+            );
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getStopWorkingContent2,
+                    l1 -> paramDao.listByCategoryId("stopWorkingContent2"),
+                    (t, r) -> defaultIfBlank(t.getStopWorkingContent2()).equals(r.getValue()),
+                    (t, r) -> t.setStopWorkingContent2Format(r.getLabel())
+            );
+            MultitaskUtil.supplementList(
+                    list,
+                    ReportResponse::getStopWorkingContent3,
+                    l1 -> paramDao.listByCategoryId("stopWorkingContent3"),
+                    (t, r) -> defaultIfBlank(t.getStopWorkingContent3()).equals(r.getValue()),
+                    (t, r) -> t.setStopWorkingContent3Format(r.getLabel())
+            );
+        }
         final Map<List<String>, List<UserDeviceResponse>> dayUserDeviceMap = list.stream()
                 .filter(t -> isNotBlank(t.getReportDate()))
                 .filter(t -> isNotBlank(t.getUserId()))
@@ -605,7 +610,7 @@ public class DousonReportController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute ReportQueryRequest request
     ) {
-        final List<ReportResponse> rl = formatReportList(reportList(request));
+        final List<ReportResponse> rl = formatReportList(reportList(request), true);
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<ReportSummaryAccountResponse> list = rl.stream()
                 .collect(Collectors.groupingBy(
@@ -681,7 +686,7 @@ public class DousonReportController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute ReportQueryRequest request
     ) {
-        final List<ReportResponse> rl = formatReportList(reportList(request));
+        final List<ReportResponse> rl = formatReportList(reportList(request), true);
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<ReportSummaryDeviceResponse> list = rl.stream()
                 .collect(Collectors.groupingBy(
