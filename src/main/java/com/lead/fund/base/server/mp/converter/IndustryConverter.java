@@ -71,7 +71,7 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "reportId", source = "id")
     @Mapping(target = "reportDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getReportDate()))")
     @Mapping(target = "photoList", expression = "java(new java.util.ArrayList<>())")
-    @Mapping(target = "workMinute", constant = "435")
+    @Mapping(target = "workMinute", source = "t.workMinute")
     @Mapping(target = "leaderSubsidyMinute", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getLeaderSubsidyMinute()))")
     @Mapping(target = "deviceRunningStartHour", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getDeviceRunningStartHour()))")
     @Mapping(target = "deviceRunningStartMinute", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getDeviceRunningStartMinute()))")
@@ -123,7 +123,10 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "runningMinute", ignore = true)
     ProductResponse deviceDecorateProduct(@MappingTarget ProductResponse t, DeviceEntity t1);
 
+    @Mapping(target = "deviceId", source = "t.id")
+    @Mapping(target = "testDevice", source = "t.id")
     @Mapping(target = "testDeviceFormat", source = "t.deviceName")
+    @Mapping(target = "deviceIdFormat", source = "t.deviceName")
     @Mapping(target = "deviceUnitPrice", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getUnitPrice()))")
     @Mapping(target = "deviceUnitPriceFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.formatIntTh(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getUnitPrice())))")
     @Mapping(target = "deviceRunningStartHour", expression = "java(com.lead.fund.base.common.util.StrUtil.isNotBlank(r.getReportId()) ? r.getDeviceRunningStartHour() : com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getRunningHour()).intValue())")

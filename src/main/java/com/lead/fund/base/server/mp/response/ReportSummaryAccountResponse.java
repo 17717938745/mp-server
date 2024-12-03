@@ -2,6 +2,8 @@ package com.lead.fund.base.server.mp.response;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -41,5 +43,6 @@ public class ReportSummaryAccountResponse implements Serializable {
     /**
      * 报告日期
      */
-    private String reportDate;
+    private Set<String> reportDateList = new HashSet<>();
+    private int reportDateCount;
 }

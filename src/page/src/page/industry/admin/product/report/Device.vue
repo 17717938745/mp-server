@@ -50,7 +50,8 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'userIdFormat', labelKey: 'user', width: 168},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 268},
+  {value: 'reportDateCount', label: '工作天数', width: 168},
   {value: 'deviceCompletePercentFormat', label: '平均值项:当班绩效，当台的效率/%', width: 128},
   {value: 'deviceUsePercentFormat', label: '平均值项:当班设备利用率', width: 110},
   {value: 'percentDiffFormat', label: '差异比', width: 110},

@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.response;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -41,10 +42,11 @@ public class ReportSummaryDeviceResponse implements Serializable {
     /**
      * 用户
      */
-    private String userId;
-    private String userIdFormat;
+    private String deviceId;
+    private String deviceIdFormat;
     /**
      * 报告日期
      */
-    private String reportDate;
+    private Set<String> reportDateList;
+    private int reportDateCount;
 }

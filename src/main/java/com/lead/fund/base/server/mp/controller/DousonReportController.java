@@ -67,6 +67,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -613,38 +614,41 @@ public class DousonReportController {
         final List<ReportResponse> rl = formatReportList(reportList(request), true);
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<ReportSummaryAccountResponse> list = rl.stream()
+                .map(t -> new ReportSummaryAccountResponse()
+                        .setUserId(t.getUserId())
+                        .setUserIdFormat(t.getUserFormat())
+                        .setReportDateList(CollUtil.newHashSet(t.getReportDate()))
+                        .setReportDateCount(1)
+                        .setSalary(t.getSalary())
+                        .setDeviceCompletePercent(t.getDeviceCompletePercent()))
                 .collect(Collectors.groupingBy(
-                        t -> CollUtil.toList(t.getUserId(), t.getReportDate()),
+                        t -> CollUtil.toList(t.getUserId(), t.getReportDateList()),
                         Collectors.reducing(
-                                new ReportSummaryAccountResponse()
-                                        .setReportDate("")
-                                        .setSalary(BigDecimal.ZERO)
-                                        .setDeviceCompletePercent(BigDecimal.ZERO),
-                                t -> new ReportSummaryAccountResponse()
-                                        .setUserId(t.getUserId())
-                                        .setUserIdFormat(t.getUserFormat())
-                                        .setReportDate(t.getReportDate())
-                                        .setSalary(t.getSalary())
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent()),
                                 (t, t1) -> new ReportSummaryAccountResponse()
                                         .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
                                         .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
-                                        .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
+                                        .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                        .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
                                         .setSalary(t.getSalary().add(t1.getSalary()))
                                         .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
                         )
                 ))
                 .values()
                 .stream()
+                .map(Optional::get)
                 .collect(Collectors.groupingBy(
                         ReportSummaryAccountResponse::getUserId,
                         Collectors.reducing(
-                                (t, t1) -> new ReportSummaryAccountResponse()
-                                        .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
-                                        .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
-                                        .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
-                                        .setSalary(t.getSalary().add(t1.getSalary()))
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
+                                (t, t1) -> {
+                                    final ReportSummaryAccountResponse r = new ReportSummaryAccountResponse()
+                                            .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
+                                            .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
+                                            .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                            .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
+                                            .setSalary(t.getSalary().add(t1.getSalary()))
+                                            .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP));
+                                    return r;
+                                }
                         )
                 ))
                 .values()
@@ -652,15 +656,16 @@ public class DousonReportController {
                 .map(Optional::get)
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
                 .collect(Collectors.toList());
-        list.add(list.stream()
+        list.stream()
                 .collect(Collectors.reducing(
                         (t, t1) -> new ReportSummaryAccountResponse()
                                 .setUserId("")
                                 .setUserIdFormat("总计")
-                                .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
+                                .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
                                 .setSalary(t.getSalary().add(t1.getSalary()))
                                 .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                )).get());
+                )).ifPresent(list::add);
         return new ListResult<>(
                 list
                         .stream()
@@ -689,33 +694,21 @@ public class DousonReportController {
         final List<ReportResponse> rl = formatReportList(reportList(request), true);
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<ReportSummaryDeviceResponse> list = rl.stream()
+                .map(t -> new ReportSummaryDeviceResponse()
+                        .setDeviceId(t.getDeviceId())
+                        .setDeviceIdFormat(t.getDeviceIdFormat())
+                        .setReportDateList(CollUtil.newHashSet(t.getReportDate()))
+                        .setReportDateCount(1)
+                        .setDeviceUsePercent(t.getDeviceUsePercent())
+                        .setDeviceCompletePercent(t.getDeviceCompletePercent()))
                 .collect(Collectors.groupingBy(
-                        t -> CollUtil.toList(t.getUserId(), t.getReportDate()),
-                        Collectors.reducing(
-                                null,
-                                t -> new ReportSummaryDeviceResponse()
-                                        .setUserId(t.getUserId())
-                                        .setUserIdFormat(t.getUserFormat())
-                                        .setReportDate(t.getReportDate())
-                                        .setDeviceUsePercent(t.getDeviceUsePercent())
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent()),
-                                (t, t1) -> null == t ? t1 : null == t1 ? t : new ReportSummaryDeviceResponse()
-                                        .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
-                                        .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
-                                        .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
-                                        .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                                        .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                        )
-                ))
-                .values()
-                .stream()
-                .collect(Collectors.groupingBy(
-                        ReportSummaryDeviceResponse::getUserId,
+                        ReportSummaryDeviceResponse::getDeviceId,
                         Collectors.reducing(
                                 (t, t1) -> new ReportSummaryDeviceResponse()
-                                        .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
-                                        .setUserIdFormat(defaultIfBlank(t.getUserIdFormat(), t1.getUserIdFormat()))
-                                        .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
+                                        .setDeviceId(defaultIfBlank(t.getDeviceId(), t1.getDeviceId()))
+                                        .setDeviceIdFormat(defaultIfBlank(t.getDeviceIdFormat(), t1.getDeviceIdFormat()))
+                                        .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                        .setReportDateCount(CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()).size())
                                         .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                                         .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                         )
@@ -725,15 +718,16 @@ public class DousonReportController {
                 .map(Optional::get)
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
                 .collect(Collectors.toList());
-        list.add(list.stream()
+        list.stream()
                 .collect(Collectors.reducing(
                         (t, t1) -> new ReportSummaryDeviceResponse()
-                                .setUserId("")
-                                .setUserIdFormat("总计")
-                                .setReportDate(defaultIfBlank(t.getReportDate(), t1.getReportDate()))
+                                .setDeviceId("")
+                                .setDeviceIdFormat("总计")
+                                .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
                                 .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                                 .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                )).get());
+                )).ifPresent(list::add);
         return new ListResult<>(
                 list
                         .stream()
