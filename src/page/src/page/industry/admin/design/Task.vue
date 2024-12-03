@@ -253,6 +253,51 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item prop="customerShortName" :label="store.state.label.customerShortName" v-if="taskShow">
+          <el-input v-model="formData.customerShortName"/>
+        </el-form-item>
+        <el-form-item prop="saleOrderNo" :label="store.state.label.saleOrderNo" v-if="taskShow">
+          <el-input v-model="formData.saleOrderNo"
+                    @change="formData.saleOrderNo = (formData.saleOrderNo || '').toUpperCase()"/>
+        </el-form-item>
+        <el-form-item prop="orderProjectNo" :label="store.state.label.orderProjectNo" v-if="taskShow">
+          <el-input v-model="formData.orderProjectNo"/>
+        </el-form-item>
+        <el-form-item prop="materialNo" :label="store.state.label.materialNo" v-if="taskShow">
+          <el-input v-model="formData.materialNo"
+                    @change="formData.materialNo = (formData.materialNo || '').toUpperCase()"/>
+        </el-form-item>
+        <el-form-item prop="improveMaterialDescribe" :label="store.state.label.improveMaterialDescribe" v-if="taskShow">
+          <el-input v-model="formData.improveMaterialDescribe" type="textarea" :rows="4"/>
+        </el-form-item>
+        <el-form-item prop="designNumber" :label="store.state.label.designNumber" v-if="taskShow">
+          <el-input v-model="formData.designNumber"
+                    @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
+        </el-form-item>
+        <el-form-item prop="orderCount" :label="store.state.label.orderCount" v-if="taskShow">
+          <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="roughcastExpireDate" :label="store.state.label.roughcastExpireDate" v-if="taskShow">
+          <el-date-picker
+              type="date"
+              v-model="formData.roughcastExpireDate"
+              format="YYYY-MM-DD"
+              @change="formData.roughcastExpireDate = formatDate(formData.roughcastExpireDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="materialCount" :label="store.state.label.materialCount" v-if="taskShow">
+          <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
+        <el-form-item prop="promiseDoneDate" :label="store.state.label.promiseDoneDate" v-if="taskShow">
+          <el-date-picker
+              type="date"
+              v-model="formData.promiseDoneDate"
+              format="YYYY-MM-DD"
+              @change="formData.promiseDoneDate = formatDate(formData.promiseDoneDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
         <el-form-item prop="planReformCount" :label="store.state.label.planReformCount" v-if="taskShow">
           <el-input-number v-model="formData.planReformCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
@@ -333,6 +378,66 @@
               @change="formData.supplierPromiseDoneDate = formatDate(formData.supplierPromiseDoneDate, 'yyyy-MM-dd')"
           >
           </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="nde" :label="store.state.label.nde" v-if="taskShow">
+          <el-select v-model="formData.nde"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.nde"
+          >
+            <el-option
+                v-for="item in checkOrNotList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="assemble" :label="store.state.label.assemble" v-if="taskShow">
+          <el-select v-model="formData.assemble"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.assemble"
+          >
+            <el-option
+                v-for="item in checkOrNotList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="testPress" :label="store.state.label.testPress" v-if="taskShow">
+          <el-select v-model="formData.testPress"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.testPress"
+          >
+            <el-option
+                v-for="item in checkOrNotList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="surfaceTreatment" :label="store.state.label.surfaceTreatment" v-if="taskShow">
+          <el-select v-model="formData.surfaceTreatment"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.surfaceTreatment"
+          >
+            <el-option
+                v-for="item in checkOrNotList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
