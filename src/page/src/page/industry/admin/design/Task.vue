@@ -472,7 +472,7 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'operator', labelKey: 'viewAndEdit', width: 378, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 412, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', labelKey: 'device', width: 121},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
