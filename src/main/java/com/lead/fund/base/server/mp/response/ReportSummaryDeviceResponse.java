@@ -25,10 +25,20 @@ public class ReportSummaryDeviceResponse implements Serializable {
      */
     private Integer index;
     /**
+     * 总当班设备完成率
+     */
+    private BigDecimal sumDeviceCompletePercent = BigDecimal.ZERO;
+    private String sumDeviceCompletePercentFormat;
+    /**
      * 当班设备完成率
      */
     private BigDecimal deviceCompletePercent;
     private String deviceCompletePercentFormat;
+    /**
+     * 总设备使用率
+     */
+    private BigDecimal sumDeviceUsePercent;
+    private String sumDeviceUsePercentFormat;
     /**
      * 设备使用率
      */
@@ -48,5 +58,6 @@ public class ReportSummaryDeviceResponse implements Serializable {
      * 报告日期
      */
     private Set<String> reportDateList;
-    private int reportDateCount;
+    private int reportDateCount = 1;
+    private int totalCount = 1;
 }

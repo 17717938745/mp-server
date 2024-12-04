@@ -26,7 +26,12 @@ public class ReportSummaryAccountResponse implements Serializable {
      */
     private Integer index;
     /**
-     * 当班设备完成率
+     * 总当班设备完成率
+     */
+    private BigDecimal sumDeviceCompletePercent = BigDecimal.ZERO;
+    private String sumDeviceCompletePercentFormat;
+    /**
+     * 平均当班设备完成率
      */
     private BigDecimal deviceCompletePercent;
     private String deviceCompletePercentFormat;
@@ -45,4 +50,5 @@ public class ReportSummaryAccountResponse implements Serializable {
      */
     private Set<String> reportDateList = new HashSet<>();
     private int reportDateCount;
+    private int totalCount = 1;
 }

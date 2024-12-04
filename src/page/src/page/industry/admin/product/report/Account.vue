@@ -49,10 +49,11 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'userIdFormat', labelKey: 'user', width: 168},
-  {value: 'reportDateCount', label: '工作天数', width: 168},
-  {value: 'deviceCompletePercentFormat', label: '平均值项:当班绩效，当台的效率/%', width: 128},
-  {value: 'salaryFormat', label: '求和项:当天考核金额', width: 110},
+  {value: 'userIdFormat', labelKey: 'user', width: 213},
+  {value: 'sumDeviceCompletePercentFormat', label: '累计项:当班绩效，当台的效率/%', width: 256},
+  {value: 'reportDateCount', label: '工作天数', width: 86},
+  {value: 'deviceCompletePercentFormat', label: '平均值项:当班绩效，当台的效率/%', width: 256},
+  {value: 'salaryFormat', label: '求和项:当天考核金额', width: 210},
 ])
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],
