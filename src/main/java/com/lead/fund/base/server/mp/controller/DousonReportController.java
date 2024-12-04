@@ -720,6 +720,7 @@ public class DousonReportController {
                                 .setDeviceId("")
                                 .setDeviceIdFormat("总计")
                                 .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                .setTotalCount(t.getTotalCount() + t1.getTotalCount())
                                 .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
                                 // .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
                                 .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))
