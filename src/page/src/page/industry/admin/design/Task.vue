@@ -206,6 +206,7 @@
             @click="handleCopy(row)"
             class="mr10"
             type="info"
+            style="word-break: keep-all;"
         >
           Copy
         </el-link>
@@ -215,6 +216,7 @@
             @click="handleUp(row)"
             class="mr10"
             type="info"
+            style="word-break: keep-all;"
             :disabled="!(row.param.up)"
         >
           Up
@@ -225,6 +227,7 @@
             @click="handleDown(row)"
             class="mr10"
             type="info"
+            style="word-break: keep-all;"
             :disabled="!(row.param.down)"
         >
           Down
