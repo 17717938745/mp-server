@@ -51,6 +51,9 @@ const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
   {value: 'deviceIdFormat', labelKey: 'device', width: 268},
+  {value: 'sumDeviceCompletePercentFormat', label: '累计项:当班绩效，当台的效率/%', width: 256},
+  {value: 'sumDeviceUsePercentFormat', label: '累计项:当班设备利用率', width: 231},
+  {value: 'totalCount', label: '记录数', width: 87},
   {value: 'reportDateCount', label: '工作天数', width: 87},
   {value: 'deviceCompletePercentFormat', label: '平均值项:当班绩效，当台的效率/%', width: 256},
   {value: 'deviceUsePercentFormat', label: '平均值项:当班设备利用率', width: 231},

@@ -720,7 +720,10 @@ public class DousonReportController {
                                 .setDeviceId("")
                                 .setDeviceIdFormat("总计")
                                 .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
-                                .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
+                                .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
+                                // .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
+                                .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))
+                                .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
                                 .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                                 .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
                 )).ifPresent(list::add);
@@ -729,6 +732,8 @@ public class DousonReportController {
                         .stream()
                         .peek(t -> t
                                 .setIndex(atomicInteger.addAndGet(1))
+                                .setSumDeviceUsePercentFormat(t.getSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                                .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceUsePercentFormat(t.getDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setPercentDiff(t.getDeviceCompletePercent().subtract(t.getDeviceUsePercent()))
