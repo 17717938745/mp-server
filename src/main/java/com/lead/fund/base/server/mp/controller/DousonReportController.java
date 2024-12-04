@@ -638,7 +638,10 @@ public class DousonReportController {
                 .stream()
                 .map(Optional::get)
                 .peek(t -> {
-                    t.setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getReportDateCount()), 8, RoundingMode.HALF_UP));
+                    t
+                            .setIndex(atomicInteger.addAndGet(1))
+                            .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getReportDateCount()), 8, RoundingMode.HALF_UP))
+                    ;
                 })
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
                 .collect(Collectors.toList());
@@ -652,17 +655,22 @@ public class DousonReportController {
                                 .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
                                 .setTotalCount(t.getTotalCount() + t1.getTotalCount())
                                 .setSalary(t.getSalary().add(t1.getSalary()))
-                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                        // .setDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()).divide(new BigDecimal(t.getReportDateCount() + t1.getReportDateCount()), 8, RoundingMode.HALF_UP))
-                )).ifPresent(list::add);
+                                // 先累计
+                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
+                )).ifPresent(t -> {
+                    list.add(t
+                            // 在平均
+                            .setDeviceCompletePercent(t.getDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                            .setIndex(atomicInteger.addAndGet(1))
+                    );
+                });
         return new ListResult<>(
                 list
                         .stream()
                         .peek(t -> t
-                                .setIndex(atomicInteger.addAndGet(1))
                                 .setSalaryFormat(NumberUtil.formatIntTh(t.getSalary()))
-                                .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                                .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                         )
                         .collect(Collectors.toList())
         );
@@ -709,7 +717,9 @@ public class DousonReportController {
                 .stream()
                 .map(Optional::get)
                 .peek(t -> {
-                    t.setDeviceUsePercent(t.getSumDeviceUsePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP))
+                    t
+                            .setIndex(atomicInteger.addAndGet(1))
+                            .setDeviceUsePercent(t.getSumDeviceUsePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP))
                             .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP));
                 })
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
@@ -722,17 +732,23 @@ public class DousonReportController {
                                 .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
                                 .setTotalCount(t.getTotalCount() + t1.getTotalCount())
                                 .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
-                                // .setReportDateCount(Math.max(t.getReportDateCount(), t1.getReportDateCount()))
                                 .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))
                                 .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
-                                .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()).divide(new BigDecimal(2), 8, RoundingMode.HALF_UP))
-                )).ifPresent(list::add);
+                                // 先累计
+                                .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()))
+                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
+                )).ifPresent(t -> {
+                    // 在平均
+                    list.add(t
+                            .setDeviceUsePercent(t.getDeviceUsePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                            .setDeviceCompletePercent(t.getDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                            .setIndex(atomicInteger.addAndGet(1))
+                    );
+                });
         return new ListResult<>(
                 list
                         .stream()
                         .peek(t -> t
-                                .setIndex(atomicInteger.addAndGet(1))
                                 .setSumDeviceUsePercentFormat(t.getSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceUsePercentFormat(t.getDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
