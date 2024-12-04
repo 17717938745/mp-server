@@ -637,13 +637,13 @@ public class DousonReportController {
                 .values()
                 .stream()
                 .map(Optional::get)
-                .peek(t -> {
-                    t
-                            .setIndex(atomicInteger.addAndGet(1))
-                            .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getReportDateCount()), 8, RoundingMode.HALF_UP))
-                    ;
-                })
+                .peek(t -> t
+                        .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getReportDateCount()), 8, RoundingMode.HALF_UP))
+                )
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
+                .peek(t -> t
+                        .setIndex(atomicInteger.addAndGet(1))
+                )
                 .collect(Collectors.toList());
         list.stream()
                 .collect(Collectors.reducing(
@@ -716,13 +716,14 @@ public class DousonReportController {
                 .values()
                 .stream()
                 .map(Optional::get)
-                .peek(t -> {
-                    t
-                            .setIndex(atomicInteger.addAndGet(1))
-                            .setDeviceUsePercent(t.getSumDeviceUsePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP))
-                            .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP));
-                })
+                .peek(t -> t
+                        .setDeviceUsePercent(t.getSumDeviceUsePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP))
+                        .setDeviceCompletePercent(t.getSumDeviceCompletePercent().divide(new BigDecimal(t.getTotalCount()), 8, RoundingMode.HALF_UP))
+                )
                 .sorted((o1, o2) -> o2.getDeviceCompletePercent().compareTo(o1.getDeviceCompletePercent()))
+                .peek(t -> t
+                        .setIndex(atomicInteger.addAndGet(1))
+                )
                 .collect(Collectors.toList());
         list.stream()
                 .collect(Collectors.reducing(
