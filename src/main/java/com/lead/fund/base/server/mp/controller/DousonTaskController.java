@@ -257,7 +257,7 @@ public class DousonTaskController {
             @ModelAttribute TaskPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
             return new PageResult<>(0, new ArrayList<>());
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
