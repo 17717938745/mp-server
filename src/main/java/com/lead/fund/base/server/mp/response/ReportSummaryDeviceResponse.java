@@ -29,7 +29,7 @@ public class ReportSummaryDeviceResponse implements Serializable {
      * 报告日期
      */
     private Set<String> reportDateList = new HashSet<>();
-    private int reportDateCount = 1;
+    private Integer reportDateCount = 1;
     /**
      * 用户
      */
@@ -39,17 +39,17 @@ public class ReportSummaryDeviceResponse implements Serializable {
      * 用户ID列表
      */
     private Set<String> userIdList = new HashSet<>();
-    private int userIdCount;
+    private Integer userIdCount;
     /**
      * 用户
      */
     private String deviceId;
     private String deviceIdFormat;
-    private int totalCount = 1;
+    private Integer totalCount = 1;
     /**
      * 总条数
      */
-    private int deviceTotalCount = 1;
+    private Integer deviceTotalCount = 1;
     /**
      * 总当班设备完成率
      */
@@ -82,7 +82,7 @@ public class ReportSummaryDeviceResponse implements Serializable {
     /**
      * 记录数
      */
-    private int deviceReportDateCount = 1;
+    private Integer deviceReportDateCount = 1;
     /**
      * 当班设备完成率
      */

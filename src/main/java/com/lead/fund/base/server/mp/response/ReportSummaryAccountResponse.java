@@ -42,15 +42,15 @@ public class ReportSummaryAccountResponse implements Serializable {
     /**
      * 记录数
      */
-    private int reportDateCount = 1;
+    private Integer reportDateCount = 1;
     /**
      * 总条数
      */
-    private int totalCount = 1;
+    private Integer totalCount = 1;
     /**
      * 总条数
      */
-    private int deviceTotalCount = 1;
+    private Integer deviceTotalCount = 1;
     /**
      * 总当班设备完成率
      */
@@ -73,7 +73,7 @@ public class ReportSummaryAccountResponse implements Serializable {
     /**
      * 记录数
      */
-    private int deviceReportDateCount = 1;
+    private Integer deviceReportDateCount = 1;
     /**
      * 总当班设备完成率
      */
