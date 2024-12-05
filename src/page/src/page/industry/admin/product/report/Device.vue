@@ -50,14 +50,15 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'deviceIdFormat', labelKey: 'device', width: 268},
-  {value: 'sumDeviceCompletePercentFormat', label: '累计项:当班绩效，当台的效率/%', width: 256},
-  {value: 'sumDeviceUsePercentFormat', label: '累计项:当班设备利用率', width: 231},
-  {value: 'totalCount', label: '记录数', width: 87},
-  {value: 'reportDateCount', label: '工作天数', width: 87},
-  {value: 'deviceCompletePercentFormat', label: '平均值项:当班绩效，当台的效率/%', width: 256},
-  {value: 'deviceUsePercentFormat', label: '平均值项:当班设备利用率', width: 231},
-  {value: 'percentDiffFormat', label: '差异比', width: 110},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 165},
+  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 156},
+  {value: 'sumDeviceUsePercentFormat', labelKey: 'reportSumDeviceUsePercent', width: 156},
+  {value: 'totalCount', labelKey: 'totalCount', width: 87},
+  {value: 'userIdCount', labelKey: 'userCount', width: 87},
+  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 87},
+  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 156},
+  {value: 'deviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 156},
+  {value: 'percentDiffFormat', labelKey: 'reportDiff', width: 80},
 ])
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],

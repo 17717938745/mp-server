@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.response;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 import lombok.ToString;
@@ -49,6 +50,11 @@ public class ReportSummaryDeviceResponse implements Serializable {
      */
     private BigDecimal percentDiff;
     private String percentDiffFormat;
+    /**
+     * 用户ID列表
+     */
+    private Set<String> userIdList = new HashSet<>();
+    private int userIdCount;
     /**
      * 用户
      */

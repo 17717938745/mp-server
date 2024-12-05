@@ -511,6 +511,42 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "设备管理"
         },
         {
+          "value": "reportSumDeviceCompletePercent",
+          "label": "累计项:当班绩效，当台的效率/%"
+        },
+        {
+          "value": "reportSumDeviceUsePercent",
+          "label": "累计项：当班设备利用率"
+        },
+        {
+          "value": "totalCount",
+          "label": "记录数"
+        },
+        {
+          "value": "userCount",
+          "label": "人员数"
+        },
+        {
+          "value": "reportDateCount",
+          "label": "工作天数"
+        },
+        {
+          "value": "reportDeviceCompletePercent",
+          "label": "平均值项:当班绩效，当台的效率/%"
+        },
+        {
+          "value": "reportDeviceUsePercent",
+          "label": "平均值项:当班设备利用率"
+        },
+        {
+          "value": "reportDiff",
+          "label": "差异比"
+        },
+        {
+          "value": "reportSalary",
+          "label": "求和项:当天考核金额"
+        },
+        {
           "value": "device",
           "label": "设备"
         },
@@ -1958,6 +1994,42 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "deviceManage",
           "label": "Thiết bị manage"
+        },
+        {
+          "value": "reportSumDeviceCompletePercent",
+          "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy/%"
+        },
+        {
+          "value": "reportDeviceUsePercent",
+          "label": "Tỷ lệ % hiệu suất máy ca"
+        },
+        {
+          "value": "reportDiff",
+          "label": "Tỷ lệ chênh lệch"
+        },
+        {
+          "value": "reportSumDeviceUsePercent",
+          "label": "Mục trung bình: Tỷ lệ % hiệu suất máy ca"
+        },
+        {
+          "value": "totalCount",
+          "label": "Số lượng ghi chép"
+        },
+        {
+          "value": "userCount",
+          "label": "Số người"
+        },
+        {
+          "value": "reportDateCount",
+          "label": "Số ngày làm việc"
+        },
+        {
+          "value": "reportSalary",
+          "label": "Mục tổng: số tiền đánh giá vào ngày đó"
+        },
+        {
+          "value": "reportDeviceCompletePercent",
+          "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy /%"
         },
         {
           "value": "device",
