@@ -26,6 +26,31 @@ public class ReportSummaryDeviceResponse implements Serializable {
      */
     private Integer index;
     /**
+     * 报告日期
+     */
+    private Set<String> reportDateList = new HashSet<>();
+    private int reportDateCount = 1;
+    /**
+     * 用户
+     */
+    private String userId;
+    private String userIdFormat;
+    /**
+     * 用户ID列表
+     */
+    private Set<String> userIdList = new HashSet<>();
+    private int userIdCount;
+    /**
+     * 用户
+     */
+    private String deviceId;
+    private String deviceIdFormat;
+    private int totalCount = 1;
+    /**
+     * 总条数
+     */
+    private int deviceTotalCount = 1;
+    /**
      * 总当班设备完成率
      */
     private BigDecimal sumDeviceCompletePercent = BigDecimal.ZERO;
@@ -51,19 +76,36 @@ public class ReportSummaryDeviceResponse implements Serializable {
     private BigDecimal percentDiff;
     private String percentDiffFormat;
     /**
-     * 用户ID列表
+     * 报告日期，start device ========
      */
-    private Set<String> userIdList = new HashSet<>();
-    private int userIdCount;
+    private Set<String> deviceReportDateList = new HashSet<>();
     /**
-     * 用户
+     * 记录数
      */
-    private String deviceId;
-    private String deviceIdFormat;
+    private int deviceReportDateCount = 1;
     /**
-     * 报告日期
+     * 当班设备完成率
      */
-    private Set<String> reportDateList;
-    private int reportDateCount = 1;
-    private int totalCount = 1;
+    private BigDecimal deviceDeviceCompletePercent;
+    private String deviceDeviceCompletePercentFormat;
+    /**
+     * 总当班设备完成率
+     */
+    private BigDecimal deviceSumDeviceCompletePercent = BigDecimal.ZERO;
+    private String deviceSumDeviceCompletePercentFormat;
+    /**
+     * 总设备使用率
+     */
+    private BigDecimal deviceSumDeviceUsePercent;
+    private String deviceSumDeviceUsePercentFormat;
+    /**
+     * 设备使用率
+     */
+    private BigDecimal deviceDeviceUsePercent;
+    private String deviceDeviceUsePercentFormat;
+    /**
+     * 使用率差值（绝对值）
+     */
+    private BigDecimal devicePercentDiff;
+    private String devicePercentDiffFormat;
 }

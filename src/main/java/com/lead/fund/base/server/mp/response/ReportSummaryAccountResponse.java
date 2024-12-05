@@ -26,6 +26,32 @@ public class ReportSummaryAccountResponse implements Serializable {
      */
     private Integer index;
     /**
+     * 用户
+     */
+    private String userId;
+    private String userIdFormat;
+    /**
+     * 用户
+     */
+    private String deviceId;
+    private String deviceIdFormat;
+    /**
+     * 报告日期
+     */
+    private Set<String> reportDateList = new HashSet<>();
+    /**
+     * 记录数
+     */
+    private int reportDateCount = 1;
+    /**
+     * 总条数
+     */
+    private int totalCount = 1;
+    /**
+     * 总条数
+     */
+    private int deviceTotalCount = 1;
+    /**
      * 总当班设备完成率
      */
     private BigDecimal sumDeviceCompletePercent = BigDecimal.ZERO;
@@ -41,14 +67,26 @@ public class ReportSummaryAccountResponse implements Serializable {
     private BigDecimal salary;
     private String salaryFormat;
     /**
-     * 用户
+     * 报告日期，start device ========
      */
-    private String userId;
-    private String userIdFormat;
+    private Set<String> deviceReportDateList = new HashSet<>();
     /**
-     * 报告日期
+     * 记录数
      */
-    private Set<String> reportDateList = new HashSet<>();
-    private int reportDateCount;
-    private int totalCount = 1;
+    private int deviceReportDateCount = 1;
+    /**
+     * 总当班设备完成率
+     */
+    private BigDecimal deviceSumDeviceCompletePercent = BigDecimal.ZERO;
+    private String deviceSumDeviceCompletePercentFormat;
+    /**
+     * 平均当班设备完成率
+     */
+    private BigDecimal deviceDeviceCompletePercent;
+    private String deviceDeviceCompletePercentFormat;
+    /**
+     * 薪水
+     */
+    private BigDecimal deviceSalary;
+    private String deviceSalaryFormat;
 }

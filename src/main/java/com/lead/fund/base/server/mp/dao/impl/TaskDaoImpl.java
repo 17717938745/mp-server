@@ -132,9 +132,9 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         final List<TaskEntity> taskList = taskMapper.selectList(new LambdaQueryWrapper<TaskEntity>()
                 .eq(TaskEntity::getDeviceId, e.getDeviceId())
                 .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
-                .select(TaskEntity::getId, TaskEntity::getSorter, TaskEntity::getOfflineDate, TaskEntity::getModifyTime));
+                .select(TaskEntity::getId, TaskEntity::getSorter, TaskEntity::getOfflineDate, TaskEntity::getOnlineDate, TaskEntity::getModifyTime));
         for (int i = 0; i < taskList.size(); i++) {
-            final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i);
+            final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
             final TaskEntity db = taskList.get(i);
             final LambdaUpdateWrapper<TaskEntity> lambda = new LambdaUpdateWrapper<TaskEntity>()
                     .set(TaskEntity::getSorter, i)
@@ -142,7 +142,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
             if (isNotBlank(pdb.getOfflineDate()) && isBlank(db.getOnlineDate())) {
-                lambda.set(TaskEntity::getOnlineDate, pdb.getOfflineDate());
+                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getOfflineDate()), 1))));
             }
             taskMapper.update(null, lambda);
         }

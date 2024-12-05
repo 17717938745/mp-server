@@ -16,6 +16,11 @@
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
     </div>
+    <div>
+      <el-space wrap>
+        <el-switch v-model="showMore" active-text="Show more" inactive-text="Hide info" @change="handleToggleMore"/>
+      </el-space>
+    </div>
     <view-list
         idKey="computerId"
         :columnConfigList="columnConfigList"
@@ -48,14 +53,30 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'index', labelKey: 'index', width: 51},
-  {value: 'userIdFormat', labelKey: 'user', width: 168},
-  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 176},
-  {value: 'totalCount', labelKey: 'totalCount', width: 87},
-  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 86},
-  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 167},
-  {value: 'salaryFormat', labelKey: 'reportSalary', width: 167},
+  {value: 'index', labelKey: 'index', width: 51, mergeKey: ['userId']},
+  {value: 'userIdFormat', labelKey: 'user', width: 168, mergeKey: ['userId']},
+  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 51, mergeKey: ['userId']},
+  {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 121, mergeKey: ['userId']},
+  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 139},
+  {value: 'deviceTotalCount', labelKey: 'totalCount', width: 87},
+  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 139},
+  {value: 'deviceSalaryFormat', labelKey: 'reportSalary', width: 139},
+  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 139, mergeKey: ['userId']},
+  {value: 'totalCount', labelKey: 'totalCount', width: 87, mergeKey: ['userId']},
+  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139, mergeKey: ['userId']},
+  {value: 'salaryFormat', labelKey: 'reportSalary', width: 139, mergeKey: ['userId']},
 ])
+const toggleKeyList = ['deviceSumDeviceCompletePercentFormat', 'deviceTotalCount', 'deviceDeviceCompletePercentFormat', 'deviceSalaryFormat', ]
+const showMore = ref(true)
+const handleToggleMore = (v) => {
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if (toggleKeyList.indexOf(t.value) >= 0) {
+      t.hide = !v
+    }
+    return t
+  })
+}
+handleToggleMore(showMore.value)
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],
   userConfigList: new Array<any>(),

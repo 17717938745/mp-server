@@ -201,8 +201,8 @@
     >
       <template #operator="row">
         <el-link
-            v-if="row.param.taskId"
             :icon="DocumentCopy"
+            :disabled="!row.param.taskId"
             @click="handleCopy(row)"
             class="mr10"
             type="info"
@@ -211,24 +211,22 @@
           Copy
         </el-link>
         <el-link
-            v-if="row.param.taskId"
             :icon="ArrowUp"
             @click="handleUp(row)"
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="!(row.param.up)"
+            :disabled="!row.param.taskId || !(row.param.up)"
         >
           Up
         </el-link>
         <el-link
-            v-if="row.param.taskId"
             :icon="ArrowDown"
             @click="handleDown(row)"
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="!(row.param.down)"
+            :disabled="!row.param.taskId || !(row.param.down)"
         >
           Down
         </el-link>
@@ -322,7 +320,7 @@
         <el-form-item prop="processCount" :label="store.state.label.processCount" v-if="taskShow">
           <el-input-number v-model="formData.processCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure" v-if="taskShow">
+        <el-form-item prop="processProcedureList" :label="store.state.label.processProcedure" v-if="taskShow">
           <el-select v-model="formData.processProcedureList"
                      filterable
                      clearable
@@ -477,7 +475,7 @@ const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 412, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 56,},
-  {value: 'deviceIdFormat', labelKey: 'device', width: 121,},
+  {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
   {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 56},
@@ -497,7 +495,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'offlineDate', labelKey: 'offlineDate', width: 102},
   {value: 'delay', labelKey: 'delay', width: 68},
   {value: 'processCount', labelKey: 'processCount', width: 68},
-  {value: 'processProcedureFormat', labelKey: 'processProcedure', width: 131},
+  {value: 'processProcedureFormat', originValue: 'processProcedureList', labelKey: 'processProcedure', width: 131},
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 102},
@@ -723,6 +721,7 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
+const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'index', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
@@ -821,7 +820,6 @@ const handleMerge = () => {
 }
 const handleUpdate = (row: any) => {
   return httpPutJson('douson/task/merge', row).then(() => {
-    state.formVisible = false
     ElMessage.success('Update success')
     handlePage()
   })
@@ -849,13 +847,42 @@ Promise.all([
   httpGet(`system/user/config/list`, {}),
 ]).then((l: any) => {
   state.config = l[0].data || {}
-  columnConfigList.value = columnConfigList.value.map(t => {
-    if ('deviceIdFormat' === t.value) {
-      t.type = ValueType.SelectEdit
-      t.optionList = state.config.testDeviceList
-    }
-    return t
-  })
+  if (taskEdit) {
+    columnConfigList.value = columnConfigList.value.map(t => {
+      if ('deviceIdFormat' === t.value) {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.testDeviceList
+      } else if ('planReformCount' === t.value) {
+        t.width = 136
+        t.type = ValueType.NumberEdit
+      } else if ('supplierRemark' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('processWorkingHour' === t.value) {
+        t.width = 136
+        t.type = ValueType.NumberEdit
+      } else if ('onlineDate' === t.value) {
+        t.width = 169
+        t.type = ValueType.DateEdit
+      } else if ('offlineDate' === t.value) {
+        t.width = 169
+        t.type = ValueType.DateEdit
+      } else if ('delay' === t.value) {
+        t.width = 98
+        t.type = ValueType.NumberEdit
+      } else if ('processCount' === t.value) {
+        t.width = 98
+        t.type = ValueType.NumberEdit
+      } else if ('processProcedureFormat' === t.value) {
+        t.width = 215
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.processProcedureList
+      } else if ('surplus' === t.value) {
+        t.width = 98
+        t.type = ValueType.NumberEdit
+      }
+      return t
+    })
+  }
   // userOptionList.value = (l[1].list || []).map((t: any) => {
   //   return {
   //     value: t.userId,
@@ -889,7 +916,9 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.processCount > 0 && row.processCount === row.materialCount) {
+  if(!row.taskId) {
+    return 'row-blue'
+  } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'
   }
   return ''

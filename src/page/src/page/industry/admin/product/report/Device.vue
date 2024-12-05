@@ -16,6 +16,11 @@
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
     </div>
+    <div>
+      <el-space wrap>
+        <el-switch v-model="showMore" active-text="Show more" inactive-text="Hide info" @change="handleToggleMore"/>
+      </el-space>
+    </div>
     <view-list
         idKey="computerId"
         :columnConfigList="columnConfigList"
@@ -49,17 +54,33 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'index', labelKey: 'index', width: 51},
-  {value: 'deviceIdFormat', labelKey: 'device', width: 165},
-  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 156},
-  {value: 'sumDeviceUsePercentFormat', labelKey: 'reportSumDeviceUsePercent', width: 156},
-  {value: 'totalCount', labelKey: 'totalCount', width: 87},
-  {value: 'userIdCount', labelKey: 'userCount', width: 87},
-  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 87},
-  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 156},
-  {value: 'deviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 156},
-  {value: 'percentDiffFormat', labelKey: 'reportDiff', width: 80},
+  {value: 'index', labelKey: 'index', width: 51, mergeKey: ['deviceId']},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 121, mergeKey: ['deviceId']},
+  {value: 'userIdFormat', labelKey: 'user', width: 168,},
+  {value: 'deviceReportDateCount', labelKey: 'reportDateCount', width: 87,},
+  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139,},
+  {value: 'deviceDeviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 139,},
+  {value: 'devicePercentDiffFormat', labelKey: 'reportDiff', width: 80,},
+  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 139, mergeKey: ['deviceId']},
+  {value: 'sumDeviceUsePercentFormat', labelKey: 'reportSumDeviceUsePercent', width: 139, mergeKey: ['deviceId']},
+  {value: 'totalCount', labelKey: 'totalCount', width: 87, mergeKey: ['deviceId']},
+  {value: 'userIdCount', labelKey: 'userCount', width: 87, mergeKey: ['deviceId']},
+  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 87, mergeKey: ['deviceId']},
+  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139, mergeKey: ['deviceId']},
+  {value: 'deviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 139, mergeKey: ['deviceId']},
+  {value: 'percentDiffFormat', labelKey: 'reportDiff', width: 80, mergeKey: ['deviceId']},
 ])
+const toggleKeyList = ['userIdFormat', 'deviceReportDateCount', 'deviceDeviceCompletePercentFormat', 'deviceDeviceUsePercentFormat', 'devicePercentDiffFormat',]
+const showMore = ref(true)
+const handleToggleMore = (v) => {
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if (toggleKeyList.indexOf(t.value) >= 0) {
+      t.hide = !v
+    }
+    return t
+  })
+}
+handleToggleMore(showMore.value)
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],
   userConfigList: new Array<any>(),

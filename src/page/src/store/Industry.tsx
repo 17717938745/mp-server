@@ -515,6 +515,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "累计项:当班绩效，当台的效率/%"
         },
         {
+          "value": "reportAvgDeviceCompletePercent",
+          "label": "平均值项:当班绩效，当台的效率/%"
+        },
+        {
           "value": "reportSumDeviceUsePercent",
           "label": "累计项：当班设备利用率"
         },
@@ -532,6 +536,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "reportDeviceCompletePercent",
+          "label": "平均值项:当班绩效，当台的效率/%"
+        },
+        {
+          "value": "reportAvgDeviceCompletePercent",
           "label": "平均值项:当班绩效，当台的效率/%"
         },
         {
@@ -2000,6 +2008,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy/%"
         },
         {
+          "value": "reportAvgDeviceCompletePercent",
+          "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy /%"
+        },
+        {
           "value": "reportDeviceUsePercent",
           "label": "Tỷ lệ % hiệu suất máy ca"
         },
@@ -2029,6 +2041,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "reportDeviceCompletePercent",
+          "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy /%"
+        },
+        {
+          "value": "reportAvgDeviceCompletePercent",
           "label": "Mục trung bình：Hiệu suất ca, hiệu suất máy /%"
         },
         {
