@@ -107,12 +107,12 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         e.setModifier(u.getUserId());
         // update
         if (isNotBlank(e.getId())) {
-            if (u.getRoleList().stream().noneMatch(t -> "materialManager".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            if (u.getRoleList().stream().noneMatch(t -> "taskManager".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             // insert
         } else {
-            if (u.getRoleList().stream().noneMatch(t -> "materialManager".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            if (u.getRoleList().stream().noneMatch(t -> "taskManager".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             e.setCreator(u.getUserId());
