@@ -24,6 +24,13 @@ body {
   font-size: 14px;
 }
 
+.el-table--border,
+.el-table--group,
+.el-table td.el-table__cell,
+.el-table th.el-table__cell.is-leaf,
+.el-table__footer-wrapper td.el-table__cell {
+  border: #999999 1px solid !important;
+}
 
 $containerGap: 20px;
 $containerTopGap: 5px;
@@ -88,6 +95,7 @@ $containerLeftGap: 5px;
   .row-blue {
     background-color: #97adda;
   }
+
   .row-done {
     background-color: #e4e7ed;
   }
