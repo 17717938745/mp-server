@@ -4,6 +4,7 @@ import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
 import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
+import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_OPERATOR_OTHER_NOT_ALLOW;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_ORDER_REPEAT;
@@ -73,6 +74,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -670,7 +672,7 @@ public class DousonReportController {
         return new ListResult<>(
                 list
                         .stream()
-                        .flatMap(t -> userDeviceListMap.getOrDefault(t.getUserId(), new ArrayList<>()).stream().peek(t1 -> {
+                        .flatMap(t -> isBlank(t.getUserId()) ? Stream.of(t) : userDeviceListMap.getOrDefault(t.getUserId(), new ArrayList<>()).stream().peek(t1 -> {
                                             t1
                                                     .setDeviceSumDeviceCompletePercent(t1.getSumDeviceCompletePercent())
                                                     .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
@@ -780,7 +782,7 @@ public class DousonReportController {
         return new ListResult<>(
                 list
                         .stream()
-                        .flatMap(t -> deviceUserListMap.getOrDefault(t.getDeviceId(), new ArrayList<>()).stream().peek(t1 -> {
+                        .flatMap(t -> isBlank(t.getDeviceId()) ? Stream.of(t) : deviceUserListMap.getOrDefault(t.getDeviceId(), new ArrayList<>()).stream().peek(t1 -> {
                                             t1
                                                     .setDeviceReportDateList(t1.getReportDateList())
                                                     .setDeviceReportDateCount(t1.getReportDateCount())

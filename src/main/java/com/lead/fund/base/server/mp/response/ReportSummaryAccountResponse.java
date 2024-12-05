@@ -59,12 +59,12 @@ public class ReportSummaryAccountResponse implements Serializable {
     /**
      * 平均当班设备完成率
      */
-    private BigDecimal deviceCompletePercent;
+    private BigDecimal deviceCompletePercent = BigDecimal.ZERO;
     private String deviceCompletePercentFormat;
     /**
      * 薪水
      */
-    private BigDecimal salary;
+    private BigDecimal salary = BigDecimal.ZERO;
     private String salaryFormat;
     /**
      * 报告日期，start device ========
@@ -82,11 +82,11 @@ public class ReportSummaryAccountResponse implements Serializable {
     /**
      * 平均当班设备完成率
      */
-    private BigDecimal deviceDeviceCompletePercent;
+    private BigDecimal deviceDeviceCompletePercent = BigDecimal.ZERO;
     private String deviceDeviceCompletePercentFormat;
     /**
      * 薪水
      */
-    private BigDecimal deviceSalary;
+    private BigDecimal deviceSalary = BigDecimal.ZERO;
     private String deviceSalaryFormat;
 }

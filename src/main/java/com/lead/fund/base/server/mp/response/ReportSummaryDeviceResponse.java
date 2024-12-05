@@ -58,22 +58,22 @@ public class ReportSummaryDeviceResponse implements Serializable {
     /**
      * 当班设备完成率
      */
-    private BigDecimal deviceCompletePercent;
+    private BigDecimal deviceCompletePercent = BigDecimal.ZERO;
     private String deviceCompletePercentFormat;
     /**
      * 总设备使用率
      */
-    private BigDecimal sumDeviceUsePercent;
+    private BigDecimal sumDeviceUsePercent = BigDecimal.ZERO;
     private String sumDeviceUsePercentFormat;
     /**
      * 设备使用率
      */
-    private BigDecimal deviceUsePercent;
+    private BigDecimal deviceUsePercent = BigDecimal.ZERO;
     private String deviceUsePercentFormat;
     /**
      * 使用率差值（绝对值）
      */
-    private BigDecimal percentDiff;
+    private BigDecimal percentDiff = BigDecimal.ZERO;
     private String percentDiffFormat;
     /**
      * 报告日期，start device ========
@@ -86,7 +86,7 @@ public class ReportSummaryDeviceResponse implements Serializable {
     /**
      * 当班设备完成率
      */
-    private BigDecimal deviceDeviceCompletePercent;
+    private BigDecimal deviceDeviceCompletePercent = BigDecimal.ZERO;
     private String deviceDeviceCompletePercentFormat;
     /**
      * 总当班设备完成率
@@ -96,16 +96,16 @@ public class ReportSummaryDeviceResponse implements Serializable {
     /**
      * 总设备使用率
      */
-    private BigDecimal deviceSumDeviceUsePercent;
+    private BigDecimal deviceSumDeviceUsePercent = BigDecimal.ZERO;
     private String deviceSumDeviceUsePercentFormat;
     /**
      * 设备使用率
      */
-    private BigDecimal deviceDeviceUsePercent;
+    private BigDecimal deviceDeviceUsePercent = BigDecimal.ZERO;
     private String deviceDeviceUsePercentFormat;
     /**
      * 使用率差值（绝对值）
      */
-    private BigDecimal devicePercentDiff;
+    private BigDecimal devicePercentDiff = BigDecimal.ZERO;
     private String devicePercentDiffFormat;
 }
