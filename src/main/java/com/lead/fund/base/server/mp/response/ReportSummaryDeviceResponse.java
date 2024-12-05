@@ -39,7 +39,7 @@ public class ReportSummaryDeviceResponse implements Serializable {
      * 用户ID列表
      */
     private Set<String> userIdList = new HashSet<>();
-    private Integer userIdCount;
+    private Integer userIdCount = 1;
     /**
      * 用户
      */
