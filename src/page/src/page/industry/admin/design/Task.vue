@@ -723,18 +723,18 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
-const taskShow = 'admin' === user.username || (includes(roleCodeList, 'materialManager') && !includes(roleCodeList, 'supplierManager'))
-const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'materialManager'))
+const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
+const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const supplierManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const materialManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const taskManagerColumnValueList = ['operator', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
-  if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'materialManager')) {
+  if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager')) {
     columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
-  } else if (includes(roleCodeList, 'materialManager') && !includes(roleCodeList, 'supplierManager')) {
-    columnConfigList.value = materialManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
+  } else if (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager')) {
+    columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
   }
 }
-if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
+if (user.username === 'admin' || includes(roleCodeList, 'taskManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
       t.type = ValueType.TextEdit
@@ -759,7 +759,7 @@ const handleEdit = (row: any) => {
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  return row.taskId && ('admin' === user.username || includes(roleCodeList, 'materialManager') || includes(roleCodeList, 'supplierManager'))
+  return row.taskId && ('admin' === user.username || includes(roleCodeList, 'taskManager') || includes(roleCodeList, 'supplierManager'))
 }
 const handleDeleteShow = (row: any) => {
   return row.taskId
