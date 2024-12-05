@@ -66,7 +66,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139, mergeKey: ['userId']},
   {value: 'salaryFormat', labelKey: 'reportSalary', width: 139, mergeKey: ['userId']},
 ])
-const toggleKeyList = ['deviceSumDeviceCompletePercentFormat', 'deviceTotalCount', 'deviceDeviceCompletePercentFormat', 'deviceSalaryFormat', ]
+const toggleKeyList = ['deviceIdFormat', 'deviceSumDeviceCompletePercentFormat', 'deviceTotalCount', 'deviceDeviceCompletePercentFormat', 'deviceSalaryFormat', ]
 const showMore = ref(true)
 const handleToggleMore = (v) => {
   columnConfigList.value = columnConfigList.value.map(t => {
