@@ -477,7 +477,7 @@ const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 412, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 56,},
-  {value: 'deviceIdFormat', labelKey: 'device', width: 121, type: ValueType.SelectEdit, optionList: config.testDeviceList,},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 121,},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
   {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 56},
@@ -849,6 +849,13 @@ Promise.all([
   httpGet(`system/user/config/list`, {}),
 ]).then((l: any) => {
   state.config = l[0].data || {}
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if ('deviceIdFormat' === t.value) {
+      t.type = ValueType.SelectEdit
+      t.optionList = state.config.testDeviceList
+    }
+    return t
+  })
   // userOptionList.value = (l[1].list || []).map((t: any) => {
   //   return {
   //     value: t.userId,
