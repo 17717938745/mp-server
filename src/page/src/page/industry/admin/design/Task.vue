@@ -725,6 +725,7 @@ const handleLimitChange = (val: number) => {
 }
 
 const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
+const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
@@ -751,7 +752,7 @@ const handleEditShow = (row: any) => {
   return row.taskId && ('admin' === user.username || includes(roleCodeList, 'taskManager') || includes(roleCodeList, 'supplierManager'))
 }
 const handleDeleteShow = (row: any) => {
-  return row.taskId && taskEdit
+  return row.taskId && taskDelete
 }
 const handleCopy = (d) => {
   const request = Object.assign({}, d.param, {
