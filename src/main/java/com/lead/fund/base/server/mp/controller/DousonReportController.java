@@ -665,8 +665,8 @@ public class DousonReportController {
                                             .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
                                             .setDeviceCompletePercent(t.getDeviceCompletePercent())
                                             .setSalary(t.getSalary())
-                                            .setDeviceReportDateList(t.getReportDateList())
-                                            .setDeviceReportDateCount(t.getReportDateList().size())
+                                            .setReportDateList(t.getReportDateList())
+                                            .setReportDateCount(t.getReportDateList().size())
                                             .setTotalCount(t.getTotalCount())
                                             .setIndex(t.getIndex())
                                     ;
