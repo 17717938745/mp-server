@@ -69,7 +69,7 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51, mergeKey: ['deviceId']},
-  {value: 'deviceIdFormat', labelKey: 'device', width: 121, mergeKey: ['deviceId']},
+  {value: 'deviceIdFormat', labelKey: 'device', width: 189, mergeKey: ['deviceId']},
   {value: 'userIdFormat', labelKey: 'user', width: 168,},
   {value: 'deviceReportDateCount', labelKey: 'reportDateCount', width: 57,},
   {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139,},
@@ -123,6 +123,8 @@ const state = reactive({
       date: '',
       startReportDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
       endReportDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
+      // startReportDate: '',
+      // endReportDate: '',
     },
     page: {
       page: DEFAULT_PAGE,
