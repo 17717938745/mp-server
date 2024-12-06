@@ -141,8 +141,8 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .set(TaskEntity::getDeviceSorter, d.getSorter())
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
-            if (isNotBlank(pdb.getOfflineDate()) && isBlank(db.getOnlineDate())) {
-                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getOfflineDate()), 1))));
+            if (isNotBlank(pdb.getOfflineDate())) {
+                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), 1))));
             }
             taskMapper.update(null, lambda);
         }

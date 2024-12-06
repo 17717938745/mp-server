@@ -191,7 +191,7 @@
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
         :handleDeleteShow="handleDeleteShow"
-        :handleDelete="taskShow ? handleDelete : null"
+        :handleDelete="handleDelete"
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
@@ -201,6 +201,7 @@
     >
       <template #operator="row">
         <el-link
+            v-if="row.param.taskId"
             :icon="DocumentCopy"
             :disabled="!row.param.taskId"
             @click="handleCopy(row)"
@@ -211,6 +212,7 @@
           Copy
         </el-link>
         <el-link
+            v-if="row.param.taskId"
             :icon="ArrowUp"
             @click="handleUp(row)"
             class="mr10"
@@ -221,6 +223,7 @@
           Up
         </el-link>
         <el-link
+            v-if="row.param.taskId"
             :icon="ArrowDown"
             @click="handleDown(row)"
             class="mr10"
@@ -474,7 +477,7 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 412, type: ValueType.Operator,},
-  {value: 'index', labelKey: 'index', width: 56,},
+  {value: 'deviceIndex', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
@@ -721,7 +724,7 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
-const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
+const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'index', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
@@ -761,7 +764,7 @@ const handleEditShow = (row: any) => {
   return row.taskId && ('admin' === user.username || includes(roleCodeList, 'taskManager') || includes(roleCodeList, 'supplierManager'))
 }
 const handleDeleteShow = (row: any) => {
-  return row.taskId
+  return row.taskId && taskEdit
 }
 const handleCopy = (d) => {
   const request = Object.assign({}, d.param, {
@@ -916,7 +919,7 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if(!row.taskId) {
+  if (!row.taskId) {
     return 'row-blue'
   } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'

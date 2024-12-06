@@ -98,7 +98,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @date 2024-04-30 16:11
  */
-@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused"})
+@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused", "ResultOfMethodCallIgnored"})
 @RestController
 @RequestMapping("/douson/report")
 @Slf4j
@@ -651,61 +651,71 @@ public class DousonReportController {
                         .setIndex(atomicInteger.addAndGet(1))
                 )
                 .collect(Collectors.toList());
-        list.stream()
-                .collect(Collectors.reducing(
-                        (t, t1) -> new ReportSummaryAccountResponse()
-                                .setUserId("")
-                                .setUserIdFormat("总计")
-                                .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
-                                .setDeviceSumDeviceCompletePercent(null)
-                                .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
-                                .setDeviceReportDateList(null)
-                                .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
-                                .setDeviceReportDateCount(null)
-                                .setTotalCount(t.getTotalCount() + t1.getTotalCount())
-                                .setDeviceTotalCount(null)
-                                .setSalary(t.getSalary().add(t1.getSalary()))
-                                .setDeviceSalary(null)
-                                // 先累计
-                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
-                                .setDeviceDeviceCompletePercent(null)
-                )).ifPresent(t -> {
-                    list.add(t
-                            // 在平均
-                            .setDeviceCompletePercent(t.getDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
-                            .setIndex(atomicInteger.addAndGet(1))
-                    );
-                });
-        return new ListResult<>(
-                list
-                        .stream()
-                        .flatMap(t -> isBlank(t.getUserId()) ? Stream.of(t) : userDeviceListMap.getOrDefault(t.getUserId(), new ArrayList<>()).stream().peek(t1 -> {
-                                            t1
-                                                    .setDeviceSumDeviceCompletePercent(t1.getSumDeviceCompletePercent())
-                                                    .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
-                                                    .setDeviceSalary(t1.getSalary())
-                                                    .setDeviceReportDateList(t1.getReportDateList())
-                                                    .setDeviceReportDateCount(t1.getReportDateCount())
-                                                    .setDeviceTotalCount(t1.getTotalCount())
+        final List<ReportSummaryAccountResponse> userDeviceList = list
+                .stream()
+                .flatMap(t -> isBlank(t.getUserId()) ? Stream.of(t) : userDeviceListMap.getOrDefault(t.getUserId(), new ArrayList<>()).stream().peek(t1 -> {
+                                    t1
+                                            .setDeviceSumDeviceCompletePercent(t1.getSumDeviceCompletePercent())
+                                            .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
+                                            .setDeviceSalary(t1.getSalary())
+                                            .setDeviceReportDateList(t1.getReportDateList())
+                                            .setDeviceReportDateCount(t1.getReportDateCount())
+                                            .setDeviceTotalCount(t1.getTotalCount())
 
-                                                    .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
-                                                    .setDeviceCompletePercent(t.getDeviceCompletePercent())
-                                                    .setSalary(t.getSalary())
-                                                    .setDeviceReportDateList(t.getReportDateList())
-                                                    .setDeviceReportDateCount(t.getReportDateCount())
-                                                    .setTotalCount(t.getTotalCount())
-                                                    .setIndex(t.getIndex())
-                                            ;
-                                        })
-                                        .sorted((o1, o2) -> o2.getDeviceDeviceCompletePercent().compareTo(o1.getDeviceDeviceCompletePercent()))
-                        )
+                                            .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
+                                            .setDeviceCompletePercent(t.getDeviceCompletePercent())
+                                            .setSalary(t.getSalary())
+                                            .setDeviceReportDateList(t.getReportDateList())
+                                            .setDeviceReportDateCount(t.getReportDateCount())
+                                            .setTotalCount(t.getTotalCount())
+                                            .setIndex(t.getIndex())
+                                    ;
+                                })
+                                .sorted((o1, o2) -> o2.getDeviceDeviceCompletePercent().compareTo(o1.getDeviceDeviceCompletePercent()))
+                )
+                .collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(list) && CollUtil.isNotEmpty(userDeviceList)) {
+            final ReportSummaryAccountResponse summary = new ReportSummaryAccountResponse()
+                    .setUserId("")
+                    .setUserIdFormat("总计");
+            list.stream().reduce(
+                    (t, t1) -> summary
+                            .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
+                            .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                            .setReportDateCount(summary.getReportDateList().size())
+                            .setTotalCount(t.getTotalCount() + t1.getTotalCount())
+                            .setSalary(t.getSalary().add(t1.getSalary()))
+                            // 先累计
+                            .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
+            );
+            userDeviceList.stream()
+                    .reduce(
+                            (t, t1) -> summary
+                                    .setDeviceSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
+                                    .setDeviceReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDeviceReportDateList()), t1.getDeviceReportDateList()))
+                                    .setDeviceReportDateCount(summary.getDeviceReportDateList().size())
+                                    .setDeviceTotalCount(t.getDeviceTotalCount() + t1.getDeviceTotalCount())
+                                    .setDeviceSalary(t.getDeviceSalary().add(t1.getDeviceSalary()))
+                                    // 先累计
+                                    .setDeviceDeviceCompletePercent(t.getDeviceDeviceCompletePercent().add(t1.getDeviceDeviceCompletePercent()))
+                    );
+            summary
+                    // 在平均
+                    .setDeviceCompletePercent(summary.getDeviceCompletePercent().divide(new BigDecimal(list.size()), 8, RoundingMode.HALF_UP))
+                    .setDeviceDeviceCompletePercent(summary.getDeviceDeviceCompletePercent().divide(new BigDecimal(userDeviceList.size()), 8, RoundingMode.HALF_UP))
+                    .setIndex(atomicInteger.addAndGet(1));
+            userDeviceList.add(summary);
+        }
+        return new ListResult<>(
+                userDeviceList
+                        .stream()
                         .peek(t -> t
                                 .setSalaryFormat(NumberUtil.formatIntTh(t.getSalary()))
                                 .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceSalaryFormat(NumberUtil.formatIntTh(t.getDeviceSalary()))
-                                .setDeviceSumDeviceCompletePercentFormat(null == t.getDeviceSumDeviceCompletePercent() ? "--" : t.getDeviceSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceDeviceCompletePercentFormat(null == t.getDeviceDeviceCompletePercent() ? "--" : t.getDeviceDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                                .setDeviceSumDeviceCompletePercentFormat(t.getDeviceSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                                .setDeviceDeviceCompletePercentFormat(t.getDeviceDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                         )
                         .collect(Collectors.toList())
         );
@@ -764,77 +774,86 @@ public class DousonReportController {
                         .setIndex(atomicInteger.addAndGet(1))
                 )
                 .collect(Collectors.toList());
-        list.stream()
-                .collect(Collectors.reducing(
-                        (t, t1) -> new ReportSummaryDeviceResponse()
-                                .setDeviceId("")
-                                .setDeviceIdFormat("总计")
-                                .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
-                                .setDeviceReportDateList(null)
-                                .setTotalCount(t.getTotalCount() + t1.getTotalCount())
-                                .setDeviceTotalCount(null)
-                                .setUserIdCount(t.getUserIdCount() + t1.getUserIdCount())
-                                .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
-                                .setDeviceReportDateCount(null)
-                                .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))
-                                .setDeviceSumDeviceUsePercent(null)
-                                .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
-                                // 先累计
-                                .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()))
-                                .setDeviceDeviceUsePercent(null)
-                                .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
-                                .setDeviceDeviceCompletePercent(null)
-                )).ifPresent(t -> {
-                    // 在平均
-                    list.add(t
-                            .setDeviceUsePercent(t.getDeviceUsePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
-                            .setDeviceCompletePercent(t.getDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
-                            .setIndex(atomicInteger.addAndGet(1))
+        final List<ReportSummaryDeviceResponse> deviceUserList = list
+                .stream()
+                .flatMap(t -> isBlank(t.getDeviceId()) ? Stream.of(t) : deviceUserListMap.getOrDefault(t.getDeviceId(), new ArrayList<>()).stream().peek(t1 -> {
+                                    t1
+                                            .setDeviceReportDateList(t1.getReportDateList())
+                                            .setDeviceReportDateCount(t1.getReportDateCount())
+                                            .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
+                                            .setDeviceSumDeviceCompletePercent(t1.getSumDeviceCompletePercent())
+                                            .setDeviceSumDeviceUsePercent(t1.getSumDeviceUsePercent())
+                                            .setDeviceDeviceUsePercent(t1.getDeviceUsePercent())
+                                            .setDevicePercentDiff(t1.getPercentDiff())
+                                            .setIndex(t.getIndex())
+                                            .setReportDateList(t.getReportDateList())
+                                            .setReportDateCount(t.getReportDateCount())
+                                            .setUserIdList(t.getUserIdList())
+                                            .setUserIdCount(t.getUserIdCount())
+                                            .setTotalCount(t.getTotalCount())
+                                            .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
+                                            .setDeviceCompletePercent(t.getDeviceCompletePercent())
+                                            .setSumDeviceUsePercent(t.getSumDeviceUsePercent())
+                                            .setDeviceUsePercent(t.getDeviceUsePercent())
+                                            .setPercentDiff(t.getPercentDiff())
+                                    ;
+                                })
+                                .sorted((o1, o2) -> o2.getDeviceDeviceCompletePercent().compareTo(o1.getDeviceDeviceCompletePercent()))
+                )
+                .collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(list) && CollUtil.isNotEmpty(deviceUserList)) {
+            final ReportSummaryDeviceResponse summary = new ReportSummaryDeviceResponse()
+                    .setDeviceId("")
+                    .setDeviceIdFormat("总计");
+            list.stream()
+                    .reduce(
+                            (t, t1) -> summary
+                                    .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
+                                    .setReportDateCount(summary.getReportDateList().size())
+                                    .setTotalCount(t.getTotalCount() + t1.getTotalCount())
+                                    .setUserIdCount(t.getUserIdCount() + t1.getUserIdCount())
+                                    .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))
+                                    .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
+                                    // 先累计
+                                    .setDeviceUsePercent(t.getDeviceUsePercent().add(t1.getDeviceUsePercent()))
+                                    .setDeviceCompletePercent(t.getDeviceCompletePercent().add(t1.getDeviceCompletePercent()))
                     );
-                });
-        return new ListResult<>(
-                list
-                        .stream()
-                        .flatMap(t -> isBlank(t.getDeviceId()) ? Stream.of(t) : deviceUserListMap.getOrDefault(t.getDeviceId(), new ArrayList<>()).stream().peek(t1 -> {
-                                            t1
-                                                    .setDeviceReportDateList(t1.getReportDateList())
-                                                    .setDeviceReportDateCount(t1.getReportDateCount())
-                                                    .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
-                                                    .setDeviceSumDeviceCompletePercent(t1.getSumDeviceCompletePercent())
-                                                    .setDeviceSumDeviceUsePercent(t1.getSumDeviceUsePercent())
-                                                    .setDeviceDeviceUsePercent(t1.getDeviceUsePercent())
-                                                    .setDevicePercentDiff(t1.getPercentDiff())
-                                                    .setIndex(t.getIndex())
-                                                    .setReportDateList(t.getReportDateList())
-                                                    .setReportDateCount(t.getReportDateCount())
-                                                    .setUserIdList(t.getUserIdList())
-                                                    .setUserIdCount(t.getUserIdCount())
-                                                    .setTotalCount(t.getTotalCount())
-                                                    .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
-                                                    .setDeviceCompletePercent(t.getDeviceCompletePercent())
-                                                    .setSumDeviceUsePercent(t.getSumDeviceUsePercent())
-                                                    .setDeviceUsePercent(t.getDeviceUsePercent())
-                                                    .setPercentDiff(t.getPercentDiff())
-                                            ;
-                                        })
-                                        .sorted((o1, o2) -> o2.getDeviceDeviceCompletePercent().compareTo(o1.getDeviceDeviceCompletePercent()))
-                        )
-                        .peek(t -> t
-                                .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setSumDeviceUsePercentFormat(t.getSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceUsePercentFormat(t.getDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setPercentDiff(t.getDeviceCompletePercent().subtract(t.getDeviceUsePercent()))
-                                .setPercentDiffFormat(t.getPercentDiff().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceSumDeviceCompletePercentFormat(null == t.getDeviceSumDeviceCompletePercent() ? "--" : t.getDeviceSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceDeviceCompletePercentFormat(null == t.getDeviceDeviceCompletePercent() ? "--" : t.getDeviceDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceSumDeviceUsePercentFormat(null == t.getDeviceSumDeviceUsePercent() ? "--" : t.getDeviceSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDeviceDeviceUsePercentFormat(null == t.getDeviceDeviceUsePercent() ? "--" : t.getDeviceDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                                .setDevicePercentDiff(null == t.getDeviceDeviceCompletePercent() ? null : t.getDeviceDeviceCompletePercent().subtract(t.getDeviceDeviceUsePercent()))
-                                .setDevicePercentDiffFormat(null == t.getDevicePercentDiff() ? "--" : t.getDevicePercentDiff().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
-                        )
-                        .collect(Collectors.toList())
-        );
+            deviceUserList.stream()
+                    .reduce(
+                            (t, t1) -> summary
+                                    .setDeviceReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDeviceReportDateList()), t1.getDeviceReportDateList()))
+                                    .setDeviceReportDateCount(summary.getDeviceReportDateList().size())
+                                    .setDeviceTotalCount(t.getDeviceTotalCount() + t1.getDeviceTotalCount())
+                                    .setUserIdCount(t.getUserIdCount() + t1.getUserIdCount())
+                                    .setDeviceSumDeviceUsePercent(t.getDeviceSumDeviceUsePercent().add(t1.getDeviceSumDeviceUsePercent()))
+                                    .setDeviceSumDeviceCompletePercent(t.getDeviceSumDeviceCompletePercent().add(t1.getDeviceSumDeviceCompletePercent()))
+                                    // 先累计
+                                    .setDeviceDeviceUsePercent(t.getDeviceDeviceUsePercent().add(t1.getDeviceDeviceUsePercent()))
+                                    .setDeviceDeviceCompletePercent(t.getDeviceDeviceCompletePercent().add(t1.getDeviceDeviceCompletePercent()))
+                    );
+            deviceUserList.add(summary
+                    .setDeviceUsePercent(summary.getDeviceUsePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                    .setDeviceCompletePercent(summary.getDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                    .setDeviceDeviceUsePercent(summary.getDeviceDeviceUsePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                    .setDeviceDeviceCompletePercent(summary.getDeviceDeviceCompletePercent().divide(new BigDecimal(atomicInteger.get()), 8, RoundingMode.HALF_UP))
+                    .setIndex(atomicInteger.addAndGet(1)));
+        }
+        return new ListResult<>(deviceUserList.stream()
+                .peek(t -> t
+                        .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setSumDeviceUsePercentFormat(t.getSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceUsePercentFormat(t.getDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setPercentDiff(t.getDeviceCompletePercent().subtract(t.getDeviceUsePercent()))
+                        .setPercentDiffFormat(t.getPercentDiff().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceSumDeviceCompletePercentFormat(t.getDeviceSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceDeviceCompletePercentFormat(t.getDeviceDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceSumDeviceUsePercentFormat(t.getDeviceSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDeviceDeviceUsePercentFormat(t.getDeviceDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                        .setDevicePercentDiff(t.getDeviceDeviceCompletePercent().subtract(t.getDeviceDeviceUsePercent()))
+                        .setDevicePercentDiffFormat(t.getDevicePercentDiff().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
+                )
+                .collect(Collectors.toList()));
     }
 
     /**

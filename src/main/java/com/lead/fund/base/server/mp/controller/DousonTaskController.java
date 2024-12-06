@@ -261,24 +261,29 @@ public class DousonTaskController {
             return new PageResult<>(0, new ArrayList<>());
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
-        final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        final AtomicInteger index = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
+        final AtomicInteger deviceIndex = new AtomicInteger(0);
         final TaskResponse[] prev = {new TaskResponse().setDeviceId("")};
         final List<TaskResponse> l = formatTaskList(pr.getList());
         return new PageResult<>(
                 pr.getTotal(),
                 l.stream().map(t -> {
-                    t.setIndex(atomicInteger.addAndGet(1))
-                            .setUp(isNotBlank(t.getDeviceId()) && t.getIndex() > 0)
-                            .setDown(isNotBlank(t.getDeviceId()) && t.getIndex() < pr.getTotal());
+                    t.setIndex(index.addAndGet(1))
+                            .setUp(index.get() > 1)
+                            .setDown(index.get() < pr.getTotal());
                     List<TaskResponse> rl;
                     if (!t.getDeviceId().equals(prev[0].getDeviceId())) {
                         prev[0].setDown(false);
                         t.setUp(false);
                         rl = CollUtil.toList(new TaskResponse(), t);
+                        deviceIndex.set(0);
                     } else {
+
                         rl = CollUtil.toList(t);
                     }
                     prev[0] = t;
+                    t
+                            .setDeviceIndex(deviceIndex.addAndGet(1));
                     return rl;
                 }).flatMap(Collection::stream).collect(Collectors.toList())
         );

@@ -29,6 +29,10 @@ public class TaskResponse extends AbstractAdmin {
      */
     private Integer index;
     /**
+     * 序号
+     */
+    private Integer deviceIndex;
+    /**
      * 生产计划ID
      */
     private String taskId;
