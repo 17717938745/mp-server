@@ -137,6 +137,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             } else {
                 final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
                 final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
+                db.setOfflineDate(offlineDate);
                 lambda.set(TaskEntity::getOfflineDate, offlineDate);
             }
             if (isBlank(db.getOfflineDate()) || isBlank(db.getPromiseDoneDate())) {
