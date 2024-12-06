@@ -20,10 +20,12 @@ import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TaskMapper;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -59,29 +61,13 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             e.setProductCountHour8(new BigDecimal("435").divide(e.getProcessWorkingHour(), 1, RoundingMode.HALF_UP))
                     .setProductCountHour12(new BigDecimal("585").divide(e.getProcessWorkingHour(), 1, RoundingMode.HALF_UP));
         }
-        if (isBlank(e.getOnlineDate()) || null == e.getProcessWorkingHour() || null == e.getPlanReformCount()) {
-            e.setOfflineDate(null);
-        } else {
-            final int diff = e.getPlanReformCount().multiply(e.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
-            e.setOfflineDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getOnlineDate()), diff)));
-        }
-        if (isBlank(e.getOfflineDate()) || isBlank(e.getPromiseDoneDate())) {
-            e.setDelay(null);
-        } else {
-            e.setDelay(new BigDecimal(cn.hutool.core.date.DateUtil.between(
-                    DateUtil.parse(e.getPromiseDoneDate()),
-                    DateUtil.parse(e.getOfflineDate()),
-                    DateUnit.DAY,
-                    false
-            )));
-        }
         if (null == e.getOrderCount() || null == e.getProcessCount()) {
             e.setSurplus(null);
         } else {
             e.setSurplus(e.getOrderCount().subtract(e.getProcessCount()));
         }
         if (isBlank(e.getSupplierDoneDate())) {
-            e.setSupplierDoneDate(null);
+            e.setSupplierPromiseDoneDate(null);
         } else {
             final int diff = -10 - ((isNotBlank(e.getNde()) ? 1 : 0) + (isNotBlank(e.getAssemble()) ? 5 : 0) + (isNotBlank(e.getTestPress()) ? 3 : 0) + (isNotBlank(e.getSurfaceTreatment()) ? 3 : 0));
             e.setSupplierPromiseDoneDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getSupplierDoneDate()), diff)));
@@ -132,7 +118,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         final List<TaskEntity> taskList = taskMapper.selectList(new LambdaQueryWrapper<TaskEntity>()
                 .eq(TaskEntity::getDeviceId, e.getDeviceId())
                 .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
-                .select(TaskEntity::getId, TaskEntity::getSorter, TaskEntity::getOfflineDate, TaskEntity::getOnlineDate, TaskEntity::getModifyTime));
+        );
         for (int i = 0; i < taskList.size(); i++) {
             final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
             final TaskEntity db = taskList.get(i);
@@ -142,7 +128,27 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
             if (isNotBlank(pdb.getOfflineDate())) {
-                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), 0))));
+                final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), 0)));
+                db.setOnlineDate(onlineDate);
+                lambda.set(TaskEntity::getOnlineDate, onlineDate);
+            }
+            if (isBlank(db.getOnlineDate()) || null == db.getProcessWorkingHour() || null == db.getPlanReformCount()) {
+                lambda.set(TaskEntity::getOfflineDate, null);
+            } else {
+                final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
+                final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
+                lambda.set(TaskEntity::getOfflineDate, offlineDate);
+            }
+            if (isBlank(db.getOfflineDate()) || isBlank(db.getPromiseDoneDate())) {
+                lambda.set(TaskEntity::getDelay, null);
+            } else {
+                final BigDecimal delay = new BigDecimal(cn.hutool.core.date.DateUtil.between(
+                        DateUtil.parse(db.getPromiseDoneDate()),
+                        DateUtil.parse(db.getOfflineDate()),
+                        DateUnit.DAY,
+                        false
+                ));
+                lambda.set(TaskEntity::getDelay, delay);
             }
             taskMapper.update(null, lambda);
         }
