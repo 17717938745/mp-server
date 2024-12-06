@@ -140,6 +140,7 @@ public class ForumController {
             }
         }
         final PageResult<ForumEntity> pr = DatabaseUtil.page(request, this::forumList);
+        log.info("pr info, count: {}, size: {}", pr.getTotal(), pr.getList().size());
         return new PageResult<>(pr.getTotal(), formatForumList(u, pr.getList())
                 .stream().peek(t -> {
                     if (searchTitle) {
@@ -191,7 +192,6 @@ public class ForumController {
                 (t, r) -> t
                         .setThumbsUpType(r.getThumbsUp() ? 1 : 2)
         );
-
         return rl;
     }
 

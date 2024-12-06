@@ -659,14 +659,14 @@ public class DousonReportController {
                                             .setDeviceDeviceCompletePercent(t1.getDeviceCompletePercent())
                                             .setDeviceSalary(t1.getSalary())
                                             .setDeviceReportDateList(t1.getReportDateList())
-                                            .setDeviceReportDateCount(t1.getReportDateCount())
+                                            .setDeviceReportDateCount(t1.getReportDateList().size())
                                             .setDeviceTotalCount(t1.getTotalCount())
 
                                             .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent())
                                             .setDeviceCompletePercent(t.getDeviceCompletePercent())
                                             .setSalary(t.getSalary())
                                             .setDeviceReportDateList(t.getReportDateList())
-                                            .setDeviceReportDateCount(t.getReportDateCount())
+                                            .setDeviceReportDateCount(t.getReportDateList().size())
                                             .setTotalCount(t.getTotalCount())
                                             .setIndex(t.getIndex())
                                     ;
