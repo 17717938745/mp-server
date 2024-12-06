@@ -54,17 +54,17 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51, mergeKey: ['userId']},
-  {value: 'userIdFormat', labelKey: 'user', width: 168, mergeKey: ['userId']},
+  {value: 'userIdFormat', labelKey: 'user', width: 157, mergeKey: ['userId']},
   {value: 'reportDateCount', labelKey: 'reportDateCount', width: 51, mergeKey: ['userId']},
   {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 121,},
-  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 139},
-  {value: 'deviceTotalCount', labelKey: 'totalCount', width: 87},
-  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 139},
-  {value: 'deviceSalaryFormat', labelKey: 'reportSalary', width: 139},
-  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 139, mergeKey: ['userId']},
-  {value: 'totalCount', labelKey: 'totalCount', width: 87, mergeKey: ['userId']},
-  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139, mergeKey: ['userId']},
-  {value: 'salaryFormat', labelKey: 'reportSalary', width: 139, mergeKey: ['userId']},
+  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 133},
+  {value: 'deviceTotalCount', labelKey: 'totalCount', width: 61},
+  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 133},
+  {value: 'deviceSalaryFormat', labelKey: 'reportSalary', width: 133},
+  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 133, mergeKey: ['userId']},
+  {value: 'totalCount', labelKey: 'totalCount', width: 61, mergeKey: ['userId']},
+  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 133, mergeKey: ['userId']},
+  {value: 'salaryFormat', labelKey: 'reportSalary', width: 133, mergeKey: ['userId']},
 ])
 const toggleKeyList = ['deviceIdFormat', 'deviceSumDeviceCompletePercentFormat', 'deviceTotalCount', 'deviceDeviceCompletePercentFormat', 'deviceSalaryFormat', ]
 const showMore = ref(true)
@@ -88,6 +88,8 @@ const state = reactive({
       date: '',
       startReportDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
       endReportDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
+      // startReportDate: '',
+      // endReportDate: '',
     },
     page: {
       page: DEFAULT_PAGE,
