@@ -526,7 +526,7 @@ const defaultColumnConfigList = [
     },
   },
 ]
-const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList)
+const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList.map(t => t))
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -730,18 +730,14 @@ const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdForm
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
-const handleShowTypeChange = (v) => {
-  console.log(showType.value, v)
-  console.log(showType.value === 0)
-  console.log(showType.value === 1)
-  console.log(showType.value === 2)
+const handleShowTypeChange = () => {
   if (showType.value === 0) {
     columnConfigList.value = defaultColumnConfigList.map(t => t)
   } else if (showType.value === 1) {
     columnConfigList.value = taskManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
   } else {
+    columnConfigList.value = supplierManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
   }
-  columnConfigList.value = supplierManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
 }
 handleShowTypeChange()
 const handleSaveModal = () => {
