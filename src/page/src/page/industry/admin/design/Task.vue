@@ -727,25 +727,21 @@ const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManag
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
-  if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager')) {
-    columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
-  } else if (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager')) {
-    columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
-  }
-}
-const showType = ref(!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username ? "0" :
-    includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? "1" : "2"
+const showType = ref('admin' === user.username ? 0 :
+    includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
-const handleShowTypeChange = () => {
-  console.log(showType.value)
-  if (showType.value === "1") {
-    columnConfigList.value = taskManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
-  } else if (showType.value === "2") {
+const handleShowTypeChange = (v) => {
+  console.log(showType.value, v)
+  console.log(showType.value === 0)
+  console.log(showType.value === 1)
+  console.log(showType.value === 2)
+  if (showType.value === 0) {
+    columnConfigList.value = defaultColumnConfigList.map(t => t)
+  } else if (showType.value === 1) {
     columnConfigList.value = taskManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
   } else {
-    columnConfigList.value = defaultColumnConfigList.map(t => t)
   }
+  columnConfigList.value = supplierManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
 }
 handleShowTypeChange()
 const handleSaveModal = () => {
