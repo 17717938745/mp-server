@@ -684,7 +684,7 @@ public class DousonReportController {
                     (t, t1) -> summary
                             .setSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
                             .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
-                            .setReportDateCount(summary.getReportDateList().size())
+                            .setReportDateCount(t.getReportDateCount() + t1.getReportDateCount())
                             .setTotalCount(t.getTotalCount() + t1.getTotalCount())
                             .setSalary(t.getSalary().add(t1.getSalary()))
                             // 先累计
