@@ -62,7 +62,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         if (isBlank(e.getOnlineDate()) || null == e.getProcessWorkingHour() || null == e.getPlanReformCount()) {
             e.setOfflineDate(null);
         } else {
-            final int diff = e.getProcessWorkingHour().multiply(e.getPlanReformCount().divide(new BigDecimal(60 * 18), 1, RoundingMode.HALF_UP)).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
+            final int diff = e.getPlanReformCount().multiply(e.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
             e.setOfflineDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getOnlineDate()), diff)));
         }
         if (isBlank(e.getOfflineDate()) || isBlank(e.getPromiseDoneDate())) {
@@ -142,7 +142,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
             if (isNotBlank(pdb.getOfflineDate())) {
-                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), 1))));
+                lambda.set(TaskEntity::getOnlineDate, DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), 0))));
             }
             taskMapper.update(null, lambda);
         }

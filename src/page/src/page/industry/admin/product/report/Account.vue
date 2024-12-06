@@ -12,6 +12,20 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
+      <el-select v-model="query.data.userId"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.user"
+      >
+        <el-option
+            v-for="item in userOptionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
@@ -66,6 +80,23 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 133, mergeKey: ['userId']},
   {value: 'salaryFormat', labelKey: 'reportSalary', width: 133, mergeKey: ['userId']},
 ])
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'device',
+      'processProcedure',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data || {}
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
+})
 const toggleKeyList = ['deviceIdFormat', 'deviceSumDeviceCompletePercentFormat', 'deviceTotalCount', 'deviceDeviceCompletePercentFormat', 'deviceSalaryFormat', ]
 const showMore = ref(true)
 const handleToggleMore = (v) => {

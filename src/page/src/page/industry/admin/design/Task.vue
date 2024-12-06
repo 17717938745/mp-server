@@ -837,6 +837,12 @@ Promise.all([
   httpGet(`system/user/config/list`, {}),
 ]).then((l: any) => {
   state.config = l[0].data || {}
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
   if (taskEdit) {
     columnConfigList.value = columnConfigList.value.map(t => {
       if ('deviceIdFormat' === t.value) {
@@ -872,15 +878,8 @@ Promise.all([
       }
       return t
     })
-    handlePage()
   }
-  // userOptionList.value = (l[1].list || []).map((t: any) => {
-  //   return {
-  //     value: t.userId,
-  //     label: t.name,
-  //   }
-  // })
-  // handlePage()
+  handlePage()
 })
 const {
   expandRowKeys,
