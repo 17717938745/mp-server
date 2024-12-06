@@ -737,7 +737,6 @@ if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && '
     columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
   }
 }
-handlePage()
 const handleSaveModal = () => {
   state.formData = Object.assign({}, defaultFormData)
   state.formVisible = true
@@ -873,6 +872,7 @@ Promise.all([
       }
       return t
     })
+    handlePage()
   }
   // userOptionList.value = (l[1].list || []).map((t: any) => {
   //   return {
