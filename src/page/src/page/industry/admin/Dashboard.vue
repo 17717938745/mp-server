@@ -4,7 +4,7 @@
         style="background-color: #ffffff; margin-right:40px ;border-radius: 5px; padding: 0; margin-bottom: 20px;"
         class="forum-content"
     >
-      <div style="font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px;">
+      <div style="font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px; background: radial-gradient(circle, #7b6262, #be8b5a, #6facb7); color: #2927cf;">
         {{ store.state.label.forum }}
         <el-input
             v-model="forumRequest.data.title"
