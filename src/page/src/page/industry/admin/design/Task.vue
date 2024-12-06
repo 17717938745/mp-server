@@ -179,11 +179,13 @@
       </div>
     </div>
     <div>
-      <el-radio-group v-model="showType" :disabled="true" @change="handleShowTypeChange">
+      <el-radio-group v-model="showType" @change="handleShowTypeChange">
         <el-radio :label="0">管理员 nhân viên quản lý</el-radio>
         <el-radio :label="1">台机管理员 NV quản lý điều hành</el-radio>
         <el-radio :label="2">供应商管理员 NV quản lý nhà cung cấp</el-radio>
       </el-radio-group>
+    </div>
+    <div>
       <el-space wrap>
         <el-switch v-model="showMore" active-text="Show more" inactive-text="Hide info" @change="handleToggleMore"/>
       </el-space>
@@ -367,7 +369,8 @@
         <el-form-item prop="scrapCount" :label="store.state.label.scrapCount" v-if="supplierShow">
           <el-input-number v-model="formData.scrapCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate" v-if="supplierShow">
+        <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate"
+                      v-if="supplierShow">
           <el-date-picker
               type="date"
               v-model="formData.supplierPromiseDoneDate"
@@ -468,7 +471,7 @@ const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
-const columnConfigList = ref<ViewConfig[]>([
+const defaultColumnConfigList = [
   {value: 'operator', labelKey: 'viewAndEdit', width: 230, type: ValueType.Operator,},
   {value: 'deviceIndex', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
@@ -522,7 +525,8 @@ const columnConfigList = ref<ViewConfig[]>([
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
     },
   },
-])
+]
+const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList)
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -533,7 +537,6 @@ httpGet(`system/user/config/list`, {}).then(
         }
       })
     })
-const showType = ref(0)
 const defaultFormData = {
   creator: user.userId,
   deviceId: '',
@@ -731,14 +734,17 @@ if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && '
     columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
   }
 }
+const showType = ref(!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username ? "0" :
+    includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? "1" : "2"
+)
 const handleShowTypeChange = () => {
   console.log(showType.value)
-  if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
-    if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager')) {
-      columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
-    } else if (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager')) {
-      columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
-    }
+  if (showType.value === "1") {
+    columnConfigList.value = taskManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
+  } else if (showType.value === "2") {
+    columnConfigList.value = taskManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
+  } else {
+    columnConfigList.value = defaultColumnConfigList.map(t => t)
   }
 }
 handleShowTypeChange()
@@ -826,10 +832,10 @@ const handleDelete = (row: any) => {
     httpDelete('douson/task', {
       taskId: row.taskId,
     })
-    .then(() => {
-      ElMessage.success('Delete success')
-      handlePage()
-    })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handlePage()
+        })
   })
 }
 Promise.all([
