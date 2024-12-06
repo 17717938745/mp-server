@@ -179,6 +179,11 @@
       </div>
     </div>
     <div>
+      <el-radio-group v-model="showType" :disabled="true" @change="handleShowTypeChange">
+        <el-radio :label="0">管理员 nhân viên quản lý</el-radio>
+        <el-radio :label="1">台机管理员 NV quản lý điều hành</el-radio>
+        <el-radio :label="2">供应商管理员 NV quản lý nhà cung cấp</el-radio>
+      </el-radio-group>
       <el-space wrap>
         <el-switch v-model="showMore" active-text="Show more" inactive-text="Hide info" @change="handleToggleMore"/>
       </el-space>
@@ -464,7 +469,7 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'operator', labelKey: 'viewAndEdit', width: 412, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 230, type: ValueType.Operator,},
   {value: 'deviceIndex', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
   {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
@@ -528,6 +533,7 @@ httpGet(`system/user/config/list`, {}).then(
         }
       })
     })
+const showType = ref(0)
 const defaultFormData = {
   creator: user.userId,
   deviceId: '',
@@ -725,6 +731,17 @@ if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && '
     columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
   }
 }
+const handleShowTypeChange = () => {
+  console.log(showType.value)
+  if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
+    if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager')) {
+      columnConfigList.value = supplierManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
+    } else if (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager')) {
+      columnConfigList.value = taskManagerColumnValueList.map(k => columnConfigList.value.filter(t => k === t.value)[0])
+    }
+  }
+}
+handleShowTypeChange()
 const handleSaveModal = () => {
   state.formData = Object.assign({}, defaultFormData)
   state.formVisible = true
@@ -836,15 +853,15 @@ Promise.all([
         t.type = ValueType.SelectEdit
         t.optionList = state.config.testDeviceList
       } else if ('planReformCount' === t.value) {
-        t.width = 136
+        t.width = 95
         t.type = ValueType.NumberEdit
       } else if ('supplierRemark' === t.value) {
         t.type = ValueType.TextEdit
       } else if ('processWorkingHour' === t.value) {
-        t.width = 136
+        t.width = 95
         t.type = ValueType.NumberEdit
       } else if ('onlineDate' === t.value) {
-        t.width = 169
+        t.width = 102
         t.type = ValueType.DateEdit
       } else if ('processCount' === t.value) {
         t.width = 98
