@@ -69,16 +69,16 @@ const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51, mergeKey: ['userId']},
   {value: 'userIdFormat', labelKey: 'user', width: 157, mergeKey: ['userId']},
-  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 51, mergeKey: ['userId']},
-  {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 189,},
-  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 133},
+  {value: 'reportDateCount', labelKey: 'reportDateCount', width: 61, mergeKey: ['userId']},
+  {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 167,},
+  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 115},
   {value: 'deviceTotalCount', labelKey: 'totalCount', width: 61},
-  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 133},
-  {value: 'deviceSalaryFormat', labelKey: 'reportSalary', width: 133},
-  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 133, mergeKey: ['userId']},
+  {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 115},
+  {value: 'deviceSalaryFormat', labelKey: 'reportSalary', width: 115},
+  {value: 'sumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 115, mergeKey: ['userId']},
   {value: 'totalCount', labelKey: 'totalCount', width: 61, mergeKey: ['userId']},
-  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 133, mergeKey: ['userId']},
-  {value: 'salaryFormat', labelKey: 'reportSalary', width: 133, mergeKey: ['userId']},
+  {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 115, mergeKey: ['userId']},
+  {value: 'salaryFormat', labelKey: 'reportSalary', width: 115, mergeKey: ['userId']},
 ])
 Promise.all([
   httpGet('douson/config', {
