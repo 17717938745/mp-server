@@ -1,6 +1,6 @@
 package com.lead.fund.base.server.mp.mapper.douson;
 
-import com.github.jeffreyning.mybatisplus.base.MppBaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lead.fund.base.server.mp.entity.douson.ForumEntity;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  * @date 2024-05-11 11:00
  */
 @Repository
-public interface ForumMapper extends MppBaseMapper<ForumEntity> {
+public interface ForumMapper extends BaseMapper<ForumEntity> {
 
 }
