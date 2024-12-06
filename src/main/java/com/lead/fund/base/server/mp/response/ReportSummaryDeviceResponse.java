@@ -108,4 +108,9 @@ public class ReportSummaryDeviceResponse implements Serializable {
      */
     private BigDecimal devicePercentDiff = BigDecimal.ZERO;
     private String devicePercentDiffFormat;
+    /**
+     * 报告日期
+     */
+    private Set<String> designNumberList = new HashSet<>();
+    private Integer designNumberCount = 1;
 }

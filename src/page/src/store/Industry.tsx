@@ -575,6 +575,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "道森心声社区"
         },
         {
+          "value": "designNumberCount",
+          "label": "图号计数"
+        },
+        {
           "value": "agree",
           "label": "赞同"
         },
@@ -2066,6 +2070,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "forum",
           "label": "Bạn đang nghĩ gì vậy?"
+        },
+        {
+          "value": "designNumberCount",
+          "label": "Tính toán số bản vẽ"
         },
         {
           "value": "agree",

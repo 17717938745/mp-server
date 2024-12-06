@@ -741,6 +741,7 @@ public class DousonReportController {
             final ReportSummaryDeviceResponse r = new ReportSummaryDeviceResponse()
                     .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
                     .setUserIdList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getUserIdList()), t1.getUserIdList()))
+                    .setDesignNumberList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDesignNumberList()), t1.getDesignNumberList()))
                     .setDeviceId(defaultIfBlank(t.getDeviceId(), t1.getDeviceId()))
                     .setDeviceIdFormat(defaultIfBlank(t.getDeviceIdFormat(), t1.getDeviceIdFormat()))
                     .setUserId(defaultIfBlank(t.getUserId(), t1.getUserId()))
@@ -751,6 +752,7 @@ public class DousonReportController {
             r
                     .setReportDateCount(r.getReportDateList().size())
                     .setUserIdCount(r.getUserIdList().size())
+                    .setDesignNumberCount(r.getDesignNumberList().size())
                     .setDeviceCompletePercent(r.getSumDeviceCompletePercent().divide(new BigDecimal(r.getReportDateCount()), 8, RoundingMode.HALF_UP))
                     .setDeviceUsePercent(r.getSumDeviceUsePercent().divide(new BigDecimal(r.getReportDateCount()), 8, RoundingMode.HALF_UP))
             ;
@@ -817,6 +819,8 @@ public class DousonReportController {
                                                 .setSumDeviceUsePercent(t.getSumDeviceUsePercent())
                                                 .setDeviceCompletePercent(t.getDeviceCompletePercent())
                                                 .setDeviceUsePercent(t.getDeviceUsePercent())
+                                                .setDesignNumberList(t.getDesignNumberList())
+                                                .setDesignNumberCount(t.getDesignNumberCount())
                                         ;
                                     })
                                     .sorted((o1, o2) -> o2.getDeviceDeviceCompletePercent().compareTo(o1.getDeviceDeviceCompletePercent()))

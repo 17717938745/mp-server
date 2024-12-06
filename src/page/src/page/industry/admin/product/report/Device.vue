@@ -99,6 +99,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'deviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 100, mergeKey: ['deviceId']},
   {value: 'deviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 100, mergeKey: ['deviceId']},
   {value: 'percentDiffFormat', labelKey: 'reportDiff', width: 60, mergeKey: ['deviceId']},
+  {value: 'designNumberCount', labelKey: 'designNumberCount', width: 60, mergeKey: ['deviceId']},
 ])
 Promise.all([
   httpGet('douson/config', {
