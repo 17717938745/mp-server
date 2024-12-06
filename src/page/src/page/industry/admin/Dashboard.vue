@@ -243,6 +243,7 @@ const handlePageChange = () => {
 }
 
 const handleResetForumPage = () => {
+  forumRequest.value.page.page = 1
   handleForumPage(true)
 }
 const handleForumPage = (reset: boolean = false) => {
