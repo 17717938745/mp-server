@@ -846,12 +846,6 @@ Promise.all([
       } else if ('onlineDate' === t.value) {
         t.width = 169
         t.type = ValueType.DateEdit
-      } else if ('offlineDate' === t.value) {
-        t.width = 169
-        t.type = ValueType.DateEdit
-      } else if ('delay' === t.value) {
-        t.width = 98
-        t.type = ValueType.NumberEdit
       } else if ('processCount' === t.value) {
         t.width = 98
         t.type = ValueType.NumberEdit
