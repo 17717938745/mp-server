@@ -323,20 +323,8 @@
         <el-form-item prop="processCount" :label="store.state.label.processCount" v-if="taskShow">
           <el-input-number v-model="formData.processCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="processProcedureList" :label="store.state.label.processProcedure" v-if="taskShow">
-          <el-select v-model="formData.processProcedureList"
-                     filterable
-                     clearable
-                     multiple
-                     :placeholder="store.state.label.processProcedure"
-                     class="search-item">
-            <el-option
-                v-for="item in config.processProcedureList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure" v-if="taskShow">
+          <el-input v-model="formData.processProcedure" :placeholder="store.state.label.processProcedure"/>
         </el-form-item>
         <el-form-item prop="supplierDoneDate" :label="store.state.label.supplierDoneDate" v-if="supplierShow">
           <el-date-picker
@@ -498,7 +486,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'offlineDate', labelKey: 'offlineDate', width: 102},
   {value: 'delay', labelKey: 'delay', width: 68},
   {value: 'processCount', labelKey: 'processCount', width: 68},
-  {value: 'processProcedureFormat', originValue: 'processProcedureList', labelKey: 'processProcedure', width: 131},
+  {value: 'processProcedure', originValue: 'processProcedure', labelKey: 'processProcedure', width: 131},
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 102},
@@ -562,7 +550,7 @@ const defaultFormData = {
   offlineDate: '',
   delay: 0,
   processCount: 0,
-  processProcedureList: [],
+  processProcedure: '',
   nde: '',
   assemble: '',
   testPress: '',
@@ -728,7 +716,7 @@ const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManag
 const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
-const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedureFormat', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'taskView') && 'admin' !== user.username) {
   if (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager')) {
@@ -764,7 +752,7 @@ const handleCopy = (d) => {
     offlineDate: null,
     delay: null,
     processCount: null,
-    processProcedureList: [],
+    processProcedure: '',
     supplierDoneDate: null,
     deliverCount: null,
     deliverDate: null,
@@ -831,7 +819,6 @@ Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
       'device',
-      'processProcedure',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -868,10 +855,9 @@ Promise.all([
       } else if ('processCount' === t.value) {
         t.width = 98
         t.type = ValueType.NumberEdit
-      } else if ('processProcedureFormat' === t.value) {
+      } else if ('processProcedure' === t.value) {
         t.width = 215
-        t.type = ValueType.SelectEdit
-        t.optionList = state.config.processProcedureList
+        t.type = ValueType.TextEdit
       } else if ('surplus' === t.value) {
         t.width = 98
         t.type = ValueType.NumberEdit

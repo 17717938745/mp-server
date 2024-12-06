@@ -136,8 +136,7 @@ public class TaskResponse extends AbstractAdmin {
     /**
      * 加工工序
      */
-    private List<String> processProcedureList;
-    private String processProcedureFormat;
+    private String processProcedure;
     /**
      * NDE
      */

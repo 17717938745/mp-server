@@ -128,7 +128,7 @@ public class TaskRequest extends AbstractAdmin {
     /**
      * 加工工序
      */
-    private List<String> processProcedureList = new ArrayList<>();
+    private String processProcedure;
     /**
      * NDE
      */

@@ -104,7 +104,6 @@ public class DousonTaskController {
                 taskDao.merge(
                         deviceId,
                         TASK_INSTANCE.task(request)
-                                .setProcessProcedure("," + String.join(",", request.getProcessProcedureList()) + ",")
                 )
         );
     }
@@ -218,7 +217,7 @@ public class DousonTaskController {
                 .flatMap(t -> t)
                 .distinct()
                 .collect(Collectors.toList());
-        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<MpUserEntity>() : userMapper.selectList(
+        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
                 DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
@@ -230,12 +229,9 @@ public class DousonTaskController {
                 (t, r) -> t.getDeviceId().equals(r.getId()),
                 (t, r) -> t.setDeviceIdFormat(r.getDeviceName())
         );
-        final List<String> ppl = rl.stream().map(TaskResponse::getProcessProcedureList).filter(CollUtil::isNotEmpty).flatMap(Collection::stream).toList();
-        final Map<Object, String> ppm = paramDao.listByCategoryId("processProcedure").stream().collect(Collectors.toMap(OptionItem::getValue, OptionItem::getLabel, (t, t1) -> t1));
         for (TaskResponse t : rl) {
             t.setCheckOrderNoFormat(t.getCheckOrderNo());
             t.setMaterialOrderNoFormat(t.getMaterialOrderNo());
-            t.setProcessProcedureFormat(t.getProcessProcedureList().stream().map(t1 -> ppm.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
         }
         return rl;
     }

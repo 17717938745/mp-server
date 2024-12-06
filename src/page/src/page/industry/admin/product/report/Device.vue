@@ -26,6 +26,20 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.testDevice"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.testDevice"
+                 class="search-item">
+        <el-option
+            v-for="item in config.testDeviceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
@@ -71,6 +85,8 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51, mergeKey: ['deviceId']},
   {value: 'deviceIdFormat', labelKey: 'device', width: 189, mergeKey: ['deviceId']},
   {value: 'userIdFormat', labelKey: 'user', width: 168,},
+  {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 139,},
+  {value: 'deviceSumDeviceUsePercentFormat', labelKey: 'reportSumDeviceUsePercent', width: 112,},
   {value: 'deviceReportDateCount', labelKey: 'reportDateCount', width: 57,},
   {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportDeviceCompletePercent', width: 139,},
   {value: 'deviceDeviceUsePercentFormat', labelKey: 'reportDeviceUsePercent', width: 109,},
@@ -101,7 +117,7 @@ Promise.all([
     }
   })
 })
-const toggleKeyList = ['userIdFormat', 'deviceReportDateCount', 'deviceDeviceCompletePercentFormat', 'deviceDeviceUsePercentFormat', 'devicePercentDiffFormat',]
+const toggleKeyList = ['userIdFormat', 'deviceSumDeviceCompletePercentFormat', 'deviceSumDeviceUsePercentFormat', 'deviceReportDateCount', 'deviceDeviceCompletePercentFormat', 'deviceDeviceUsePercentFormat', 'devicePercentDiffFormat',]
 const showMore = ref(true)
 const handleToggleMore = (v) => {
   columnConfigList.value = columnConfigList.value.map(t => {
@@ -119,6 +135,7 @@ const state = reactive({
     data: {
       department: '',
       vocationType: '',
+      testDevice: '',
       user: '',
       date: '',
       startReportDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
