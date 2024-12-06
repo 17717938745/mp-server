@@ -28,6 +28,7 @@ public interface ReportConverter extends Serializable {
 
     @Mapping(target = "reportDateList", expression = "java(cn.hutool.core.collection.CollUtil.newHashSet(t.getReportDate()))")
     @Mapping(target = "userIdList", expression = "java(cn.hutool.core.collection.CollUtil.newHashSet(t.getUserId()))")
+    @Mapping(target = "designNumberList", expression = "java(cn.hutool.core.collection.CollUtil.newHashSet(t.getDesignNumber()))")
     @Mapping(target = "userIdFormat", source = "userFormat")
     @Mapping(target = "sumDeviceCompletePercent", source = "deviceCompletePercent")
     @Mapping(target = "sumDeviceUsePercent", source = "deviceUsePercent")
