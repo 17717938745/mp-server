@@ -70,7 +70,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51, mergeKey: ['userId']},
   {value: 'userIdFormat', labelKey: 'user', width: 157, mergeKey: ['userId']},
   {value: 'reportDateCount', labelKey: 'reportDateCount', width: 61, mergeKey: ['userId']},
-  {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 167,},
+  {value: 'deviceIdFormat', labelKey: 'deviceNumber', width: 150,},
   {value: 'deviceSumDeviceCompletePercentFormat', labelKey: 'reportSumDeviceCompletePercent', width: 115},
   {value: 'deviceTotalCount', labelKey: 'totalCount', width: 61},
   {value: 'deviceDeviceCompletePercentFormat', labelKey: 'reportAvgDeviceCompletePercent', width: 115},
