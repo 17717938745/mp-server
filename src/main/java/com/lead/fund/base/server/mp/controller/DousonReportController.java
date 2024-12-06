@@ -695,7 +695,7 @@ public class DousonReportController {
                             (t, t1) -> summary
                                     .setDeviceSumDeviceCompletePercent(t.getSumDeviceCompletePercent().add(t1.getSumDeviceCompletePercent()))
                                     .setDeviceReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDeviceReportDateList()), t1.getDeviceReportDateList()))
-                                    .setDeviceReportDateCount(summary.getDeviceReportDateList().size())
+                                    .setDeviceReportDateCount(t.getDeviceReportDateCount() + t1.getDeviceReportDateCount())
                                     .setDeviceTotalCount(t.getDeviceTotalCount() + t1.getDeviceTotalCount())
                                     .setDeviceSalary(t.getDeviceSalary().add(t1.getDeviceSalary()))
                                     // 先累计
@@ -853,7 +853,7 @@ public class DousonReportController {
                     .reduce(
                             (t, t1) -> summary
                                     .setDeviceReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDeviceReportDateList()), t1.getDeviceReportDateList()))
-                                    .setDeviceReportDateCount(summary.getDeviceReportDateList().size())
+                                    .setDeviceReportDateCount(t.getDeviceReportDateCount() + t1.getDeviceReportDateCount())
                                     .setDeviceTotalCount(t.getDeviceTotalCount() + t1.getDeviceTotalCount())
                                     .setUserIdCount(t.getUserIdCount() + t1.getUserIdCount())
                                     .setDeviceSumDeviceUsePercent(t.getDeviceSumDeviceUsePercent().add(t1.getDeviceSumDeviceUsePercent()))
