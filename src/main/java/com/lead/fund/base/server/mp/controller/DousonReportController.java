@@ -64,6 +64,7 @@ import com.lead.fund.base.server.mp.response.ReportSummaryDeviceResponse;
 import com.lead.fund.base.server.mp.response.ReportSummaryResponse;
 import com.lead.fund.base.server.mp.response.UserDeviceResponse;
 import jakarta.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -837,6 +839,8 @@ public class DousonReportController {
                             (t, t1) -> summary
                                     .setReportDateList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getReportDateList()), t1.getReportDateList()))
                                     .setReportDateCount(summary.getReportDateList().size())
+                                    .setDesignNumberList((java.util.Set<String>) CollUtil.addAll(CollUtil.newHashSet(t.getDesignNumberList()), t1.getDesignNumberList()))
+                                    .setDesignNumberCount(summary.getDesignNumberList().size())
                                     .setTotalCount(t.getTotalCount() + t1.getTotalCount())
                                     .setUserIdCount(t.getUserIdCount() + t1.getUserIdCount())
                                     .setSumDeviceUsePercent(t.getSumDeviceUsePercent().add(t1.getSumDeviceUsePercent()))

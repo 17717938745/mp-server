@@ -852,9 +852,6 @@ Promise.all([
       } else if ('processProcedure' === t.value) {
         t.width = 215
         t.type = ValueType.TextEdit
-      } else if ('surplus' === t.value) {
-        t.width = 98
-        t.type = ValueType.NumberEdit
       }
       return t
     })
