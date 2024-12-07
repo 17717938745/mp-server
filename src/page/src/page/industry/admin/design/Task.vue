@@ -902,6 +902,8 @@ const handleTableRowClassName = ({
     return 'row-blue'
   } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'
+  } else if (row.delay >= 0) {
+    return 'row-red'
   }
   return ''
 }

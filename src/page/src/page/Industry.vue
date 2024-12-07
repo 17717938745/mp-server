@@ -95,6 +95,9 @@ $containerLeftGap: 5px;
   .row-blue {
     background-color: #97adda;
   }
+  .row-red {
+    background-color: #b35362;
+  }
 
   .row-done {
     background-color: #e4e7ed;
