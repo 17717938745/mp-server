@@ -64,7 +64,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         if (null == e.getOrderCount() || null == e.getProcessCount()) {
             e.setSurplus(null);
         } else {
-            e.setSurplus(e.getOrderCount().subtract(e.getProcessCount()).setScale(1, RoundingMode.HALF_UP));
+            e.setSurplus(e.getOrderCount().subtract(e.getProcessCount()));
         }
         if (isBlank(e.getSupplierDoneDate())) {
             e.setSupplierPromiseDoneDate(null);

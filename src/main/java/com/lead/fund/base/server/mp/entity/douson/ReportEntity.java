@@ -5,14 +5,13 @@ import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdministrator;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
 
 /**
  * IndustryReportEntity

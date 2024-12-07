@@ -146,7 +146,7 @@ public interface IndustryConverter extends Serializable {
 
     @Mapping(target = "orderCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getOrderCount()))")
     @Mapping(target = "actualCompleteCount", ignore = true)
-    @Mapping(target = "surplusCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getOrderCount()).subtract(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getActualCompleteCount())))")
+    @Mapping(target = "surplusCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getOrderCount()).subtract(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getActualCompleteCount())).setScale(1, java.math.RoundingMode.HALF_UP))")
     ReportResponse formatReport(@MappingTarget ReportResponse r, OrderEntity t);
 
     @Mapping(target = "orderCount", ignore = true)
