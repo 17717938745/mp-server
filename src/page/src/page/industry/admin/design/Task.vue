@@ -202,6 +202,7 @@
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
+        :handleTableCellClassName="handleTableCellClassName"
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
@@ -730,6 +731,7 @@ const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdForm
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
+let delayIndex = -1
 const handleShowTypeChange = () => {
   if (showType.value === 0) {
     columnConfigList.value = defaultColumnConfigList.map(t => t)
@@ -738,6 +740,13 @@ const handleShowTypeChange = () => {
   } else {
     columnConfigList.value = supplierManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
   }
+  for (let i = 0; i < columnConfigList.value.length; i++) {
+    if(columnConfigList.value[i].value === 'delay') {
+      delayIndex = i
+      break
+    }
+  }
+  console.log('delayIndex: ' + delayIndex)
 }
 handleShowTypeChange()
 const handleSaveModal = () => {
@@ -902,7 +911,19 @@ const handleTableRowClassName = ({
     return 'row-blue'
   } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'
-  } else if (row.delay >= 0) {
+  }
+  return ''
+}
+const handleTableCellClassName = ({
+                                   row,
+                              column,
+                                   rowIndex,
+                                   columnIndex,
+                                 }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (delayIndex >= 0 && columnIndex === delayIndex && row.taskId && row.delay >= 0) {
     return 'row-red'
   }
   return ''

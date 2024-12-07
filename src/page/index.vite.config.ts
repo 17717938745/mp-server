@@ -105,7 +105,7 @@ export default ({mode}) => {
             server: {
               host: '0.0.0.0',
               port: 9090,
-              open: true,
+              open: false,
               proxy: {
                 '^/index/img/.*': {
                   target: 'http://localhost',

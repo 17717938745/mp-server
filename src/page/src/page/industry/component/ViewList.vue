@@ -67,6 +67,7 @@
       :expand-row-keys="expandRowKeys"
       :height="tableHeight"
       :row-class-name="props.handleTableRowClassName || handleTableRowClassName"
+      :cell-class-name="props.handleTableCellClassName"
       :span-method="handleGetSpan"
       :style="{
           transform: `scale(${scale})`,
@@ -231,6 +232,7 @@ interface PropType {
   handlePageChange?: (i: number) => {};
   handleLimitChange?: (i: number) => {};
   handleTableRowClassName?: (row: any) => {};
+  handleTableCellClassName?: (row: any) => {};
   handleSelectionChange?: (row: any) => {};
   detailLink?: boolean;
 }
