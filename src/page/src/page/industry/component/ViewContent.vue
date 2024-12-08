@@ -215,7 +215,10 @@
     <slot name="template" :param="row" :viewConfig="viewConfig"/>
   </template>
   <template v-else-if="viewConfig.type === ValueType.SelectEdit">
-    <span v-if="!props.handleUpdate">
+    <span v-if="!row[props.idKey]">
+        {{ row[viewConfig.value]}}
+    </span>
+    <span v-else-if="!props.handleUpdate">
       {{
         (viewConfig.optionList || []).reduce((p, t) => t.value === row[viewConfig.value] ? t.label : p, row[viewConfig.value]) || '--'
       }}
@@ -247,7 +250,10 @@
     </el-select>
   </template>
   <template v-else-if="viewConfig.type === ValueType.NumberEdit">
-    <span v-if="!props.handleUpdate">
+    <span v-if="!row[props.idKey]">
+        {{ row[viewConfig.value]}}
+    </span>
+    <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}
     </span>
     <el-link
@@ -268,7 +274,10 @@
     />
   </template>
   <template v-else-if="viewConfig.type === ValueType.TextEdit">
-    <span v-if="!props.handleUpdate">
+    <span v-if="!row[props.idKey]">
+        {{ row[viewConfig.value]}}
+    </span>
+    <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}
     </span>
     <el-link
@@ -290,7 +299,10 @@
     />
   </template>
   <template v-else-if="viewConfig.type === ValueType.DateEdit">
-    <span v-if="!props.handleUpdate">
+    <span v-if="!row[props.idKey]">
+        {{ row[viewConfig.value]}}
+    </span>
+    <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}
     </span>
     <el-link
