@@ -50,7 +50,7 @@
       </el-space>
     </div>
     <view-list
-        idKey="computerId"
+        idKey="deviceId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleTableRowClassName="handleTableRowClassName"

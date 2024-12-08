@@ -17,7 +17,7 @@
       </div>
     </div>
     <view-list
-        idKey="computerId"
+        idKey="vocationId"
         :columnConfigList="columnConfigList"
         :list="tableData"
     >

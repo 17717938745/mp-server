@@ -92,7 +92,7 @@
       <span style="font-weight: bold;">{{ summaryData.vocationDaysFormat }}</span>
     </div>
     <view-list
-        idKey="computerId"
+        idKey="vocationId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"

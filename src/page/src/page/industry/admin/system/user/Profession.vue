@@ -6,7 +6,7 @@
       </div>
     </div>
     <view-list
-        idKey="computerId"
+        idKey="peofessionId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleTableRowClassName="handleTableRowClassName"
