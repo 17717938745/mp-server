@@ -236,7 +236,6 @@
         v-else
         v-model="formData[viewConfig.originValue || viewConfig.value]"
         @change="handleUpdateSubmit"
-        @blur="editSelect = false"
         filterable
         :multiple="'[object Array]' === Object.prototype.toString.call(formData[viewConfig.originValue || viewConfig.value])"
         clearable
@@ -268,7 +267,6 @@
         type="number"
         v-model="formData[viewConfig.originValue || viewConfig.value]"
         @change="handleUpdateSubmit"
-        @blur="editNumber = false"
         :placeholder="store.state.label[viewConfig.originValue || viewConfig.value]"
         clearable
     />
@@ -293,7 +291,6 @@
         :rows=4
         v-model="formData[viewConfig.originValue || viewConfig.value]"
         @change="handleUpdateSubmit"
-        @blur="editText = false"
         :placeholder="store.state.label[viewConfig.originValue || viewConfig.value]"
         clearable
     />
