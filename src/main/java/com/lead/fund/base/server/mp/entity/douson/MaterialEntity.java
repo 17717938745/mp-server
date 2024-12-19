@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.entity.douson;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
@@ -119,6 +120,9 @@ public class MaterialEntity extends AbstractAdmin {
     @FieldRemark(value = "领料数量")
     @Size(max = 16, message = "领料数量长度不合法")
     private BigDecimal materialCount;
+    @FieldRemark(value = "累计领料数量")
+    @Size(max = 16, message = "累计领料数量长度不合法")
+    private BigDecimal sumMaterialCount;
     /**
      * 炉号
      */

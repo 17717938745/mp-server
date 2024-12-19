@@ -128,12 +128,12 @@ public class DousonMaterialController {
         final String today = DateUtil.day(now);
         final MpUserResponse u = accountHelper.getUser(deviceId);
         MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(request);
-        e.setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()));
         lockHelper.lock("material");
         try {
             final List<String> key = CollUtil.toList(request.getSaleOrderNo(), request.getOrderProjectNo());
             e
-                    .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : null)
+                    .setRemainCount(e.getMaterialCount().subtract(e.getProductionCount()))
+                    .setArrangeProductionDate(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? today : "")
                     .setGenerateTask(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? true : null)
                     .setModifier(u.getUserId());
             final boolean alreadyGenerateTask = isNotBlank(e.getId()) && Boolean.TRUE.equals(materialMapper.selectById(e.getId()).getGenerateTask());
@@ -597,7 +597,8 @@ public class DousonMaterialController {
                         .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                         .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
         );
-        BigDecimal sumMaterialCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
+        final BigDecimal sumMaterialCount = defaultDecimal(el.stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add));
+        e.setSumMaterialCount(sumMaterialCount);
         final BigDecimal surplusCount = e.getOrderCount().subtract(sumMaterialCount);
         materialMapper.update(null,
                 new LambdaUpdateWrapper<MaterialEntity>()
@@ -607,6 +608,7 @@ public class DousonMaterialController {
                         .set(MaterialEntity::getSurfaceTreatment, e.getSurfaceTreatment())
                         .set(MaterialEntity::getOrderCount, e.getOrderCount())
                         .set(MaterialEntity::getGenerateTask, e.getGenerateTask())
+                        .set(MaterialEntity::getSumMaterialCount, sumMaterialCount)
                         .set(MaterialEntity::getSurplusCount, surplusCount)
                         .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                         .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())

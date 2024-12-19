@@ -40,5 +40,6 @@ public interface MaterialConverter extends Serializable {
     List<MaterialResponse> materialList(List<MaterialEntity> list);
 
     @Mapping(target = "roughcastExpireDate", source = "productionDate")
+    @Mapping(target = "materialCount", source = "sumMaterialCount")
     TaskEntity generateTask(MaterialEntity e);
 }

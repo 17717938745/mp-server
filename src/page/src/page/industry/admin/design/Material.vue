@@ -547,7 +547,7 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'chargeCompany', labelKey: 'chargeCompany', width: 116},
   {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
-  {value: 'arrangeProductionDate', labelKey: 'productionDate', width: 102},
+  {value: 'arrangeProductionDate', labelKey: 'arrangeProductionDate', width: 102},
   {
     value: 'materialOrderNoFormat',
     labelKey: 'materialOrderNo',
