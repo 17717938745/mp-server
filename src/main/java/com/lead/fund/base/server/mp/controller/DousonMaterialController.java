@@ -160,6 +160,7 @@ public class DousonMaterialController {
             updateSummaryInfo(e, today);
             if (!alreadyGenerateTask && Boolean.TRUE.equals(e.getGenerateTask())) {
                 taskDao.merge((TaskEntity) MATERIAL_INSTANCE.generateTask(e)
+                        .setSorter(999999)
                         .setCreator(u.getUserId())
                         .setModifier(u.getUserId())
                         .setState(AdminState.NORMAL.getCode())
