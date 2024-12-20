@@ -422,6 +422,7 @@
               {{ printData['eachBoxWeight'] }}
             </el-descriptions-item>
           </el-descriptions>
+          <div style="margin-top: 10px;">Country of Origin  Xuất xứ ：MADE IN VIETNAM</div>
         </div>
       </div>
     </el-drawer>
