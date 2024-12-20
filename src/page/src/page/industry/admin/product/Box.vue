@@ -267,6 +267,7 @@
     </el-dialog>
     <el-drawer
         v-model="showPrint"
+        :with-header="true"
         size="100%"
         :append-to-body="true"
         :lock-scroll="false"
@@ -274,14 +275,14 @@
         :z-index="99999"
     >
       <div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 10px;">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
-          <h1 style="text-align: center;">
-            <span style="font-size: 36px;">PACKING STAMP</span>
+          <h1 style="text-align: center; height: 50px;">
+            <span style="font-size: 32px;">PACKING STAMP</span>
             <br>
-            <span style="font-size: 24px;">TEM ĐÓNG THÙNG</span>
+            <span style="font-size: 22px;">TEM ĐÓNG THÙNG</span>
           </h1>
-          <div style="display: flex; justify-content: flex-end; width: 100%;">
+          <div style="display: flex; justify-content: flex-end; width: 100%; height: 50px;">
             <h5>{{ store.state.label.orderNo }}：{{ printData['orderNo'] }}</h5>
           </div>
           <el-descriptions
@@ -421,8 +422,17 @@
               </template>
               {{ printData['eachBoxWeight'] }}
             </el-descriptions-item>
+            <el-descriptions-item
+                :label="'Country of Origin  Xuất xứ'"
+                align="center"
+                label-class-name="box-print-label"
+            >
+              <template #label>
+                Country of Origin  Xuất xứ
+              </template>
+              MADE IN VIETNAM
+            </el-descriptions-item>
           </el-descriptions>
-          <div style="margin-top: 10px;">Country of Origin  Xuất xứ ：MADE IN VIETNAM</div>
         </div>
       </div>
     </el-drawer>
