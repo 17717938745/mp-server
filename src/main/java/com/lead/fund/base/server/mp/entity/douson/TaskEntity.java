@@ -138,6 +138,12 @@ public class TaskEntity extends AbstractAdmin {
     @Size(max = 16, message = "工序工时/件长度不合法")
     private BigDecimal processWorkingHour;
     /**
+     * 上线时间偏移
+     */
+    @FieldRemark(value = "上线时间偏移")
+    @Size(max = 16, message = "上线时间偏移长度不合法")
+    private BigDecimal onlineDateDiff;
+    /**
      * 上线时间
      */
     @FieldRemark(value = "上线时间")

@@ -110,6 +110,10 @@ public class TaskRequest extends AbstractAdmin {
      */
     private BigDecimal processWorkingHour;
     /**
+     * 上线时间偏移
+     */
+    private BigDecimal onlineDateDiff;
+    /**
      * 上线时间
      */
     private String onlineDate;

@@ -1471,6 +1471,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "上线时间"
         },
         {
+          "value": "onlineDateDiff",
+          "label": "上线时间偏移"
+        },
+        {
           "value": "offlineDate",
           "label": "下线时间"
         },
@@ -1815,6 +1819,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "onlineDate",
           "label": "Ngày hàng lên máy SX"
+        },
+        {
+          "value": "onlineDateDiff",
+          "label": "Ngày hàng lên máy SX Diff"
         },
         {
           "value": "offlineDate",

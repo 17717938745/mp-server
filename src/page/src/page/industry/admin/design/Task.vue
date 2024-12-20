@@ -319,6 +319,9 @@
         <el-form-item prop="processWorkingHour" :label="store.state.label.processWorkingHour" v-if="taskShow">
           <el-input-number v-model="formData.processWorkingHour" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
+        <el-form-item prop="onlineDateDiff" :label="store.state.label.onlineDateDiff" v-if="taskShow">
+          <el-input-number v-model="formData.onlineDateDiff" style="width: 60px;" :controls="false" :min="0"/>
+        </el-form-item>
         <el-form-item prop="onlineDate" :label="store.state.label.onlineDate" v-if="taskShow">
           <el-date-picker
               type="date"
@@ -556,6 +559,7 @@ const defaultFormData = {
   productCountHour8: '',
   productCountHour12: '',
   processWorkingHour: '',
+  onlineDateDiff: 0,
   onlineDate: '',
   offlineDate: '',
   delay: 0,
@@ -727,7 +731,7 @@ const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskMan
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
@@ -824,6 +828,7 @@ const handleMerge = () => {
 const handleUpdate = (row: any) => {
   return httpPutJson('douson/task/merge', row).then(() => {
     ElMessage.success('Update success')
+    state.formVisible = false
     handlePage()
   })
 }
