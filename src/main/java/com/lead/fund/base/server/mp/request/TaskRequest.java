@@ -154,6 +154,10 @@ public class TaskRequest extends AbstractAdmin {
      */
     private BigDecimal surplus;
     /**
+     * 供应商角色查询
+     */
+    private Boolean supplier;
+    /**
      * 领料单号
      */
     private String materialOrderNo;
@@ -174,6 +178,10 @@ public class TaskRequest extends AbstractAdmin {
      */
     private String deliverDate;
     /**
+     * 发货日期备注
+     */
+    private String deliverDateRemark;
+    /**
      * 收货数量
      */
     private BigDecimal receiptCount;
@@ -181,6 +189,10 @@ public class TaskRequest extends AbstractAdmin {
      * 收货日期
      */
     private String receiptDate;
+    /**
+     * 收货日期备注
+     */
+    private String receiptDateRemark;
     /**
      * 报废数量
      */
@@ -197,4 +209,12 @@ public class TaskRequest extends AbstractAdmin {
      * 加工状态，1-已完成（加工数量=领料数量）
      */
     private Integer processType;
+    /**
+     * 0-是，1-否
+     */
+    private Integer delayType;
+    /**
+     * 0-!=0,1-=0
+     */
+    private Integer surplusCountType;
 }

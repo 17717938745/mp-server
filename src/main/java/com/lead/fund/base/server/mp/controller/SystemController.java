@@ -326,6 +326,9 @@ public class SystemController {
             if (isNotBlank(request.getState())) {
                 lambda.eq(MpUserEntity::getState, request.getState());
             }
+            if (isNotBlank(request.getLeaderUserId())) {
+                lambda.eq(MpUserEntity::getLeaderUserId, request.getLeaderUserId());
+            }
         }
         final List<MpUserResponse> list = userMapper.selectList(lambda
                         .orderByAsc(MpUserEntity::getState)
@@ -380,6 +383,13 @@ public class SystemController {
         );
         AtomicInteger index = new AtomicInteger(0);
         boolean notUserManager = u.getRoleCodeList().stream().noneMatch("userManager"::equals);
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getLeaderUserId())).collect(Collectors.toList()),
+                MpUserResponse::getLeaderUserId,
+                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
+                (t, r) -> t.getLeaderUserId().equals(r.getId()),
+                (t, r) -> t.setLeaderUserIdFormat(r.getName())
+        );
         return new ListResult<>(
                 list.stream()
                         .peek(t -> {

@@ -79,6 +79,7 @@ public class PlanRequest implements Serializable {
     /**
      * 负责人
      */
+    private List<String> responsiblePersonList;
     private String responsiblePerson;
     /**
      * 负责人

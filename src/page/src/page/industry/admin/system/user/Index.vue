@@ -86,6 +86,20 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.leaderUserId"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.leaderUserId"
+                 class="search-item">
+        <el-option
+            v-for="item in userOptionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
         <el-button v-if="includes(roleCodeList, 'admin')"
@@ -111,6 +125,16 @@
         </el-form-item>
         <el-form-item prop="username" :label="store.state.label.username">
           <el-input v-model="formData.username"/>
+        </el-form-item>
+        <el-form-item prop="leaderUserId" :label="store.state.label.leaderUserId">
+          <el-select v-model="formData.leaderUserId" clearable filterable placeholder="Please select">
+            <el-option
+                v-for="item in userOptionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item prop="department" :label="store.state.label.department">
           <el-select v-model="formData.department"
@@ -264,6 +288,7 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'username', labelKey: 'username', width: 152,},
+  {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 152,},
   {value: 'departmentFormat', labelKey: 'department', width: 186,},
   {value: 'name', labelKey: 'chineseName', width: 168,},
   {value: 'userPropertyFormat', labelKey: 'userProperty', width: 168,},
@@ -275,15 +300,13 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
   {value: 'stateFormat', labelKey: 'state', width: 143,},
 ])
-if (!includes(roleCodeList, 'userManager')) {
-  columnConfigList.value = columnConfigList.value.filter((t: any) => t.value !== 'interviewResume')
-}
 const defaultFormData = {
   userId: '',
   photoList: [],
   roleIdList: ['user'],
   username: '',
   profession: '',
+  leaderUserId: '',
   mobile: '',
   department: '',
   name: '',
@@ -303,6 +326,7 @@ const state = reactive({
       name: '',
       userProperty: '',
       schedule: '',
+      leaderUserId: '',
       state: 0,
     },
   },
@@ -391,17 +415,38 @@ const handleUpdate = (row: any) => {
     handleList()
   })
 }
-const handleEditScheduleShow = (row: any) => {
-  editSchedule.value = true
-  state.formData = Object.assign({}, row)
-}
-const handleEditSchedule = (row: any) => {
-  httpPutJson('system/user', row).then(() => {
-    editSchedule.value = false
-    ElMessage.success('Edit success')
-    handleList()
+const userOptionList = ref(new Array<any>())
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'processProcedure',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
   })
-}
+  if(includes(roleCodeList, 'admin')) {
+    columnConfigList.value = columnConfigList.value.map((t: any) => {
+      if(t.value === 'leaderUserIdFormat') {
+        t.width = 231
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      }
+      return t;
+    })
+  }
+  if (!includes(roleCodeList, 'userManager')) {
+    columnConfigList.value = columnConfigList.value.filter((t: any) => t.value !== 'interviewResume')
+  }
+  handleStart()
+})
+
 const {
   query,
   tableData,

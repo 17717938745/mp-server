@@ -42,22 +42,26 @@
             :value="item.value"
         />
       </el-select>
-      <!--      <el-select v-model="query.data.valid"
-                       @change="handlePage"
-                       filterable
-                       allow-create
-                       clearable
-                       :placeholder="store.state.label.valid"
-                       class="search-item">
-              <el-option
-                  label="Done"
-                  :value="true"
-              />
-              <el-option
-                  label="Pending"
-                  :value="false"
-              />
-            </el-select>-->
+      <el-input v-model="query.data.accidentDescribe"
+                @change="handlePage"
+                :placeholder="store.state.label.accidentDescribe"
+                class="search-item"/>
+      <el-select v-model="query.data.valid"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.valid"
+                 class="search-item">
+        <el-option
+            label="Done"
+            :value="true"
+        />
+        <el-option
+            label="Pending"
+            :value="false"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -287,10 +291,11 @@ const state = reactive({
       qualityId: route.query.qualityId,
       startReportDate: '',
       endReportDate: '',
+      accidentDescribe: '',
       userId: '',
       reason: '',
       reasonList: [],
-      valid: null,
+      valid: false,
     },
     page: {
       page: DEFAULT_PAGE,

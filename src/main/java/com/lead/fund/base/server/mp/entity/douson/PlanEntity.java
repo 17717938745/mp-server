@@ -67,10 +67,10 @@ public class PlanEntity extends AbstractAdmin {
     @Size(max = 256, message = "负责人")
     private String responsiblePerson;
     /**
-     * 负责人
+     * 计划完成时间
      */
-    @FieldRemark(value = "负责人")
-    @Size(max = 256, message = "负责人")
+    @FieldRemark(value = "计划完成时间")
+    @Size(max = 256, message = "计划完成时间")
     private String planCompleteTime;
     /**
      * 奖励金额

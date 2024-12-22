@@ -1857,6 +1857,9 @@ public class DousonController {
         if (isNotBlank(request.getUserId())) {
             lambda.eq(EventEntity::getUserId, request.getUserId());
         }
+        if (isNotBlank(request.getAccidentDescribe())) {
+            lambda.like(EventEntity::getAccidentDescribe, request.getAccidentDescribe());
+        }
         if (isNotBlank(request.getQueryUserId())) {
             lambda.and(true, lam -> {
                 lam.eq(EventEntity::getUserId, request.getQueryUserId())
@@ -2102,6 +2105,9 @@ public class DousonController {
         }
         if (null != request.getReportDate()) {
             lambda.eq(QualityEntity::getReportDate, request.getReportDate());
+        }
+        if (null != request.getAccidentDescribe()) {
+            lambda.like(QualityEntity::getAccidentDescribe, request.getAccidentDescribe());
         }
         if (isNotBlank(request.getReason())) {
             lambda.like(QualityEntity::getReason, "," + request.getReason() + ",");
@@ -2887,6 +2893,9 @@ public class DousonController {
         }
         if (isNotBlank(request.getUserId())) {
             lambda.like(ImproveEntity::getUserId, "," + request.getUserId() + ",");
+        }
+        if (isNotBlank(request.getAccidentDescribe())) {
+            lambda.like(ImproveEntity::getAccidentDescribe, request.getAccidentDescribe());
         }
         if (isNotBlank(request.getQueryUserId())) {
             lambda.and(true, lam -> {
@@ -4272,6 +4281,9 @@ public class DousonController {
         if (isNotBlank(d.getSkillDealOpinion())) {
             lambda.eq(DisqualificationOrderEntity::getSkillDealOpinion, d.getSkillDealOpinion());
         }
+        if (isNotBlank(d.getDisqualificationContent())) {
+            lambda.like(DisqualificationOrderEntity::getDisqualificationContent, d.getDisqualificationContent());
+        }
         return disqualificationOrderDao.list(lambda.orderByDesc(DisqualificationOrderEntity::getCreateTime));
     }
 
@@ -4514,10 +4526,14 @@ public class DousonController {
             lambda.eq(PlanEntity::getOptimizeType, d.getOptimizeType());
         }
         if (isNotBlank(d.getResponsiblePerson())) {
-            lambda.like(PlanEntity::getResponsiblePerson, d.getResponsiblePerson());
+            lambda.like(PlanEntity::getResponsiblePerson, "," + d.getResponsiblePerson() + ",");
         }
-        if (Boolean.TRUE.equals(d.getValid())) {
-            lambda.eq(PlanEntity::getValid, d.getValid());
+        if (null != d.getValid()) {
+            if (Boolean.TRUE.equals(d.getValid())) {
+                lambda.eq(PlanEntity::getValid, true);
+            } else {
+                lambda.eq(PlanEntity::getValid, false).or(true, (lam) -> lam.isNull(PlanEntity::getValid));
+            }
         }
         return planDao.list(lambda.orderByDesc(PlanEntity::getCreateTime));
     }
@@ -4539,7 +4555,7 @@ public class DousonController {
         );
         List<String> userIdList = Stream.of(
                         rl.stream().map(PlanResponse::getCreator).filter(StrUtil::isNotBlank),
-                        rl.stream().map(PlanResponse::getResponsiblePerson).filter(StrUtil::isNotBlank)
+                        rl.stream().map(PlanResponse::getResponsiblePersonList).flatMap(t -> t.stream()).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
@@ -4549,19 +4565,13 @@ public class DousonController {
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 rl.stream().filter(t -> isNotBlank(t.getCreator())).collect(Collectors.toList()),
                 PlanResponse::getCreator,
                 l -> userList,
                 (t, r) -> t.getCreator().equals(r.getId()),
                 (t, r) -> t.setCreatorFormat(r.getName())
-        );
-        MultitaskUtil.supplementList(
-                rl.stream().filter(t -> isNotBlank(t.getResponsiblePerson())).collect(Collectors.toList()),
-                PlanResponse::getResponsiblePerson,
-                l -> userList,
-                (t, r) -> t.getResponsiblePerson().equals(r.getId()),
-                (t, r) -> t.setResponsiblePersonFormat(r.getName())
         );
         MultitaskUtil.supplementList(
                 rl,
@@ -4584,6 +4594,9 @@ public class DousonController {
                 (t, r) -> t.getOptimizeType().equals(r.getValue()),
                 (t, r) -> t.setOptimizeTypeFormat(r.getLabel())
         );
+        for (PlanResponse t : rl) {
+            t.setResponsiblePersonFormat(t.getResponsiblePersonList().stream().map(t1 -> userMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));
+        }
         return rl;
     }
 
@@ -4601,7 +4614,7 @@ public class DousonController {
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (u.getRoleList().stream().noneMatch(t -> "planView".equals(t.getRoleCode()) || AdminUser.ADMIN.getCode().equals(t.getRoleCode()))) {
-            request.getData().setResponsiblePerson(u.getUserId());
+            request.getData().setResponsiblePersonList(CollUtil.toList(u.getUserId()));
         }
         PageResult<PlanEntity> pr = DatabaseUtil.page(request, this::planList);
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());

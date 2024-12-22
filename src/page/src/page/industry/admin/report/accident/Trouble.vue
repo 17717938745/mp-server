@@ -44,6 +44,22 @@
       </el-select>
       <el-input v-model="query.data.accidentDescribe" @keyup.enter="handlePage"
                 :placeholder="store.state.label.accidentQualityDescribe" clearable @change="handlePage" class="search-item"/>
+      <el-select v-model="query.data.valid"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.valid"
+                 class="search-item">
+        <el-option
+            label="Done"
+            :value="true"
+        />
+        <el-option
+            label="Pending"
+            :value="false"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -241,7 +257,7 @@ const defaultFormData = {
   toolDescribe: '',
   improveDescribe: '',
   opinion: '',
-  valid: false,
+  valid: null,
   photoList: [],
   fileList: [],
   improvePhotoList: [],
@@ -259,7 +275,7 @@ const state = reactive({
       reason: '',
       accidentDescribe: '',
       reasonList: [],
-      valid: null,
+      valid: false,
     },
     page: {
       page: DEFAULT_PAGE,

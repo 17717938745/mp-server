@@ -134,6 +134,11 @@ public class TaskResponse extends AbstractAdmin {
      */
     private BigDecimal delay;
     /**
+     * 0-是，1-否
+     */
+    private Integer delayType;
+    private String delayTypeFormat;
+    /**
      * 已加工数量
      */
     private BigDecimal processCount;
@@ -184,6 +189,10 @@ public class TaskResponse extends AbstractAdmin {
      */
     private String deliverDate;
     /**
+     * 发货日期备注
+     */
+    private String deliverDateRemark;
+    /**
      * 收货数量
      */
     private BigDecimal receiptCount;
@@ -191,6 +200,10 @@ public class TaskResponse extends AbstractAdmin {
      * 收货日期
      */
     private String receiptDate;
+    /**
+     * 收货日期备注
+     */
+    private String receiptDateRemark;
     /**
      * 报废数量
      */

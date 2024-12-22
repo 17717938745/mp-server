@@ -95,6 +95,10 @@
                 @change="handlePage"
                 :placeholder="store.state.label.disqualificationOrder"
                 class="search-item"/>
+      <el-input v-model="query.data.disqualificationContent"
+                @change="handlePage"
+                :placeholder="store.state.label.disqualificationContent"
+                class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -392,6 +396,7 @@ const state = reactive({
       disqualificationOrderId: String(route.query.disqualificationOrderId || ''),
       orderNo: '',
       materialNo: '',
+      disqualificationContent: '',
       designNumber: '',
       disqualificationOrderNo: '',
       disqualificationOrder: '',

@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.response;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.basic.model.AbstractAdministratorModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.util.ArrayList;
@@ -119,4 +120,9 @@ public class MpUserResponse extends AbstractAdministratorModel {
      */
     private String schedule;
     private String scheduleFormat;
+    /**
+     * 当班主管
+     */
+    private String leaderUserId;
+    private String leaderUserIdFormat;
 }

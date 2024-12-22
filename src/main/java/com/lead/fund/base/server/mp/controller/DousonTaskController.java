@@ -12,8 +12,10 @@ import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.IdUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.ParamDao;
@@ -192,6 +194,35 @@ public class DousonTaskController {
         if (null != d.getSurplus()) {
             lambda.eq(TaskEntity::getSurplus, d.getSurplus());
         }
+        if (null != d.getSurplusCountType()) {
+            if (1 == d.getSurplusCountType()) {
+                lambda.eq(TaskEntity::getSurplus, 0);
+            } else {
+                lambda.ne(TaskEntity::getSurplus, 0).or(true, lam -> lam.isNull(TaskEntity::getSurplus));
+            }
+        }
+        if (Boolean.TRUE.equals(d.getSupplier())) {
+            DatabaseUtil.or(lambda, deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getSupplier, true))
+                    .stream().map(AbstractPrimaryKey::getId)
+                    .collect(Collectors.toList()), (lam, l) -> {
+                lam.in(TaskEntity::getDeviceId, l);
+            })
+            ;
+        }
+        if (null != d.getDelayType()) {
+            if (1 == d.getDelayType()) {
+                lambda.eq(TaskEntity::getSurplus, 0)
+                        .isNotNull(TaskEntity::getReceiptDate)
+                        .isNotNull(TaskEntity::getSupplierDoneDate)
+                        .apply("RECEIPT_DATE <= SUPPLIER_DONE_DATE")
+                ;
+            } else {
+                lambda.ne(TaskEntity::getSurplus, 0)
+                        .or(true, lam -> {
+                            lam.apply("RECEIPT_DATE IS NULL OR SUPPLIER_DONE_DATE IS NULL OR RECEIPT_DATE > SUPPLIER_DONE_DATE");
+                        });
+            }
+        }
         if (null != d.getProcessType()) {
             if (1 == d.getProcessType()) {
                 lambda.apply("PROCESS_COUNT = MATERIAL_COUNT");
@@ -232,6 +263,13 @@ public class DousonTaskController {
         for (TaskResponse t : rl) {
             t.setCheckOrderNoFormat(t.getCheckOrderNo());
             t.setMaterialOrderNoFormat(t.getMaterialOrderNo());
+            if (null != t.getSurplus() && BigDecimal.ZERO.equals(t.getSurplus()) && isNotBlank(t.getReceiptDate()) && isNotBlank(t.getSupplierDoneDate()) && DateUtil.future(t.getReceiptDate(), t.getSupplierDoneDate())) {
+                t.setDelayType(1)
+                        .setDelayTypeFormat("No");
+            } else {
+                t.setDelayType(0)
+                        .setDelayTypeFormat("Yes");
+            }
         }
         return rl;
     }
@@ -256,6 +294,9 @@ public class DousonTaskController {
         if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
             return new PageResult<>(0, new ArrayList<>());
         }
+        if (u.getRoleList().stream().anyMatch(t -> !"admin".equals(t.getRoleCode()) && !"taskManager".equals(t.getRoleCode()) && !"taskView".equals(t.getRoleCode()) && "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            request.getData().setSupplier(true);
+        }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
         final AtomicInteger index = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         final AtomicInteger deviceIndex = new AtomicInteger(0);
@@ -271,10 +312,9 @@ public class DousonTaskController {
                     if (!t.getDeviceId().equals(prev[0].getDeviceId())) {
                         prev[0].setDown(false);
                         t.setUp(false);
-                        rl = CollUtil.toList(new TaskResponse(), t);
+                        rl = CollUtil.toList(new TaskResponse().setTaskId("auto-" + index.get()), t);
                         deviceIndex.set(0);
                     } else {
-
                         rl = CollUtil.toList(t);
                     }
                     prev[0] = t;

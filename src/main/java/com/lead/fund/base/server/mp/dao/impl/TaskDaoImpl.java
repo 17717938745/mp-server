@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.dao.impl;
 
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isBlank;
@@ -61,16 +62,27 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             e.setProductCountHour8(new BigDecimal("435").divide(e.getProcessWorkingHour(), 1, RoundingMode.HALF_UP))
                     .setProductCountHour12(new BigDecimal("585").divide(e.getProcessWorkingHour(), 1, RoundingMode.HALF_UP));
         }
-        if (null == e.getOrderCount() || null == e.getProcessCount()) {
-            e.setSurplus(null);
+        if (isBlank(e.getDeviceId())) {
+            e.setOnlineDate("")
+                    .setSorter(999999);
+        }
+        final boolean supplier = isNotBlank(e.getDeviceId()) && Boolean.TRUE.equals(deviceMapper.selectById(e.getDeviceId()).getSupplier());
+        if (supplier) {
+            e.setSurplus(defaultDecimal(e.getMaterialCount()).subtract(defaultDecimal(e.getProcessCount())).subtract(defaultDecimal(e.getScrapCount())));
         } else {
-            e.setSurplus(e.getOrderCount().subtract(e.getProcessCount()));
+            e.setSurplus(defaultDecimal(e.getOrderCount()).subtract(defaultDecimal(e.getProcessCount())));
         }
         if (isBlank(e.getPromiseDoneDate())) {
             e.setSupplierDoneDate(null);
         } else {
             final int diff = -10 - ((isNotBlank(e.getNde()) ? 1 : 0) + (isNotBlank(e.getAssemble()) ? 5 : 0) + (isNotBlank(e.getTestPress()) ? 3 : 0) + (isNotBlank(e.getSurfaceTreatment()) ? 3 : 0));
             e.setSupplierDoneDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getPromiseDoneDate()), diff)));
+        }
+        if (defaultDecimal(e.getDeliverCount()).compareTo(BigDecimal.ZERO) <= 0) {
+            e.setDeliverDate("");
+        }
+        if (defaultDecimal(e.getReceiptCount()).compareTo(BigDecimal.ZERO) <= 0) {
+            e.setReceiptDate("");
         }
         // update
         if (isNotBlank(e.getId())) {

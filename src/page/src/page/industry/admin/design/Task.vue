@@ -75,7 +75,7 @@
                 :placeholder="store.state.label.scrapCount"
                 type="number"
                 class="search-item"/>
-      <el-date-picker
+<!--      <el-date-picker
           v-model="dateTimeListSupplier"
           @change="handleDateTimeChangeSupplier"
           clearable
@@ -86,7 +86,7 @@
           end-placeholder="End supplier promise done date"
           style="width: 180px; margin-right: 20px;"
       >
-      </el-date-picker>
+      </el-date-picker>-->
       <el-select v-model="query.data.nde"
                  filterable
                  allow-create
@@ -153,7 +153,7 @@
                 clearable
                 :placeholder="store.state.label.checkOrderNo"
                 class="search-item"/>
-      <el-select v-model="query.data.processType"
+<!--      <el-select v-model="query.data.processType"
                  filterable
                  allow-create
                  clearable
@@ -162,6 +162,34 @@
       >
         <el-option
             v-for="item in [{value: 0, label: 'Undone',}, {value: 1, label: 'Done',}, {value: null, label: 'All',}, ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>-->
+      <el-select v-model="query.data.surplusCountType"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="store.state.label.surplusCount"
+      >
+        <el-option
+            v-for="item in [{value: 0, label: `${store.state.label.surplusCount}!=0`,}, {value: 1, label: `${store.state.label.surplusCount}=0`,}, ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.delayType"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="store.state.label.delay"
+      >
+        <el-option
+            v-for="item in [{value: 0, label: `${store.state.label.delay} Yes`,}, {value: 1, label: `${store.state.label.delay} No`,}, ]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -320,7 +348,7 @@
           <el-input-number v-model="formData.processWorkingHour" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
         <el-form-item prop="onlineDateDiff" :label="store.state.label.onlineDateDiff" v-if="taskShow">
-          <el-input-number v-model="formData.onlineDateDiff" style="width: 60px;" :controls="false" :min="0"/>
+          <el-input-number v-model="formData.onlineDateDiff" style="width: 60px;" :controls="false"/>
         </el-form-item>
         <el-form-item prop="onlineDate" :label="store.state.label.onlineDate" v-if="taskShow">
           <el-date-picker
@@ -358,6 +386,10 @@
           >
           </el-date-picker>
         </el-form-item>
+        <el-form-item prop="deliverDateRemark" :label="store.state.label.deliverDateRemark"
+                      v-if="supplierShow">
+          <el-input v-model="formData.deliverDateRemark" type="textarea" :rows="4"/>
+        </el-form-item>
         <el-form-item prop="receiptCount" :label="store.state.label.receiptCount" v-if="supplierShow">
           <el-input-number v-model="formData.receiptCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
@@ -370,18 +402,16 @@
           >
           </el-date-picker>
         </el-form-item>
+        <el-form-item prop="receiptDateRemark" :label="store.state.label.receiptDateRemark"
+                      v-if="supplierShow">
+          <el-input v-model="formData.receiptDateRemark" type="textarea" :rows="4"/>
+        </el-form-item>
         <el-form-item prop="scrapCount" :label="store.state.label.scrapCount" v-if="supplierShow">
           <el-input-number v-model="formData.scrapCount" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
         <el-form-item prop="supplierPromiseDoneDate" :label="store.state.label.supplierPromiseDoneDate"
                       v-if="supplierShow">
-          <el-date-picker
-              type="date"
-              v-model="formData.supplierPromiseDoneDate"
-              format="YYYY-MM-DD"
-              @change="formData.supplierPromiseDoneDate = formatDate(formData.supplierPromiseDoneDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
+          <el-input v-model="formData.supplierPromiseDoneDate" type="textarea" :rows="4"/>
         </el-form-item>
         <el-form-item prop="nde" :label="store.state.label.nde" v-if="taskShow">
           <el-select v-model="formData.nde"
@@ -502,8 +532,10 @@ const defaultColumnConfigList = [
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 102},
+  {value: 'deliverDateRemark', labelKey: 'deliverDateRemark', width: 102},
   {value: 'receiptCount', labelKey: 'receiptCount', width: 68},
   {value: 'receiptDate', labelKey: 'receiptDate', width: 102},
+  {value: 'receiptDateRemark', labelKey: 'receiptDateRemark', width: 102},
   {value: 'scrapCount', labelKey: 'scrapCount', width: 68},
   {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 102},
   {value: 'nde', labelKey: 'nde', width: 56},
@@ -529,6 +561,7 @@ const defaultColumnConfigList = [
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
     },
   },
+  {value: 'delayTypeFormat', labelKey: 'delay', width: 68},
 ]
 const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList.map(t => t))
 httpGet(`system/user/config/list`, {}).then(
@@ -621,7 +654,9 @@ const state = reactive({
       orderCount: null,
       delay: null,
       scrapCount: null,
-      processType: 0,
+      processType: null,
+      delayType: null,
+      surplusCountType: 0,
     },
     page: {
       page: DEFAULT_PAGE,
@@ -691,7 +726,7 @@ const handleDateTimeChange = () => {
   }
   handlePage()
 }
-const handleDateTimeChangeSupplier = () => {
+/*const handleDateTimeChangeSupplier = () => {
   if (state.dateTimeListSupplier && state.dateTimeListSupplier.length > 1) {
     state.query.data.startSupplierPromiseDoneDate = formatDate(
         state.dateTimeListSupplier[0],
@@ -706,7 +741,7 @@ const handleDateTimeChangeSupplier = () => {
     state.query.data.endSupplierPromiseDoneDate = ''
   }
   handlePage()
-}
+}*/
 
 const handlePage = () => {
   httpGet(`douson/task/page`, state.query).then(
@@ -731,7 +766,7 @@ const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskMan
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'receiptCount', 'receiptDate', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
@@ -881,6 +916,9 @@ Promise.all([
         t.type = ValueType.NumberEdit
       } else if ('processProcedure' === t.value) {
         t.width = 215
+        t.type = ValueType.TextEdit
+      } else if ('supplierPromiseDoneDate' === t.value) {
+        t.width = 265
         t.type = ValueType.TextEdit
       }
       return t

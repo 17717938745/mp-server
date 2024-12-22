@@ -197,12 +197,20 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "发货日期"
         },
         {
+          "value": "deliverDateRemark",
+          "label": "发货日期Remark"
+        },
+        {
           "value": "receiptCount",
           "label": "收货数量"
         },
         {
           "value": "receiptDate",
           "label": "收货日期"
+        },
+        {
+          "value": "receiptDateRemark",
+          "label": "收货日期Remark"
         },
         {
           "value": "scrapCount",
@@ -1063,6 +1071,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "主管"
         },
         {
+          "value": "leaderUserId",
+          "label": "当班主管"
+        },
+        {
           "value": "manager",
           "label": "经理"
         },
@@ -1665,12 +1677,20 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Ngày xuất"
         },
         {
+          "value": "deliverDateRemark",
+          "label": "Ngày xuất Remark"
+        },
+        {
           "value": "receiptCount",
           "label": "Số lượng nhập"
         },
         {
           "value": "receiptDate",
           "label": "Ngày nhập"
+        },
+        {
+          "value": "receiptDate",
+          "label": "Ngày nhập Remark"
         },
         {
           "value": "scrapCount",
@@ -2558,6 +2578,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "chargePerson",
           "label": "Chủ quản BP"
+        },
+        {
+          "value": "leaderUserId",
+          "label": "chủ quản ca đó"
         },
         {
           "value": "manager",

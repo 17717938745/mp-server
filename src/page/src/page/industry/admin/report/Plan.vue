@@ -168,8 +168,8 @@
         <el-form-item prop="solveScheme" :label="store.state.label.solveScheme">
           <el-input type="textarea" :rows=4 v-model="formData.solveScheme"/>
         </el-form-item>
-        <el-form-item prop="responsiblePerson" :label="store.state.label.responsiblePerson">
-          <el-select v-model="formData.responsiblePerson"
+        <el-form-item prop="responsiblePersonList" :label="store.state.label.responsiblePerson">
+          <el-select v-model="formData.responsiblePersonList"
                      filterable
                      allow-create
                      clearable
@@ -262,7 +262,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'optimizeTypeFormat', label: store.state.label.optimizeType, labelKey: 'optimizeType', width: 128},
   {value: 'existsProblem', label: store.state.label.existsProblem, labelKey: 'existsProblem', width: 334, type: ValueType.Text, showOverflow: true,},
   {value: 'solveScheme', label: store.state.label.solveScheme, labelKey: 'solveScheme', width: 334, type: ValueType.Text, showOverflow: true,},
-  {value: 'responsiblePerson', label: store.state.label.responsiblePerson, labelKey: 'responsiblePerson', width: 128},
+  {value: 'responsiblePersonFormat', originValue: 'responsiblePersonList', label: store.state.label.responsiblePerson, labelKey: 'responsiblePerson', width: 128},
   {value: 'planCompleteTime', label: store.state.label.planCompleteTime, labelKey: 'planCompleteTime', width: 102},
   {value: 'awardAmountFormat', label: store.state.label.awardAmount, labelKey: 'awardAmount', width: 87},
   {value: 'valid', label: store.state.label.valid, labelKey: 'valid', width: 68, type: ValueType.Valid,},
@@ -278,7 +278,7 @@ const defaultFormData = {
   optimizeType: '',
   existsProblem: '',
   solveScheme: '',
-  responsiblePerson: store.state.user.userId,
+  responsiblePersonList: [store.state.user.userId],
   planCompleteTime: '',
   beforePhotoList: [],
   afterPhotoList: [],
@@ -301,7 +301,7 @@ const state = reactive({
       existsProblem: '',
       username: '',
       responsiblePerson: '',
-      valid: '',
+      valid: false,
     },
     page: {
       page: DEFAULT_PAGE,
@@ -328,9 +328,9 @@ const state = reactive({
     optimizeType: [{required: true, message: 'Please check', trigger: 'blur'}],
     existsProblem: [{required: true, message: 'Please check', trigger: 'blur'}],
     solveScheme: [{required: true, message: 'Please check', trigger: 'blur'}],
-    responsiblePerson: [{required: true, message: 'Please check', trigger: 'blur'}],
     planCompleteTime: [{required: true, message: 'Please check', trigger: 'blur'}],
     beforePhotoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 5}],
+    responsiblePersonList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 5}],
     afterPhotoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 5}],
     attachmentList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 4}],
   },
@@ -403,8 +403,9 @@ httpGet(`system/user/config/list`, {}).then(
         }
       })
       columnConfigList.value = columnConfigList.value.map((t: any) => {
-        if ('responsiblePerson' === t.value) {
+        if ('responsiblePersonFormat' === t.value) {
           t.type = ValueType.SelectEdit
+          t.width = 234;
           t.optionList = userOptionList.value
         }
         return t

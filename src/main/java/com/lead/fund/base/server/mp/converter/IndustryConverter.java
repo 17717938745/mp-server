@@ -234,6 +234,7 @@ public interface IndustryConverter extends Serializable {
     PhotoImgModel photo(DisqualificationOrderPhotoEntity e, String urlPrefix);
 
     @Mapping(target = "id", source = "planId")
+    @Mapping(target = "responsiblePerson", expression = "java(\",\" + request.getResponsiblePersonList().stream().collect(java.util.stream.Collectors.joining(\",\")) + \",\")")
     PlanEntity plan(PlanRequest request);
 
     @Mapping(target = "planId", source = "id")
@@ -241,6 +242,7 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "createTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getCreateTime()))")
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getModifyTime()))")
     @Mapping(target = "awardAmountFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.formatIntTh(d.getAwardAmount()))")
+    @Mapping(target = "responsiblePersonList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(d.getResponsiblePerson()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     PlanResponse plan(PlanEntity d);
 
     List<PlanResponse> planList(List<PlanEntity> list);

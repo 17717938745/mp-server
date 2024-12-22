@@ -69,7 +69,7 @@ public class PlanResponse extends AbstractAdministratorModel {
     /**
      * 负责人
      */
-    private String responsiblePerson;
+    private List<String> responsiblePersonList;
     private String responsiblePersonFormat;
     /**
      * 完成时间

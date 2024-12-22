@@ -80,4 +80,8 @@ public class MpUserMergeRequest implements Serializable {
      * 班次
      */
     private String schedule;
+    /**
+     * 当班主管
+     */
+    private String leaderUserId;
 }

@@ -234,6 +234,12 @@ public class TaskEntity extends AbstractAdmin {
     @Size(max = 32, message = "发货日期长度不合法")
     private String deliverDate;
     /**
+     * 发货日期备注
+     */
+    @FieldRemark(value = "发货日期备注")
+    @Size(max = 512, message = "发货日期备注长度不合法")
+    private String deliverDateRemark;
+    /**
      * 收货数量
      */
     @FieldRemark(value = "收货数量")
@@ -246,6 +252,12 @@ public class TaskEntity extends AbstractAdmin {
     @Size(max = 32, message = "收货日期长度不合法")
     private String receiptDate;
     /**
+     * 收货日期备注
+     */
+    @FieldRemark(value = "收货日期备注")
+    @Size(max = 512, message = "收货日期备注长度不合法")
+    private String receiptDateRemark;
+    /**
      * 报废数量
      */
     @FieldRemark(value = "报废数量")
@@ -255,6 +267,6 @@ public class TaskEntity extends AbstractAdmin {
      * 外协承诺完成时间
      */
     @FieldRemark(value = "外协承诺完成时间")
-    @Size(max = 32, message = "外协承诺完成时间长度不合法")
+    @Size(max = 512, message = "外协承诺完成时间长度不合法")
     private String supplierPromiseDoneDate;
 }

@@ -1,5 +1,7 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
+import jakarta.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
@@ -75,4 +77,8 @@ public class EventQueryRequest implements Serializable {
      * 是否有效
      */
     private Boolean valid;
+    /**
+     * 问题描述
+     */
+    private String accidentDescribe;
 }
