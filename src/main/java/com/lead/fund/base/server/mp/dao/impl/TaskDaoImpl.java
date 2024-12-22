@@ -67,10 +67,10 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             e.setSurplus(e.getOrderCount().subtract(e.getProcessCount()));
         }
         if (isBlank(e.getSupplierDoneDate())) {
-            e.setSupplierPromiseDoneDate(null);
+            e.setSupplierDoneDate(null);
         } else {
             final int diff = -10 - ((isNotBlank(e.getNde()) ? 1 : 0) + (isNotBlank(e.getAssemble()) ? 5 : 0) + (isNotBlank(e.getTestPress()) ? 3 : 0) + (isNotBlank(e.getSurfaceTreatment()) ? 3 : 0));
-            e.setSupplierPromiseDoneDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getSupplierDoneDate()), diff)));
+            e.setSupplierDoneDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getSupplierDoneDate()), diff)));
         }
         // update
         if (isNotBlank(e.getId())) {

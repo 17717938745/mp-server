@@ -122,4 +122,9 @@ public class MpUserEntity extends AbstractAdmin {
      */
     @FieldRemark(value = "班次")
     private String schedule;
+    /**
+     * 当班主管
+     */
+    @FieldRemark(value = "当班主管")
+    private String leaderUserId;
 }
