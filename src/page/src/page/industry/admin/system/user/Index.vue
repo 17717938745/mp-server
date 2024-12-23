@@ -354,18 +354,6 @@ const state = reactive({
   formSave: false,
   formVisible: false,
 })
-const editSchedule = ref(false)
-httpGet('douson/config').then(r => {
-  state.config = r.data
-  columnConfigList.value = columnConfigList.value.map((t: any) => {
-    if (t.value === 'schedule') {
-      t.type = ValueType.SelectEdit
-      t.optionList = state.config.scheduleList
-    }
-    return t
-  })
-  handleList()
-})
 const handleList = () => {
   httpGet(`system/user/list`, state.query.data).then(
       (res: PageResult<typeof state.tableData>) => {
@@ -420,6 +408,13 @@ Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
       'processProcedure',
+      'testDevice',
+      'customerShortName',
+      'department',
+      'profession',
+      'optimizeType',
+      'userProperty',
+      'schedule',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -431,9 +426,12 @@ Promise.all([
       label: t.name,
     }
   })
-  if(includes(roleCodeList, 'admin')) {
+  if (includes(roleCodeList, 'admin')) {
     columnConfigList.value = columnConfigList.value.map((t: any) => {
-      if(t.value === 'leaderUserIdFormat') {
+      if (t.value === 'schedule') {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.scheduleList
+      } else if (t.value === 'leaderUserIdFormat') {
         t.width = 231
         t.type = ValueType.SelectEdit
         t.optionList = userOptionList.value

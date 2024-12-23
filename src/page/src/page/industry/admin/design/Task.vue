@@ -239,7 +239,7 @@
         <el-link
             v-if="row.param.taskId"
             :icon="DocumentCopy"
-            :disabled="!row.param.taskId"
+            :disabled="row.param.taskId.indexOf('auto-') >= 0"
             @click="handleCopy(row)"
             class="mr10"
             type="info"
@@ -254,7 +254,7 @@
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="!row.param.taskId || !(row.param.up)"
+            :disabled="row.param.taskId.indexOf('auto-') >= 0 || !(row.param.up)"
         >
           Up
         </el-link>
@@ -265,7 +265,7 @@
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="!row.param.taskId || !(row.param.down)"
+            :disabled="row.param.taskId.indexOf('auto-') >= 0 || !(row.param.down)"
         >
           Down
         </el-link>
@@ -951,7 +951,7 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (!row.taskId) {
+  if (row.taskId.indexOf('auto-') >= 0) {
     return 'row-blue'
   } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'

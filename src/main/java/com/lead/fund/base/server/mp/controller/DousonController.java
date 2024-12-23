@@ -4528,11 +4528,16 @@ public class DousonController {
         if (isNotBlank(d.getResponsiblePerson())) {
             lambda.like(PlanEntity::getResponsiblePerson, "," + d.getResponsiblePerson() + ",");
         }
+        if (isNotBlank(d.getExistsProblem())) {
+            lambda.like(PlanEntity::getExistsProblem, d.getExistsProblem());
+        }
         if (null != d.getValid()) {
             if (Boolean.TRUE.equals(d.getValid())) {
                 lambda.eq(PlanEntity::getValid, true);
             } else {
-                lambda.eq(PlanEntity::getValid, false).or(true, (lam) -> lam.isNull(PlanEntity::getValid));
+                lambda.and(true, lambdaTemp -> {
+                    lambdaTemp.eq(PlanEntity::getValid, false).or(true, (lam) -> lam.isNull(PlanEntity::getValid));
+                });
             }
         }
         return planDao.list(lambda.orderByDesc(PlanEntity::getCreateTime));

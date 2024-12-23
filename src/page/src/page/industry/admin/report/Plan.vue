@@ -172,6 +172,7 @@
           <el-select v-model="formData.responsiblePersonList"
                      filterable
                      allow-create
+                     multiple
                      clearable
                      :placeholder="store.state.label.responsiblePerson"
           >
