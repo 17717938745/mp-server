@@ -209,6 +209,20 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.receiptCountType"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="`${store.state.label.receiptCount} VS ${store.state.label.planReformCount}`"
+      >
+        <el-option
+            v-for="item in [{value: 0, label: `${store.state.label.receiptCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.receiptCount} = ${store.state.label.planReformCount}`,}, ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -670,7 +684,8 @@ const state = reactive({
       scrapCount: null,
       processType: null,
       delayType: null,
-      processCountType: 0,
+      processCountType: null,
+      receiptCountType: null,
       surplusCountType: null,
     },
     page: {
@@ -781,7 +796,7 @@ const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskMan
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )
@@ -995,7 +1010,11 @@ const handleTableRowClassName = ({
 }) => {
   if (row.taskId.indexOf('auto-') >= 0) {
     return 'row-light-blue'
-  } else if (row.processCount && row.planReformCount && row.processCount === row.planReformCount) {
+  }
+  if (row.processCount && row.planReformCount && row.processCount === row.planReformCount) {
+    return 'row-done'
+  }
+  if (row.receiptCount && row.planReformCount && row.receiptCount === row.planReformCount) {
     return 'row-done'
   }
   return ''

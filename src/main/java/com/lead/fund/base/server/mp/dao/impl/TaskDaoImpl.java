@@ -132,11 +132,9 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                 .eq(TaskEntity::getDeviceId, e.getDeviceId())
                 .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
         );
-        BigDecimal materialCount = defaultDecimal(e.getMaterialCount());
-        BigDecimal sumReceiptCount = taskList.stream().map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
-        BigDecimal sumScrapCount = taskList.stream().map(t -> defaultDecimal(t.getScrapCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
-        BigDecimal surplus = materialCount.subtract(sumReceiptCount).subtract(sumScrapCount);
         BigDecimal orderCount = defaultDecimal(e.getOrderCount());
+        BigDecimal sumReceiptCount = taskList.stream().map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+        BigDecimal surplus = orderCount.subtract(sumReceiptCount);
         BigDecimal sumProcessCount = taskList.stream().map(t -> defaultDecimal(t.getProcessCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
         BigDecimal surplusNoSupplier = orderCount.subtract(sumProcessCount);
         for (int i = 0; i < taskList.size(); i++) {
@@ -149,7 +147,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .eq(TaskEntity::getId, db.getId());
             if (Boolean.TRUE.equals(d.getSupplier())) {
                 lambda
-                        .set(TaskEntity::getMaterialCount, materialCount)
+                        .set(TaskEntity::getOrderCount, orderCount)
                         .set(TaskEntity::getSurplus, surplus)
                 ;
             } else {

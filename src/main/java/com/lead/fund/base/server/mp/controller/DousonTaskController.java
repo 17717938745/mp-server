@@ -237,6 +237,13 @@ public class DousonTaskController {
                 lambda.apply("(PROCESS_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR PROCESS_COUNT != PLAN_REFORM_COUNT)");
             }
         }
+        if (null != d.getReceiptCountType()) {
+            if (1 == d.getReceiptCountType()) {
+                lambda.apply("RECEIPT_COUNT = PLAN_REFORM_COUNT");
+            } else if (0 == d.getReceiptCountType()) {
+                lambda.apply("(RECEIPT_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR RECEIPT_COUNT != PLAN_REFORM_COUNT)");
+            }
+        }
         if (isNotBlank(d.getMaterialOrderNo())) {
             lambda.like(TaskEntity::getMaterialOrderNo, d.getMaterialOrderNo());
         }

@@ -221,4 +221,5 @@ public class TaskRequest extends AbstractAdmin {
      * 0-已加工数量!=计划加工数量,1-已加工数量=计划加工数量
      */
     private Integer processCountType;
+    private Integer receiptCountType;
 }
