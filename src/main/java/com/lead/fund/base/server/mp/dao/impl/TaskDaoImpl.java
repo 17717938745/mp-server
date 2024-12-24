@@ -27,6 +27,7 @@ import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -68,7 +69,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         }
         final boolean supplier = isNotBlank(e.getDeviceId()) && Boolean.TRUE.equals(deviceMapper.selectById(e.getDeviceId()).getSupplier());
         if (supplier) {
-            e.setSurplus(defaultDecimal(e.getMaterialCount()).subtract(defaultDecimal(e.getProcessCount())).subtract(defaultDecimal(e.getScrapCount())));
+            e.setSurplus(defaultDecimal(e.getMaterialCount()).subtract(defaultDecimal(e.getReceiptCount())).subtract(defaultDecimal(e.getScrapCount())));
         } else {
             e.setSurplus(defaultDecimal(e.getOrderCount()).subtract(defaultDecimal(e.getProcessCount())));
         }
@@ -131,6 +132,10 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                 .eq(TaskEntity::getDeviceId, e.getDeviceId())
                 .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
         );
+        BigDecimal materialCount = defaultDecimal(e.getMaterialCount());
+        BigDecimal sumReceiptCount = taskList.stream().map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+        BigDecimal sumScrapCount = taskList.stream().map(t -> defaultDecimal(t.getScrapCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+        BigDecimal surplus = materialCount.subtract(sumReceiptCount).subtract(sumScrapCount);
         for (int i = 0; i < taskList.size(); i++) {
             final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
             final TaskEntity db = taskList.get(i);
@@ -139,6 +144,12 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     .set(TaskEntity::getDeviceSorter, d.getSorter())
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
+            if (Boolean.TRUE.equals(d.getSupplier())) {
+                lambda
+                        .set(TaskEntity::getMaterialCount, materialCount)
+                        .set(TaskEntity::getSurplus, surplus)
+                ;
+            }
             if (isNotBlank(pdb.getOfflineDate())) {
                 final int onlineDateDiff = defaultInt(e.getOnlineDateDiff());
                 final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), onlineDateDiff)));

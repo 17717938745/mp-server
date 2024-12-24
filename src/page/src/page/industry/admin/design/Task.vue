@@ -75,18 +75,18 @@
                 :placeholder="store.state.label.scrapCount"
                 type="number"
                 class="search-item"/>
-<!--      <el-date-picker
-          v-model="dateTimeListSupplier"
-          @change="handleDateTimeChangeSupplier"
-          clearable
-          type="daterange"
-          format="YYYY-MM-DD"
-          range-separator="-"
-          start-placeholder="Start supplier promise done date"
-          end-placeholder="End supplier promise done date"
-          style="width: 180px; margin-right: 20px;"
-      >
-      </el-date-picker>-->
+      <!--      <el-date-picker
+                v-model="dateTimeListSupplier"
+                @change="handleDateTimeChangeSupplier"
+                clearable
+                type="daterange"
+                format="YYYY-MM-DD"
+                range-separator="-"
+                start-placeholder="Start supplier promise done date"
+                end-placeholder="End supplier promise done date"
+                style="width: 180px; margin-right: 20px;"
+            >
+            </el-date-picker>-->
       <el-select v-model="query.data.nde"
                  filterable
                  allow-create
@@ -153,20 +153,20 @@
                 clearable
                 :placeholder="store.state.label.checkOrderNo"
                 class="search-item"/>
-<!--      <el-select v-model="query.data.processType"
-                 filterable
-                 allow-create
-                 clearable
-                 @change="handlePage"
-                 :placeholder="store.state.label.processType"
-      >
-        <el-option
-            v-for="item in [{value: 0, label: 'Undone',}, {value: 1, label: 'Done',}, {value: null, label: 'All',}, ]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>-->
+      <!--      <el-select v-model="query.data.processType"
+                       filterable
+                       allow-create
+                       clearable
+                       @change="handlePage"
+                       :placeholder="store.state.label.processType"
+            >
+              <el-option
+                  v-for="item in [{value: 0, label: 'Undone',}, {value: 1, label: 'Done',}, {value: null, label: 'All',}, ]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>-->
       <el-select v-model="query.data.surplusCountType"
                  filterable
                  allow-create
@@ -190,6 +190,20 @@
       >
         <el-option
             v-for="item in [{value: 0, label: `${store.state.label.delay} Yes`,}, {value: 1, label: `${store.state.label.delay} No`,}, ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.orderCountType"
+                 filterable
+                 allow-create
+                 clearable
+                 @change="handlePage"
+                 :placeholder="`${store.state.label.orderCount} VS ${store.state.label.planReformCount}`"
+      >
+        <el-option
+            v-for="item in [{value: 0, label: `${store.state.label.orderCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.orderCount} = ${store.state.label.planReformCount}`,}, ]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -656,6 +670,7 @@ const state = reactive({
       scrapCount: null,
       processType: null,
       delayType: null,
+      orderCountType: 0,
       surplusCountType: 0,
     },
     page: {
@@ -781,7 +796,7 @@ const handleShowTypeChange = () => {
   }
   delayIndex = -1
   for (let i = 0; i < columnConfigList.value.length; i++) {
-    if(columnConfigList.value[i].value === 'delay') {
+    if (columnConfigList.value[i].value === 'delay') {
       delayIndex = i
       break
     }
@@ -800,10 +815,10 @@ const handleEdit = (row: any) => {
   state.formData = Object.assign({}, row)
 }
 const handleEditShow = (row: any) => {
-  return row.taskId && ('admin' === user.username || includes(roleCodeList, 'taskManager') || includes(roleCodeList, 'supplierManager'))
+  return !(row.taskId.indexOf('auto-') >= 0) && ('admin' === user.username || includes(roleCodeList, 'taskManager') || includes(roleCodeList, 'supplierManager'))
 }
 const handleDeleteShow = (row: any) => {
-  return row.taskId && taskDelete
+  return !(row.taskId.indexOf('auto-') >= 0) && taskDelete
 }
 const handleCopy = (d) => {
   const request = Object.assign({}, d.param, {
@@ -874,10 +889,10 @@ const handleDelete = (row: any) => {
     httpDelete('douson/task', {
       taskId: row.taskId,
     })
-        .then(() => {
-          ElMessage.success('Delete success')
-          handlePage()
-        })
+    .then(() => {
+      ElMessage.success('Delete success')
+      handlePage()
+    })
   })
 }
 Promise.all([
@@ -923,6 +938,33 @@ Promise.all([
       }
       return t
     })
+  } else if (supplierShow) {
+    columnConfigList.value = columnConfigList.value.map(t => {
+      if ('deliverCount' === t.value) {
+        t.width = 95
+        t.type = ValueType.NumberEdit
+      } else if ('deliverDate' === t.value) {
+        t.width = 102
+        t.type = ValueType.DateEdit
+      } else if ('deliverDateRemark' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('receiptCount' === t.value) {
+        t.width = 95
+        t.type = ValueType.NumberEdit
+      } else if ('receiptDate' === t.value) {
+        t.width = 102
+        t.type = ValueType.DateEdit
+      } else if ('receiptDateRemark' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('scrapCount' === t.value) {
+        t.width = 95
+        t.type = ValueType.NumberEdit
+      } else if ('supplierPromiseDoneDate' === t.value) {
+        t.width = 102
+        t.type = ValueType.DateEdit
+      }
+      return t
+    })
   }
   handlePage()
 })
@@ -952,18 +994,20 @@ const handleTableRowClassName = ({
   rowIndex: number
 }) => {
   if (row.taskId.indexOf('auto-') >= 0) {
-    return 'row-blue'
+    return 'row-light-blue'
+  } else if (row.orderCount === row.planReformCount) {
+    return 'row-done'
   } else if (row.processCount > 0 && row.processCount === row.materialCount) {
     return 'row-done'
   }
   return ''
 }
 const handleTableCellClassName = ({
-                                   row,
-                              column,
-                                   rowIndex,
-                                   columnIndex,
-                                 }: {
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
   row: any
   rowIndex: number
 }) => {

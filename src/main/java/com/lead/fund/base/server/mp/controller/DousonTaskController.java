@@ -198,7 +198,7 @@ public class DousonTaskController {
             if (1 == d.getSurplusCountType()) {
                 lambda.eq(TaskEntity::getSurplus, 0);
             } else {
-                lambda.ne(TaskEntity::getSurplus, 0).or(true, lam -> lam.isNull(TaskEntity::getSurplus));
+                lambda.and(true, lambdaTemp -> lambdaTemp.ne(TaskEntity::getSurplus, 0).or(true, lam -> lam.isNull(TaskEntity::getSurplus)));
             }
         }
         if (Boolean.TRUE.equals(d.getSupplier())) {
@@ -228,6 +228,13 @@ public class DousonTaskController {
                 lambda.apply("PROCESS_COUNT = MATERIAL_COUNT");
             } else if (0 == d.getProcessType()) {
                 lambda.apply("(PROCESS_COUNT IS NULL OR MATERIAL_COUNT IS NULL OR PROCESS_COUNT != MATERIAL_COUNT)");
+            }
+        }
+        if (null != d.getOrderCountType()) {
+            if (1 == d.getOrderCountType()) {
+                lambda.apply("ORDER_COUNT = PLAN_REFORM_COUNT");
+            } else if (0 == d.getOrderCountType()) {
+                lambda.apply("(ORDER_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR ORDER_COUNT != PLAN_REFORM_COUNT)");
             }
         }
         if (isNotBlank(d.getMaterialOrderNo())) {

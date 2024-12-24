@@ -217,4 +217,8 @@ public class TaskRequest extends AbstractAdmin {
      * 0-!=0,1-=0
      */
     private Integer surplusCountType;
+    /**
+     * 0-订单数量!=计划加工数量,1-订单数量=计划加工数量
+     */
+    private Integer orderCountType;
 }

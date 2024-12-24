@@ -432,7 +432,7 @@ Promise.all([
         t.type = ValueType.SelectEdit
         t.optionList = state.config.scheduleList
       } else if (t.value === 'leaderUserIdFormat') {
-        t.width = 231
+        t.width = 198
         t.type = ValueType.SelectEdit
         t.optionList = userOptionList.value
       }
@@ -442,7 +442,7 @@ Promise.all([
   if (!includes(roleCodeList, 'userManager')) {
     columnConfigList.value = columnConfigList.value.filter((t: any) => t.value !== 'interviewResume')
   }
-  handleStart()
+  handleList()
 })
 
 const {
