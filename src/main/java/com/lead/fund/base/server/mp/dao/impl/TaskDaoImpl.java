@@ -53,8 +53,8 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
     @Override
     public TaskEntity merge(TaskEntity e) {
-        e.setDeviceId(defaultIfBlank(e.getDeviceId()));
-        e.setSorter(defaultInt(e.getSorter()));
+        e.setDeviceId(defaultIfBlank(e.getDeviceId()))
+                .setSorter(defaultInt(e.getSorter()));
         e.setModifyTime(new Date());
         if (null == e.getProcessWorkingHour()) {
             e.setProductCountHour8(null)
@@ -140,7 +140,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
             final TaskEntity db = taskList.get(i);
             final LambdaUpdateWrapper<TaskEntity> lambda = new LambdaUpdateWrapper<TaskEntity>()
-                    .set(TaskEntity::getSorter, i)
+                    .set(TaskEntity::getSorter, isBlank(e.getDeviceId()) ? 999999 : i)
                     .set(TaskEntity::getDeviceSorter, d.getSorter())
                     .set(TaskEntity::getDeviceId, d.getId())
                     .eq(TaskEntity::getId, db.getId());
