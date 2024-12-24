@@ -172,10 +172,10 @@
                  allow-create
                  clearable
                  @change="handlePage"
-                 :placeholder="store.state.label.surplusCount"
+                 :placeholder="store.state.label.surplus"
       >
         <el-option
-            v-for="item in [{value: 0, label: `${store.state.label.surplusCount}!=0`,}, {value: 1, label: `${store.state.label.surplusCount}=0`,}, ]"
+            v-for="item in [{value: 0, label: `${store.state.label.surplus}!=0`,}, {value: 1, label: `${store.state.label.surplus}=0`,}, ]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -195,15 +195,15 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="query.data.orderCountType"
+      <el-select v-model="query.data.processCountType"
                  filterable
                  allow-create
                  clearable
                  @change="handlePage"
-                 :placeholder="`${store.state.label.orderCount} VS ${store.state.label.planReformCount}`"
+                 :placeholder="`${store.state.label.processCount} VS ${store.state.label.planReformCount}`"
       >
         <el-option
-            v-for="item in [{value: 0, label: `${store.state.label.orderCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.orderCount} = ${store.state.label.planReformCount}`,}, ]"
+            v-for="item in [{value: 0, label: `${store.state.label.processCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.processCount} = ${store.state.label.planReformCount}`,}, ]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -670,8 +670,8 @@ const state = reactive({
       scrapCount: null,
       processType: null,
       delayType: null,
-      orderCountType: 0,
-      surplusCountType: 0,
+      processCountType: 0,
+      surplusCountType: null,
     },
     page: {
       page: DEFAULT_PAGE,
@@ -995,9 +995,7 @@ const handleTableRowClassName = ({
 }) => {
   if (row.taskId.indexOf('auto-') >= 0) {
     return 'row-light-blue'
-  } else if (row.orderCount === row.planReformCount) {
-    return 'row-done'
-  } else if (row.processCount > 0 && row.processCount === row.materialCount) {
+  } else if (row.processCount && row.planReformCount && row.processCount === row.planReformCount) {
     return 'row-done'
   }
   return ''
@@ -1012,7 +1010,6 @@ const handleTableCellClassName = ({
   rowIndex: number
 }) => {
   if (delayIndex >= 0 && columnIndex === delayIndex && row.taskId && row.delay >= 0) {
-    console.log('cell class, index: ' + delayIndex)
     return 'row-red'
   }
   return ''

@@ -230,11 +230,11 @@ public class DousonTaskController {
                 lambda.apply("(PROCESS_COUNT IS NULL OR MATERIAL_COUNT IS NULL OR PROCESS_COUNT != MATERIAL_COUNT)");
             }
         }
-        if (null != d.getOrderCountType()) {
-            if (1 == d.getOrderCountType()) {
-                lambda.apply("ORDER_COUNT = PLAN_REFORM_COUNT");
-            } else if (0 == d.getOrderCountType()) {
-                lambda.apply("(ORDER_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR ORDER_COUNT != PLAN_REFORM_COUNT)");
+        if (null != d.getProcessCountType()) {
+            if (1 == d.getProcessCountType()) {
+                lambda.apply("PROCESS_COUNT = PLAN_REFORM_COUNT");
+            } else if (0 == d.getProcessCountType()) {
+                lambda.apply("(PROCESS_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR PROCESS_COUNT != PLAN_REFORM_COUNT)");
             }
         }
         if (isNotBlank(d.getMaterialOrderNo())) {

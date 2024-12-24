@@ -136,6 +136,9 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         BigDecimal sumReceiptCount = taskList.stream().map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
         BigDecimal sumScrapCount = taskList.stream().map(t -> defaultDecimal(t.getScrapCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
         BigDecimal surplus = materialCount.subtract(sumReceiptCount).subtract(sumScrapCount);
+        BigDecimal orderCount = defaultDecimal(e.getOrderCount());
+        BigDecimal sumProcessCount = taskList.stream().map(t -> defaultDecimal(t.getProcessCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+        BigDecimal surplusNoSupplier = orderCount.subtract(sumProcessCount);
         for (int i = 0; i < taskList.size(); i++) {
             final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
             final TaskEntity db = taskList.get(i);
@@ -148,6 +151,11 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                 lambda
                         .set(TaskEntity::getMaterialCount, materialCount)
                         .set(TaskEntity::getSurplus, surplus)
+                ;
+            } else {
+                lambda
+                        .set(TaskEntity::getOrderCount, orderCount)
+                        .set(TaskEntity::getSurplus, surplusNoSupplier)
                 ;
             }
             if (isNotBlank(pdb.getOfflineDate())) {

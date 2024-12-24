@@ -99,7 +99,10 @@ $containerLeftGap: 5px;
     background-color: #d8ddea;
   }
   .row-red {
-    background-color: #b35362;
+    background-color: #f1f15b;
+    color: #ff0000;
+    font-weight: 900;
+    font-size: 16px;
   }
 
   .row-done {
