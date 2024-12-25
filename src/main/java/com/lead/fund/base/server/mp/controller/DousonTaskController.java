@@ -8,20 +8,16 @@ import static com.lead.fund.base.server.mp.converter.TaskConverter.TASK_INSTANCE
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lead.fund.base.common.basic.exec.BusinessException;
-import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
-import com.lead.fund.base.common.util.IdUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
-import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.TaskDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
-import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
 import com.lead.fund.base.server.mp.entity.douson.TaskEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
@@ -39,10 +35,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -256,17 +250,6 @@ public class DousonTaskController {
 
     private List<TaskResponse> formatTaskList(List<TaskEntity> list) {
         List<TaskResponse> rl = TASK_INSTANCE.taskList(list);
-        List<String> userIdList = Stream.of(
-                        rl.stream().map(TaskResponse::getCreator).filter(StrUtil::isNotBlank)
-                )
-                .flatMap(t -> t)
-                .distinct()
-                .collect(Collectors.toList());
-        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
-                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
-                        userIdList,
-                        (lam, pl) -> lam.in(MpUserEntity::getId, pl))
-        );
         MultitaskUtil.supplementList(
                 rl.stream().filter(t -> isNotBlank(t.getDeviceId())).collect(Collectors.toList()),
                 TaskResponse::getDeviceId,
@@ -284,6 +267,8 @@ public class DousonTaskController {
                 t.setDelayType(0)
                         .setDelayTypeFormat("Yes");
             }
+            t.setTimelyDeliver(isNotBlank(t.getPromiseDoneDate()) && isNotBlank(t.getReceiptDate()) && t.getPromiseDoneDate().compareTo(t.getReceiptDate()) >= 0);
+            t.setTimelyDeliverFormat(Boolean.TRUE.equals(t.getTimelyDeliver()) ? "Yes" : "No");
         }
         return rl;
     }

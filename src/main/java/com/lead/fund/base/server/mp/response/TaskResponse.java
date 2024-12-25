@@ -212,4 +212,9 @@ public class TaskResponse extends AbstractAdmin {
      * 外协承诺完成时间
      */
     private String supplierPromiseDoneDate;
+    /**
+     * 是否准时交付
+     */
+    private Boolean timelyDeliver;
+    private String timelyDeliverFormat;
 }

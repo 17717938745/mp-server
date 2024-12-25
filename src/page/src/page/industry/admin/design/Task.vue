@@ -195,12 +195,14 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="query.data.processCountType"
-                 filterable
-                 allow-create
-                 clearable
-                 @change="handlePage"
-                 :placeholder="`${store.state.label.processCount} VS ${store.state.label.planReformCount}`"
+      <el-select
+          v-if="!onlySupplier"
+          v-model="query.data.processCountType"
+          filterable
+          allow-create
+          clearable
+          @change="handlePage"
+          :placeholder="`${store.state.label.processCount} VS ${store.state.label.planReformCount}`"
       >
         <el-option
             v-for="item in [{value: 0, label: `${store.state.label.processCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.processCount} = ${store.state.label.planReformCount}`,}, ]"
@@ -209,12 +211,14 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="query.data.receiptCountType"
-                 filterable
-                 allow-create
-                 clearable
-                 @change="handlePage"
-                 :placeholder="`${store.state.label.receiptCount} VS ${store.state.label.planReformCount}`"
+      <el-select
+          v-if="adminRole || onlySupplier"
+          v-model="query.data.receiptCountType"
+          filterable
+          allow-create
+          clearable
+          @change="handlePage"
+          :placeholder="`${store.state.label.receiptCount} VS ${store.state.label.planReformCount}`"
       >
         <el-option
             v-for="item in [{value: 0, label: `${store.state.label.receiptCount} != ${store.state.label.planReformCount}`,}, {value: 1, label: `${store.state.label.receiptCount} = ${store.state.label.planReformCount}`,}, ]"
@@ -225,13 +229,13 @@
       </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
-        <el-button
+<!--        <el-button
             :icon="Plus"
             @click="handleSaveModal"
             type="success"
-            :disabled="!includes(roleCodeList, 'material')"
+            :disabled="onlySupplier"
         >Add
-        </el-button>
+        </el-button>-->
       </div>
     </div>
     <div>
@@ -264,7 +268,7 @@
         :detailLink="false"
     >
       <template #operator="row">
-        <el-link
+<!--        <el-link
             v-if="row.param.taskId"
             :icon="DocumentCopy"
             :disabled="row.param.taskId.indexOf('auto-') >= 0"
@@ -274,7 +278,7 @@
             style="word-break: keep-all;"
         >
           Copy
-        </el-link>
+        </el-link>-->
         <el-link
             v-if="row.param.taskId"
             :icon="ArrowUp"
@@ -282,7 +286,7 @@
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="row.param.taskId.indexOf('auto-') >= 0 || !(row.param.up)"
+            :disabled="!row.param.deviceId || row.param.taskId.indexOf('auto-') >= 0 || !(row.param.up)"
         >
           Up
         </el-link>
@@ -293,7 +297,7 @@
             class="mr10"
             type="info"
             style="word-break: keep-all;"
-            :disabled="row.param.taskId.indexOf('auto-') >= 0 || !(row.param.down)"
+            :disabled="!row.param.deviceId || row.param.taskId.indexOf('auto-') >= 0 || !(row.param.down)"
         >
           Down
         </el-link>
@@ -342,9 +346,9 @@
           <el-input v-model="formData.designNumber"
                     @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
         </el-form-item>
-        <el-form-item prop="orderCount" :label="store.state.label.orderCount" v-if="taskShow">
+<!--        <el-form-item prop="orderCount" :label="store.state.label.orderCount" v-if="taskShow">
           <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="roughcastExpireDate" :label="store.state.label.roughcastExpireDate" v-if="taskShow">
           <el-date-picker
               type="date"
@@ -354,9 +358,9 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="materialCount" :label="store.state.label.materialCount" v-if="taskShow">
+<!--        <el-form-item prop="materialCount" :label="store.state.label.materialCount" v-if="taskShow">
           <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="promiseDoneDate" :label="store.state.label.promiseDoneDate" v-if="taskShow">
           <el-date-picker
               type="date"
@@ -590,6 +594,7 @@ const defaultColumnConfigList = [
     },
   },
   {value: 'delayTypeFormat', labelKey: 'delay', width: 68},
+  {value: 'timelyDeliverFormat', labelKey: 'timelyDeliver', width: 68},
 ]
 const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList.map(t => t))
 httpGet(`system/user/config/list`, {}).then(
@@ -647,6 +652,17 @@ const checkOrNotList = ref([
     label: '√',
   },
 ])
+const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
+const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
+const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
+const adminRole = (includes(roleCodeList, 'admin'))
+const onlySupplier = (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
+const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
+const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const showType = ref('admin' === user.username ? 0 :
+    includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
+)
 const state = reactive({
   dateTimeList: [],
   dateTimeListSupplier: [],
@@ -684,8 +700,8 @@ const state = reactive({
       scrapCount: null,
       processType: null,
       delayType: null,
-      processCountType: null,
-      receiptCountType: null,
+      processCountType: !onlySupplier ? 0 : null,
+      receiptCountType: adminRole || onlySupplier ? 0 : null,
       surplusCountType: null,
     },
     page: {
@@ -791,15 +807,6 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
-const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
-const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
-const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
-const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
-const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const showType = ref('admin' === user.username ? 0 :
-    includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
-)
 let delayIndex = -1
 const handleShowTypeChange = () => {
   if (showType.value === 0) {
@@ -953,7 +960,8 @@ Promise.all([
       }
       return t
     })
-  } else if (supplierShow) {
+  }
+  if (supplierShow) {
     columnConfigList.value = columnConfigList.value.map(t => {
       if ('deliverCount' === t.value) {
         t.width = 95

@@ -1495,6 +1495,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "是否拖期"
         },
         {
+          "value": "timelyDeliver",
+          "label": "是否准时交付"
+        },
+        {
           "value": "processCount",
           "label": "已加工数量"
         },
@@ -1851,6 +1855,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "delay",
           "label": "Có quá hạn hay không"
+        },
+        {
+          "value": "timelyDeliver",
+          "label": "Timely deliver"
         },
         {
           "value": "processCount",

@@ -21,13 +21,11 @@ import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TaskMapper;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
-
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -54,8 +52,15 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
     @Override
     public TaskEntity merge(TaskEntity e) {
         e.setDeviceId(defaultIfBlank(e.getDeviceId()))
-                .setSorter(defaultInt(e.getSorter()));
-        e.setModifyTime(new Date());
+                .setSorter(defaultInt(e.getSorter()))
+                .setOrderCount(defaultDecimal(e.getOrderCount()))
+                .setMaterialCount(defaultDecimal(e.getMaterialCount()))
+                .setPlanReformCount(defaultDecimal(e.getPlanReformCount()))
+                .setProcessCount(defaultDecimal(e.getProcessCount()))
+                .setDeliverCount(defaultDecimal(e.getDeliverCount()))
+                .setReceiptCount(defaultDecimal(e.getReceiptCount()))
+                .setScrapCount(defaultDecimal(e.getScrapCount()))
+                .setModifyTime(new Date());
         if (null == e.getProcessWorkingHour()) {
             e.setProductCountHour8(null)
                     .setProductCountHour12(null);
@@ -79,11 +84,15 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             final int diff = -10 - ((isNotBlank(e.getNde()) ? 1 : 0) + (isNotBlank(e.getAssemble()) ? 5 : 0) + (isNotBlank(e.getTestPress()) ? 3 : 0) + (isNotBlank(e.getSurfaceTreatment()) ? 3 : 0));
             e.setSupplierDoneDate(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(e.getPromiseDoneDate()), diff)));
         }
-        if (defaultDecimal(e.getDeliverCount()).compareTo(BigDecimal.ZERO) <= 0) {
+        if (e.getDeliverCount().equals(BigDecimal.ZERO)) {
             e.setDeliverDate("");
+        } else {
+            e.setDeliverDate(DateUtil.day(new Date()));
         }
-        if (defaultDecimal(e.getReceiptCount()).compareTo(BigDecimal.ZERO) <= 0) {
+        if (e.getReceiptCount().equals(BigDecimal.ZERO)) {
             e.setReceiptDate("");
+        } else {
+            e.setReceiptDate(DateUtil.day(new Date()));
         }
         // update
         if (isNotBlank(e.getId())) {
@@ -127,61 +136,76 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
     }
 
     private void updateSummaryInfo(TaskEntity e) {
-        final DeviceEntity d = isBlank(e.getDeviceId()) ? (DeviceEntity) new DeviceEntity().setSorter(0).setId("") : deviceMapper.selectById(e.getDeviceId());
-        final List<TaskEntity> taskList = taskMapper.selectList(new LambdaQueryWrapper<TaskEntity>()
-                .eq(TaskEntity::getDeviceId, e.getDeviceId())
-                .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
-        );
-        BigDecimal orderCount = defaultDecimal(e.getOrderCount());
-        BigDecimal sumReceiptCount = taskList.stream().map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
-        BigDecimal surplus = orderCount.subtract(sumReceiptCount);
-        BigDecimal sumProcessCount = taskList.stream().map(t -> defaultDecimal(t.getProcessCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
-        BigDecimal surplusNoSupplier = orderCount.subtract(sumProcessCount);
-        for (int i = 0; i < taskList.size(); i++) {
-            final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
-            final TaskEntity db = taskList.get(i);
-            final LambdaUpdateWrapper<TaskEntity> lambda = new LambdaUpdateWrapper<TaskEntity>()
-                    .set(TaskEntity::getSorter, isBlank(e.getDeviceId()) ? 999999 : i)
-                    .set(TaskEntity::getDeviceSorter, d.getSorter())
-                    .set(TaskEntity::getDeviceId, d.getId())
-                    .eq(TaskEntity::getId, db.getId());
-            if (Boolean.TRUE.equals(d.getSupplier())) {
-                lambda
-                        .set(TaskEntity::getOrderCount, orderCount)
-                        .set(TaskEntity::getSurplus, surplus)
-                ;
-            } else {
-                lambda
-                        .set(TaskEntity::getOrderCount, orderCount)
-                        .set(TaskEntity::getSurplus, surplusNoSupplier)
-                ;
+        if (isNotBlank(e.getDeviceId())) {
+            final DeviceEntity d = isBlank(e.getDeviceId()) ? (DeviceEntity) new DeviceEntity().setSorter(0).setId("") : deviceMapper.selectById(e.getDeviceId());
+            final List<TaskEntity> taskList = taskMapper.selectList(new LambdaQueryWrapper<TaskEntity>()
+                    .eq(TaskEntity::getDeviceId, e.getDeviceId())
+                    .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
+            );
+            boolean supplier = Boolean.TRUE.equals(d.getSupplier());
+            final BigDecimal orderCount = defaultDecimal(e.getOrderCount());
+            final Predicate<TaskEntity> predicateNoSupplier = t -> defaultIfBlank(e.getDeviceId()).equals(t.getDeviceId()) &&
+                    defaultDecimal(e.getOrderCount()).equals(defaultDecimal(t.getOrderCount())) &&
+                    defaultIfBlank(e.getSaleOrderNo()).equals(t.getSaleOrderNo()) &&
+                    defaultIfBlank(e.getOrderProjectNo()).equals(t.getOrderProjectNo()) &&
+                    defaultIfBlank(e.getProcessProcedure()).equals(t.getProcessProcedure());
+            final Predicate<TaskEntity> predicateSupplier = t -> defaultIfBlank(e.getDeviceId()).equals(t.getDeviceId()) &&
+                    defaultDecimal(e.getOrderCount()).equals(defaultDecimal(t.getOrderCount())) &&
+                    defaultIfBlank(e.getSaleOrderNo()).equals(t.getSaleOrderNo()) &&
+                    defaultIfBlank(e.getOrderProjectNo()).equals(t.getOrderProjectNo()) &&
+                    defaultIfBlank(e.getSupplierRemark()).equals(t.getSupplierRemark());
+            final BigDecimal sumProcessCount = taskList.stream().filter(predicateNoSupplier).map(t -> defaultDecimal(t.getProcessCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+            final BigDecimal surplusNoSupplier = orderCount.subtract(sumProcessCount);
+            final BigDecimal sumReceiptCount = taskList.stream().filter(predicateSupplier).map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+            final BigDecimal surplusSupplier = orderCount.subtract(sumReceiptCount);
+            for (int i = 0; i < taskList.size(); i++) {
+                final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
+                final TaskEntity db = taskList.get(i);
+                final LambdaUpdateWrapper<TaskEntity> lambda = new LambdaUpdateWrapper<TaskEntity>()
+                        .set(TaskEntity::getSorter, isBlank(e.getDeviceId()) ? 999999 : i)
+                        .set(TaskEntity::getDeviceSorter, d.getSorter())
+                        .set(TaskEntity::getDeviceId, d.getId())
+                        .eq(TaskEntity::getId, db.getId());
+                if (supplier) {
+                    if (predicateNoSupplier.test(db)) {
+                        lambda
+                                .set(TaskEntity::getSurplus, surplusSupplier)
+                        ;
+                    }
+                } else {
+                    if (predicateSupplier.test(db)) {
+                        lambda
+                                .set(TaskEntity::getSurplus, surplusNoSupplier)
+                        ;
+                    }
+                }
+                if (isNotBlank(pdb.getOfflineDate())) {
+                    final int onlineDateDiff = defaultInt(e.getOnlineDateDiff());
+                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), onlineDateDiff)));
+                    db.setOnlineDate(onlineDate);
+                    lambda.set(TaskEntity::getOnlineDate, onlineDate);
+                }
+                if (isBlank(db.getOnlineDate()) || null == db.getProcessWorkingHour() || null == db.getPlanReformCount()) {
+                    lambda.set(TaskEntity::getOfflineDate, null);
+                } else {
+                    final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
+                    final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
+                    db.setOfflineDate(offlineDate);
+                    lambda.set(TaskEntity::getOfflineDate, offlineDate);
+                }
+                if (isBlank(db.getOfflineDate()) || isBlank(db.getPromiseDoneDate())) {
+                    lambda.set(TaskEntity::getDelay, null);
+                } else {
+                    final BigDecimal delay = new BigDecimal(cn.hutool.core.date.DateUtil.between(
+                            DateUtil.parse(db.getPromiseDoneDate()),
+                            DateUtil.parse(db.getOfflineDate()),
+                            DateUnit.DAY,
+                            false
+                    ));
+                    lambda.set(TaskEntity::getDelay, delay);
+                }
+                taskMapper.update(null, lambda);
             }
-            if (isNotBlank(pdb.getOfflineDate())) {
-                final int onlineDateDiff = defaultInt(e.getOnlineDateDiff());
-                final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), onlineDateDiff)));
-                db.setOnlineDate(onlineDate);
-                lambda.set(TaskEntity::getOnlineDate, onlineDate);
-            }
-            if (isBlank(db.getOnlineDate()) || null == db.getProcessWorkingHour() || null == db.getPlanReformCount()) {
-                lambda.set(TaskEntity::getOfflineDate, null);
-            } else {
-                final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
-                final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
-                db.setOfflineDate(offlineDate);
-                lambda.set(TaskEntity::getOfflineDate, offlineDate);
-            }
-            if (isBlank(db.getOfflineDate()) || isBlank(db.getPromiseDoneDate())) {
-                lambda.set(TaskEntity::getDelay, null);
-            } else {
-                final BigDecimal delay = new BigDecimal(cn.hutool.core.date.DateUtil.between(
-                        DateUtil.parse(db.getPromiseDoneDate()),
-                        DateUtil.parse(db.getOfflineDate()),
-                        DateUnit.DAY,
-                        false
-                ));
-                lambda.set(TaskEntity::getDelay, delay);
-            }
-            taskMapper.update(null, lambda);
         }
     }
 }
