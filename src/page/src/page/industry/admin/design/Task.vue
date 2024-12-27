@@ -538,10 +538,10 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const defaultColumnConfigList = [
-  {value: 'operator', labelKey: 'viewAndEdit', width: 230, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 196, type: ValueType.Operator,},
   {value: 'deviceIndex', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
-  {value: 'customerShortName', labelKey: 'customerShortName', width: 167},
+  {value: 'customerShortName', labelKey: 'customerShortName', width: 125},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
   {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 56},
   {value: 'materialNo', labelKey: 'materialNo', width: 146},
@@ -560,7 +560,7 @@ const defaultColumnConfigList = [
   {value: 'offlineDate', labelKey: 'offlineDate', width: 102},
   {value: 'delay', labelKey: 'delay', width: 68},
   {value: 'processCount', labelKey: 'processCount', width: 68},
-  {value: 'processProcedure', originValue: 'processProcedure', labelKey: 'processProcedure', width: 131},
+  {value: 'processProcedure', originValue: 'processProcedure', labelKey: 'processProcedure', width: 78},
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 102},

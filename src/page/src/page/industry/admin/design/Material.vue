@@ -428,7 +428,7 @@ const uploadData = ref({})
 const afterUpload = ref(false)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 136, type: ValueType.Operator,},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 112, type: ValueType.Operator,},
   {
     value: 'customerShortName',
     labelKey: 'customerShortName',
@@ -462,7 +462,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'materialNo',
     labelKey: 'materialNo',
-    width: 112,
+    width: 79,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -474,7 +474,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'designNumber',
     labelKey: 'designNumber',
-    width: 109,
+    width: 76,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -545,8 +545,8 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 189,
     // mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
-  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 116},
-  {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 72},
+  {value: 'chargeCompany', labelKey: 'chargeCompany', width: 96},
+  {value: 'productionCount', labelKey: 'productionCount', highLight: true, width: 50},
   {value: 'arrangeProductionDate', labelKey: 'arrangeProductionDate', width: 102},
   {
     value: 'materialOrderNoFormat',
