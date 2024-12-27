@@ -4467,10 +4467,18 @@ public class DousonController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody PlanRequest request
     ) {
-        final MpUserResponse u = accountHelper.checkUserAdminOrSelf(deviceId, request.getCreator());
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        final LambdaUpdateWrapper<PlanEntity> lambda = new LambdaUpdateWrapper<PlanEntity>()
+                .eq(PlanEntity::getId, request.getPlanId());
+        if (u.getRoleCodeList().stream().noneMatch("admin"::equals)) {
+            lambda.like(PlanEntity::getResponsiblePerson, "," + u.getUserId() + ",");
+
+        }
         PlanEntity e = (PlanEntity) INDUSTRY_INSTANCE.plan(request)
                 .setModifier(u.getUserId());
-        planDao.updateById(e);
+        if (!planDao.update(e, lambda)) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
         mergeRelevance(request, e);
         return new DataResult<>(e);
     }
@@ -4530,6 +4538,9 @@ public class DousonController {
         }
         if (isNotBlank(d.getExistsProblem())) {
             lambda.like(PlanEntity::getExistsProblem, d.getExistsProblem());
+        }
+        if (CollUtil.isNotEmpty(d.getResponsiblePersonList())) {
+            DatabaseUtil.singleOr(lambda, d.getResponsiblePersonList(), (lam, t) -> lam.like(PlanEntity::getResponsiblePerson, "," + t + ","));
         }
         if (null != d.getValid()) {
             if (Boolean.TRUE.equals(d.getValid())) {
@@ -4618,9 +4629,9 @@ public class DousonController {
             @ModelAttribute PlanPageRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "planView".equals(t.getRoleCode()) || AdminUser.ADMIN.getCode().equals(t.getRoleCode()))) {
+        /*if (u.getRoleList().stream().noneMatch(t -> "planView".equals(t.getRoleCode()) || AdminUser.ADMIN.getCode().equals(t.getRoleCode()))) {
             request.getData().setResponsiblePersonList(CollUtil.toList(u.getUserId()));
-        }
+        }*/
         PageResult<PlanEntity> pr = DatabaseUtil.page(request, this::planList);
         AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatPlanList(pr.getList())

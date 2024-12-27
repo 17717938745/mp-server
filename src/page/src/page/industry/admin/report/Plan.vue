@@ -94,7 +94,7 @@
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
-        :handleDelete="includes(roleCodeList, 'admin') ? handleDelete : null"
+        :handleDelete="'admin' === user.username ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handlePageChange="handlePageChange"
@@ -240,6 +240,7 @@ import FileUpload from '../../component/FileUpload.vue'
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
+const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
