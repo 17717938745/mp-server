@@ -267,7 +267,7 @@ public class DousonTaskController {
                 t.setDelayType(0)
                         .setDelayTypeFormat("Yes");
             }
-            t.setTimelyDeliver(t.getPlanReformCount().compareTo(BigDecimal.ZERO) != 0 && t.getPlanReformCount().equals(t.getReceiptCount()) && isNotBlank(t.getPromiseDoneDate()) && isNotBlank(t.getReceiptDate()) && t.getPromiseDoneDate().compareTo(t.getReceiptDate()) >= 0);
+            t.setTimelyDeliver(t.getPlanReformCount().compareTo(BigDecimal.ZERO) != 0 && t.getPlanReformCount().equals(t.getReceiptCount()) && isNotBlank(t.getSupplierDoneDate()) && isNotBlank(t.getReceiptDate()) && t.getSupplierDoneDate().compareTo(t.getReceiptDate()) >= 0);
             t.setTimelyDeliverFormat(Boolean.TRUE.equals(t.getTimelyDeliver()) ? "Yes" : "No");
         }
         return rl;
