@@ -681,7 +681,6 @@ const state = reactive({
       orderProjectNo: '',
       materialNo: '',
       designNumber: '',
-      surplusCountType: null,
       chargeCompany: '',
       nde: '',
       assemble: '',
@@ -1036,7 +1035,7 @@ const handleTableCellClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (delayIndex >= 0 && columnIndex === delayIndex && row.taskId && row.delay >= 0) {
+  if (row.taskId.indexOf('auto-') < 0 && delayIndex >= 0 && columnIndex === delayIndex && row.taskId && row.delay >= 0) {
     return 'row-red'
   }
   return ''
