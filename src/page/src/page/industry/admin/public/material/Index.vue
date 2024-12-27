@@ -185,10 +185,10 @@
           {{ d.materialCount }}
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
-          {{ d.stoveNo }}
+          {{ d.hotBatchNo }}
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
-          {{ d.hotBatchNo }}
+          {{ d.stoveNo }}
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           {{ d.serialNo }}
