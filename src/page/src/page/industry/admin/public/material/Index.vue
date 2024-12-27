@@ -143,20 +143,20 @@
             Số lượng liệu
           </div>
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
-          <div>
-            Heat Lot No
-          </div>
-          <div>
-            Số lô xử lý nhiệt
-          </div>
-        </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
           <div>
             Heat No.
           </div>
           <div>
             Số lò nhiệt
+          </div>
+        </div>
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
+          <div>
+            Heat Lot No
+          </div>
+          <div>
+            Số lô xử lý nhiệt
           </div>
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
@@ -184,11 +184,11 @@
         <div class="douson-column douson-flex-item-column-center" style="width: 7%;">
           {{ d.materialCount }}
         </div>
-        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
-          {{ d.hotBatchNo }}
-        </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 12%;">
           {{ d.stoveNo }}
+        </div>
+        <div class="douson-column douson-flex-item-column-center" style="width: 11%;">
+          {{ d.hotBatchNo }}
         </div>
         <div class="douson-column douson-flex-item-column-center" style="width: 15%;">
           {{ d.serialNo }}
