@@ -219,23 +219,23 @@ public class DousonTaskController {
         }
         if (null != d.getProcessType()) {
             if (1 == d.getProcessType()) {
-                lambda.apply("PROCESS_COUNT = MATERIAL_COUNT");
+                lambda.apply("(PROCESS_COUNT !=0 AND MATERIAL_COUNT != 0 AND PROCESS_COUNT = MATERIAL_COUNT)");
             } else if (0 == d.getProcessType()) {
-                lambda.apply("(PROCESS_COUNT IS NULL OR MATERIAL_COUNT IS NULL OR PROCESS_COUNT != MATERIAL_COUNT)");
+                lambda.apply("(PROCESS_COUNT =0 OR MATERIAL_COUNT = 0 OR PROCESS_COUNT != MATERIAL_COUNT)");
             }
         }
         if (null != d.getProcessCountType()) {
             if (1 == d.getProcessCountType()) {
-                lambda.apply("PROCESS_COUNT = PLAN_REFORM_COUNT");
+                lambda.apply("(PROCESS_COUNT != 0 AND PLAN_REFORM_COUNT != 0 AND PROCESS_COUNT = PLAN_REFORM_COUNT)");
             } else if (0 == d.getProcessCountType()) {
-                lambda.apply("(PROCESS_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR PROCESS_COUNT != PLAN_REFORM_COUNT)");
+                lambda.apply("(PROCESS_COUNT = 0 OR PLAN_REFORM_COUNT = 0 OR PROCESS_COUNT != PLAN_REFORM_COUNT)");
             }
         }
         if (null != d.getReceiptCountType()) {
             if (1 == d.getReceiptCountType()) {
-                lambda.apply("RECEIPT_COUNT = PLAN_REFORM_COUNT");
+                lambda.apply("(RECEIPT_COUNT != 0 AND PLAN_REFORM_COUNT != 0 AND RECEIPT_COUNT = PLAN_REFORM_COUNT)");
             } else if (0 == d.getReceiptCountType()) {
-                lambda.apply("(RECEIPT_COUNT IS NULL OR PLAN_REFORM_COUNT IS NULL OR RECEIPT_COUNT != PLAN_REFORM_COUNT)");
+                lambda.apply("(RECEIPT_COUNT = 0 OR PLAN_REFORM_COUNT = 0 OR RECEIPT_COUNT != PLAN_REFORM_COUNT)");
             }
         }
         if (isNotBlank(d.getMaterialOrderNo())) {
@@ -267,7 +267,7 @@ public class DousonTaskController {
                 t.setDelayType(0)
                         .setDelayTypeFormat("Yes");
             }
-            t.setTimelyDeliver(isNotBlank(t.getPromiseDoneDate()) && isNotBlank(t.getReceiptDate()) && t.getPromiseDoneDate().compareTo(t.getReceiptDate()) >= 0);
+            t.setTimelyDeliver(t.getPlanReformCount().compareTo(BigDecimal.ZERO) != 0 && t.getPlanReformCount().equals(t.getReceiptCount()) && isNotBlank(t.getPromiseDoneDate()) && isNotBlank(t.getReceiptDate()) && t.getPromiseDoneDate().compareTo(t.getReceiptDate()) >= 0);
             t.setTimelyDeliverFormat(Boolean.TRUE.equals(t.getTimelyDeliver()) ? "Yes" : "No");
         }
         return rl;

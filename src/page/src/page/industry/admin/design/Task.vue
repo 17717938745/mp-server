@@ -268,8 +268,8 @@
         :detailLink="false"
     >
       <template #operator="row">
-<!--        <el-link
-            v-if="row.param.taskId"
+        <el-link
+            v-if="!onlySupplier"
             :icon="DocumentCopy"
             :disabled="row.param.taskId.indexOf('auto-') >= 0"
             @click="handleCopy(row)"
@@ -278,7 +278,7 @@
             style="word-break: keep-all;"
         >
           Copy
-        </el-link>-->
+        </el-link>
         <el-link
             v-if="row.param.taskId"
             :icon="ArrowUp"
@@ -564,10 +564,10 @@ const defaultColumnConfigList = [
   {value: 'supplierDoneDate', labelKey: 'supplierDoneDate', width: 102},
   {value: 'deliverCount', labelKey: 'deliverCount', width: 68},
   {value: 'deliverDate', labelKey: 'deliverDate', width: 102},
-  {value: 'deliverDateRemark', labelKey: 'deliverDateRemark', width: 102},
+  {value: 'deliverDateRemark', labelKey: 'deliverDateRemark', width: 102, showOverflow: true,},
   {value: 'receiptCount', labelKey: 'receiptCount', width: 68},
   {value: 'receiptDate', labelKey: 'receiptDate', width: 102},
-  {value: 'receiptDateRemark', labelKey: 'receiptDateRemark', width: 102},
+  {value: 'receiptDateRemark', labelKey: 'receiptDateRemark', width: 102, showOverflow: true,},
   {value: 'scrapCount', labelKey: 'scrapCount', width: 68},
   {value: 'supplierPromiseDoneDate', labelKey: 'supplierPromiseDoneDate', width: 102},
   {value: 'nde', labelKey: 'nde', width: 56},
@@ -659,7 +659,7 @@ const adminRole = (includes(roleCodeList, 'admin'))
 const onlySupplier = (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
-const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat', 'timelyDeliverFormat']
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2
 )

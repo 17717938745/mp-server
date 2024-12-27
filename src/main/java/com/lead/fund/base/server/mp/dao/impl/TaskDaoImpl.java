@@ -72,7 +72,9 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             e.setOnlineDate("")
                     .setSorter(999999);
         }
-        final boolean supplier = isNotBlank(e.getDeviceId()) && Boolean.TRUE.equals(deviceMapper.selectById(e.getDeviceId()).getSupplier());
+        final DeviceEntity d = isBlank(e.getDeviceId()) ? (DeviceEntity) new DeviceEntity().setSorter(0).setId("") : deviceMapper.selectById(e.getDeviceId());
+        e.setDeviceSorter(d.getSorter());
+        final boolean supplier = isNotBlank(e.getDeviceId()) && Boolean.TRUE.equals(d.getSupplier());
         if (supplier) {
             e.setSurplus(defaultDecimal(e.getMaterialCount()).subtract(defaultDecimal(e.getReceiptCount())).subtract(defaultDecimal(e.getScrapCount())));
         } else {
@@ -103,7 +105,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         } else {
             taskMapper.insert(e);
         }
-        updateSummaryInfo(e);
+        updateSummaryInfo(e, d);
         return e;
 
     }
@@ -136,8 +138,12 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
     }
 
     private void updateSummaryInfo(TaskEntity e) {
+        updateSummaryInfo(e, null);
+    }
+
+    private void updateSummaryInfo(TaskEntity e, DeviceEntity device) {
         if (isNotBlank(e.getDeviceId())) {
-            final DeviceEntity d = isBlank(e.getDeviceId()) ? (DeviceEntity) new DeviceEntity().setSorter(0).setId("") : deviceMapper.selectById(e.getDeviceId());
+            final DeviceEntity d = null != device ? device : isBlank(e.getDeviceId()) ? (DeviceEntity) new DeviceEntity().setSorter(0).setId("") : deviceMapper.selectById(e.getDeviceId());
             final List<TaskEntity> taskList = taskMapper.selectList(new LambdaQueryWrapper<TaskEntity>()
                     .eq(TaskEntity::getDeviceId, e.getDeviceId())
                     .orderByAsc(TaskEntity::getSorter).orderByDesc(TaskEntity::getModifyTime)
@@ -145,19 +151,21 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             boolean supplier = Boolean.TRUE.equals(d.getSupplier());
             final BigDecimal orderCount = defaultDecimal(e.getOrderCount());
             final Predicate<TaskEntity> predicateNoSupplier = t -> defaultIfBlank(e.getDeviceId()).equals(t.getDeviceId()) &&
-                    defaultDecimal(e.getOrderCount()).equals(defaultDecimal(t.getOrderCount())) &&
+                    defaultDecimal(e.getOrderCount()).intValue() == (defaultDecimal(t.getOrderCount()).intValue()) &&
                     defaultIfBlank(e.getSaleOrderNo()).equals(t.getSaleOrderNo()) &&
                     defaultIfBlank(e.getOrderProjectNo()).equals(t.getOrderProjectNo()) &&
                     defaultIfBlank(e.getProcessProcedure()).equals(t.getProcessProcedure());
             final Predicate<TaskEntity> predicateSupplier = t -> defaultIfBlank(e.getDeviceId()).equals(t.getDeviceId()) &&
-                    defaultDecimal(e.getOrderCount()).equals(defaultDecimal(t.getOrderCount())) &&
+                    defaultDecimal(e.getOrderCount()).intValue() == (defaultDecimal(t.getOrderCount()).intValue()) &&
                     defaultIfBlank(e.getSaleOrderNo()).equals(t.getSaleOrderNo()) &&
                     defaultIfBlank(e.getOrderProjectNo()).equals(t.getOrderProjectNo()) &&
-                    defaultIfBlank(e.getSupplierRemark()).equals(t.getSupplierRemark());
+                    defaultIfBlank(defaultIfBlank(e.getSupplierRemark())).equals(defaultIfBlank(t.getSupplierRemark()));
             final BigDecimal sumProcessCount = taskList.stream().filter(predicateNoSupplier).map(t -> defaultDecimal(t.getProcessCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
             final BigDecimal surplusNoSupplier = orderCount.subtract(sumProcessCount);
             final BigDecimal sumReceiptCount = taskList.stream().filter(predicateSupplier).map(t -> defaultDecimal(t.getReceiptCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
-            final BigDecimal surplusSupplier = orderCount.subtract(sumReceiptCount);
+            // final BigDecimal sumScrapCount = taskList.stream().filter(predicateSupplier).map(t -> defaultDecimal(t.getScrapCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
+            final BigDecimal sumScrapCount = BigDecimal.ZERO;
+            final BigDecimal surplusSupplier = orderCount.subtract(sumReceiptCount).subtract(sumScrapCount);
             for (int i = 0; i < taskList.size(); i++) {
                 final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
                 final TaskEntity db = taskList.get(i);
@@ -167,13 +175,13 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                         .set(TaskEntity::getDeviceId, d.getId())
                         .eq(TaskEntity::getId, db.getId());
                 if (supplier) {
-                    if (predicateNoSupplier.test(db)) {
+                    if (predicateSupplier.test(db)) {
                         lambda
                                 .set(TaskEntity::getSurplus, surplusSupplier)
                         ;
                     }
                 } else {
-                    if (predicateSupplier.test(db)) {
+                    if (predicateNoSupplier.test(db)) {
                         lambda
                                 .set(TaskEntity::getSurplus, surplusNoSupplier)
                         ;
