@@ -688,6 +688,7 @@ const state = reactive({
       surfaceTreatment: '',
       checkOrderNo: '',
       startPromiseDoneDate: '',
+      promiseDoneDate: '',
       endPromiseDoneDate: '',
       startSupplierDoneDate: '',
       endSupplierDoneDate: '',
