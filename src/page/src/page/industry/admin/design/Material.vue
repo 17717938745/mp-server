@@ -432,7 +432,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'customerShortName',
     labelKey: 'customerShortName',
-    width: 121,
+    width: 111,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -462,7 +462,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'materialNo',
     labelKey: 'materialNo',
-    width: 79,
+    width: 100,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -474,7 +474,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'designNumber',
     labelKey: 'designNumber',
-    width: 76,
+    width: 100,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -499,7 +499,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'blankMaterialNo',
     labelKey: 'blankMaterialNo',
-    width: 168,
+    width: 110,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {
@@ -511,13 +511,13 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'roughcastDesignNumber',
     labelKey: 'roughcastDesignNumber',
-    width: 168,
+    width: 110,
     mergeKey: ['saleOrderNo', 'orderProjectNo', 'productionDate'],
   },
   {value: 'materialCount', labelKey: 'materialCount', highLight: true, width: 46},
   {value: 'stoveNo', labelKey: 'stoveNo', width: 87},
   {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 87},
-  {value: 'serialNo', labelKey: 'serialNo', width: 189},
+  {value: 'serialNo', labelKey: 'serialNo', width: 136},
   {
     value: 'surplusCount',
     labelKey: 'surplusCount',
@@ -756,6 +756,7 @@ const toggleKeyList = [
   'checkOrderNo',
 ]
 const showMore = ref(!includes(roleCodeList, 'materialManager'))
+// const showMore = ref(true)
 const handleToggleMore = (v) => {
   columnConfigList.value = columnConfigList.value.map(t => {
     if (toggleKeyList.indexOf(t.value) >= 0) {

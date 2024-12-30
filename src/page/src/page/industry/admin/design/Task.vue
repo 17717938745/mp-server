@@ -541,18 +541,18 @@ const defaultColumnConfigList = [
   {value: 'operator', labelKey: 'viewAndEdit', width: 196, type: ValueType.Operator,},
   {value: 'deviceIndex', labelKey: 'index', width: 56,},
   {value: 'deviceIdFormat', originValue: 'deviceId', labelKey: 'device', width: 121,},
-  {value: 'customerShortName', labelKey: 'customerShortName', width: 125},
+  {value: 'customerShortName', labelKey: 'customerShortName', width: 111},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 87},
   {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 56},
-  {value: 'materialNo', labelKey: 'materialNo', width: 146},
+  {value: 'materialNo', labelKey: 'materialNo', width: 111},
   {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189},
-  {value: 'designNumber', labelKey: 'designNumber', width: 154},
+  {value: 'designNumber', labelKey: 'designNumber', width: 121},
   {value: 'orderCount', labelKey: 'orderCount', width: 65},
   {value: 'roughcastExpireDate', labelKey: 'roughcastExpireDate', width: 102},
   {value: 'materialCount', labelKey: 'materialCount', width: 65},
   {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 102},
   {value: 'planReformCount', labelKey: 'planReformCount', width: 65},
-  {value: 'supplierRemark', labelKey: 'supplierRemark', width: 189},
+  {value: 'supplierRemark', labelKey: 'supplierRemark', width: 169},
   {value: 'productCountHour8', labelKey: 'productCountHour8', width: 68},
   {value: 'productCountHour12', labelKey: 'productCountHour12', width: 68},
   {value: 'processWorkingHour', labelKey: 'processWorkingHour', width: 68},
@@ -578,7 +578,7 @@ const defaultColumnConfigList = [
   {
     value: 'materialOrderNoFormat',
     labelKey: 'materialOrderNo',
-    width: 86,
+    width: 75,
     type: ValueType.Link,
     openLink: (d: any) => {
       window.open(`/industry/public/material/index?materialOrderNo=${d.materialOrderNo}`);
@@ -587,7 +587,7 @@ const defaultColumnConfigList = [
   {
     value: 'checkOrderNoFormat',
     labelKey: 'checkOrderNo',
-    width: 103,
+    width: 75,
     type: ValueType.Link,
     openLink: (d: any) => {
       window.open(`/industry/public/material/check?checkOrderNo=${d.checkOrderNo}`);
@@ -949,10 +949,10 @@ Promise.all([
         t.width = 102
         t.type = ValueType.DateEdit
       } else if ('processCount' === t.value) {
-        t.width = 98
+        t.width = 95
         t.type = ValueType.NumberEdit
       } else if ('processProcedure' === t.value) {
-        t.width = 215
+        t.width = 170
         t.type = ValueType.TextEdit
       } else if ('supplierPromiseDoneDate' === t.value) {
         t.width = 265
