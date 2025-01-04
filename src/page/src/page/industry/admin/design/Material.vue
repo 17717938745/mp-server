@@ -808,7 +808,7 @@ if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
     } else if ('chargeCompany' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('productionCount' === t.value) {
-      t.width = 86
+      t.width = 101
       t.type = ValueType.NumberEdit
     }
     return t
