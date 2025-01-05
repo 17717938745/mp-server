@@ -99,8 +99,8 @@ $containerLeftGap: 5px;
     background-color: #409eff;
   }
   .row-red {
-    background-color: #f1f15b;
-    color: #ff0000;
+    background-color: #f1f15b !important;
+    color: #ff0000 !important;
     font-weight: 900;
     font-size: 16px;
   }

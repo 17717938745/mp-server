@@ -229,13 +229,13 @@
       </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
-<!--        <el-button
-            :icon="Plus"
-            @click="handleSaveModal"
-            type="success"
-            :disabled="onlySupplier"
-        >Add
-        </el-button>-->
+        <!--        <el-button
+                    :icon="Plus"
+                    @click="handleSaveModal"
+                    type="success"
+                    :disabled="onlySupplier"
+                >Add
+                </el-button>-->
       </div>
     </div>
     <div>
@@ -346,9 +346,9 @@
           <el-input v-model="formData.designNumber"
                     @change="formData.designNumber = (formData.designNumber || '').toUpperCase()"/>
         </el-form-item>
-<!--        <el-form-item prop="orderCount" :label="store.state.label.orderCount" v-if="taskShow">
-          <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>-->
+        <!--        <el-form-item prop="orderCount" :label="store.state.label.orderCount" v-if="taskShow">
+                  <el-input-number v-model="formData.orderCount" style="width: 60px;" :controls="false" :min="0"/>
+                </el-form-item>-->
         <el-form-item prop="roughcastExpireDate" :label="store.state.label.roughcastExpireDate" v-if="taskShow">
           <el-date-picker
               type="date"
@@ -358,9 +358,9 @@
           >
           </el-date-picker>
         </el-form-item>
-<!--        <el-form-item prop="materialCount" :label="store.state.label.materialCount" v-if="taskShow">
-          <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
-        </el-form-item>-->
+        <!--        <el-form-item prop="materialCount" :label="store.state.label.materialCount" v-if="taskShow">
+                  <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0"/>
+                </el-form-item>-->
         <el-form-item prop="promiseDoneDate" :label="store.state.label.promiseDoneDate" v-if="taskShow">
           <el-date-picker
               type="date"
@@ -807,6 +807,7 @@ const handleLimitChange = (val: number) => {
   handlePage()
 }
 
+let highLightArr = []
 let delayIndex = -1
 const handleShowTypeChange = () => {
   if (showType.value === 0) {
@@ -817,13 +818,14 @@ const handleShowTypeChange = () => {
     columnConfigList.value = supplierManagerColumnValueList.map(k => defaultColumnConfigList.filter(t => k === t.value)[0])
   }
   delayIndex = -1
+  highLightArr.splice(0, highLightArr.length)
   for (let i = 0; i < columnConfigList.value.length; i++) {
     if (columnConfigList.value[i].value === 'delay') {
       delayIndex = i
-      break
+    } else if (columnConfigList.value[i].value === 'orderCount' || columnConfigList.value[i].value === 'planReformCount' || columnConfigList.value[i].value === 'deliverCount' || columnConfigList.value[i].value === 'receiptCount' || columnConfigList.value[i].value === 'scrapCount') {
+      highLightArr.push(i)
     }
   }
-  console.log('delayIndex: ' + delayIndex)
 }
 handleShowTypeChange()
 const handleSaveModal = () => {
@@ -1036,8 +1038,12 @@ const handleTableCellClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.taskId.indexOf('auto-') < 0 && delayIndex >= 0 && columnIndex === delayIndex && row.taskId && row.delay >= 0) {
-    return 'row-red'
+  if (row.taskId.indexOf('auto-') < 0) {
+    if (delayIndex >= 0 && delayIndex === columnIndex && row.taskId && row.delay >= 0) {
+      return 'row-red'
+    } else if (highLightArr.indexOf(columnIndex) >= 0) {
+      return 'row-red'
+    }
   }
   return ''
 }

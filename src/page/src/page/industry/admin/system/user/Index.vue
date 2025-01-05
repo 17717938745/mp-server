@@ -292,7 +292,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'departmentFormat', labelKey: 'department', width: 186,},
   {value: 'name', labelKey: 'chineseName', width: 168,},
   {value: 'userPropertyFormat', labelKey: 'userProperty', width: 168,},
-  {value: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
+  {value: 'scheduleFormat', originValue: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
   {value: 'professionFormat', labelKey: 'profession', width: 432,},
   {value: 'mobile', labelKey: 'mobile', width: 128,},
   {value: 'roleNameList', labelKey: 'role', width: 256, type: ValueType.TagList},
