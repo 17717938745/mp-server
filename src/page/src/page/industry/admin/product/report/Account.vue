@@ -36,7 +36,7 @@
       </el-space>
     </div>
     <view-list
-        idKey="index"
+        idKey="id"
         :columnConfigList="columnConfigList"
         :list="tableData"
     >

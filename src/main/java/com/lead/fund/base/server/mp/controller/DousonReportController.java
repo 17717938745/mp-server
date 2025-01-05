@@ -24,6 +24,7 @@ import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.IdUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.NumberUtil;
 import com.lead.fund.base.server.mp.dao.MaterialDao;
@@ -712,6 +713,7 @@ public class DousonReportController {
                 userDeviceList
                         .stream()
                         .peek(t -> t
+                                .setId(IdUtil.nextIdStr())
                                 .setSalaryFormat(NumberUtil.formatIntTh(t.getSalary()))
                                 .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                                 .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
@@ -871,6 +873,7 @@ public class DousonReportController {
         }
         return new ListResult<>(deviceUserList.stream()
                 .peek(t -> t
+                        .setId(IdUtil.nextIdStr())
                         .setSumDeviceCompletePercentFormat(t.getSumDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                         .setDeviceCompletePercentFormat(t.getDeviceCompletePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")
                         .setSumDeviceUsePercentFormat(t.getSumDeviceUsePercent().multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP) + "%")

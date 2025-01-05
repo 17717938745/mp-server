@@ -22,6 +22,10 @@ public class ReportSummaryAccountResponse implements Serializable {
 
     private static final long serialVersionUID = 5945041243096726180L;
     /**
+     * ID
+     */
+    private String id;
+    /**
      * 序号
      */
     private Integer index;

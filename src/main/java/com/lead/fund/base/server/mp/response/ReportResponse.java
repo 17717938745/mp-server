@@ -24,6 +24,10 @@ public class ReportResponse implements Serializable {
 
     private static final long serialVersionUID = 5945041243096726178L;
     /**
+     * ID
+     */
+    private String id;
+    /**
      * 日报id
      */
     private String reportId;
