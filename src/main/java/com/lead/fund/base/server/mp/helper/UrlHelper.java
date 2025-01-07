@@ -23,4 +23,9 @@ public class UrlHelper {
     public String getUrlPrefix() {
         return urlPrefix;
     }
+
+    public String fullUrl(String url) {
+        url = null == url ? "" : url;
+        return url.startsWith("http:") || url.startsWith("https:") ? url : (urlPrefix + url);
+    }
 }

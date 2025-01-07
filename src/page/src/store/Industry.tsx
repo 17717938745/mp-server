@@ -317,10 +317,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "订单号"
         },
         {
-          "value": "remark",
-          "label": "备注"
-        },
-        {
           "value": "photo",
           "label": "拍照"
         },
@@ -1389,6 +1385,33 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "photoCount",
           "label": "照片数量"
+        },{
+          "value": "inventoryCount",
+          "label": "库存数量"
+        },
+        {
+          "value": "inventoryDate",
+          "label": "库存日期"
+        },
+        {
+          "value": "type",
+          "label": "类型"
+        },
+        {
+          "value": "materialDate",
+          "label": "领料日期"
+        },
+        {
+          "value": "photoDescribe",
+          "label": "图片描述"
+        },
+        {
+          "value": "attachment",
+          "label": "附件"
+        },
+        {
+          "value": "inventoryOutOfPlan",
+          "label": "计划外库存"
         },
         {
           "value": "vocationRecord",
@@ -1799,10 +1822,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "orderNo",
           "label": "Số phiếu"
-        },
-        {
-          "value": "remark",
-          "label": "chú giải"
         },
         {
           "value": "photo",
@@ -2901,7 +2920,35 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "photoCount",
-          "label": "Photo count"
+          "label": "Số lượng hình ảnh"
+        },
+        {
+          "value": "inventoryCount",
+          "label": "số lượng"
+        },
+        {
+          "value": "inventoryDate",
+          "label": "Ngày hàng về"
+        },
+        {
+          "value": "type",
+          "label": "Phân loại hàng"
+        },
+        {
+          "value": "materialDate",
+          "label": "Ngày lĩnh liệu"
+        },
+        {
+          "value": "photoDescribe",
+          "label": "Hình ảnh"
+        },
+        {
+          "value": "attachment",
+          "label": "Đính kèm"
+        },
+        {
+          "value": "inventoryOutOfPlan",
+          "label": "hàng tồn kho ngoài kế hoạch"
         },
         {
           "value": "vocationRecord",
@@ -3054,7 +3101,7 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
 
 // printMultipleText('客户简称\t客户订单号\t客户项次号\t销售订单号\t订单项目号\t物料号\t加工物料描述\t图号\t订单数量\t投产日期\t承诺交期\t毛坯物料号\t毛坯物料描述\t毛坯图号\t领料数量\t炉号\t热批号\t序列号\t欠交数量\tNDE\t装配\t试压\t表面处理\t负责单位\t备注\t排产数量\t排产日期\t领料单号\t报检单号\n' +
 //     'Tên khách hàng\tĐơn đặt hàng khách hàng\t Số hạng mục khách hàng\tĐơn đặt hàng\tSố hạng mục đơn hàng\tMã vật liệu\tMô tả vật liệu\tBản vẽ\tSố lượng đơn hàng\tNgày sản xuất\tNgày sản xuất chịu trách nhiệm nhập kho\tMã vật liệu phôi\tMô tả vật liệu phôi\tBản vẽ phôi\tSố lượng lĩnh liệu\tSố lò nhiệt\tSố lô nhiệt\tSố Serial\tSố lượng còn thiếu\tNDE\tLắp ráp\tThử áp \tXử lý bề mặt\tĐơn vị phụ trách\tGhi chú\tSố lượng sắp xếp sản xuất\tNgày sắp xếp sản xuất\tSố phiếu lĩnh liệu\tSố phiếu nhập kho')
-// printMultipleText('设备|Thiết bị\t客户简称|Tên khách hàng\t销售订单|đơn đặt hàng\t订单项目|số mục hàng\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Bản vẽ\t订单数量|Số lượng đơn hàng\t毛坯到货日期|Ngày phôi về\t领料数量|Số lượng lĩnh liệu\t承诺完成日期|Ngày sản xuất chịu trách nhiệm nhập kho\t计划加工数量|Kế hoạch số lượng gia công\t外协工序备注|Ghi chú công đoạn nhà gia công\t8H班产量/件|Sản lượng của 8h/con\t12小时班产量/件|Sản lượng của 12h/con\t工序工时/件|Thời gian/cái\t下线时间|Ngày SX xong\t是否拖期|Có quá hạn hay không\t已加工数量|Số lượng đã SX\t加工工序|Công đoạn gia công\tNDE|NDE\t装配|Lắp ráp\t试压|Thử áp\t表面处理|Xử lý bề mặt\t剩余|Còn lại\t领料单号|Số phiếu lĩnh liệu\t报检单号|Số phiếu nhập kho\t要求外协完成交期|Ngày yêu cầu Nhà GC giao hàng\t发货数量|Số lượng xuất GC\t发货日期|Ngày xuất\t收货数量|Số lượng nhập\t收货日期|Ngày nhập\t报废数量|Số lượng báo phế\t外协承诺完成时间|Thời gian cam kết giao hàng của nhà GC', '|')
+// printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

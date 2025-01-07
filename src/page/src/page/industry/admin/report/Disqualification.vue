@@ -271,7 +271,7 @@
         <el-form-item v-if="includes(roleCodeList, 'manager')" prop="fineAmount" :label="store.state.label.fineAmount">
           <el-input-number :min="0" v-model="formData.fineAmount"/>
         </el-form-item>
-        <el-form-item v-if="includes(roleCodeList, 'manager')" prop="remark" :label="store.state.label.remark">
+        <el-form-item v-if="includes(roleCodeList, 'manager')" prop="remark" :label="store.state.label.description">
           <el-input v-model="formData.remark"/>
         </el-form-item>
       </el-form>

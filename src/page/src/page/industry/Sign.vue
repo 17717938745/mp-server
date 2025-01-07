@@ -361,6 +361,15 @@ const handleSubmit = (retry: boolean = true) => {
                         "white": false,
                         "showFlag": true,
                       },
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "inventory",
+                        "component": "inventory",
+                        "nameKey": "inventoryOutOfPlan",
+                        "white": false,
+                        "showFlag": true,
+                      },
                     ]
                   },
                   {

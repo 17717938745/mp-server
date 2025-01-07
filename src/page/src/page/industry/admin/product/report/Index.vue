@@ -288,7 +288,7 @@
           :
           <el-input-number v-model="formData.deviceRunningEndMinute" style="width: 60px;" :controls="false" :min="formData.deviceRunningEndHour > formData.deviceRunningStartHour ?  0 : formData.deviceRunningStartMinute" :max="59"/>
         </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.remark">
+        <el-form-item prop="remark" :label="store.state.label.description">
           <el-input v-model="formData.remark"/>
         </el-form-item>
         <el-form-item prop="photoList" :label="store.state.label.photo">

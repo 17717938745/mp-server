@@ -29,6 +29,10 @@ public class EventRequest implements Serializable {
      */
     private String eventId;
     /**
+     * 序号
+     */
+    private String serialNo;
+    /**
      * 活动时间
      */
     private String reportDate;

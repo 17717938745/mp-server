@@ -301,6 +301,16 @@
         >
           Down
         </el-link>
+        <el-link
+            v-if="!(!row.param.deviceId || row.param.taskId.indexOf('auto-') >= 0)"
+            :icon="Sort"
+            @click="handleSort(row.param)"
+            class="mr10"
+            type="info"
+            style="word-break: keep-all;"
+        >
+          Sort
+        </el-link>
       </template>
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
@@ -397,9 +407,13 @@
         <el-form-item prop="processProcedure" :label="store.state.label.processProcedure" v-if="taskShow">
           <el-input v-model="formData.processProcedure" :placeholder="store.state.label.processProcedure"/>
         </el-form-item>
+        <el-form-item prop="supplierDoneDateDiff" :label="`${store.state.label.supplierDoneDate} Diff`">
+          <el-input-number v-model="formData.supplierDoneDateDiff" style="width: 60px;" :controls="false"/>
+        </el-form-item>
         <el-form-item prop="supplierDoneDate" :label="store.state.label.supplierDoneDate" v-if="supplierShow">
           <el-date-picker
               type="date"
+              :disabled="true"
               v-model="formData.supplierDoneDate"
               format="YYYY-MM-DD"
               @change="formData.supplierDoneDate = formatDate(formData.supplierDoneDate, 'yyyy-MM-dd')"
@@ -513,6 +527,22 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog :title="'Sort'" v-model="sortVisible" width="60%" :close-on-click-modal="false">
+      <el-tree
+          style="max-width: 600px"
+          :data="sortList"
+          :allow-drop="handleAllowDrop"
+          draggable
+          default-expand-all
+          node-key="taskId"
+      />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="sortVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="handleSortSave">Confirm</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -521,7 +551,7 @@ import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType,} from '@/store'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Search, UploadFilled, DocumentCopy, ArrowUp, ArrowDown,} from '@element-plus/icons-vue'
+import {Plus, Printer, Search, UploadFilled, DocumentCopy, ArrowUp, ArrowDown, Sort, } from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
@@ -638,6 +668,7 @@ const defaultFormData = {
   surplus: 0,
   materialOrderNo: '',
   checkOrderNo: '',
+  supplierDoneDateDiff: 0,
   supplierDoneDate: '',
   deliverCount: 0,
   deliverDate: '',
@@ -883,6 +914,50 @@ const handleDown = (d) => {
     ElMessage.success('Down success')
     handlePage()
   })
+}
+const sortVisible = ref(false)
+const sortList = ref([])
+const handleAllowDrop = (t, t1, type)=> {
+  if(t.level === t1.level) {
+    if(t.parent.taskId === t1.parent.taskId) {
+      return type === 'prev' || type === 'next'
+    }
+  } else {
+    if(t.level !== 1) {
+      return type === 'inner'
+    } else {
+      return false
+    }
+  }
+}
+const handleSort = (d) => {
+  httpGet(`douson/task/page`, {
+    page: {
+      page: state.query.page.page,
+      limit: 999999,
+    },
+    data: Object.assign({}, /*state.query.data, */{deviceId: d.deviceId,}),
+  }).then(
+      (res: PageResult<typeof state.tableData>) => {
+        sortList.value  = (res.list || []).filter(t=> !(t.taskId.indexOf('auto-') >= 0)).map(t=> {
+          return {
+            taskId: t.taskId,
+            label: `${t.index},${t.customerShortName},${t.saleOrderNo},${t.orderProjectNo},${t.materialNo},${t.supplierDoneDate || '--'}`,
+            children: [],
+          }
+        })
+        sortVisible.value = true
+        ElMessage.success("Query success")
+      }
+  )
+}
+const handleSortSave = () => {
+  httpPutJson(`douson/task/sort`, {taskList: sortList.value,}).then(
+      (res: any) => {
+        sortVisible.value = false
+        handlePage()
+      }
+  )
 }
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {

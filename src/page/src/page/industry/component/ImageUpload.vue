@@ -9,6 +9,7 @@
         :http-request="handleRequest"
         multiple
         :drag="true"
+        :disabled="props.disabled"
     >
       <div>
         <el-icon style="width: 76px; height: 76px">
@@ -28,7 +29,7 @@
           :initial-index="0"
           class="image-view"
       />
-      <el-icon class="close-btn" :size="28" @click="props.photoList.splice(i, 1)">
+      <el-icon v-if="!props.disabled" class="close-btn" :size="28" @click="props.photoList.splice(i, 1)">
         <CircleClose/>
       </el-icon>
     </div>
@@ -47,6 +48,7 @@ import {httpUpload} from '@/util/HttpUtil'
 
 const props = withDefaults(defineProps<PropType>(), {
   maxSize: 4,
+  disabled: false,
 })
 const router = useRouter()
 const route = useRoute()
@@ -60,6 +62,7 @@ interface Image {
 interface PropType {
   photoList: Image[]
   maxSize?: number
+  disabled: boolean
 }
 
 defineExpose({})

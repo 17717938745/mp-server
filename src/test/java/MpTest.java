@@ -1,5 +1,6 @@
 import com.lead.fund.base.common.basic.cons.ds.DatabaseType;
 import com.lead.fund.base.common.database.helper.DdlEntry;
+import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
 import com.lead.fund.base.server.mp.entity.douson.*;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ public class MpTest {
     @Test
     @DisplayName("test database...")
     void database() throws Exception {
-        System.out.println(new DdlEntry("15110").generateDdl(TaskEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(InventoryEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(InventoryAttachmentEntity.class, DatabaseType.MYSQL));
     }
 }

@@ -32,6 +32,10 @@ public class EventResponse implements Serializable {
      */
     private Integer index;
     /**
+     * 序号
+     */
+    private String serialNo;
+    /**
      * 事故ID
      */
     private String eventId;

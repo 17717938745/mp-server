@@ -228,6 +228,7 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 80,},
+  {value: 'serialNo', labelKey: 'serialNo', width: 100,},
   {value: 'reportDate', labelKey: 'date', width: 100,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 151,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 151,},

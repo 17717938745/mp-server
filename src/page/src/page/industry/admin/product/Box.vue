@@ -233,7 +233,7 @@
         <el-form-item prop="orderNo" :label="store.state.label.orderNo">
           <el-input v-model="formData.orderNo" :disabled="true"/>
         </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.remark">
+        <el-form-item prop="remark" :label="store.state.label.description">
           <el-input v-model="formData.remark"
                     :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
           />

@@ -216,6 +216,12 @@ public class TaskEntity extends AbstractAdmin {
     @Size(max = 64, message = "报检单号长度不合法")
     private String checkOrderNo;
     /**
+     * 要求外协完成交期偏移
+     */
+    @FieldRemark(value = "要求外协完成交期偏移")
+    @Size(max = 32, message = "要求外协完成交期偏移长度不合法")
+    private BigDecimal supplierDoneDateDiff;
+    /**
      * 要求外协完成交期
      */
     @FieldRemark(value = "要求外协完成交期")

@@ -117,7 +117,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.remark">
+        <el-form-item prop="remark" :label="store.state.label.description">
           <el-input type="textarea" :rows=4 v-model="formData.remark"/>
         </el-form-item>
         <el-form-item prop="detailDescribe" :label="store.state.label.equipmentDetailDescribe">

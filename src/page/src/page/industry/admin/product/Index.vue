@@ -149,7 +149,7 @@
         <el-form-item prop="runningMinute" :label="store.state.label.runningMinute">
           <el-input-number :min="0" v-model="formData.runningMinute"/>
         </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.remark">
+        <el-form-item prop="remark" :label="store.state.label.description">
           <el-input v-model="formData.remark"/>
         </el-form-item>
         <el-form-item prop="photoList" :label="store.state.label.photo">

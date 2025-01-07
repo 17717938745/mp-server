@@ -34,6 +34,11 @@ public class EventEntity extends AbstractAdministrator {
     @FieldRemark(value = "日期")
     private String reportDate;
     /**
+     * 序号
+     */
+    @FieldRemark(value = "序号")
+    private String serialNo;
+    /**
      * 当事人
      */
     @FieldRemark(value = "当事人")

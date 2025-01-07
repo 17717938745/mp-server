@@ -166,6 +166,10 @@ public class TaskRequest extends AbstractAdmin {
      */
     private String checkOrderNo;
     /**
+     * 要求外协完成交期偏移
+     */
+    private BigDecimal supplierDoneDateDiff;
+    /**
      * 要求外协完成交期
      */
     private String supplierDoneDate;

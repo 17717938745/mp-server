@@ -9,6 +9,7 @@
         :http-request="handleRequest"
         multiple
         :drag="true"
+        :disabled="props.disabled"
     >
       <div>
         <el-icon style="width: 76px; height: 76px">
@@ -24,7 +25,7 @@
       <a
           :href="fullUrl(t.url, '')"
       >{{ t.filename }}</a>
-      <el-icon class="close-btn" :size="28" @click="props.fileList.splice(i, 1)">
+      <el-icon v-if="!props.disabled" class="close-btn" :size="28" @click="props.fileList.splice(i, 1)">
         <CircleClose/>
       </el-icon>
     </div>
@@ -43,6 +44,7 @@ import {httpUpload} from '@/util/HttpUtil'
 
 const props = withDefaults(defineProps<PropType>(), {
   maxSize: 4,
+  disabled: false,
 })
 const router = useRouter()
 const route = useRoute()
@@ -57,6 +59,7 @@ interface File {
 interface PropType {
   fileList: File[]
   maxSize?: number
+  disabled: boolean
 }
 
 defineExpose({})

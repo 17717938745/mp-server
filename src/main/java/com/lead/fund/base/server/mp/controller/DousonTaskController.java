@@ -7,6 +7,7 @@ import static com.lead.fund.base.server.mp.converter.TaskConverter.TASK_INSTANCE
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
@@ -27,6 +28,8 @@ import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
 import com.lead.fund.base.server.mp.mapper.douson.TaskMapper;
 import com.lead.fund.base.server.mp.request.TaskPageRequest;
 import com.lead.fund.base.server.mp.request.TaskRequest;
+import com.lead.fund.base.server.mp.request.TaskSortData;
+import com.lead.fund.base.server.mp.request.TaskSortRequest;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import com.lead.fund.base.server.mp.response.TaskResponse;
 import jakarta.annotation.Resource;
@@ -102,6 +105,29 @@ public class DousonTaskController {
                         TASK_INSTANCE.task(request)
                 )
         );
+    }
+
+    /**
+     * 生产计划排序
+     *
+     * @param deviceId 设备id
+     * @param request  {@link TaskRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("sort")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result sort(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody TaskSortRequest request
+    ) {
+        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        for (TaskSortData t : request.getTaskList()) {
+            taskDao.update(new LambdaUpdateWrapper<TaskEntity>()
+                    .set(TaskEntity::getSorter, atomicInteger.getAndAdd(1))
+                    .eq(TaskEntity::getId, t.getTaskId())
+            );
+        }
+        return new Result();
     }
 
     /**

@@ -50,6 +50,7 @@ import com.lead.fund.base.server.mp.dao.DisqualificationOrderDao;
 import com.lead.fund.base.server.mp.dao.DisqualificationOrderPhotoDao;
 import com.lead.fund.base.server.mp.dao.EquipmentAttachmentDao;
 import com.lead.fund.base.server.mp.dao.EventAttachmentDao;
+import com.lead.fund.base.server.mp.dao.EventDao;
 import com.lead.fund.base.server.mp.dao.ImproveAttachmentDao;
 import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
 import com.lead.fund.base.server.mp.dao.OrderDao;
@@ -342,6 +343,8 @@ public class DousonController {
     private ComputerPhotoDao computerPhotoDao;
     @Resource
     private EventMapper eventMapper;
+    @Resource
+    private EventDao eventDao;
     @Resource
     private QualityMapper qualityMapper;
     @Resource
@@ -1766,9 +1769,11 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         EventEntity e;
         eventMapper.insert(e = (EventEntity) INDUSTRY_INSTANCE.event(request)
+                .setSerialNo(eventDao.nextSerialNo())
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
                 .setCreator(u.getUserId())
-                .setModifier(u.getUserId()));
+                .setModifier(u.getUserId()))
+        ;
         mergeRelevance(request, e);
         return new Result();
     }
