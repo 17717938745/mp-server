@@ -60,7 +60,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'specification', labelKey: 'specification', width: 100,},
   {value: 'date', labelKey: 'date', width: 100,},
   {value: 'useUserFormat', labelKey: 'useUser', width: 100,},
-  {value: 'remark', labelKey: 'remark', width: 100,},
+  {value: 'remark', labelKey: 'description', width: 100,},
   {value: 'detailDescribe', labelKey: 'equipmentDetailDescribe', width: 100,},
   {value: 'gasolineType', labelKey: 'gasolineType', width: 100,},
   {value: 'chargeUserFormat', labelKey: 'chargeUser', width: 100,},

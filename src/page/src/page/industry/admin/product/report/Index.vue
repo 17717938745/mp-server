@@ -742,7 +742,7 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {
     value: 'remark',
-    labelKey: 'remark',
+    labelKey: 'description',
     width: 192,
     align: 'center',
   },

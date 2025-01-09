@@ -235,7 +235,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'productStandMinute', labelKey: 'productStandMinute', width: 64, type: ValueType.HighLight,},
   {value: 'countHour8', labelKey: 'countHour8', width: 96},
   {value: 'countHour12', labelKey: 'countHour12', width: 96},
-  {value: 'remark', labelKey: 'remark', width: 269, align: 'left',},
+  {value: 'remark', labelKey: 'description', width: 269, align: 'left',},
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
 ])
 const defaultFormData = {

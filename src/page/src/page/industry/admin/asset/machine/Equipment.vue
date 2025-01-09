@@ -211,7 +211,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'specification', labelKey: 'specification', width: 265,},
   {value: 'date', labelKey: 'date', width: 100,},
   {value: 'useUserFormat', labelKey: 'useUser', width: 289,},
-  {value: 'remark', labelKey: 'remark', width: 232, showOverflow: true,},
+  {value: 'remark', labelKey: 'description', width: 232, showOverflow: true,},
   {value: 'detailDescribe', labelKey: 'equipmentDetailDescribe', width: 232, showOverflow: true,},
   {value: 'gasolineType', labelKey: 'gasolineType', width: 187, showOverflow: true,},
   {value: 'chargeUserFormat', labelKey: 'chargeUser', width: 135, showOverflow: true,},

@@ -83,7 +83,7 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'fineAmountFormat', labelKey: 'fineAmount', width: 87,},
   {
-    value: 'remark', labelKey: 'remark', width: 256,
+    value: 'remark', labelKey: 'description', width: 256,
   },
 ])
 const data = ref({})

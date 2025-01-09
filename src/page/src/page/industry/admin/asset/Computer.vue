@@ -346,7 +346,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'detailedFormat', labelKey: 'detailed', width: 96},
   {value: 'productPlace', labelKey: 'productPlace', width: 96},
   {value: 'supplier', labelKey: 'supplier', width: 96},
-  {value: 'remark', labelKey: 'remark', width: 169, showOverflow: true,},
+  {value: 'remark', labelKey: 'description', width: 169, showOverflow: true,},
   {value: 'photoList', labelKey: 'photo', type: ValueType.Image, width: 96},
 ])
 if (!includes(roleCodeList, 'admin') && !includes(roleCodeList, 'manager')) {

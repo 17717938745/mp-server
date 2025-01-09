@@ -490,7 +490,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'unitWeight', labelKey: 'unitWeight', width: 50,},
   {value: 'eachBoxWeight', labelKey: 'eachBoxWeight', width: 73,},
   {value: 'orderNo', labelKey: 'orderNo', width: 82,},
-  {value: 'remark', labelKey: 'remark', width: 270, type: ValueType.FixedText,},
+  {value: 'remark', labelKey: 'description', width: 270, type: ValueType.FixedText,},
   {value: 'sendCount', labelKey: 'sendCount', width: 98, type: ValueType.NumberEdit,},
   {value: 'sendDate', labelKey: 'sendDate', width: 108, type: ValueType.DateEdit,},
   {value: 'photoList', labelKey: 'photoList', width: 269, type: ValueType.Image,},
