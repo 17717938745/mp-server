@@ -77,6 +77,7 @@
             :value="false"
         />
       </el-select>
+      <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -100,6 +101,7 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detail-link="false"
+        :handleTableCellClassName="handleTableCellClassName"
     >
       <template #operator="row">
         <el-link
@@ -268,6 +270,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'planCompleteTime', label: store.state.label.planCompleteTime, labelKey: 'planCompleteTime', width: 102},
   {value: 'awardAmountFormat', label: store.state.label.awardAmount, labelKey: 'awardAmount', width: 87},
   {value: 'valid', label: store.state.label.valid, labelKey: 'valid', width: 68, type: ValueType.Valid,},
+  {value: 'serialNo', labelKey: 'templateOrderNo', width: 100,},
   {value: 'beforePhotoList', label: store.state.label.photoList, labelKey: 'beforePlanThreePhoto', width: 269, type: ValueType.Image,},
   {value: 'afterPhotoList', label: store.state.label.photoList, labelKey: 'afterPlanThreePhoto', width: 269, type: ValueType.Image,},
   {value: 'attachmentList', label: store.state.label.photoList, labelKey: 'supportAttachment', width: 269, type: ValueType.Attachment,},
@@ -302,6 +305,7 @@ const state = reactive({
       optimizeType: '',
       existsProblem: '',
       username: '',
+      serialNo: '',
       responsiblePerson: '',
       valid: false,
     },
@@ -395,6 +399,21 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (serialNoIndex >= 0 && serialNoIndex === columnIndex) {
+    return 'row-red'
+  }
+  return ''
+}
+let serialNoIndex = -1
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -404,11 +423,14 @@ httpGet(`system/user/config/list`, {}).then(
           label: t.name,
         }
       })
-      columnConfigList.value = columnConfigList.value.map((t: any) => {
+      columnConfigList.value = columnConfigList.value.map((t: any, i) => {
         if ('responsiblePersonFormat' === t.value) {
           t.type = ValueType.SelectEdit
           t.width = 234;
           t.optionList = userOptionList.value
+        }
+        if (t.value === 'serialNo') {
+          serialNoIndex = i
         }
         return t
       })

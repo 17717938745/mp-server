@@ -80,4 +80,8 @@ public class QualityEntity extends AbstractAdministrator {
      */
     @FieldRemark(value = "是否有效", defaultValue = "0")
     private Boolean valid;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

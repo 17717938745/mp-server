@@ -103,4 +103,8 @@ public class TroubleEntity extends AbstractAdministrator {
 //    @FieldRemark(value = "奖惩金额")
 //    @Size(max = 64, message = "奖惩金额")
 //    private BigDecimal opinionAmount;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

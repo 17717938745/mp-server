@@ -106,7 +106,19 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="type" :label="store.state.label.type">
-          <el-input v-model="formData.type"/>
+          <el-select v-model="formData.type"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.type"
+          >
+            <el-option
+                v-for="item in config.inventoryOutOfPlanTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item prop="description" :label="store.state.label.description">
           <el-input v-model="formData.description"/>
@@ -156,18 +168,18 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const defaultColumnConfigList = [
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 213, type: ValueType.Operator,},
-  {value: 'index', labelKey: 'index', width: 80},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 158, type: ValueType.Operator,},
+  {value: 'index', labelKey: 'index', width: 50},
   {value: 'materialNo', labelKey: 'materialNo', width: 163},
-  {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
-  {value: 'designNumber', labelKey: 'designNumber', width: 160},
-  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 96},
+  {value: 'materialDescription', labelKey: 'materialDescription', width: 210},
+  {value: 'designNumber', labelKey: 'designNumber', width: 147},
+  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56},
   {value: 'inventoryDate', labelKey: 'inventoryDate', width: 102},
-  {value: 'type', labelKey: 'type', width: 189},
+  {value: 'typeFormat', labelKey: 'type', width: 89},
   {value: 'description', labelKey: 'description', width: 189, type: ValueType.TextEdit,},
-  {value: 'materialCount', labelKey: 'materialCount', width: 95,},
-  {value: 'materialDate', labelKey: 'materialDate', width: 189},
-  {value: 'photoCount', labelKey: 'photoCount', width: 95},
+  {value: 'materialCount', labelKey: 'materialCount', width: 76,},
+  {value: 'materialDate', labelKey: 'materialDate', width: 102},
+  {value: 'photoCount', labelKey: 'photoCount', width: 56},
   {value: 'photoList', labelKey: 'photoDescribe', width: 189, type: ValueType.Image,},
   {value: 'attachmentList', labelKey: 'attachment', width: 189, type: ValueType.Attachment,},
 ]
@@ -226,7 +238,9 @@ const state = reactive({
   tableData: new Array<any>(),
   total: 0,
   formData: Object.assign({}, defaultFormData),
-  config: {},
+  config: {
+    inventoryOutOfPlanTypeList: []
+  },
   formSave: true,
   formVisible: false,
   formRuleList: {
@@ -323,7 +337,7 @@ const editMore = includes(roleCodeList, 'inventoryManager')
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
-      'device',
+      'inventoryOutOfPlanType',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -337,7 +351,7 @@ Promise.all([
   })
 
   if (editMore) {
-    columnConfigList.value = defaultColumnConfigList.value.map(t => {
+    columnConfigList.value = defaultColumnConfigList.map(t => {
       if ('materialCount' === t.value) {
         t.type = ValueType.NumberEdit
         t.width = 95

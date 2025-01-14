@@ -165,4 +165,8 @@ public class ParamResponse implements Serializable {
      * 请假类型
      */
     private List<ParamConfigResponse> vocationTypeList;
+    /**
+     * 计划外库存类型
+     */
+    private List<ParamConfigResponse> inventoryOutOfPlanTypeList;
 }

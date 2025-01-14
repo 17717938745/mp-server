@@ -12,6 +12,7 @@
             </el-icon>
         </span>
       </h1>
+      <div class="douson-serial-no">{{ data.serialNo}}</div>
       <el-descriptions
           :column="1"
           style="width: 100%;"

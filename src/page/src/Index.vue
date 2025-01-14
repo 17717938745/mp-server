@@ -133,6 +133,16 @@ body {
     height: 100vh;
     overflow: auto;
 
+    .douson-serial-no {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      font-size: 16px;
+      color: #ff0000;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
     .douson-container {
       border: 2px solid $print_border_color;
     }
@@ -176,6 +186,7 @@ body {
 
     .douson-table > .douson-column {
       border-bottom: 2px solid $print_border_color;
+
       &:last-child {
         border: none;
       }

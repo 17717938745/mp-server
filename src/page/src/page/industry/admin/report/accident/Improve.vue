@@ -61,6 +61,7 @@
             :value="false"
         />
       </el-select>
+      <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -78,6 +79,7 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
+        :handleTableCellClassName="handleTableCellClassName"
     >
       <template #operator="row">
         <el-link
@@ -176,9 +178,9 @@
         <el-form-item prop="improveFileList" :label="`${store.state.label.improveImproveFile}(${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
           <file-upload :fileList="formData.improveFileList" :maxSize="Number(`${(formRuleList['improveFileList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
         </el-form-item>
-<!--        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
-          <el-input type="textarea" :rows=4 v-model="formData.improveDescribe"/>
-        </el-form-item>-->
+        <!--        <el-form-item prop="improveDescribe" :label="store.state.label.improveDescribe">
+                  <el-input type="textarea" :rows=4 v-model="formData.improveDescribe"/>
+                </el-form-item>-->
         <el-form-item prop="opinion" :label="store.state.label.improveOpinion">
           <el-input type="textarea" :rows=4 v-model="formData.opinion"/>
         </el-form-item>
@@ -252,6 +254,7 @@ const columnConfigList = ref<ViewConfig[]>([
   // {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'improveOpinion', width: 128,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
+  {value: 'serialNo', labelKey: 'templateOrderNo', width: 100,},
   {value: 'photoList', labelKey: 'improvePhoto', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'improveFile', width: 128, type: ValueType.Attachment,},
   {value: 'improvePhotoList', labelKey: 'improveImprovePhoto', width: 128, type: ValueType.Image,},
@@ -269,6 +272,21 @@ const handleTableRowClassName = ({
   }
   return ''
 }
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (serialNoIndex >= 0 && serialNoIndex === columnIndex) {
+    return 'row-red'
+  }
+  return ''
+}
+
 const handleShowPrintDetail = (d: any) => {
   window.open(`/industry/public/improve?improveId=${d.param.improveId}`)
 }
@@ -303,6 +321,7 @@ const state = reactive({
       userId: '',
       accidentDescribe: '',
       reason: '',
+      serialNo: '',
       reasonList: [],
       valid: false,
     },
@@ -345,6 +364,7 @@ httpGet('douson/config', {
 }).then(r => {
   state.config = r.data
 })
+let serialNoIndex = -1
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -354,7 +374,10 @@ httpGet(`system/user/config/list`, {}).then(
           label: t.name,
         }
       })
-      columnConfigList.value = columnConfigList.value.map(t => {
+      columnConfigList.value = columnConfigList.value.map((t, i) => {
+        if (t.value === 'serialNo') {
+          serialNoIndex = i
+        }
         return t
       })
       handlePage()

@@ -57,6 +57,7 @@ public class InventoryResponse extends AbstractAdmin {
      * 类型
      */
     private String type;
+    private String typeFormat;
     /**
      * 备注
      */

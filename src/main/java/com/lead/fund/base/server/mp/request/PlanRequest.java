@@ -106,4 +106,8 @@ public class PlanRequest implements Serializable {
      * 附件列表
      */
     private List<FileModel> attachmentList;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

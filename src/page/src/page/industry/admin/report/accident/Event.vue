@@ -61,6 +61,7 @@
             :value="false"
         />
       </el-select>
+      <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -69,6 +70,7 @@
     <view-list
         idKey="eventId"
         :columnConfigList="columnConfigList"
+        :handleTableCellClassName="handleTableCellClassName"
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
@@ -228,7 +230,6 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 80,},
-  {value: 'serialNo', labelKey: 'serialNo', width: 100,},
   {value: 'reportDate', labelKey: 'date', width: 100,},
   {value: 'userIdFormat', labelKey: 'partyUser', width: 151,},
   {value: 'directLeaderFormat', labelKey: 'directLeader', width: 151,},
@@ -238,11 +239,28 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'eventOpinion', width: 221,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
+  {value: 'serialNo', labelKey: 'templateOrderNo', width: 100,},
   {value: 'photoList', labelKey: 'eventPhoto', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'eventFile', width: 128, type: ValueType.Attachment,},
   {value: 'improvePhotoList', labelKey: 'improveEventPhoto', width: 128, type: ValueType.Image,},
   {value: 'improveFileList', labelKey: 'improveEventFile', width: 128, type: ValueType.Attachment,},
 ])
+
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (serialNoIndex >= 0 && serialNoIndex === columnIndex) {
+    return 'row-red'
+  }
+  return ''
+}
+
 const handleTableRowClassName = ({
                                    row,
                                    rowIndex,
@@ -286,6 +304,7 @@ const state = reactive({
       userId: '',
       accidentDescribe: '',
       reason: '',
+      serialNo: '',
       reasonList: [],
       valid: false,
     },
@@ -326,6 +345,7 @@ httpGet('douson/config', {
 }).then(r => {
   state.config = r.data
 })
+let serialNoIndex = -1
 httpGet(`system/user/config/list`, {}).then(
     (res: ListResult<any>) => {
       state.userConfigList = res.list || []
@@ -335,13 +355,16 @@ httpGet(`system/user/config/list`, {}).then(
           label: t.name,
         }
       })
-      columnConfigList.value = columnConfigList.value.map(t => {
+      columnConfigList.value = columnConfigList.value.map((t, i) => {
         if ('0' === t.value) {
           (t.children || []).forEach(t1 => {
             if ('dutyPerson' === t1.value || 'groupLeader' === t1.value || 'chargePerson' === t1.value || 'manager' === t1.value) {
               t1.optionList = userOptionList.value
             }
           })
+        }
+        if (t.value === 'serialNo') {
+          serialNoIndex = i
         }
         return t
       })

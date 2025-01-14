@@ -85,4 +85,8 @@ public class CrashEntity extends AbstractAdministrator {
      */
     @FieldRemark(value = "维修ID")
     private String equipmentId;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

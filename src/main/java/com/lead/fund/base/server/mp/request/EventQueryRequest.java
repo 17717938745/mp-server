@@ -81,4 +81,8 @@ public class EventQueryRequest implements Serializable {
      * 问题描述
      */
     private String accidentDescribe;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

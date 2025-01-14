@@ -96,4 +96,8 @@ public class PlanResponse extends AbstractAdministratorModel {
      * 附件列表
      */
     private List<FileModel> attachmentList = new ArrayList<>();
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

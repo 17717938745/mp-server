@@ -62,6 +62,7 @@
             :value="false"
         />
       </el-select>
+      <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -79,6 +80,7 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
+        :handleTableCellClassName="handleTableCellClassName"
     >
       <template #operator="row">
         <el-link
@@ -246,6 +248,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'qualityOpinion', width: 221,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
+  {value: 'serialNo', labelKey: 'templateOrderNo', width: 100,},
   {value: 'photoList', labelKey: 'qualityPhoto', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'qualityFile', width: 128, type: ValueType.Attachment,},
   {value: 'improvePhotoList', labelKey: 'improveQualityPhoto', width: 128, type: ValueType.Image,},
@@ -260,6 +263,20 @@ const handleTableRowClassName = ({
 }) => {
   if (row.valid) {
     return 'row-done'
+  }
+  return ''
+}
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (serialNoIndex >= 0 && serialNoIndex === columnIndex) {
+    return 'row-red'
   }
   return ''
 }
@@ -294,6 +311,7 @@ const state = reactive({
       accidentDescribe: '',
       userId: '',
       reason: '',
+      serialNo: '',
       reasonList: [],
       valid: false,
     },
@@ -327,6 +345,7 @@ const state = reactive({
   },
 })
 
+let serialNoIndex = -1
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
@@ -342,8 +361,8 @@ Promise.all([
       label: t.name,
     }
   })
-  if (includes(roleCodeList, 'gauger')) {
-    columnConfigList.value = columnConfigList.value.map((t: any) => {
+  columnConfigList.value = columnConfigList.value.map((t: any, i) => {
+    if (includes(roleCodeList, 'gauger')) {
       if ('0' === t.value) {
         (t.children || []).forEach((t1: any) => {
           if ('dutyPerson' === t1.value || 'groupLeader' === t1.value || 'chargePerson' === t1.value || 'manager' === t1.value) {
@@ -351,9 +370,12 @@ Promise.all([
           }
         })
       }
-      return t
-    })
-  }
+    }
+    if (t.value === 'serialNo') {
+      serialNoIndex = i
+    }
+    return t
+  })
   handlePage()
 })
 const handlePage = () => {
@@ -427,10 +449,10 @@ const handleDelete = (row: any) => {
     type: 'warning',
   }).then(() => {
     httpDelete('douson/admin/quality', {qualityId: row.qualityId})
-        .then(() => {
-          ElMessage.success('Delete success')
-          handlePage()
-        })
+    .then(() => {
+      ElMessage.success('Delete success')
+      handlePage()
+    })
   })
 }
 const handleDateTimeChange = () => {

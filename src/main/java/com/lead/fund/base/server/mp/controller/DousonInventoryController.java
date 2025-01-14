@@ -15,6 +15,7 @@ import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.server.mp.dao.InventoryAttachmentDao;
 import com.lead.fund.base.server.mp.dao.InventoryDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
@@ -209,13 +210,13 @@ public class DousonInventoryController {
                         DatabaseUtil.or(new LambdaQueryWrapper<>(), rl.stream().map(InventoryResponse::getInventoryId).collect(Collectors.toList()), (lam, l) -> lam.in(InventoryAttachmentEntity::getInventoryId, l))
                 ).stream()
                 .collect(Collectors.groupingBy(InventoryAttachmentEntity::getInventoryId));
-//        MultitaskUtil.supplementList(
-//                rl.stream().filter(t -> isNotBlank(t.getDeviceId())).collect(Collectors.toList()),
-//                InventoryResponse::getDeviceId,
-//                l -> deviceMapper.selectList(DatabaseUtil.or(new LambdaQueryWrapper<>(), l, (lam, ll) -> lam.in(DeviceEntity::getId, ll))),
-//                (t, r) -> t.getDeviceId().equals(r.getId()),
-//                (t, r) -> t.setDeviceIdFormat(r.getDeviceName())
-//        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getType())).collect(Collectors.toList()),
+                InventoryResponse::getType,
+                l -> paramDao.listByCategoryId("inventoryOutOfPlanType"),
+                (t, r) -> t.getType().equals(r.getValue()),
+                (t, r) -> t.setTypeFormat(r.getLabel())
+        );
         for (InventoryResponse t : rl) {
             t.setPhotoList(am.getOrDefault(t.getInventoryId(), new ArrayList<>())
                     .stream().filter(tt -> "0".equals(tt.getAttachmentCategory()) && "0".equals(tt.getAttachmentType()))
@@ -253,7 +254,7 @@ public class DousonInventoryController {
             @ModelAttribute InventoryPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "inventoryManager".equals(t.getRoleCode()) || "inventoryView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "inventoryManager".equals(t.getRoleCode()) || "inventoryView".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
             return new PageResult<>(0, new ArrayList<>());
         }
         final PageResult<InventoryEntity> pr = DatabaseUtil.page(request, this::inventoryList);

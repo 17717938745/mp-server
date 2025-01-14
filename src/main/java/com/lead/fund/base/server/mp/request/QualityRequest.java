@@ -96,4 +96,8 @@ public class QualityRequest implements Serializable {
      * 改善后的文件列表
      */
     private List<FileModel> improveFileList = new ArrayList<>();
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

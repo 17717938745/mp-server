@@ -16,4 +16,5 @@ import java.util.List;
  */
 public interface PlanDao extends IService<PlanEntity> {
 
+    String nextSerialNo();
 }

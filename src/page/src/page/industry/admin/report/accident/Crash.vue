@@ -74,6 +74,7 @@
             :value="false"
         />
       </el-select>
+      <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>
@@ -91,6 +92,7 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detailLink="false"
+        :handleTableCellClassName="handleTableCellClassName"
     >
       <template #operator="row">
         <el-link
@@ -233,6 +235,20 @@ const activeNames = ref(['0'])
 const handleChange = (val: string[]) => {
   console.log(`collapse change: ${val}`)
 }
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (serialNoIndex >= 0 && serialNoIndex === columnIndex) {
+    return 'row-red'
+  }
+  return ''
+}
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {
@@ -259,6 +275,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'improveDescribe', labelKey: 'improveDescribe', width: 276, showOverflow: true,},
   {value: 'opinion', labelKey: 'qualityOpinion', width: 221,},
   {value: 'valid', labelKey: 'valid', width: 100, type: ValueType.Valid},
+  {value: 'serialNo', labelKey: 'templateOrderNo', width: 100,},
   {value: 'photoList', labelKey: 'qualityPhoto', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'qualityFile', width: 128, type: ValueType.Attachment,},
 ])
@@ -308,6 +325,7 @@ const state = reactive({
       equipmentId: '',
       accidentDescribe: '',
       reason: '',
+      serialNo: '',
       reasonList: [],
       valid: false,
     },
@@ -337,6 +355,7 @@ const state = reactive({
   },
 })
 
+let serialNoIndex = -1
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
@@ -352,6 +371,12 @@ Promise.all([
       value: t.userId,
       label: t.name,
     }
+  })
+  columnConfigList.value = columnConfigList.value.map((t, i) => {
+    if (t.value === 'serialNo') {
+      serialNoIndex = i
+    }
+    return t
   })
   handlePage()
 })

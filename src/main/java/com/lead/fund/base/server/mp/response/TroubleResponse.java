@@ -101,4 +101,8 @@ public class TroubleResponse implements Serializable {
      * 刀具描述
      */
     private String toolDescribe;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

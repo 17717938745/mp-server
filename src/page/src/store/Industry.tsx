@@ -1414,6 +1414,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "计划外库存"
         },
         {
+          "value": "inventoryOutOfPlanType",
+          "label": "计划外库存"
+        },
+        {
           "value": "vocationRecord",
           "label": "请假记录"
         },
@@ -1593,11 +1597,11 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "templateOrderNo",
-          "label": "Số phiếu"
+          "label": "Số đơn"
         },
         {
           "value": "meetRequirement",
-          "label": " có đáp ứng  yêu cầu không?"
+          "label": "có đáp ứng  yêu cầu không?"
         },
         {
           "value": "templateManage",

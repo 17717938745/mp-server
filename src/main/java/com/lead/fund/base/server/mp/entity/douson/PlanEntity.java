@@ -83,4 +83,8 @@ public class PlanEntity extends AbstractAdmin {
      */
     @FieldRemark(value = "结案")
     private Boolean valid;
+    /**
+     * 序号（单号）
+     */
+    private String serialNo;
 }

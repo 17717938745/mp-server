@@ -375,6 +375,15 @@ const paramCategoryGroupList = [
       },
     ],
   },
+  {
+    labelKey: 'inventoryOutOfPlanType',
+    paramCategoryIdOptionList: [
+      {
+        value: 'inventoryOutOfPlanType',
+        label: store.state.label.inventoryOutOfPlanType,
+      },
+    ],
+  },
 ]
 
 const handleFormatValue = (val: any) => {

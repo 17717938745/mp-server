@@ -44,6 +44,7 @@ import com.lead.fund.base.server.mp.dao.BoxFlagSerialNoDao;
 import com.lead.fund.base.server.mp.dao.ComputerDao;
 import com.lead.fund.base.server.mp.dao.ComputerPhotoDao;
 import com.lead.fund.base.server.mp.dao.CrashAttachmentDao;
+import com.lead.fund.base.server.mp.dao.CrashDao;
 import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerDao;
 import com.lead.fund.base.server.mp.dao.DeviceCheckLedgerPhotoDao;
 import com.lead.fund.base.server.mp.dao.DisqualificationOrderDao;
@@ -52,6 +53,7 @@ import com.lead.fund.base.server.mp.dao.EquipmentAttachmentDao;
 import com.lead.fund.base.server.mp.dao.EventAttachmentDao;
 import com.lead.fund.base.server.mp.dao.EventDao;
 import com.lead.fund.base.server.mp.dao.ImproveAttachmentDao;
+import com.lead.fund.base.server.mp.dao.ImproveDao;
 import com.lead.fund.base.server.mp.dao.MaintainAttachmentDao;
 import com.lead.fund.base.server.mp.dao.OrderDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
@@ -60,11 +62,13 @@ import com.lead.fund.base.server.mp.dao.PlanDao;
 import com.lead.fund.base.server.mp.dao.PlanPhotoDao;
 import com.lead.fund.base.server.mp.dao.ProductPhotoDao;
 import com.lead.fund.base.server.mp.dao.QualityAttachmentDao;
+import com.lead.fund.base.server.mp.dao.QualityDao;
 import com.lead.fund.base.server.mp.dao.ReportPhotoDao;
 import com.lead.fund.base.server.mp.dao.ReportSerialNoDao;
 import com.lead.fund.base.server.mp.dao.TemplateDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
+import com.lead.fund.base.server.mp.dao.TroubleDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
@@ -326,8 +330,6 @@ public class DousonController {
     @Resource
     private DisqualificationOrderPhotoDao disqualificationOrderPhotoDao;
     @Resource
-    private PlanDao planDao;
-    @Resource
     private PlanPhotoDao planPhotoDao;
     @Resource
     private PlanAttachmentDao planAttachmentDao;
@@ -345,6 +347,16 @@ public class DousonController {
     private EventMapper eventMapper;
     @Resource
     private EventDao eventDao;
+    @Resource
+    private ImproveDao improveDao;
+    @Resource
+    private QualityDao qualityDao;
+    @Resource
+    private CrashDao crashDao;
+    @Resource
+    private TroubleDao troubleDao;
+    @Resource
+    private PlanDao planDao;
     @Resource
     private QualityMapper qualityMapper;
     @Resource
@@ -463,6 +475,7 @@ public class DousonController {
                 case "crashReason" -> builder.crashReasonList(paramDao.listByCategoryId(categoryId));
                 case "troubleReason" -> builder.troubleReasonList(paramDao.listByCategoryId(categoryId));
                 case "vocationType" -> builder.vocationTypeList(paramDao.listByCategoryId(categoryId));
+                case "inventoryOutOfPlanType" -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -1877,6 +1890,9 @@ public class DousonController {
         if (null != request.getValid()) {
             lambda.eq(EventEntity::getValid, request.getValid());
         }
+        if (isNotBlank(request.getSerialNo())) {
+            lambda.like(EventEntity::getSerialNo, request.getSerialNo());
+        }
         return eventMapper.selectList(lambda.orderByDesc(EventEntity::getReportDate));
     }
 
@@ -2029,6 +2045,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         QualityEntity e;
         qualityMapper.insert(e = (QualityEntity) INDUSTRY_INSTANCE.quality(request)
+                .setSerialNo(qualityDao.nextSerialNo())
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
@@ -2134,6 +2151,9 @@ public class DousonController {
         }
         if (null != request.getValid()) {
             lambda.eq(QualityEntity::getValid, request.getValid());
+        }
+        if (isNotBlank(request.getSerialNo())) {
+            lambda.like(QualityEntity::getSerialNo, request.getSerialNo());
         }
         return qualityMapper.selectList(lambda.orderByDesc(QualityEntity::getReportDate));
     }
@@ -2277,6 +2297,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         CrashEntity e;
         crashMapper.insert(e = (CrashEntity) INDUSTRY_INSTANCE.crash(request)
+                .setSerialNo(crashDao.nextSerialNo())
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
                 .setUserId("," + String.join(",", request.getUserIdList()) + ",")
                 .setCreator(u.getUserId())
@@ -2387,6 +2408,9 @@ public class DousonController {
         }
         if (null != request.getValid()) {
             lambda.eq(CrashEntity::getValid, request.getValid());
+        }
+        if (isNotBlank(request.getSerialNo())) {
+            lambda.like(CrashEntity::getSerialNo, request.getSerialNo());
         }
         return crashMapper.selectList(lambda.orderByDesc(CrashEntity::getReportDate));
     }
@@ -2546,6 +2570,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         TroubleEntity e;
         troubleMapper.insert(e = (TroubleEntity) INDUSTRY_INSTANCE.trouble(request)
+                .setSerialNo(troubleDao.nextSerialNo())
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId()));
@@ -2651,6 +2676,9 @@ public class DousonController {
         }
         if (null != request.getValid()) {
             lambda.eq(TroubleEntity::getValid, request.getValid());
+        }
+        if (isNotBlank(request.getSerialNo())) {
+            lambda.like(TroubleEntity::getSerialNo, request.getSerialNo());
         }
         return troubleMapper.selectList(lambda.orderByDesc(TroubleEntity::getReportDate));
     }
@@ -2806,6 +2834,7 @@ public class DousonController {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         ImproveEntity e;
         improveMapper.insert(e = (ImproveEntity) INDUSTRY_INSTANCE.improve(request)
+                .setSerialNo(improveDao.nextSerialNo())
                 .setReason("," + String.join(",", request.getReasonList()) + ",")
                 .setUserId("," + String.join(",", request.getUserIdList()) + ",")
                 .setCreator(u.getUserId())
@@ -2910,6 +2939,9 @@ public class DousonController {
         }
         if (null != request.getValid()) {
             lambda.eq(ImproveEntity::getValid, request.getValid());
+        }
+        if (isNotBlank(request.getSerialNo())) {
+            lambda.like(ImproveEntity::getSerialNo, request.getSerialNo());
         }
         return improveMapper.selectList(lambda.orderByDesc(ImproveEntity::getReportDate));
     }
@@ -4452,6 +4484,7 @@ public class DousonController {
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         PlanEntity e = (PlanEntity) INDUSTRY_INSTANCE.plan(request)
+                .setSerialNo(planDao.nextSerialNo())
                 .setCreator(u.getUserId())
                 .setModifier(u.getUserId());
         planDao.save(e);
@@ -4555,6 +4588,9 @@ public class DousonController {
                     lambdaTemp.eq(PlanEntity::getValid, false).or(true, (lam) -> lam.isNull(PlanEntity::getValid));
                 });
             }
+        }
+        if (isNotBlank(d.getSerialNo())) {
+            lambda.like(PlanEntity::getSerialNo, d.getSerialNo());
         }
         return planDao.list(lambda.orderByDesc(PlanEntity::getCreateTime));
     }
