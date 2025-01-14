@@ -176,7 +176,7 @@ const defaultColumnConfigList = [
   {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56},
   {value: 'inventoryDate', labelKey: 'inventoryDate', width: 102},
   {value: 'typeFormat', labelKey: 'type', width: 89},
-  {value: 'description', labelKey: 'description', width: 189, type: ValueType.TextEdit,},
+  {value: 'description', labelKey: 'description', width: 189,},
   {value: 'materialCount', labelKey: 'materialCount', width: 76,},
   {value: 'materialDate', labelKey: 'materialDate', width: 102},
   {value: 'photoCount', labelKey: 'photoCount', width: 56},
