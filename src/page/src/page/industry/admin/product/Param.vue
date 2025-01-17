@@ -380,7 +380,7 @@ const paramCategoryGroupList = [
     paramCategoryIdOptionList: [
       {
         value: 'inventoryOutOfPlanType',
-        label: store.state.label.inventoryOutOfPlanType,
+        label: store.state.label.type,
       },
     ],
   },
