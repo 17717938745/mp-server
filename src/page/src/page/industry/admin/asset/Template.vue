@@ -137,7 +137,6 @@
         <el-form-item prop="borrowTemplatePerson" :label="store.state.label.borrowTemplatePerson">
           <el-select v-model="formData.borrowTemplatePerson"
                      filterable
-                     allow-create
                      clearable
                      :placeholder="store.state.label.borrowTemplatePerson"
           >
