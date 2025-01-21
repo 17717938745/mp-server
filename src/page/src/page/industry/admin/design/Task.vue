@@ -1046,6 +1046,8 @@ Promise.all([
       } else if ('deliverDate' === t.value) {
         t.width = 102
         t.type = ValueType.DateEdit
+      }  else if ('supplierRemark' === t.value) {
+        t.type = ValueType.TextEdit
       } else if ('deliverDateRemark' === t.value) {
         t.type = ValueType.TextEdit
       } else if ('receiptCount' === t.value) {
