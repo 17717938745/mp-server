@@ -270,7 +270,7 @@ public class DousonTaskController {
         if (isNotBlank(d.getCheckOrderNo())) {
             lambda.like(TaskEntity::getCheckOrderNo, d.getCheckOrderNo());
         }
-        return taskMapper.selectList(lambda.orderByAsc(TaskEntity::getDeviceSorter).orderByAsc(TaskEntity::getSorter));
+        return taskMapper.selectList(lambda.orderByAsc(TaskEntity::getDeviceSorter).orderByAsc(TaskEntity::getSorter).orderByAsc(TaskEntity::getPromiseDoneDate));
     }
 
 
