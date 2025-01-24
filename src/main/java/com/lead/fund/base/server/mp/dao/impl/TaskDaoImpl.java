@@ -188,7 +188,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     }
                 }
                 if (isNotBlank(pdb.getOfflineDate())) {
-                    final int onlineDateDiff = defaultInt(db.getOnlineDateDiff());
+                    final int onlineDateDiff = e.getId().equals(db.getId()) ? defaultInt(e.getOnlineDateDiff()) : defaultInt(db.getOnlineDateDiff());
                     final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), onlineDateDiff)));
                     db.setOnlineDate(onlineDate);
                     lambda.set(TaskEntity::getOnlineDate, onlineDate);
