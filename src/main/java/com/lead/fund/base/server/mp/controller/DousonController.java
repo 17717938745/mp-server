@@ -475,7 +475,7 @@ public class DousonController {
                 case "crashReason" -> builder.crashReasonList(paramDao.listByCategoryId(categoryId));
                 case "troubleReason" -> builder.troubleReasonList(paramDao.listByCategoryId(categoryId));
                 case "vocationType" -> builder.vocationTypeList(paramDao.listByCategoryId(categoryId));
-                case "inventoryOutOfPlanType" -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
+                case "                                                                                                                                                 " -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
