@@ -190,7 +190,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     }
                 }
                 if (isNotBlank(pdb.getOfflineDate())) {
-                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), defaultInt(db.getOnlineDateDiff()))));
+                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), defaultDecimal(db.getOnlineDateDiff()).intValue())));
                     lambda.set(TaskEntity::getOnlineDate, onlineDate);
                     db.setOnlineDate(onlineDate);
                 }
