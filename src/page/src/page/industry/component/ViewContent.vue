@@ -37,8 +37,8 @@
     <span v-else>{{ row[viewConfig.value] }}</span>
   </template>
   <template v-else-if="viewConfig.type === ValueType.TextArea">
-    <pre v-if="viewConfig.highLight" class="high-light">{{ row[viewConfig.value] }}</pre>
-    <pre v-else>{{ row[viewConfig.value] }}</pre>
+    <pre v-if="viewConfig.highLight" class="high-light" style="text-align: left;">{{ row[viewConfig.value] }}</pre>
+    <pre v-else style="text-align: left;">{{ row[viewConfig.value] }}</pre>
   </template>
   <template v-else-if="viewConfig.type === ValueType.Video">
     <el-space wrap style="justify-content: center;">
