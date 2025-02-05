@@ -50,4 +50,5 @@ export enum ValueType {
   ValidEdit,
   Link,
   Selection,
+  TextArea,
 }

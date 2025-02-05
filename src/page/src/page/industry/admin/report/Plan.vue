@@ -165,10 +165,10 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="existsProblem" :label="store.state.label.existsProblem">
-          <el-input type="textarea" :rows=4 v-model="formData.existsProblem"/>
+          <el-input type="textarea" :rows=8 v-model="formData.existsProblem"/>
         </el-form-item>
         <el-form-item prop="solveScheme" :label="store.state.label.solveScheme">
-          <el-input type="textarea" :rows=4 v-model="formData.solveScheme"/>
+          <el-input type="textarea" :rows=8 v-model="formData.solveScheme"/>
         </el-form-item>
         <el-form-item prop="responsiblePersonList" :label="store.state.label.responsiblePerson">
           <el-select v-model="formData.responsiblePersonList"
