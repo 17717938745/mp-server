@@ -166,43 +166,46 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
             // final BigDecimal sumScrapCount = taskList.stream().filter(predicateSupplier).map(t -> defaultDecimal(t.getScrapCount())).reduce(BigDecimal.ZERO, (t, t1) -> BigDecimal.ZERO.add(t).add(t1));
             final BigDecimal sumScrapCount = BigDecimal.ZERO;
             final BigDecimal surplusSupplier = orderCount.subtract(sumReceiptCount).subtract(sumScrapCount);
+            TaskEntity pdb = new TaskEntity();
             for (int i = 0; i < taskList.size(); i++) {
-                final TaskEntity pdb = i == 0 ? new TaskEntity() : taskList.get(i - 1);
                 final TaskEntity db = taskList.get(i);
                 final LambdaUpdateWrapper<TaskEntity> lambda = new LambdaUpdateWrapper<TaskEntity>()
-                        .set(TaskEntity::getSorter, isBlank(e.getDeviceId()) ? 999999 : i)
-                        .set(TaskEntity::getDeviceSorter, d.getSorter())
                         .set(TaskEntity::getDeviceId, d.getId())
+                        .set(TaskEntity::getDeviceSorter, d.getSorter())
+                        .set(TaskEntity::getSorter, isBlank(e.getDeviceId()) ? 999999 : i)
                         .eq(TaskEntity::getId, db.getId());
                 if (supplier) {
                     if (predicateSupplier.test(db)) {
                         lambda
                                 .set(TaskEntity::getSurplus, surplusSupplier)
                         ;
+                        db.setSurplus(surplusSupplier);
                     }
                 } else {
                     if (predicateNoSupplier.test(db)) {
                         lambda
                                 .set(TaskEntity::getSurplus, surplusNoSupplier)
                         ;
+                        db.setSurplus(surplusNoSupplier);
                     }
                 }
                 if (isNotBlank(pdb.getOfflineDate())) {
-                    final int onlineDateDiff = defaultInt(db.getOnlineDateDiff());
-                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), onlineDateDiff)));
-                    db.setOnlineDate(onlineDate);
+                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), defaultInt(db.getOnlineDateDiff()))));
                     lambda.set(TaskEntity::getOnlineDate, onlineDate);
+                    db.setOnlineDate(onlineDate);
                 }
                 if (isBlank(db.getOnlineDate()) || null == db.getProcessWorkingHour() || null == db.getPlanReformCount()) {
                     lambda.set(TaskEntity::getOfflineDate, null);
+                    db.setOfflineDate(null);
                 } else {
                     final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
                     final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
-                    db.setOfflineDate(offlineDate);
                     lambda.set(TaskEntity::getOfflineDate, offlineDate);
+                    db.setOfflineDate(offlineDate);
                 }
                 if (isBlank(db.getOfflineDate()) || isBlank(db.getPromiseDoneDate())) {
                     lambda.set(TaskEntity::getDelay, null);
+                    db.setDelay(null);
                 } else {
                     final BigDecimal delay = new BigDecimal(cn.hutool.core.date.DateUtil.between(
                             DateUtil.parse(db.getPromiseDoneDate()),
@@ -211,8 +214,10 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                             false
                     ));
                     lambda.set(TaskEntity::getDelay, delay);
+                    db.setDelay(delay);
                 }
                 taskMapper.update(null, lambda);
+                pdb = db;
             }
         }
     }
