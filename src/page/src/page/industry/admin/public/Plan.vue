@@ -21,7 +21,7 @@
             :key="viewConfig.value"
             :label="viewConfig.labelKey ? store.state.label[viewConfig.labelKey] : viewConfig.label"
             align="center"
-            label-class-name="plan-print-label description-print-border"
+            label-class-name="plan-print-label description-print-border fixed-width"
             class-name="description-print-border"
         >
           <view-content
@@ -106,5 +106,8 @@ const handleCopyLink = () => {
 <style lang="scss">
 .plan-print-label {
   width: 137px;
+}
+.fixed-width {
+  width: 90px;
 }
 </style>
