@@ -113,6 +113,33 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.leaderSubsidyMinuteType"
+                 @change="handleList"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.leaderSubsidyMinute"
+                 class="search-item">
+        <el-option
+            v-for="item in [
+                {
+                  value: 0,
+                  label: '=0',
+                },
+                {
+                  value: 1,
+                  label: '>0',
+                },
+                {
+                  value: -1,
+                  label: '<0',
+                },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button v-if="route.query.productId" :icon="Tools" @click="handleStart" type="warning">Start</el-button>
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
@@ -275,7 +302,7 @@
           <el-input type="number" v-model="formData.completeMinute" :disabled="true"/>
         </el-form-item>
         <el-form-item prop="leaderSubsidyMinute" :label="store.state.label.leaderSubsidyMinute">
-          <el-input-number v-model="formData.leaderSubsidyMinute" style="width: 60px;" :controls="false" :min="0" :disabled="!includes(roleCodeList, 'admin')"/>
+          <el-input-number v-model="formData.leaderSubsidyMinute" style="width: 60px;" :controls="false" :disabled="!includes(roleCodeList, 'admin')"/>
         </el-form-item>
         <el-form-item prop="deviceRunningTime" :label="store.state.label.deviceRunningTime">
           <el-input-number v-model="formData.deviceRunningStartHour" style="width: 100px;" :disabled="formSave" :controls="false"/>
@@ -433,6 +460,7 @@ const state = reactive({
       processProcedure: '',
       valid: null,
       surplusCountType: null,
+      leaderSubsidyMinuteType: null,
     },
     page: {
       page: DEFAULT_PAGE,

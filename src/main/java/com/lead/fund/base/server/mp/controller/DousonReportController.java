@@ -291,6 +291,15 @@ public class DousonReportController {
         if (null != request.getStartReportDate()) {
             lambda.ge(ReportEntity::getReportDate, DateUtil.day(request.getStartReportDate()));
         }
+        if (null != request.getLeaderSubsidyMinuteType()) {
+            if (request.getLeaderSubsidyMinuteType() > 0) {
+                lambda.gt(ReportEntity::getLeaderSubsidyMinute, 0);
+            } else if (request.getLeaderSubsidyMinuteType() < 0) {
+                lambda.lt(ReportEntity::getLeaderSubsidyMinute, 0);
+            } else {
+                lambda.eq(ReportEntity::getLeaderSubsidyMinute, 0);
+            }
+        }
         if (null != request.getEndReportDate()) {
             lambda.le(ReportEntity::getReportDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndReportDate())));
         }

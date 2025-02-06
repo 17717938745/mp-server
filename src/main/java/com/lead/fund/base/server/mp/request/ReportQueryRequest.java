@@ -89,4 +89,5 @@ public class ReportQueryRequest implements Serializable {
      */
     private Boolean valid;
     private Integer surplusCountType;
+    private Integer leaderSubsidyMinuteType;
 }
