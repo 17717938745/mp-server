@@ -143,7 +143,7 @@ public class DousonMaterialController {
                     throw new BusinessException(AUTHORITY_AUTH_FAIL);
                 }
                 if (materialMapper.updateById((MaterialEntity) e
-                        .setCreator(u.getUserId())
+                        .setModifier(u.getUserId())
                 ) <= 0) {
                     throw new BusinessException(AUTHORITY_AUTH_FAIL);
                 }
