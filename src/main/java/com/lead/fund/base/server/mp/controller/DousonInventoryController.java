@@ -200,7 +200,7 @@ public class DousonInventoryController {
         if (null != d.getInventoryCountType()) {
             lambda.apply("(INVENTORY_COUNT = 0 OR INVENTORY_COUNT != MATERIAL_COUNT)");
         }
-        return inventoryMapper.selectList(lambda);
+        return inventoryMapper.selectList(lambda.orderByDesc(InventoryEntity::getInventoryDate));
     }
 
 

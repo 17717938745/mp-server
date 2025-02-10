@@ -375,7 +375,7 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/admin/equipment', {accidentId: row.accidentId})
+    httpDelete('douson/admin/equipment', {equipmentId: row.equipmentId})
     .then(() => {
       ElMessage.success('Delete success')
       handlePage()
