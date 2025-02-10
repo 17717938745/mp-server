@@ -155,7 +155,10 @@ public class DousonMaterialController {
                 e
                         .setMaterialOrderNo(materialDao.nextMaterialOrderNo())
                         .setCheckOrderNo(materialDao.nextCheckOrderNo());
-                materialMapper.insert(e);
+                materialMapper.insert((MaterialEntity) e
+                        .setCreator(u.getUserId())
+                        .setModifier(u.getUserId())
+                );
             }
             updateSummaryInfo(e, today);
             if (!alreadyGenerateTask && Boolean.TRUE.equals(e.getGenerateTask())) {
