@@ -975,6 +975,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "主管补贴工时"
         },
         {
+          "value": "responsibleTeam",
+          "label": "负责小组"
+        },
+        {
           "value": "deviceCompletePercent",
           "label": "当班绩效，当台的效率/%"
         },
@@ -2517,6 +2521,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "leaderSubsidyMinute",
           "label": "Số giờ trợ cấp chủ quản"
+        },
+        {
+          "value": "responsibleTeam",
+          "label": "nhóm phụ trách"
         },
         {
           "value": "deviceCompletePercent",

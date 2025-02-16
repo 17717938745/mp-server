@@ -476,6 +476,7 @@ public class DousonController {
                 case "troubleReason" -> builder.troubleReasonList(paramDao.listByCategoryId(categoryId));
                 case "vocationType" -> builder.vocationTypeList(paramDao.listByCategoryId(categoryId));
                 case "inventoryOutOfPlanType" -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
+                case "responsibleTeam" -> builder.responsibleTeamList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -4574,6 +4575,9 @@ public class DousonController {
         if (isNotBlank(d.getResponsiblePerson())) {
             lambda.like(PlanEntity::getResponsiblePerson, "," + d.getResponsiblePerson() + ",");
         }
+        if (isNotBlank(d.getResponsibleTeam())) {
+            lambda.eq(PlanEntity::getResponsibleTeam, d.getResponsibleTeam());
+        }
         if (isNotBlank(d.getExistsProblem())) {
             lambda.like(PlanEntity::getExistsProblem, d.getExistsProblem());
         }
@@ -4650,6 +4654,13 @@ public class DousonController {
                 l -> paramDao.listByCategoryId("optimizeType"),
                 (t, r) -> t.getOptimizeType().equals(r.getValue()),
                 (t, r) -> t.setOptimizeTypeFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getResponsibleTeam())).collect(Collectors.toList()),
+                PlanResponse::getResponsibleTeam,
+                l -> paramDao.listByCategoryId("responsibleTeam"),
+                (t, r) -> t.getResponsibleTeam().equals(r.getValue()),
+                (t, r) -> t.setResponsibleTeamFormat(r.getLabel())
         );
         for (PlanResponse t : rl) {
             t.setResponsiblePersonFormat(t.getResponsiblePersonList().stream().map(t1 -> userMap.getOrDefault(t1, t1)).collect(Collectors.joining(",")));

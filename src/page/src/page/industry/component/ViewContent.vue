@@ -415,7 +415,7 @@ const handleEditValidShow = (row: any) => {
 }
 const handleDateUpdateSubmit = (v: any) => {
   const key: string = viewConfig.value.originValue || viewConfig.value.value
-  formData.value[key] = formatDate(formData.value[key], 'yyyy-MM-dd')
+  formData.value[key] = formData.value[key] ? formatDate(formData.value[key], 'yyyy-MM-dd') : ''
   handleUpdateSubmit(v)
 }
 const handleUpdateSubmit = (v: any) => {

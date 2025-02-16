@@ -326,6 +326,10 @@ const paramCategoryGroupList = [
         value: 'optimizeType',
         label: store.state.label.optimizeType,
       },
+      {
+        value: 'responsibleTeam',
+        label: store.state.label.responsibleTeam,
+      },
     ],
   },
   {

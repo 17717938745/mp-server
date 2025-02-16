@@ -110,4 +110,8 @@ public class PlanRequest implements Serializable {
      * 序号（单号）
      */
     private String serialNo;
+    /**
+     * 负责小组
+     */
+    private String responsibleTeam;
 }

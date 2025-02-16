@@ -169,4 +169,8 @@ public class ParamResponse implements Serializable {
      * 计划外库存类型
      */
     private List<ParamConfigResponse> inventoryOutOfPlanTypeList;
+    /**
+     * 负责小组
+     */
+    private List<ParamConfigResponse> responsibleTeamList;
 }

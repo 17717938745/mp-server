@@ -78,6 +78,20 @@
         />
       </el-select>
       <el-input v-model="query.data.serialNo" @keyup.enter="handlePage" :placeholder="store.state.label.templateOrderNo" clearable @change="handlePage" class="search-item"/>
+      <el-select v-model="query.data.responsibleTeam"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.responsibleTeam"
+                 class="search-item">
+        <el-option
+            v-for="item in config.responsibleTeamList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -143,6 +157,21 @@
                      class="search-item">
             <el-option
                 v-for="item in config.departmentList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="responsibleTeam" :label="store.state.label.responsibleTeam">
+          <el-select v-model="formData.responsibleTeam"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.responsibleTeam"
+                     class="search-item">
+            <el-option
+                v-for="item in config.responsibleTeamList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -263,6 +292,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'createDate', label: store.state.label.createDate, labelKey: 'createDate', width: 102},
   {value: 'creatorFormat', label: store.state.label.username, labelKey: 'username', width: 110},
   {value: 'departmentFormat', label: store.state.label.department, labelKey: 'department', width: 154},
+  {value: 'responsibleTeamFormat', label: store.state.label.responsibleTeam, labelKey: 'responsibleTeam', width: 154},
   {value: 'optimizeTypeFormat', label: store.state.label.optimizeType, labelKey: 'optimizeType', width: 128},
   {value: 'existsProblem', label: store.state.label.existsProblem, labelKey: 'existsProblem', width: 334, type: ValueType.Text, showOverflow: true,},
   {value: 'solveScheme', label: store.state.label.solveScheme, labelKey: 'solveScheme', width: 334, type: ValueType.Text, showOverflow: true,},
@@ -283,6 +313,7 @@ const defaultFormData = {
   optimizeType: '',
   existsProblem: '',
   solveScheme: '',
+  responsibleTeam: '',
   responsiblePersonList: [store.state.user.userId],
   planCompleteTime: '',
   beforePhotoList: [],
@@ -302,6 +333,7 @@ const state = reactive({
       startCreateDate: '',
       endCreateDate: '',
       department: '',
+      responsibleTeam: '',
       optimizeType: '',
       existsProblem: '',
       username: '',
@@ -324,6 +356,7 @@ const state = reactive({
     customerShortNameList: [],
     departmentList: [],
     optimizeTypeList: [],
+    responsibleTeamList: [],
   },
   userConfigList: new Array<any>(),
   formVisible: false,
@@ -379,7 +412,16 @@ const handleJumpDevice = (t: any) => {
         },
       })
 }
-httpGet('douson/config').then(r => {
+httpGet('douson/config', {
+  categoryIdList: [
+    'processProcedure',
+    'testDevice',
+    'customerShortName',
+    'department',
+    'optimizeType',
+    'responsibleTeam',
+  ]
+}).then(r => {
   state.config = r.data
 })
 const handlePage = () => {

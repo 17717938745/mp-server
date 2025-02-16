@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lead.fund.base.common.basic.exec.BusinessException;
+import com.lead.fund.base.common.util.BeanUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.server.mp.dao.TaskDao;
 import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
@@ -61,6 +62,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                 .setReceiptCount(defaultDecimal(e.getReceiptCount()))
                 .setScrapCount(defaultDecimal(e.getScrapCount()))
                 .setModifyTime(new Date());
+        final TaskEntity db = null == e.getId() ? new TaskEntity() : BeanUtil.defaultIfNull(taskMapper.selectById(e.getId()), new TaskEntity());
         if (null == e.getProcessWorkingHour()) {
             e.setProductCountHour8(null)
                     .setProductCountHour12(null);
@@ -88,7 +90,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         }
         if (e.getDeliverCount().equals(BigDecimal.ZERO)) {
             e.setDeliverDate("");
-        } else {
+        } else if (e.getDeliverCount().compareTo(defaultDecimal(db.getDeliverCount())) != 0) {
             e.setDeliverDate(DateUtil.day(new Date()));
         }
         if (e.getReceiptCount().equals(BigDecimal.ZERO)) {
