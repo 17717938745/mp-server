@@ -95,7 +95,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
         }
         if (e.getReceiptCount().equals(BigDecimal.ZERO)) {
             e.setReceiptDate("");
-        } else {
+        } else if (e.getReceiptCount().compareTo(defaultDecimal(db.getReceiptCount())) != 0) {
             e.setReceiptDate(DateUtil.day(new Date()));
         }
         // update

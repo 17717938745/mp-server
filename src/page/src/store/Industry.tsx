@@ -3073,8 +3073,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
     thaArr = arr[1].split('\t')
   }
   for (let i = 0; i < chsArr.length; i++) {
-    const chs = chsArr[i]
-    const tha = thaArr[i]
+    const chs = (chsArr[i] || '').trim()
+    const tha = (thaArr[i] || '').trim()
     const arr = MULTIPLE_TEXT_LIST['CHS'].filter(t => chs === t.label)
     const arr1 = MULTIPLE_TEXT_LIST['THA'].filter(t => tha === t.label)
     const key = arr.length > 0 && arr1.length > 0 && arr1.filter(k => k.value === arr[0].value).length > 0 ? arr[0].value : ''
@@ -3111,8 +3111,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formRuleString)
 }
 
-// printMultipleText('客户简称\t客户订单号\t客户项次号\t销售订单号\t订单项目号\t物料号\t加工物料描述\t图号\t订单数量\t投产日期\t承诺交期\t毛坯物料号\t毛坯物料描述\t毛坯图号\t领料数量\t炉号\t热批号\t序列号\t欠交数量\tNDE\t装配\t试压\t表面处理\t负责单位\t备注\t排产数量\t排产日期\t领料单号\t报检单号\n' +
-//     'Tên khách hàng\tĐơn đặt hàng khách hàng\t Số hạng mục khách hàng\tĐơn đặt hàng\tSố hạng mục đơn hàng\tMã vật liệu\tMô tả vật liệu\tBản vẽ\tSố lượng đơn hàng\tNgày sản xuất\tNgày sản xuất chịu trách nhiệm nhập kho\tMã vật liệu phôi\tMô tả vật liệu phôi\tBản vẽ phôi\tSố lượng lĩnh liệu\tSố lò nhiệt\tSố lô nhiệt\tSố Serial\tSố lượng còn thiếu\tNDE\tLắp ráp\tThử áp \tXử lý bề mặt\tĐơn vị phụ trách\tGhi chú\tSố lượng sắp xếp sản xuất\tNgày sắp xếp sản xuất\tSố phiếu lĩnh liệu\tSố phiếu nhập kho')
+printMultipleText('整机序列号\t采购订单编号\tPO项目\t销售订单\t订单项目\t物料号\t物料描述\t图号\t承诺交期\t订单数量\t完成数量\t备注\t阀体\t照片（最多4张）\t阀盖/尾盖\t照片（最多4张）\t闸板\t照片（最多4张）\t阀座/阀瓣\t照片（最多4张）\t阀杆/尾杆\t照片（最多4张）\t装配人员\t开始装配日期\t整机和驱动器试压\t照片，最多6张\t闸阀开关扭矩，N.m\t注油\t照片，最多2张\t试压人员\t装配完成日期\n' +
+    'Seri\tmã đơn đặt hàng của khách hàng \thạng mục đơn đặt hàng\tđơn đặt hàng\tsố mục hàng\tmã vật liệu\tmiêu tả vật liệu\tbản vẽ\tNgày sản xuất chịu trách nhiệm nhập kho\tsố lượng đơn đặt hàng\tSố lượng hoàn thành\tGhi chú\tThân van\tHình ảnh (Max 4 ảnh)\tNắp van/Nắp đậy\tHình ảnh (Max 4 ảnh)\tCửa van\tHình ảnh (Max 4 ảnh)\tĐế van\tHình ảnh (Max 4 ảnh)\tCán van\tHình ảnh (Max 4 ảnh)\tNhân viên lắp ráp\tNgày bắt đầu lắp\tKiểm tra áp suất toàn bộ máy và Động cơ\tHình ảnh (Max 6 ảnh)\tlực vặn đóng mở van khi có áp suất N.m\tBơm dầu\tHình ảnh (Max 4 ảnh)\tNhân viên thử áp \tNgày lắp ráp hoàn thành')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};

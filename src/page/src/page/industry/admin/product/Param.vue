@@ -185,24 +185,21 @@ const state = reactive({
 
 const paramCategoryGroupList = [
   {
-    labelKey: 'paramManage',
+    labelKey: 'vocationRecord',
     paramCategoryIdOptionList: [
-      {
-        value: 'schedule',
-        label: store.state.label.schedule,
-      },
-      {
+      /*{
         value: 'accidentType',
         label: store.state.label.accidentType,
-      },
+      },*/
       {
-        value: 'department',
-        label: store.state.label.department,
+        value: 'vocationType',
+        label: store.state.label.vocationType,
       },
-      {
-        value: 'profession',
-        label: store.state.label.profession,
-      },
+    ],
+  },
+  {
+    labelKey: 'deviceCheckLedger',
+    paramCategoryIdOptionList: [
       {
         value: 'chineseVietnamName',
         label: store.state.label.chineseVietnamName,
@@ -219,10 +216,6 @@ const paramCategoryGroupList = [
         value: 'deviceCheckLedgerState',
         label: store.state.label.deviceCheckLedgerState,
       },
-      {
-        value: 'vocationType',
-        label: store.state.label.vocationType,
-      },
     ],
   },
   {
@@ -231,6 +224,18 @@ const paramCategoryGroupList = [
       {
         value: 'userProperty',
         label: store.state.label.userProperty,
+      },
+      {
+        value: 'schedule',
+        label: store.state.label.schedule,
+      },
+      {
+        value: 'department',
+        label: store.state.label.department,
+      },
+      {
+        value: 'profession',
+        label: store.state.label.profession,
       },
     ],
   },
@@ -392,10 +397,10 @@ const paramCategoryGroupList = [
 
 const handleFormatValue = (val: any) => {
   for (let i = 0; i < paramCategoryGroupList.length; i++) {
-    const l = paramCategoryGroupList[i]. paramCategoryIdOptionList || []
+    const l = paramCategoryGroupList[i].paramCategoryIdOptionList || []
     for (let j = 0; j < l.length; j++) {
       const t = l[j]
-      if(t.value === val) {
+      if (t.value === val) {
         return t.label
       }
     }
