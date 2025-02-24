@@ -8,6 +8,7 @@ import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_DATA_QUERY_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
 import static com.lead.fund.base.server.mp.converter.MaterialConverter.MATERIAL_INSTANCE;
+import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -558,41 +559,6 @@ public class DousonMaterialController {
             );
         }
         return r;
-    }
-
-    public static String getCellValue(Cell cell) {
-        String cellValue = "";
-        // 以下是判断数据的类型
-        switch (cell.getCellType()) {
-            case NUMERIC:
-                if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    cellValue = sdf.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue()));
-                } else {
-                    DataFormatter dataFormatter = new DataFormatter();
-                    cellValue = dataFormatter.formatCellValue(cell);
-                }
-                break;
-            case STRING:
-                cellValue = cell.getStringCellValue();
-                break;
-            case BOOLEAN:
-                cellValue = cell.getBooleanCellValue() + "";
-                break;
-            case FORMULA:
-                cellValue = cell.getCellFormula();
-                break;
-            case BLANK:
-                cellValue = "";
-                break;
-            case ERROR:
-                cellValue = "非法字符";
-                break;
-            default:
-                cellValue = "未知类型";
-                break;
-        }
-        return cellValue;
     }
 
     private void updateSummaryInfo(MaterialEntity e, String today) {

@@ -244,6 +244,15 @@ const handleSubmit = (retry: boolean = true) => {
                       {
                         "children": [],
                         "id": "-1",
+                        "path": "assembly",
+                        "component": "assembly",
+                        "nameKey": "completeMachineAssemblyRecord",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
                         "path": "box",
                         "component": "box",
                         "nameKey": "boxFlagCard",

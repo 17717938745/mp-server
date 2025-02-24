@@ -58,8 +58,8 @@
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
-          start-placeholder="Start promise done date"
-          end-placeholder="End promise done date"
+          :start-placeholder="`Start ${store.state.label.promiseDoneDate}`"
+          :end-placeholder="`End ${store.state.label.promiseDoneDate}`"
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
@@ -689,7 +689,7 @@ const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManag
 const adminRole = (includes(roleCodeList, 'admin'))
 const onlySupplier = (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
 const supplierShow = 'admin' === user.username || (includes(roleCodeList, 'supplierManager') && !includes(roleCodeList, 'taskManager'))
-const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat']
+const taskManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'productCountHour8', 'productCountHour12', 'processWorkingHour', 'onlineDate', 'offlineDate', 'delay', 'processCount', 'processProcedure', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus']
 const supplierManagerColumnValueList = ['operator', 'deviceIndex', 'deviceIdFormat', 'customerShortName', 'saleOrderNo', 'orderProjectNo', 'materialNo', 'improveMaterialDescribe', 'designNumber', 'orderCount', 'roughcastExpireDate', 'materialCount', 'promiseDoneDate', 'planReformCount', 'supplierRemark', 'supplierDoneDate', 'deliverCount', 'deliverDate', 'deliverDateRemark', 'receiptCount', 'receiptDate', 'receiptDateRemark', 'scrapCount', 'supplierPromiseDoneDate', 'nde', 'assemble', 'testPress', 'surfaceTreatment', 'surplus', 'materialOrderNoFormat', 'checkOrderNoFormat', 'timelyDeliverFormat']
 const showType = ref('admin' === user.username ? 0 :
     includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager') ? 1 : 2

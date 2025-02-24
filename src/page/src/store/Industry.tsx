@@ -137,6 +137,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "订单数量"
         },
         {
+          "value": "completeMachineAssemblyRecord",
+          "label": "整机装配记录"
+        },
+        {
+          "value": "createOrderCount",
+          "label": "创建订单数量"
+        },
+        {
           "value": "productionDate",
           "label": "投产日期"
         },
@@ -1389,7 +1397,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "photoCount",
           "label": "照片数量"
-        },{
+        }, {
           "value": "inventoryCount",
           "label": "库存数量"
         },
@@ -1441,6 +1449,28 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "value": "vocationUser",
           "label": "请假人"
         },
+        {"value": "serialNumber", "label": "整机序列号"},
+        {"value": "deliveryDate", "label": "承诺交期"},
+        {"value": "completedQty", "label": "完成数量"},
+        {"value": "valveBody", "label": "阀体"},
+        {"value": "valveBodyPhoto", "label": "阀体照片"},
+        {"value": "valveCover", "label": "阀盖/尾盖"},
+        {"value": "valveCoverPhoto", "label": "阀盖/尾盖照片"},
+        {"value": "gate", "label": "闸板"},
+        {"value": "gatePhoto", "label": "闸板照片"},
+        {"value": "valveSeat", "label": "阀座/阀瓣"},
+        {"value": "valveSeatPhoto", "label": "阀座/阀瓣照片"},
+        {"value": "valveStem", "label": "阀杆/尾杆"},
+        {"value": "valveStemPhoto", "label": "阀杆/尾杆照片"},
+        {"value": "assemblyPerson", "label": "装配人员"},
+        {"value": "assemblyStartDate", "label": "开始装配日期"},
+        {"value": "pressureTest", "label": "整机和驱动器试压"},
+        {"value": "pressureTestPhoto", "label": "整机和驱动器试压照片"},
+        {"value": "torqueNm", "label": "闸阀开关扭矩，N.m"},
+        {"value": "oilInjection", "label": "注油"},
+        {"value": "oilInjectionPhoto", "label": "注油照片"},
+        {"value": "tester", "label": "试压人员"},
+        {"value": "assemblyCompleteDate", "label": "装配完成日期"},
         {
           "value": "vocationChargeUser",
           "label": "主管领导"
@@ -1650,6 +1680,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "orderCount",
           "label": "Số lượng đơn hàng"
+        },
+        {
+          "value": "completeMachineAssemblyRecord",
+          "label": "Ghi chép lắp ráp máy"
+        },
+        {
+          "value": "createOrderCount",
+          "label": "Tạo số lượng đơn hàng"
         },
         {
           "value": "productionDate",
@@ -2981,6 +3019,93 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "vocationUser",
           "label": "Người xin nghỉ"
+        },    {
+          "value": "serialNumber",
+          "label": "Seri"
+        },
+        {
+          "value": "deliveryDate",
+          "label": "Ngày sản xuất chịu trách nhiệm nhập kho"
+        },
+        {
+          "value": "completedQty",
+          "label": "Số lượng hoàn thành"
+        },
+        {
+          "value": "valveBody",
+          "label": "Thân van"
+        },
+        {
+          "value": "valveBodyPhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "valveCover",
+          "label": "Nắp van/Nắp đậy"
+        },
+        {
+          "value": "valveCoverPhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "gate",
+          "label": "Cửa van"
+        },
+        {
+          "value": "gatePhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "valveSeat",
+          "label": "Đế van"
+        },
+        {
+          "value": "valveSeatPhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "valveStem",
+          "label": "Cán van"
+        },
+        {
+          "value": "valveStemPhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "assemblyPerson",
+          "label": "Nhân viên lắp ráp"
+        },
+        {
+          "value": "assemblyStartDate",
+          "label": "Ngày bắt đầu lắp"
+        },
+        {
+          "value": "pressureTest",
+          "label": "Kiểm tra áp suất toàn bộ máy và Động cơ"
+        },
+        {
+          "value": "pressureTestPhoto",
+          "label": "Hình ảnh (Max 6 ảnh)"
+        },
+        {
+          "value": "torqueNm",
+          "label": "lực vặn đóng mở van khi có áp suất N.m"
+        },
+        {
+          "value": "oilInjection",
+          "label": "Bơm dầu"
+        },
+        {
+          "value": "oilInjectionPhoto",
+          "label": "Hình ảnh (Max 4 ảnh)"
+        },
+        {
+          "value": "tester",
+          "label": "Nhân viên thử áp"
+        },
+        {
+          "value": "assemblyCompleteDate",
+          "label": "Ngày lắp ráp hoàn thành"
         },
         {
           "value": "vocationChargeUser",
@@ -3110,9 +3235,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formString)
   console.log(formRuleString)
 }
-
-printMultipleText('整机序列号\t采购订单编号\tPO项目\t销售订单\t订单项目\t物料号\t物料描述\t图号\t承诺交期\t订单数量\t完成数量\t备注\t阀体\t照片（最多4张）\t阀盖/尾盖\t照片（最多4张）\t闸板\t照片（最多4张）\t阀座/阀瓣\t照片（最多4张）\t阀杆/尾杆\t照片（最多4张）\t装配人员\t开始装配日期\t整机和驱动器试压\t照片，最多6张\t闸阀开关扭矩，N.m\t注油\t照片，最多2张\t试压人员\t装配完成日期\n' +
-    'Seri\tmã đơn đặt hàng của khách hàng \thạng mục đơn đặt hàng\tđơn đặt hàng\tsố mục hàng\tmã vật liệu\tmiêu tả vật liệu\tbản vẽ\tNgày sản xuất chịu trách nhiệm nhập kho\tsố lượng đơn đặt hàng\tSố lượng hoàn thành\tGhi chú\tThân van\tHình ảnh (Max 4 ảnh)\tNắp van/Nắp đậy\tHình ảnh (Max 4 ảnh)\tCửa van\tHình ảnh (Max 4 ảnh)\tĐế van\tHình ảnh (Max 4 ảnh)\tCán van\tHình ảnh (Max 4 ảnh)\tNhân viên lắp ráp\tNgày bắt đầu lắp\tKiểm tra áp suất toàn bộ máy và Động cơ\tHình ảnh (Max 6 ảnh)\tlực vặn đóng mở van khi có áp suất N.m\tBơm dầu\tHình ảnh (Max 4 ảnh)\tNhân viên thử áp \tNgày lắp ráp hoàn thành')
+// printMultipleText('整机序列号\t采购订单编号\tPO项目\t销售订单\t订单项目\t物料号\t物料描述\t图号\t承诺交期\t订单数量\t完成数量\t备注\t阀体\t阀体照片\t阀盖/尾盖\t阀盖/尾盖照片\t闸板\t闸板照片\t阀座/阀瓣\t阀座/阀瓣照片\t阀杆/尾杆\t阀杆/尾杆照片\t装配人员\t开始装配日期\t整机和驱动器试压\t整机和驱动器试压照片\t闸阀开关扭矩，N.m\t注油\t注油照片\t试压人员\t装配完成日期\n' +
+//     'Seri\tmã đơn đặt hàng của khách hàng \thạng mục đơn đặt hàng\tđơn đặt hàng\tsố mục hàng\tMã vật liệu\tmiêu tả vật liệu\tBản vẽ\tNgày sản xuất chịu trách nhiệm nhập kho\tSố lượng đơn hàng\tSố lượng hoàn thành\tGhi chú\tThân van\tHình ảnh (Max 4 ảnh)\tNắp van/Nắp đậy\tHình ảnh (Max 4 ảnh)\tCửa van\tHình ảnh (Max 4 ảnh)\tĐế van\tHình ảnh (Max 4 ảnh)\tCán van\tHình ảnh (Max 4 ảnh)\tNhân viên lắp ráp\tNgày bắt đầu lắp\tKiểm tra áp suất toàn bộ máy và Động cơ\tHình ảnh (Max 6 ảnh)\tlực vặn đóng mở van khi có áp suất N.m\tBơm dầu\tHình ảnh (Max 4 ảnh)\tNhân viên thử áp \tNgày lắp ráp hoàn thành')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
