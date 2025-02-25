@@ -75,18 +75,6 @@
                 :placeholder="store.state.label.scrapCount"
                 type="number"
                 class="search-item"/>
-      <!--      <el-date-picker
-                v-model="dateTimeListSupplier"
-                @change="handleDateTimeChangeSupplier"
-                clearable
-                type="daterange"
-                format="YYYY-MM-DD"
-                range-separator="-"
-                start-placeholder="Start supplier promise done date"
-                end-placeholder="End supplier promise done date"
-                style="width: 180px; margin-right: 20px;"
-            >
-            </el-date-picker>-->
       <el-select v-model="query.data.nde"
                  filterable
                  allow-create
@@ -227,6 +215,19 @@
             :value="item.value"
         />
       </el-select>
+      <el-date-picker
+          v-if="adminRole || onlySupplier"
+          v-model="dateTimeListSupplier"
+          @change="handleDateTimeChangeSupplier"
+          clearable
+          type="daterange"
+          format="YYYY-MM-DD"
+          range-separator="-"
+          :start-placeholder="`Start ${store.state.label.supplierPromiseDoneDate}`"
+          :end-placeholder="`End ${store.state.label.supplierPromiseDoneDate}`"
+          style="width: 180px; margin-right: 20px;"
+      >
+      </el-date-picker>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <!--        <el-button
@@ -803,7 +804,7 @@ const handleDateTimeChange = () => {
   }
   handlePage()
 }
-/*const handleDateTimeChangeSupplier = () => {
+const handleDateTimeChangeSupplier = () => {
   if (state.dateTimeListSupplier && state.dateTimeListSupplier.length > 1) {
     state.query.data.startSupplierPromiseDoneDate = formatDate(
         state.dateTimeListSupplier[0],
@@ -818,7 +819,7 @@ const handleDateTimeChange = () => {
     state.query.data.endSupplierPromiseDoneDate = ''
   }
   handlePage()
-}*/
+}
 
 const handlePage = () => {
   httpGet(`douson/task/page`, state.query).then(
