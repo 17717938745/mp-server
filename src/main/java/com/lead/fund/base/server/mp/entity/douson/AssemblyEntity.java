@@ -198,15 +198,15 @@ public class AssemblyEntity extends AbstractAdministrator {
     @Size(max = 64, message = "试压人员长度不合法")
     private String tester;
     /**
+     * 装配完成数量（开始）
+     */
+    @FieldRemark(value = "装配完成数量")
+    @Size(max = 16, message = "装配完成数量长度不合法")
+    private Integer assemblyCompleteCount;
+    /**
      * 装配完成日期
      */
     @FieldRemark(value = "装配完成日期")
     @Size(max = 32, message = "装配完成日期长度不合法")
     private String assemblyCompleteDate;
-    /**
-     * 装配完成数量
-     */
-    @FieldRemark(value = "装配完成数量")
-    @Size(max = 16, message = "装配完成数量长度不合法")
-    private Integer assemblyCompleteCount;
 }

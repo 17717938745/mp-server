@@ -159,8 +159,16 @@ public class AssemblyRequest implements Serializable {
      * 装配完成日期
      */
     private String assemblyCompleteDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startAssemblyCompleteDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endAssemblyCompleteDate;
     /**
      * 装配完成数量
      */
     private Integer assemblyCompleteCount;
+    /**
+     * 装配完成情况，0-ok，1-no
+     */
+    private Integer assemblyCompleteType;
 }

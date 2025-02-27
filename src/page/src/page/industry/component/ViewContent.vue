@@ -32,6 +32,29 @@
       />
     </el-space>
   </template>
+  <template v-else-if="viewConfig.type === ValueType.PictureText">
+    <div>
+      <h3 v-if="viewConfig.textLabel">{{ row[viewConfig.textLabel] || '--'}}</h3>
+      <el-space style="justify-content: center;">
+        <img
+            v-if="row[viewConfig.value] && row[viewConfig.value].length > 0"
+            v-for="(t, i) in row[viewConfig.value]"
+            :src="fullUrl(t.photoCompressUrl, '')"
+            :style="{
+            height: `${viewConfig.pictureHeight || 155 / scale}px`,
+          }"
+        />
+        <el-empty v-else description="Empty"
+                  :style="{
+                  width: `${155 / scale}px`,
+                  height: `${160 / scale}px`,
+                  marginTop: `${30 / scale}px`,
+                  marginBottom: `${30 / scale}px`,
+                }"
+        />
+      </el-space>
+    </div>
+  </template>
   <template v-else-if="viewConfig.type === ValueType.Text">
     <span v-if="viewConfig.highLight" class="high-light">{{ row[viewConfig.value] }}</span>
     <span v-else>{{ row[viewConfig.value] }}</span>
@@ -220,7 +243,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.SelectEdit">
     <span v-if="!row[props.idKey]">
-        {{ row[viewConfig.value]}}
+        {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">
       {{
@@ -254,7 +277,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.NumberEdit">
     <span v-if="!row[props.idKey]">
-        {{ row[viewConfig.value]}}
+        {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}
@@ -277,7 +300,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.TextEdit">
     <span v-if="!row[props.idKey]">
-        {{ row[viewConfig.value]}}
+        {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}
@@ -301,7 +324,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.DateEdit">
     <span v-if="!row[props.idKey]">
-        {{ row[viewConfig.value]}}
+        {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">
         {{ row[viewConfig.value] || '--' }}

@@ -46,13 +46,13 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      */
     private Integer maxSerialOrderIndex;
     /**
-     * 最大整机序列号索引，维度：采购订单编号、PO项目
-     */
-    private Integer maxSerialIndex;
-    /**
      * 整机序列号索引
      */
     private Integer serialIndex;
+    /**
+     * 最大整机序列号索引，维度：采购订单编号、PO项目
+     */
+    private Integer maxSerialIndex;
     /**
      * 采购订单编号
      */
@@ -92,7 +92,7 @@ public class AssemblyResponse extends AbstractAdministratorModel {
     /**
      * 完成数量
      */
-    private String completedQty;
+    private Integer completedQty;
     /**
      * 备注
      */
@@ -136,6 +136,7 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      * 装配人员
      */
     private String assemblyPerson;
+    private String assemblyPersonFormat;
     /**
      * 开始装配日期
      */
@@ -160,6 +161,7 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      * 试压人员
      */
     private String tester;
+    private String testerFormat;
     /**
      * 装配完成日期
      */

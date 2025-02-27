@@ -162,6 +162,15 @@ const handleSubmit = (retry: boolean = true) => {
                       {
                         "children": [],
                         "id": "-1",
+                        "path": "scheduling",
+                        "component": "scheduling",
+                        "nameKey": "schedulingCnc",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
                         "path": "vocation",
                         "component": "vocation",
                         "nameKey": "vocationRecord",

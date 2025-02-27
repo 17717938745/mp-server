@@ -170,6 +170,14 @@ const initialRouter = (router: Router) => {
             component: () => import ('../page/industry/admin/public/Plan.vue'),
           },
           {
+            path: 'public/assembly',
+            name: '/industry/public/assembly',
+            meta: {
+              title: 'Assembly',
+            },
+            component: () => import ('../page/industry/admin/public/Assembly.vue'),
+          },
+          {
             path: 'public/template',
             name: '/industry/public/template',
             meta: {

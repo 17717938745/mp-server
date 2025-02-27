@@ -9,7 +9,9 @@ export interface ViewConfig {
   label?: string,
   labelKey?: string,
   width?: number,
+  pictureHeight?: number,
   align?: string,
+  textLabel?: string,
   hide?: boolean,
   highLight?: boolean,
   showOverflow?: boolean,
@@ -51,4 +53,5 @@ export enum ValueType {
   Link,
   Selection,
   TextArea,
+  PictureText,
 }

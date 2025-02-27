@@ -699,6 +699,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "白班"
         },
         {
+          "value": "scheduleDayTimeTechnologyGroup",
+          "label": "白班技术组"
+        },
+        {
           "value": "scheduleDayTime12",
           "label": "白班12H"
         },
@@ -709,6 +713,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "scheduleEvening12",
           "label": "夜班12H"
+        },
+        {
+          "value": "scheduleEveningTechnologyGroup",
+          "label": "夜班技术组"
         },
         {
           "value": "scheduleMiddle",
@@ -1471,6 +1479,8 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {"value": "oilInjectionPhoto", "label": "注油照片"},
         {"value": "tester", "label": "试压人员"},
         {"value": "assemblyCompleteDate", "label": "装配完成日期"},
+        {"value": "assemblyCompleteCount", "label": "装配完成数量"},
+        {"value": "assemblyCompleteType", "label": "装配完成情况"},
         {
           "value": "vocationChargeUser",
           "label": "主管领导"
@@ -1514,6 +1524,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "pressureTest",
           "label": "试压"
+        },
+        {
+          "value": "schedulingCnc",
+          "label": "CNC排班表"
         },
         {
           "value": "scheduleProduce",
@@ -1570,6 +1584,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "surplus",
           "label": "剩余"
+        },
+        {
+          "value": "alreadyComplete",
+          "label": "已完成"
+        },
+        {
+          "value": "notYetComplete",
+          "label": "未完成"
         },
       ],
       'THA': [
@@ -1938,6 +1960,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Còn lại"
         },
         {
+          "value": "alreadyComplete",
+          "label": "Đã hoàn thành"
+        },
+        {
+          "value": "notYetComplete",
+          "label": "Chưa hoàn thành"
+        },
+        {
           "value": "procedureCountHour8",
           "label": "Sản lượng của 8h/ con"
         },
@@ -2285,12 +2315,20 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Ca ngày"
         },
         {
+          "value": "scheduleDayTimeTechnologyGroup",
+          "label": "Nhóm kỹ thuật ca ngày"
+        },
+        {
           "value": "scheduleDayTime12",
           "label": "Ca ngày 12H"
         },
         {
           "value": "scheduleEvening",
           "label": "Ca đêm"
+        },
+        {
+          "value": "scheduleEveningTechnologyGroup",
+          "label": "Nhóm kỹ thuật ca đêm"
         },
         {
           "value": "scheduleEvening12",
@@ -3019,7 +3057,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "vocationUser",
           "label": "Người xin nghỉ"
-        },    {
+        }, {
           "value": "serialNumber",
           "label": "Seri"
         },
@@ -3107,6 +3145,12 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "value": "assemblyCompleteDate",
           "label": "Ngày lắp ráp hoàn thành"
         },
+        {
+          "value": "schedulingCnc",
+          "label": "Bảng chia ca CNC"
+        },
+        {"value": "assemblyCompleteCount", "label": "Số lượng lắp ráp hoàn thành"},
+        {"value": "assemblyCompleteType", "label": "Tình hình hoàn thành lắp ráp"},
         {
           "value": "vocationChargeUser",
           "label": "Chủ quản ca"
@@ -3235,8 +3279,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formString)
   console.log(formRuleString)
 }
-// printMultipleText('整机序列号\t采购订单编号\tPO项目\t销售订单\t订单项目\t物料号\t物料描述\t图号\t承诺交期\t订单数量\t完成数量\t备注\t阀体\t阀体照片\t阀盖/尾盖\t阀盖/尾盖照片\t闸板\t闸板照片\t阀座/阀瓣\t阀座/阀瓣照片\t阀杆/尾杆\t阀杆/尾杆照片\t装配人员\t开始装配日期\t整机和驱动器试压\t整机和驱动器试压照片\t闸阀开关扭矩，N.m\t注油\t注油照片\t试压人员\t装配完成日期\n' +
-//     'Seri\tmã đơn đặt hàng của khách hàng \thạng mục đơn đặt hàng\tđơn đặt hàng\tsố mục hàng\tMã vật liệu\tmiêu tả vật liệu\tBản vẽ\tNgày sản xuất chịu trách nhiệm nhập kho\tSố lượng đơn hàng\tSố lượng hoàn thành\tGhi chú\tThân van\tHình ảnh (Max 4 ảnh)\tNắp van/Nắp đậy\tHình ảnh (Max 4 ảnh)\tCửa van\tHình ảnh (Max 4 ảnh)\tĐế van\tHình ảnh (Max 4 ảnh)\tCán van\tHình ảnh (Max 4 ảnh)\tNhân viên lắp ráp\tNgày bắt đầu lắp\tKiểm tra áp suất toàn bộ máy và Động cơ\tHình ảnh (Max 6 ảnh)\tlực vặn đóng mở van khi có áp suất N.m\tBơm dầu\tHình ảnh (Max 4 ảnh)\tNhân viên thử áp \tNgày lắp ráp hoàn thành')
+printMultipleText('设备编号\t白班\t中班\t夜班\t白班12H\t夜班12H\t白班技术组\t夜班技术组\n' +
+    'Mã máy\tCa ngày\tCa hai\tCa đêm\tCa ngày 12H\tCa đêm 12H\tNhóm kỹ thuật ca ngày\tNhóm kỹ thuật ca đêm')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};

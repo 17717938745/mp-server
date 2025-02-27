@@ -5,6 +5,7 @@ import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import com.lead.fund.base.server.mp.request.AssemblyRequest;
 import com.lead.fund.base.server.mp.response.AssemblyResponse;
+import com.lead.fund.base.server.mp.response.AssemblySummaryResponse;
 import java.io.Serializable;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -44,4 +45,10 @@ public interface AssemblyConverter extends Serializable {
     @Mapping(target = "photoUrl", expression = "java(e.getUrl())")
     @Mapping(target = "fullPhotoUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
     PhotoImgModel photo(AssemblyAttachmentEntity e, String urlPrefix);
+
+    @Mapping(target = "completedQty", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getCompletedQty()))")
+    @Mapping(target = "assemblyCompleteCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getAssemblyCompleteCount()))")
+    AssemblySummaryResponse assemblySummary(AssemblyEntity t);
+
+    List<AssemblySummaryResponse> assemblySummaryList(List<AssemblyEntity> list);
 }

@@ -3,20 +3,25 @@ package com.lead.fund.base.server.mp.controller;
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
 import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
+import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
+import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
 import static com.lead.fund.base.server.mp.converter.AssemblyConverter.ASSEMBLY_INSTANCE;
 import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.response.DataResult;
+import com.lead.fund.base.common.basic.response.ListResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
@@ -35,27 +40,38 @@ import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.AssemblyAttachmentMapper;
 import com.lead.fund.base.server.mp.mapper.douson.AssemblyMapper;
+import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import com.lead.fund.base.server.mp.request.AssemblyPageRequest;
 import com.lead.fund.base.server.mp.request.AssemblyRequest;
 import com.lead.fund.base.server.mp.response.AssemblyResponse;
+import com.lead.fund.base.server.mp.response.AssemblySummaryResponse;
 import com.lead.fund.base.server.mp.response.AssemblyUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,6 +126,26 @@ public class DousonAssemblyController {
     private UrlHelper urlHelper;
 
     /**
+     * 模板下载
+     *
+     * @param resp {@link HttpServletResponse}
+     * @return excel
+     */
+    @GetMapping("template")
+    public ResponseEntity<byte[]> template(HttpServletResponse resp) {
+        byte[] assemblyTemplateBytes = IoUtil.readBytes(this.getClass().getResourceAsStream("/assembly_template.xlsx"));
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        try {
+            headers.setContentDispositionFormData("attachment", new String(("assembly_template" + ".xlsx").getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
+        } catch (UnsupportedEncodingException e) {
+            log.warn("set attachment error");
+        }
+        resp.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
+        return new ResponseEntity<>(assemblyTemplateBytes, headers, HttpStatus.OK);
+    }
+
+    /**
      * 上传整机装配
      *
      * @param file 单个图片 {@link MultipartFile}
@@ -141,7 +177,8 @@ public class DousonAssemblyController {
                             .setDesignNumber(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
                             .setDeliveryDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
                             .setOrderCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP).intValue())
-                            .setCompletedQty(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP).intValue())
+                            .setCompletedQty(0)
+                            .setAssemblyCompleteCount(0)
                             .setValveBody(getCellValue(row.getCell(ci++)))
                             .setValveCover(getCellValue(row.getCell(ci++)))
                             .setGate(getCellValue(row.getCell(ci++)))
@@ -159,6 +196,8 @@ public class DousonAssemblyController {
                         .setSerialIndex(0)
                         .setMaxSerialIndex(0)
                         .setMaxSerialOrderIndex(0)
+                        .setCompletedQty(0)
+                        .setAssemblyCompleteCount(0)
                         .setSerialNumber(t.getPurchaseOrderNo() + " " + t.getPoProject() + " " + StrUtil.padPre("0", 3, "0"))
                         .setCreator(u.getUserId())
                         .setModifier(u.getUserId());
@@ -193,6 +232,8 @@ public class DousonAssemblyController {
         final String today = DateUtil.day(now);
         final MpUserResponse u = accountHelper.getUser(deviceId);
         final AssemblyEntity e = (AssemblyEntity) ASSEMBLY_INSTANCE.assembly(request)
+                .setCompletedQty(defaultInt(request.getAssemblyCompleteCount()))
+                .setAssemblyCompleteCount(defaultInt(request.getAssemblyCompleteCount()))
                 .setModifier(u.getUserId());
         // update
         if (isNotBlank(e.getId())) {
@@ -241,6 +282,9 @@ public class DousonAssemblyController {
                     .setMaxSerialIndex(db.getMaxSerialIndex() + (i + 1))
                     .setSerialIndex(db.getMaxSerialIndex() + (i + 1))
                     .setSerialNumber(e.getPurchaseOrderNo() + " " + e.getPoProject() + " " + StrUtil.padPre(String.valueOf(e.getSerialIndex()), 3, "0"))
+                    .setOrderCount(1)
+                    .setCompletedQty(0)
+                    .setAssemblyCompleteCount(0)
                     .setCreator(u.getUserId())
                     .setModifier(u.getUserId())
                     .setId(null)
@@ -283,12 +327,28 @@ public class DousonAssemblyController {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         if (isNotBlank(request.getAssemblyId())) {
-            assemblyDao.removeById(request.getAssemblyId());
+            final AssemblyEntity db = assemblyDao.getById(request.getAssemblyId());
+            if (null != db) {
+                if (db.getSerialIndex() == 0) {
+                    assemblyDao.remove(new LambdaUpdateWrapper<AssemblyEntity>()
+                            .eq(AssemblyEntity::getPurchaseOrderNo, db.getPurchaseOrderNo())
+                            .eq(AssemblyEntity::getPoProject, db.getPoProject())
+                            .eq(AssemblyEntity::getSaleOrderNo, db.getSaleOrderNo())
+                            .eq(AssemblyEntity::getOrderProject, db.getOrderProject())
+                    );
+                } else {
+                    assemblyDao.removeById(request.getAssemblyId());
+                }
+            }
         }
         return new Result();
     }
 
     private List<AssemblyEntity> assemblyList(AssemblyRequest d) {
+        return assemblyList(d, null);
+    }
+
+    private List<AssemblyEntity> assemblyList(AssemblyRequest d, Consumer<LambdaQueryWrapper<AssemblyEntity>> consumer) {
         LambdaQueryWrapper<AssemblyEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(d.getAssemblyId())) {
             lambda.eq(AssemblyEntity::getId, d.getAssemblyId());
@@ -323,6 +383,12 @@ public class DousonAssemblyController {
         if (null != d.getEndDeliveryDate()) {
             lambda.le(AssemblyEntity::getDeliveryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndDeliveryDate())));
         }
+        if (null != d.getStartAssemblyCompleteDate()) {
+            lambda.ge(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartAssemblyCompleteDate())));
+        }
+        if (null != d.getEndAssemblyCompleteDate()) {
+            lambda.le(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndAssemblyCompleteDate())));
+        }
         if (isNotBlank(d.getOrderCount())) {
             lambda.eq(AssemblyEntity::getOrderCount, d.getOrderCount());
         }
@@ -332,22 +398,38 @@ public class DousonAssemblyController {
         if (isNotBlank(d.getDescription())) {
             lambda.like(AssemblyEntity::getDescription, d.getDescription());
         }
-        return assemblyDao.list(lambda.orderByDesc(AssemblyEntity::getPurchaseOrderNo).orderByDesc(AssemblyEntity::getPoProject).orderByDesc(AssemblyEntity::getSaleOrderNo).orderByDesc(AssemblyEntity::getOrderProject).orderByAsc(AssemblyEntity::getSerialIndex));
+        if (isNotBlank(d.getValveBody())) {
+            lambda.like(AssemblyEntity::getValveBody, d.getValveBody());
+        }
+        if (null != d.getAssemblyCompleteType()) {
+            if (0 == d.getAssemblyCompleteType()) {
+                lambda.apply("ASSEMBLY_COMPLETE_COUNT != 0");
+            } else {
+                lambda.apply("SERIAL_INDEX = 0 OR ASSEMBLY_COMPLETE_COUNT = 0 ");
+            }
+        }
+        lambda.orderByDesc(AssemblyEntity::getPurchaseOrderNo).orderByDesc(AssemblyEntity::getPoProject).orderByDesc(AssemblyEntity::getSaleOrderNo).orderByDesc(AssemblyEntity::getOrderProject).orderByAsc(AssemblyEntity::getSerialIndex);
+        if (null != consumer) {
+            consumer.accept(lambda);
+        }
+        return assemblyDao.list(lambda);
     }
 
     private List<AssemblyResponse> formatAssemblyList(List<AssemblyEntity> list) {
         List<AssemblyResponse> rl = ASSEMBLY_INSTANCE.assemblyList(list);
         List<String> userIdList = Stream.of(
-                        rl.stream().map(AssemblyResponse::getCreator).filter(StrUtil::isNotBlank)
+                        rl.stream().map(AssemblyResponse::getCreator).filter(StrUtil::isNotBlank),
+                        rl.stream().map(AssemblyResponse::getTester).filter(StrUtil::isNotBlank),
+                        rl.stream().map(AssemblyResponse::getAssemblyPerson).filter(StrUtil::isNotBlank)
                 )
                 .flatMap(t -> t)
                 .distinct()
                 .collect(Collectors.toList());
-        final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
+        final Map<String, String> um = CollUtil.isEmpty(userIdList) ? new HashMap<>(8) : userMapper.selectList(
                 DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
-        );
+        ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> t.getName(), (t, t1) -> t1));
         MultitaskUtil.supplementList(
                 rl,
                 AssemblyResponse::getAssemblyId,
@@ -390,7 +472,9 @@ public class DousonAssemblyController {
                     .setValveBodyPhotoCount(t.getValveBodyPhotoList().size())
                     .setValveCoverPhotoCount(t.getValveCoverPhotoList().size())
                     .setOilInjectionPhotoCount(t.getOilInjectionPhotoList().size())
-                    ;
+                    .setAssemblyPersonFormat(um.getOrDefault(t.getAssemblyPerson(), t.getAssemblyPerson()))
+                    .setTesterFormat(um.getOrDefault(t.getTester(), t.getTester()))
+            ;
         }
         return rl;
     }
@@ -412,7 +496,8 @@ public class DousonAssemblyController {
             @ModelAttribute AssemblyPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().anyMatch(t -> "assemblyManager".equals(t.getRoleCode()))) {
+        if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()) || "assemblyRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         final PageResult<AssemblyEntity> pr = DatabaseUtil.page(request, this::assemblyList);
         final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
@@ -421,7 +506,140 @@ public class DousonAssemblyController {
         );
     }
 
+    /**
+     * 整机装配
+     *
+     * @param deviceId 设备id
+     * @param request  {@link AssemblyRequest}
+     * @return {@link DataResult<AssemblyResponse>}
+     */
+    @GetMapping("")
+    public DataResult<AssemblyResponse> assembly(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute AssemblyRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()) || "assemblyRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        return new DataResult<>(CollUtil.getFirst(formatAssemblyList(assemblyList(request))));
+    }
+
+    /**
+     * 汇总列表
+     *
+     * @param deviceId 设备id
+     * @param request  {@link AssemblyRequest}
+     * @return {@link ListResult <AssemblySummaryResponse>}
+     */
+    @GetMapping("summary-list")
+    public ListResult<AssemblySummaryResponse> summaryList(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute AssemblyRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()) || "assemblyRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final List<AssemblyEntity> l = assemblyList(request, lambda -> {
+            lambda.eq(AssemblyEntity::getSerialIndex, 0)
+                    .select(
+                            AssemblyEntity::getPurchaseOrderNo,
+                            AssemblyEntity::getPoProject,
+                            AssemblyEntity::getSaleOrderNo,
+                            AssemblyEntity::getOrderProject,
+                            AssemblyEntity::getMaterialNo,
+                            AssemblyEntity::getMaterialDescription,
+                            AssemblyEntity::getDesignNumber,
+                            AssemblyEntity::getDeliveryDate,
+                            AssemblyEntity::getCompletedQty,
+                            AssemblyEntity::getAssemblyCompleteDate,
+                            AssemblyEntity::getAssemblyCompleteCount
+                    );
+        });
+        final List<AssemblySummaryResponse> rl = ASSEMBLY_INSTANCE.assemblySummaryList(l)
+                .stream().peek(t -> {
+                    t.setDeliveryDate(DateUtil.day(t.getDeliveryDate()));
+                    if (isNotBlank(t.getAssemblyCompleteDate()) && t.getCompletedQty() > 0) {
+                        t.setAssemblyCompleteDate(DateUtil.day(t.getAssemblyCompleteDate()));
+                    } else {
+                        t.setAssemblyCompleteDate("--")
+                                .setCompletedQty(0);
+                    }
+                })
+                .sorted(Comparator.comparing(AssemblySummaryResponse::getAssemblyCompleteDate))
+                .collect(Collectors.toList());
+        rl.add(
+                rl.stream().reduce(
+                        new AssemblySummaryResponse()
+                                .setPurchaseOrderNo("")
+                                .setPoProject("")
+                                .setSaleOrderNo("")
+                                .setOrderProject("")
+                                .setMaterialNo("")
+                                .setMaterialDescription("")
+                                .setDesignNumber("")
+                                .setDeliveryDate("--")
+                                .setAssemblyCompleteDate("合计")
+                                .setAssemblyCompleteCount(0)
+                                .setCompletedQty(0)
+                        ,
+                        (t, t1) -> {
+                            t.setAssemblyCompleteCount(t.getAssemblyCompleteCount() + t1.getAssemblyCompleteCount())
+                                    .setCompletedQty(t.getCompletedQty() + t1.getCompletedQty())
+                            ;
+                            return t;
+                        }
+                )
+        );
+        return new ListResult<>(
+                rl.stream()
+                        .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
     private void updateSummaryInfo(AssemblyEntity e, AssemblyRequest request) {
+        final List<AssemblyAttachmentEntity> attachList = assemblyAttachmentMapper.selectList(new LambdaQueryWrapper<AssemblyAttachmentEntity>()
+                .eq(AssemblyAttachmentEntity::getAssemblyId, e.getId())
+                .in(AssemblyAttachmentEntity::getAttachmentCategory, "valveBody", "oilInjection")
+        );
+        final String valveBodyString = attachList.stream().filter(t -> "valveBody".equals(t.getAttachmentCategory())).map(AssemblyAttachmentEntity::getUrl).sorted(String::compareTo).collect(Collectors.joining(","));
+        final String oilInjectionString = attachList.stream().filter(t -> "oilInjection".equals(t.getAttachmentCategory())).map(AssemblyAttachmentEntity::getUrl).sorted(String::compareTo).collect(Collectors.joining(","));
+        final String valveBodyRequestString = request.getValveBodyPhotoList().stream().map(PhotoImgModel::getPhotoUrl).sorted(String::compareTo).collect(Collectors.joining(","));
+        final String oilInjectionRequestString = request.getOilInjectionPhotoList().stream().map(PhotoImgModel::getPhotoUrl).sorted(String::compareTo).collect(Collectors.joining(","));
+        final boolean valveBodyChange = isNotBlank(valveBodyRequestString) && !valveBodyString.equals(valveBodyRequestString);
+        final boolean oilInjectionChange = isNotBlank(oilInjectionRequestString) && !oilInjectionString.equals(oilInjectionRequestString);
+        final String dateTime = DateUtil.dateTime(new Date());
+        final LambdaUpdateWrapper<AssemblyEntity> updateLambda = new LambdaUpdateWrapper<AssemblyEntity>().eq(AssemblyEntity::getId, e.getId());
+        if (valveBodyChange) {
+            updateLambda
+                    .set(AssemblyEntity::getAssemblyCompleteCount, 1)
+                    .set(AssemblyEntity::getAssemblyPerson, e.getModifier())
+                    .set(AssemblyEntity::getAssemblyStartDate, dateTime)
+            ;
+        } else if (isBlank(valveBodyRequestString)) {
+            updateLambda
+                    .set(AssemblyEntity::getAssemblyCompleteCount, 0)
+                    .set(AssemblyEntity::getAssemblyPerson, "")
+                    .set(AssemblyEntity::getAssemblyStartDate, "")
+            ;
+        }
+        if (oilInjectionChange) {
+            updateLambda
+                    .set(AssemblyEntity::getCompletedQty, 1)
+                    .set(AssemblyEntity::getTester, e.getModifier())
+                    .set(AssemblyEntity::getAssemblyCompleteDate, dateTime)
+            ;
+        } else if (isBlank(oilInjectionRequestString)) {
+            updateLambda
+                    .set(AssemblyEntity::getCompletedQty, 0)
+                    .set(AssemblyEntity::getTester, "")
+                    .set(AssemblyEntity::getAssemblyCompleteDate, "")
+            ;
+
+        }
+        assemblyMapper.update(null, updateLambda);
         assemblyAttachmentMapper.delete(new LambdaUpdateWrapper<AssemblyAttachmentEntity>()
                 .eq(AssemblyAttachmentEntity::getAssemblyId, e.getId())
         );
@@ -451,7 +669,23 @@ public class DousonAssemblyController {
                         ).flatMap(t -> t)
                         .collect(Collectors.toList())
         );
-
+        final Integer completeCount = assemblyMapper.selectList(new LambdaQueryWrapper<AssemblyEntity>()
+                        .ne(AssemblyEntity::getSerialIndex, 0)
+                        .eq(AssemblyEntity::getPurchaseOrderNo, e.getPurchaseOrderNo())
+                        .eq(AssemblyEntity::getPoProject, e.getPoProject())
+                        .eq(AssemblyEntity::getSaleOrderNo, e.getSaleOrderNo())
+                        .eq(AssemblyEntity::getOrderProject, e.getOrderProject())
+                        .select(AssemblyEntity::getCompletedQty)
+                ).stream().map(t -> defaultInt(t.getCompletedQty()))
+                .reduce(0, Integer::sum);
+        assemblyMapper.update(null, new LambdaUpdateWrapper<AssemblyEntity>()
+                .set(AssemblyEntity::getCompletedQty, completeCount)
+                .eq(AssemblyEntity::getSerialIndex, 0)
+                .eq(AssemblyEntity::getPurchaseOrderNo, e.getPurchaseOrderNo())
+                .eq(AssemblyEntity::getPoProject, e.getPoProject())
+                .eq(AssemblyEntity::getSaleOrderNo, e.getSaleOrderNo())
+                .eq(AssemblyEntity::getOrderProject, e.getOrderProject())
+        );
 //        final List<AssemblyEntity> el = assemblyMapper.selectList(
 //                new LambdaQueryWrapper<AssemblyEntity>()
 //                        .eq(AssemblyEntity::getSaleOrderNo, e.getSaleOrderNo())
