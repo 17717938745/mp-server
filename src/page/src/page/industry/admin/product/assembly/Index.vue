@@ -577,7 +577,7 @@ const handleTableRowClassName = ({
     }
   } else {
     if(row.completedQty > 0) {
-      return 'row-green'
+      return 'row-gray'
     }
   }
   return ''
