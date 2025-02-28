@@ -17,6 +17,7 @@ export interface ViewConfig {
   showOverflow?: boolean,
   children?: ViewConfig[],
   managerEdit?: Function,
+  valueHighLight?: Function,
   openLink?: Function,
   listShowType?: number,
 }

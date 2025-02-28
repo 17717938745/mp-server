@@ -3,6 +3,7 @@ package com.lead.fund.base.server.mp.controller;
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
 import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
+import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.converter.SchedulingConverter.SCHEDULING_INSTANCE;
 
@@ -12,6 +13,7 @@ import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.exec.BusinessException;
+import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
@@ -49,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -242,8 +245,6 @@ public class DousonSchedulingController {
                 .filter(StrUtil::isNotBlank)
                 .distinct()
                 .collect(Collectors.toList());
-        final Map<Object, String> pm = paramDao.listByCategoryId("profession")
-                .stream().collect(Collectors.toMap(ParamConfigResponse::getValue, t -> t.getLabel(), (t, t1) -> t1, HashMap::new));
         final Map<String, MpUserEntity> um = CollUtil.isEmpty(userIdList) ? new HashMap<>(8) : userMapper.selectList(
                 DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName, MpUserEntity::getProfession),
                         userIdList,
@@ -255,19 +256,12 @@ public class DousonSchedulingController {
             t
                     .setDeviceSorter(0)
                     .setScheduleDayTimeFormat(t.getScheduleDayTimeList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).distinct().collect(Collectors.joining(",")))
-                    .setScheduleDayTimeProfessionFormat(t.getScheduleDayTimeList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleMiddleFormat(t.getScheduleMiddleList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleMiddleProfessionFormat(t.getScheduleMiddleList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleEveningFormat(t.getScheduleEveningList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEveningProfessionFormat(t.getScheduleEveningList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleDayTime12Format(t.getScheduleDayTime12List().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleDayTime12ProfessionFormat(t.getScheduleDayTime12List().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleEvening12Format(t.getScheduleEvening12List().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEvening12ProfessionFormat(t.getScheduleEvening12List().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleDayTimeTechnologyGroupFormat(t.getScheduleDayTimeTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleDayTimeTechnologyGroupProfessionFormat(t.getScheduleDayTimeTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
                     .setScheduleEveningTechnologyGroupFormat(t.getScheduleEveningTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEveningTechnologyGroupProfessionFormat(t.getScheduleEveningTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
             ;
             final DeviceEntity de = dm.get(t.getDeviceNumber());
             if (null != de) {
@@ -318,8 +312,30 @@ public class DousonSchedulingController {
                     .setScheduling(CollUtil.getFirst(formatSchedulingList(schedulingList(new SchedulingRequest().setSchedulingId(request.getSchedulingId())))))
                     .setSchedulingList(formatSchedulingDetailList(schedulingDetailList(request)))
             ;
-            r.getSchedulingList().add(0,
-                    r.getSchedulingList().stream().reduce(
+            final List<SchedulingDetailResponse> rl = r.getSchedulingList();
+            final List<String> userIdList = Stream.of(
+                            rl.stream().map(SchedulingDetailResponse::getScheduleDayTimeList),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleMiddleList),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleEveningList),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleDayTime12List),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleEvening12List),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleDayTimeTechnologyGroupList),
+                            rl.stream().map(SchedulingDetailResponse::getScheduleEveningTechnologyGroupList)
+                    )
+                    .flatMap(t -> t.flatMap(Collection::stream))
+                    .filter(StrUtil::isNotBlank)
+                    .distinct()
+                    .collect(Collectors.toList());
+            final Map<String, String> pm = paramDao.listByCategoryId("profession")
+                    .stream().filter(t -> defaultIfBlank(t.getLabel()).contains("组长")).collect(Collectors.toMap(t -> String.valueOf(t.getValue()), OptionItem::getLabel, (t, t1) -> t1, HashMap::new));
+            final Map<String, Boolean> um = CollUtil.isEmpty(userIdList) ? new HashMap<>(8) : userMapper.selectList(
+                    DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName, MpUserEntity::getProfession),
+                            userIdList,
+                            (lam, pl) -> lam.in(MpUserEntity::getId, pl))
+            ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> pm.containsKey(t.getProfession()), (t, t1) -> t1, HashMap::new));
+            r.setHighLightUserIdList(new ArrayList<>(um.entrySet().stream().filter(t -> Boolean.TRUE.equals(t.getValue())).map(Entry::getKey).collect(Collectors.toList())));
+            rl.add(0,
+                    rl.stream().reduce(
                             new SchedulingDetailResponse()
                                     .setDeviceNumber("-1")
                                     .setDeviceNumberFormat("Total")
@@ -346,7 +362,7 @@ public class DousonSchedulingController {
                     )
             );
             final AtomicInteger atomicInteger = new AtomicInteger(1);
-            for (SchedulingDetailResponse t : r.getSchedulingList()) {
+            for (SchedulingDetailResponse t : rl) {
                 t.setIndex(atomicInteger.getAndAdd(1));
             }
         }

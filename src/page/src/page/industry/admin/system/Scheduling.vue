@@ -195,15 +195,18 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'scheduleDayTimeTechnologyGroupLabel', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189},
   {value: 'scheduleEveningTechnologyGroupLabel', labelKey: 'scheduleEveningTechnologyGroup', width: 189},
 ])
+const handleValueHighLight = (row, t) => {
+  return includes(highLightUserIdList.value || [], t)
+}
 const columnDetailConfigList = ref<ViewConfig[]>([
   {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 189},
-  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 189, listShowType: 1,},
-  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 189, listShowType: 1,},
-  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 189, listShowType: 1,},
-  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 189, listShowType: 1,},
-  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 189, listShowType: 1,},
-  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189, listShowType: 1,},
-  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 189, listShowType: 1,},
+  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
+  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 189, listShowType: 1, valueHighLight: handleValueHighLight,},
 ])
 const defaultFormData = {
   dateMonth: '',
@@ -218,6 +221,7 @@ const defaultFormData = {
 const deliveryDateTimeList = ref([])
 const tableDetailData = ref([])
 const tableDetailSummaryData = ref({})
+const highLightUserIdList = ref([])
 const state = reactive({
   photoVisible: false,
   photoList: new Array<any>(),
@@ -274,8 +278,7 @@ const handleTableCellClassName = ({
 }) => {
   const k = columnIndexKey[columnIndex]
   if (k && row[k] && row[k].indexOf('组长') >= 0) {
-    console.log(`key: ${k}`)
-    return 'cell-red'
+    // return 'cell-red'
   }
   return ''
 }
@@ -316,7 +319,6 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
-let serialNoIndex = -1
 
 Promise.all([
   httpGet('douson/config', {
@@ -412,6 +414,7 @@ const handleShowDetail = () => {
       (res: DataResult<any>) => {
         showDetail.value = true
         tableDetailData.value = res.data.schedulingList
+        highLightUserIdList.value = res.data.highLightUserIdList
         const d = res.data.scheduling
         tableDetailSummaryData.value = d
         columnDetailConfigList.value = columnDetailConfigList.value.map(t => {

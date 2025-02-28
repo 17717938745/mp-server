@@ -31,4 +31,8 @@ public class SchedulingDetailWrapperResponse extends AbstractAdministratorModel 
      * 明细列表
      */
     private List<SchedulingDetailResponse> schedulingList;
+    /**
+     * 高亮用户列表
+     */
+    private List<String> highLightUserIdList;
 }

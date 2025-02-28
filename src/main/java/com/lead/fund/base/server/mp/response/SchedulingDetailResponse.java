@@ -47,41 +47,34 @@ public class SchedulingDetailResponse extends AbstractAdministratorModel {
      */
     private String scheduleDayTimeFormat;
     private List<String> scheduleDayTimeList = new ArrayList<>();
-    private String scheduleDayTimeProfessionFormat;
     /**
      * 中班
      */
     private String scheduleMiddleFormat;
     private List<String> scheduleMiddleList = new ArrayList<>();
-    private String scheduleMiddleProfessionFormat;
     /**
      * 夜班
      */
     private String scheduleEveningFormat;
     private List<String> scheduleEveningList = new ArrayList<>();
-    private String scheduleEveningProfessionFormat;
     /**
      * 白班12H
      */
     private String scheduleDayTime12Format;
     private List<String> scheduleDayTime12List = new ArrayList<>();
-    private String scheduleDayTime12ProfessionFormat;
     /**
      * 夜班12H
      */
     private String scheduleEvening12Format;
     private List<String> scheduleEvening12List = new ArrayList<>();
-    private String scheduleEvening12ProfessionFormat;
     /**
      * 白班技术组
      */
     private String scheduleDayTimeTechnologyGroupFormat;
     private List<String> scheduleDayTimeTechnologyGroupList = new ArrayList<>();
-    private String scheduleDayTimeTechnologyGroupProfessionFormat;
     /**
      * 夜班技术组
      */
     private String scheduleEveningTechnologyGroupFormat;
     private List<String> scheduleEveningTechnologyGroupList = new ArrayList<>();
-    private String scheduleEveningTechnologyGroupProfessionFormat;
 }

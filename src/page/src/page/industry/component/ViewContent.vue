@@ -259,6 +259,9 @@
           @click="() => handleEditSelectShow(row)"
           type="warning"
           class="douson-flex"
+          :style="(() => {
+            return viewConfig.valueHighLight && viewConfig.valueHighLight(row, t) ? {color: '#ff0000'} : {}
+          })(row)"
       >
         {{
           (viewConfig.optionList || []).reduce((p, tt) => tt.value === t ? tt.label : p, row[viewConfig.value]) || '--'
