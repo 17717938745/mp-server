@@ -2,14 +2,11 @@
   <div id="printContainer" class="douson-flex" style="margin-top: 20px;">
     <div class="douson-flex-item-column-center" style="width: 100%;">
       <h1 style="text-align: center;">
-        <span style="font-size: 36px;" @click="handleCopyLink">
+        <span style="font-size: 36px;">
           整机装配记录 Ghi chép lắp ráp máy
-            <el-icon style="vertical-align: middle">
-              <document-copy/>
-            </el-icon>
         </span>
       </h1>
-      <div class="douson-serial-no">{{ data.serialNo}}</div>
+      <div class="douson-serial-no">{{ data.serialNo }}</div>
       <el-descriptions
           :column="1"
           border
@@ -98,24 +95,12 @@ httpGet(`douson/assembly`, {assemblyId: route.query.assemblyId}).then(
     }
 )
 
-const handleCopyLink = () => {
-  const text = dousonFullUrl(`/industry/public/assembly?assemblyId=${route.query.assemblyId}`)
-  // 添加一个input元素放置需要的文本内容
-  const input = document.createElement('input')
-  input.value = text
-  document.body.appendChild(input)
-  // 选中并复制文本到剪切板
-  input.select()
-  document.execCommand('copy')
-  // 移除input元素
-  document.body.removeChild(input)
-  ElMessage.success('Copy success')
-}
 </script>
 
 <style lang="scss">
 .assembly-print-label {
 }
+
 .fixed-width {
   width: 90px;
 }

@@ -179,6 +179,7 @@ public class DousonAssemblyController {
                             .setOrderCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP).intValue())
                             .setCompletedQty(0)
                             .setAssemblyCompleteCount(0)
+                            .setDescription(defaultIfBlank(getCellValue(row.getCell(ci++))))
                             .setValveBody(getCellValue(row.getCell(ci++)))
                             .setValveCover(getCellValue(row.getCell(ci++)))
                             .setGate(getCellValue(row.getCell(ci++)))
@@ -198,7 +199,7 @@ public class DousonAssemblyController {
                         .setMaxSerialOrderIndex(0)
                         .setCompletedQty(0)
                         .setAssemblyCompleteCount(0)
-                        .setSerialNumber(t.getPurchaseOrderNo() + " " + t.getPoProject() + " " + StrUtil.padPre("0", 3, "0"))
+                        .setSerialNumber(t.getPurchaseOrderNo() + t.getPoProject() + StrUtil.padPre("0", 3, "0"))
                         .setCreator(u.getUserId())
                         .setModifier(u.getUserId());
                 il.add(e);
@@ -281,7 +282,7 @@ public class DousonAssemblyController {
                     .setMaxSerialOrderIndex(db.getMaxSerialOrderIndex() + (i + 1))
                     .setMaxSerialIndex(db.getMaxSerialIndex() + (i + 1))
                     .setSerialIndex(db.getMaxSerialIndex() + (i + 1))
-                    .setSerialNumber(e.getPurchaseOrderNo() + " " + e.getPoProject() + " " + StrUtil.padPre(String.valueOf(e.getSerialIndex()), 3, "0"))
+                    .setSerialNumber(e.getPurchaseOrderNo() + e.getPoProject() + StrUtil.padPre(String.valueOf(e.getSerialIndex()), 3, "0"))
                     .setOrderCount(1)
                     .setCompletedQty(0)
                     .setAssemblyCompleteCount(0)
@@ -354,7 +355,7 @@ public class DousonAssemblyController {
             lambda.eq(AssemblyEntity::getId, d.getAssemblyId());
         }
         if (isNotBlank(d.getSerialNumber())) {
-            lambda.like(AssemblyEntity::getSerialNumber, d.getSerialNumber());
+            lambda.like(AssemblyEntity::getSerialNumber, d.getSerialNumber().replace(" ", ""));
         }
         if (isNotBlank(d.getPurchaseOrderNo())) {
             lambda.like(AssemblyEntity::getPurchaseOrderNo, d.getPurchaseOrderNo());
@@ -550,6 +551,7 @@ public class DousonAssemblyController {
                             AssemblyEntity::getSaleOrderNo,
                             AssemblyEntity::getOrderProject,
                             AssemblyEntity::getMaterialNo,
+                            AssemblyEntity::getOrderCount,
                             AssemblyEntity::getMaterialDescription,
                             AssemblyEntity::getDesignNumber,
                             AssemblyEntity::getDeliveryDate,
@@ -584,10 +586,12 @@ public class DousonAssemblyController {
                                 .setAssemblyCompleteDate("合计")
                                 .setAssemblyCompleteCount(0)
                                 .setCompletedQty(0)
+                                .setOrderCount(0)
                         ,
                         (t, t1) -> {
                             t.setAssemblyCompleteCount(t.getAssemblyCompleteCount() + t1.getAssemblyCompleteCount())
                                     .setCompletedQty(t.getCompletedQty() + t1.getCompletedQty())
+                                    .setOrderCount(t.getOrderCount() + t1.getOrderCount())
                             ;
                             return t;
                         }

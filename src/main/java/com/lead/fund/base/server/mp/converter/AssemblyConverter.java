@@ -29,7 +29,8 @@ public interface AssemblyConverter extends Serializable {
     AssemblyEntity assembly(AssemblyRequest request);
 
     @Mapping(target = "assemblyId", source = "id")
-    AssemblyResponse assembly(AssemblyEntity d);
+    @Mapping(target = "serialNumber", expression = "java(t.getPurchaseOrderNo() + \" \" + t.getPoProject() + \" \" + com.lead.fund.base.common.util.StrUtil.padPre(\"0\", 3, \"0\"))")
+    AssemblyResponse assembly(AssemblyEntity t);
 
     List<AssemblyResponse> assemblyList(List<AssemblyEntity> list);
 

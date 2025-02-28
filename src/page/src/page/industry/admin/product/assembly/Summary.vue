@@ -53,6 +53,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 102},
   {value: 'orderProject', labelKey: 'orderProject', width: 56},
   {value: 'materialNo', labelKey: 'materialNo', width: 98},
+  {value: 'orderCount', labelKey: 'orderCount', width: 47},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
   {value: 'designNumber', labelKey: 'designNumber', width: 102},
   {value: 'deliveryDate', labelKey: 'deliveryDate', width: 102},

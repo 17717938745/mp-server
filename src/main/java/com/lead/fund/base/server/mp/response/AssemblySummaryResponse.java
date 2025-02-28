@@ -1,5 +1,7 @@
 package com.lead.fund.base.server.mp.response;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -68,4 +70,8 @@ public class AssemblySummaryResponse implements Serializable {
      * 装配完成数量
      */
     private Integer assemblyCompleteCount;
+    /**
+     * 订单数量，维度：采购订单编号、PO项目、销售订单、订单项目
+     */
+    private Integer orderCount;
 }
