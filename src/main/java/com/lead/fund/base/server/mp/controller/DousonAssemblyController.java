@@ -429,7 +429,7 @@ public class DousonAssemblyController {
                 DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
-        ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> t.getName(), (t, t1) -> t1));
+        ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, MpUserEntity::getName, (t, t1) -> t1));
         MultitaskUtil.supplementList(
                 rl,
                 AssemblyResponse::getAssemblyId,
