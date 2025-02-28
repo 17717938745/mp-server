@@ -151,6 +151,7 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      * 闸阀开关扭矩，N.m
      */
     private BigDecimal torqueNm;
+    private String torqueNmFormat;
     /**
      * 注油
      */

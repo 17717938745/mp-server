@@ -43,7 +43,7 @@
                        :placeholder="`${store.state.label.assemblyCompleteType}`"
                        class="search-item">
               <el-option
-                  v-for="item in [{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+                  v-for="item in [{value: null, label: `All`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -91,7 +91,7 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
         :detail-link="false"
-        :handleTableCellClassName="handleTableCellClassName"
+        :handleTableRowClassName="handleTableRowClassName"
     >
       <template #operator="row">
         <el-link
@@ -236,7 +236,7 @@
           <image-upload :photoList="formData.pressureTestPhotoList" :maxSize="Number(`${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow)"></image-upload>
         </el-form-item>
         <el-form-item prop="torqueNm" :label="store.state.label.torqueNm">
-          <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :disabled="!(editYellow)">
+          <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :min="100" :max="300" :disabled="!(editYellow)">
             <template #append>
               N.m
             </template>
@@ -360,10 +360,9 @@ const columnConfigList = ref<ViewConfig[]>([
     value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 65,
   },
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.Image,},
-  {value: 'torqueNm', labelKey: 'torqueNm', width: 189},
-  {value: 'oilInjection', labelKey: 'oilInjection', width: 189},
+  {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 189},
   {
-    value: 'oilInjectionPhotoCount', labelKey: 'oilInjectionPhoto', width: 65,
+    value: 'oilInjectionPhotoCount', labelKey: 'oilInjection', width: 65,
   },
   {value: 'oilInjectionPhotoList', labelKey: 'oilInjectionPhoto', width: 189, type: ValueType.Image,},
   {value: 'testerFormat', labelKey: 'tester', width: 189},
@@ -411,7 +410,6 @@ const defaultFormData = {
   pressureTestPhotoCount: 0,
   pressureTestPhotoList: [],
   torqueNm: '',
-  oilInjection: '',
   oilInjectionPhotoCount: 0,
   oilInjectionPhotoList: [],
   tester: '',
@@ -440,7 +438,7 @@ const state = reactive({
       endDeliveryDate: '',
       description: '',
       valveBody: '',
-      assemblyCompleteType: 1,
+      assemblyCompleteType: includes(roleCodeList, 'assemblyRecord') ? 1 : includes(roleCodeList, 'assemblyTesterRecord') ? 0 : null,
 
       startCreateDate: '',
       endCreateDate: '',
@@ -481,6 +479,7 @@ const state = reactive({
     valveBodyPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveCoverPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveSeatPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
+    torqueNm: [{required: false, type: 'number', min: 100, max: 300}],
     gatePhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveStemPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     pressureTestPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
@@ -565,22 +564,24 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
-const handleTableCellClassName = ({
-                                    row,
-                                    column,
-                                    rowIndex,
-                                    columnIndex,
-                                  }: {
+const handleTableRowClassName = ({
+                                   row,
+                                   rowIndex,
+                                 }: {
   row: any
   rowIndex: number
 }) => {
-  if (row.serialIndex === 0 && row.orderCount === row.completedQty) {
-    return 'row-green'
+  if (row.serialIndex === 0) {
+    if( row.orderCount === row.completedQty) {
+      return 'row-green'
+    }
+  } else {
+    if(row.completedQty > 0) {
+      return 'row-green'
+    }
   }
   return ''
 }
-let serialNoIndex = -1
-
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
@@ -644,6 +645,8 @@ Promise.all([
             formRef.value.scrollToField('valveStemPhotoList')
           }, 100)
         }
+      } else if ('description' === t.value) {
+        t.type = ValueType.TextEdit
       }
     }
     if (editYellow) {
@@ -665,6 +668,11 @@ Promise.all([
             formRef.value.scrollToField('oilInjectionPhotoList')
           }, 100)
         }
+      } else if ('description' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('torqueNmFormat' === t.value) {
+        t.width = 161
+        t.type = ValueType.NumberEdit
       }
     }
 

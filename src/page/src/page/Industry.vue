@@ -116,6 +116,12 @@ $containerLeftGap: 5px;
     font-weight: 900;
     font-size: 16px;
   }
+  .row-gray {
+    background-color: #e2e3df !important;
+    color: #3b2424 !important;
+    font-weight: 900;
+    font-size: 16px;
+  }
 
   .row-done {
     background-color: #e4e7ed;

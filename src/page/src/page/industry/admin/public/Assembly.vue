@@ -81,8 +81,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'assemblyStartDate', labelKey: 'assemblyStartDate', width: 189},
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.PictureText,},
   {value: 'torqueNm', labelKey: 'torqueNm', width: 189},
-  {value: 'oilInjection', labelKey: 'oilInjection', width: 189},
-  {value: 'oilInjectionPhotoList', labelKey: 'oilInjectionPhoto', width: 189, type: ValueType.PictureText, textLabel: 'oilInjection',},
+  {value: 'oilInjectionPhotoList', labelKey: 'oilInjection', width: 189, type: ValueType.PictureText, textLabel: 'oilInjection',},
   {value: 'testerFormat', labelKey: 'tester', width: 189},
   {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 189},
 

@@ -236,6 +236,7 @@ public class DousonAssemblyController {
                 .setCompletedQty(defaultInt(request.getAssemblyCompleteCount()))
                 .setAssemblyCompleteCount(defaultInt(request.getAssemblyCompleteCount()))
                 .setModifier(u.getUserId());
+        e.setSerialNumber(e.getPurchaseOrderNo() + e.getPoProject() + StrUtil.padPre(String.valueOf(e.getSerialIndex()), 3, "0"));
         // update
         if (isNotBlank(e.getId())) {
             if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()))) {
@@ -406,7 +407,7 @@ public class DousonAssemblyController {
             if (0 == d.getAssemblyCompleteType()) {
                 lambda.apply("ASSEMBLY_COMPLETE_COUNT != 0");
             } else {
-                lambda.apply("SERIAL_INDEX = 0 OR ASSEMBLY_COMPLETE_COUNT = 0 ");
+                lambda.apply("(SERIAL_INDEX = 0 OR ASSEMBLY_COMPLETE_COUNT = 0)");
             }
         }
         lambda.orderByDesc(AssemblyEntity::getPurchaseOrderNo).orderByDesc(AssemblyEntity::getPoProject).orderByDesc(AssemblyEntity::getSaleOrderNo).orderByDesc(AssemblyEntity::getOrderProject).orderByAsc(AssemblyEntity::getSerialIndex);
