@@ -675,7 +675,6 @@ Promise.all([
         t.type = ValueType.NumberEdit
       }
     }
-
     return t
   })
   handlePage()
