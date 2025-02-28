@@ -3279,8 +3279,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formString)
   console.log(formRuleString)
 }
-printMultipleText('设备编号\t白班\t中班\t夜班\t白班12H\t夜班12H\t白班技术组\t夜班技术组\n' +
-    'Mã máy\tCa ngày\tCa hai\tCa đêm\tCa ngày 12H\tCa đêm 12H\tNhóm kỹ thuật ca ngày\tNhóm kỹ thuật ca đêm')
+// printMultipleText('设备编号\t白班\t中班\t夜班\t白班12H\t夜班12H\t白班技术组\t夜班技术组\n' +
+//     'Mã máy\tCa ngày\tCa hai\tCa đêm\tCa ngày 12H\tCa đêm 12H\tNhóm kỹ thuật ca ngày\tNhóm kỹ thuật ca đêm')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};

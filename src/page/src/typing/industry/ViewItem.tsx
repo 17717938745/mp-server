@@ -18,6 +18,7 @@ export interface ViewConfig {
   children?: ViewConfig[],
   managerEdit?: Function,
   openLink?: Function,
+  listShowType?: number,
 }
 
 export enum ViewType {

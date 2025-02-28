@@ -33,6 +33,10 @@ public class SchedulingRequest implements Serializable {
      */
     private String schedulingId;
     /**
+     * 拷贝
+     */
+    private String schedulingCopyId;
+    /**
      * 某一月
      */
     private String dateMonth;

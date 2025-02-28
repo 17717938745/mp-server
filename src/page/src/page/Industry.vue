@@ -104,6 +104,12 @@ $containerLeftGap: 5px;
     font-weight: 900;
     font-size: 16px;
   }
+  .cell-red {
+    background-color: #f1f15b !important;
+    color: #ff0000 !important;
+    font-weight: 900;
+    font-size: 16px;
+  }
   .row-green {
     background-color: #9bc567 !important;
     //color: #ca3434 !important;

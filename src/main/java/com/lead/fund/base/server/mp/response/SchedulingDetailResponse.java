@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.response;
 
 import com.lead.fund.base.common.basic.model.AbstractAdministratorModel;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,10 @@ public class SchedulingDetailResponse extends AbstractAdministratorModel {
 
     private static final long serialVersionUID = -2958798731405959906L;
     /**
+     * 排班明细ID
+     */
+    private String schedulingDetailId;
+    /**
      * 序号
      */
     private Integer index;
@@ -36,39 +41,47 @@ public class SchedulingDetailResponse extends AbstractAdministratorModel {
      */
     private String deviceNumber;
     private String deviceNumberFormat;
+    private Integer deviceSorter;
     /**
      * 白班
      */
     private String scheduleDayTimeFormat;
-    private List<String> scheduleDayTimeList;
+    private List<String> scheduleDayTimeList = new ArrayList<>();
+    private String scheduleDayTimeProfessionFormat;
     /**
      * 中班
      */
     private String scheduleMiddleFormat;
-    private List<String> scheduleMiddleList;
+    private List<String> scheduleMiddleList = new ArrayList<>();
+    private String scheduleMiddleProfessionFormat;
     /**
      * 夜班
      */
     private String scheduleEveningFormat;
-    private List<String> scheduleEveningList;
+    private List<String> scheduleEveningList = new ArrayList<>();
+    private String scheduleEveningProfessionFormat;
     /**
      * 白班12H
      */
     private String scheduleDayTime12Format;
-    private List<String> scheduleDayTime12List;
+    private List<String> scheduleDayTime12List = new ArrayList<>();
+    private String scheduleDayTime12ProfessionFormat;
     /**
      * 夜班12H
      */
     private String scheduleEvening12Format;
-    private List<String> scheduleEvening12List;
+    private List<String> scheduleEvening12List = new ArrayList<>();
+    private String scheduleEvening12ProfessionFormat;
     /**
      * 白班技术组
      */
     private String scheduleDayTimeTechnologyGroupFormat;
-    private List<String> scheduleDayTimeTechnologyGroupList;
+    private List<String> scheduleDayTimeTechnologyGroupList = new ArrayList<>();
+    private String scheduleDayTimeTechnologyGroupProfessionFormat;
     /**
      * 夜班技术组
      */
     private String scheduleEveningTechnologyGroupFormat;
-    private List<String> scheduleEveningTechnologyGroupList;
+    private List<String> scheduleEveningTechnologyGroupList = new ArrayList<>();
+    private String scheduleEveningTechnologyGroupProfessionFormat;
 }

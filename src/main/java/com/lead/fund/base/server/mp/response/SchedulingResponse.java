@@ -1,8 +1,6 @@
 package com.lead.fund.base.server.mp.response;
 
-import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.basic.model.AbstractAdministratorModel;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -33,6 +31,10 @@ public class SchedulingResponse extends AbstractAdministratorModel {
      */
     private String schedulingId;
     /**
+     * 标题
+     */
+    private String schedulingTitle;
+    /**
      * 某一月
      */
     private String dateMonth;
@@ -43,7 +45,7 @@ public class SchedulingResponse extends AbstractAdministratorModel {
     /**
      * 日期
      */
-    private String dateFormat;
+    private String dateMonthFormat;
     /**
      * 白班
      */

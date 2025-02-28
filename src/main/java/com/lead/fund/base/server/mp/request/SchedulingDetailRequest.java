@@ -24,6 +24,10 @@ public class SchedulingDetailRequest implements Serializable {
 
     private static final long serialVersionUID = -2958798731405959905L;
     /**
+     * 排班明细ID
+     */
+    private String schedulingDetailId;
+    /**
      * 序号
      */
     private Integer index;

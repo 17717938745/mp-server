@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.controller;
 
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.converter.SchedulingConverter.SCHEDULING_INSTANCE;
 
@@ -16,20 +17,18 @@ import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
+import com.lead.fund.base.common.util.BeanUtil;
 import com.lead.fund.base.common.util.DateUtil;
+import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.SchedulingDao;
 import com.lead.fund.base.server.mp.dao.SchedulingDetailDao;
-import com.lead.fund.base.server.mp.dao.TaskDao;
-import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.DeviceEntity;
 import com.lead.fund.base.server.mp.entity.douson.SchedulingDetailEntity;
 import com.lead.fund.base.server.mp.entity.douson.SchedulingEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
-import com.lead.fund.base.server.mp.helper.LockHelper;
-import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
 import com.lead.fund.base.server.mp.mapper.douson.SchedulingMapper;
@@ -37,17 +36,20 @@ import com.lead.fund.base.server.mp.request.SchedulingDetailRequest;
 import com.lead.fund.base.server.mp.request.SchedulingPageRequest;
 import com.lead.fund.base.server.mp.request.SchedulingRequest;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
+import com.lead.fund.base.server.mp.response.ParamConfigResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailWrapperResponse;
 import com.lead.fund.base.server.mp.response.SchedulingResponse;
+import com.lead.fund.base.server.mp.response.VocationResponse;
 import jakarta.annotation.Resource;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,7 +74,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @date 2024-04-30 16:11
  */
-@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused"})
 @RestController
 @RequestMapping("/douson/scheduling")
 @Slf4j
@@ -82,11 +83,7 @@ public class DousonSchedulingController {
     @Resource
     private AccountHelper accountHelper;
     @Resource
-    private TemplatePhotoDao templatePhotoDao;
-    @Resource
     private SchedulingMapper schedulingMapper;
-    @Resource
-    private TaskDao taskDao;
     @Resource
     private SchedulingDao schedulingDao;
     @Resource
@@ -94,13 +91,9 @@ public class DousonSchedulingController {
     @Resource
     private MpUserMapper userMapper;
     @Resource
-    private ParamDao paramDao;
-    @Resource
-    private LockHelper lockHelper;
-    @Resource
-    private UrlHelper urlHelper;
-    @Resource
     private DeviceMapper deviceMapper;
+    @Resource
+    private ParamDao paramDao;
 
     /**
      * 保存、更新排班
@@ -115,26 +108,51 @@ public class DousonSchedulingController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody SchedulingRequest request
     ) {
-        final Date now = new Date();
-        final String today = DateUtil.day(now);
         final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "schedulingManager".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        final Date now = new Date();
         final SchedulingEntity e = (SchedulingEntity) SCHEDULING_INSTANCE.scheduling(request)
+                .setWeekIndex(DateUtil.parse(request.getDateMonth()).getField(DateField.WEEK_OF_YEAR))
                 .setModifier(u.getUserId());
-        // update
-        if (isNotBlank(e.getId())) {
-            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()))) {
-                throw new BusinessException(AUTHORITY_AUTH_FAIL);
-            }
+        // copy
+        if (isNotBlank(request.getSchedulingCopyId())) {
+            schedulingMapper.insert((SchedulingEntity) e
+                    .setCreator(u.getUserId())
+            );
+            schedulingDetailDao.saveBatch(
+                    schedulingDetailDao.list(new LambdaQueryWrapper<SchedulingDetailEntity>()
+                                    .eq(SchedulingDetailEntity::getSchedulingId, request.getSchedulingCopyId())
+                            ).stream()
+                            .peek(t -> {
+                                t.setSchedulingId(e.getId())
+                                        .setId(null)
+                                ;
+                            }).collect(Collectors.toList())
+            );
+            // update
+        } else if (isNotBlank(e.getId())) {
             if (schedulingMapper.updateById(e) <= 0) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             // insert
         } else {
-            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()))) {
-                throw new BusinessException(AUTHORITY_AUTH_FAIL);
-            }
             schedulingMapper.insert((SchedulingEntity) e
                     .setCreator(u.getUserId())
+            );
+            MultitaskUtil.batchInvokeAll(
+                    deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>()
+                                    .select(DeviceEntity::getId, DeviceEntity::getSorter))
+                            .stream()
+                            .sorted(Comparator.comparing(DeviceEntity::getSorter))
+                            .map(t -> new SchedulingDetailEntity()
+                                    .setSchedulingId(e.getId())
+                                    .setDeviceNumber(t.getId())).collect(Collectors.toList()),
+                    l -> {
+                        schedulingDetailDao.saveBatch(l);
+                        return l;
+                    }
             );
         }
         return new DataResult<>(e);
@@ -185,7 +203,10 @@ public class DousonSchedulingController {
     private List<SchedulingDetailEntity> schedulingDetailList(SchedulingDetailRequest d) {
         LambdaQueryWrapper<SchedulingDetailEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(d.getSchedulingId())) {
-            lambda.eq(SchedulingDetailEntity::getId, d.getSchedulingId());
+            lambda.eq(SchedulingDetailEntity::getSchedulingId, d.getSchedulingId());
+        }
+        if (isNotBlank(d.getDeviceNumber())) {
+            lambda.eq(SchedulingDetailEntity::getDeviceNumber, d.getDeviceNumber());
         }
         lambda.orderByAsc(SchedulingDetailEntity::getDeviceNumber);
         return schedulingDetailDao.list(lambda);
@@ -195,13 +216,13 @@ public class DousonSchedulingController {
         final List<SchedulingResponse> rl = SCHEDULING_INSTANCE.schedulingList(list);
         for (SchedulingResponse t : rl) {
             final DateTime dateTime = DateUtil.parse(t.getDateMonth());
-            final DateTime dateCopy = DateTime.of(dateTime.getTime());
-            dateCopy.setField(DateField.WEEK_OF_MONTH, t.getWeekIndex());
-            dateCopy.setField(DateField.DAY_OF_WEEK, 1);
-            final String startDay = DateUtil.day(dateCopy);
-            dateCopy.offset(DateField.WEEK_OF_MONTH, 1);
-            final String endDay = DateUtil.day(dateCopy);
-            t.setDateFormat(dateTime.toString("yyyy年MM月 ") + "第" + t.getIndex() + "周" + "（" + startDay + " - " + endDay + "）");
+            final DateTime startDate = DateTime.of(dateTime.getTime());
+            final DateTime endDate = DateTime.of(startDate.getTime());
+            endDate.setField(DateField.DAY_OF_WEEK, 1);
+            endDate.offset(DateField.WEEK_OF_MONTH, 1).offset(DateField.DAY_OF_YEAR, -1);
+            t.setDateMonthFormat(dateTime.toString("yyyy-MM ") + "Week " + dateTime.getField(DateField.WEEK_OF_MONTH) + "（" + dateTime.toString("yyyy") + "Week " + t.getWeekIndex() + ", " + DateUtil.day(startDate) + " - " + DateUtil.day(endDate) + "）")
+                    .setSchedulingTitle("Bảng chia ca CNC 排班表，Tuần %2d năm %s,(%s đến %s)".formatted(t.getWeekIndex(), dateTime.toString("yyyy"), startDate.toString("dd/MM"), endDate.toString("dd/MM")))
+            ;
         }
         return rl;
     }
@@ -218,32 +239,46 @@ public class DousonSchedulingController {
                         rl.stream().map(SchedulingDetailResponse::getScheduleEveningTechnologyGroupList)
                 )
                 .flatMap(t -> t.flatMap(Collection::stream))
-                .filter(StrUtil::isNotBlank).distinct()
+                .filter(StrUtil::isNotBlank)
                 .distinct()
                 .collect(Collectors.toList());
+        final Map<Object, String> pm = paramDao.listByCategoryId("profession")
+                .stream().collect(Collectors.toMap(ParamConfigResponse::getValue, t -> t.getLabel(), (t, t1) -> t1, HashMap::new));
         final Map<String, MpUserEntity> um = CollUtil.isEmpty(userIdList) ? new HashMap<>(8) : userMapper.selectList(
-                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName, MpUserEntity::getProfession),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> t, (t, t1) -> t1, HashMap::new));
-        final Map<String, String> dm = deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().orderByAsc(DeviceEntity::getSorter).select(DeviceEntity::getId, DeviceEntity::getDeviceName))
-                .stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, DeviceEntity::getDeviceName, (t, t1) -> t1, HashMap::new));
-        for (SchedulingDetailResponse t : rl) {
+        final Map<String, DeviceEntity> dm = deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().orderByAsc(DeviceEntity::getSorter).select(DeviceEntity::getId, DeviceEntity::getDeviceName, DeviceEntity::getSorter))
+                .stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> t, (t, t1) -> t1, HashMap::new));
+        return rl.stream().peek(t -> {
             t
-                    .setScheduleDayTimeFormat(t.getScheduleDayTimeList().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleMiddleFormat(t.getScheduleMiddleList().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEveningFormat(t.getScheduleEveningList().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleDayTime12Format(t.getScheduleDayTime12List().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEvening12Format(t.getScheduleEvening12List().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleDayTimeTechnologyGroupFormat(t.getScheduleDayTimeTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
-                    .setScheduleEveningTechnologyGroupFormat(t.getScheduleEveningTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> dm.getOrDefault(t1, t1)).collect(Collectors.joining(",")))
+                    .setDeviceSorter(0)
+                    .setScheduleDayTimeFormat(t.getScheduleDayTimeList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).distinct().collect(Collectors.joining(",")))
+                    .setScheduleDayTimeProfessionFormat(t.getScheduleDayTimeList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleMiddleFormat(t.getScheduleMiddleList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleMiddleProfessionFormat(t.getScheduleMiddleList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleEveningFormat(t.getScheduleEveningList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleEveningProfessionFormat(t.getScheduleEveningList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleDayTime12Format(t.getScheduleDayTime12List().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleDayTime12ProfessionFormat(t.getScheduleDayTime12List().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleEvening12Format(t.getScheduleEvening12List().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleEvening12ProfessionFormat(t.getScheduleEvening12List().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleDayTimeTechnologyGroupFormat(t.getScheduleDayTimeTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleDayTimeTechnologyGroupProfessionFormat(t.getScheduleDayTimeTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
+                    .setScheduleEveningTechnologyGroupFormat(t.getScheduleEveningTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getName, t1)).collect(Collectors.joining(",")))
+                    .setScheduleEveningTechnologyGroupProfessionFormat(t.getScheduleEveningTechnologyGroupList().stream().filter(StrUtil::isNotBlank).map(t1 -> pm.get(BeanUtil.wrapperIfNotNull(um.get(t1), MpUserEntity::getProfession, t1))).filter(Objects::nonNull).collect(Collectors.joining(",")))
             ;
-        }
-        return rl;
-    }
-
-    private static String tail(BigDecimal v) {
-        return null == v || v.compareTo(BigDecimal.ZERO) <= 0 ? "" : ("-" + v.setScale(0, RoundingMode.HALF_UP));
+            final DeviceEntity de = dm.get(t.getDeviceNumber());
+            if (null != de) {
+                t.setDeviceNumberFormat(de.getDeviceName())
+                        .setDeviceSorter(defaultInt(de.getSorter()));
+            } else {
+                t
+                        .setDeviceNumberFormat(t.getDeviceNumber())
+                        .setDeviceSorter(0);
+            }
+        }).sorted(Comparator.comparing(SchedulingDetailResponse::getDeviceSorter)).collect(Collectors.toList());
     }
 
     /**
@@ -258,10 +293,6 @@ public class DousonSchedulingController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute SchedulingPageRequest request
     ) {
-        final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "schedulingManager".equals(t.getRoleCode()) || "schedulingRecord".equals(t.getRoleCode()) || "schedulingTesterRecord".equals(t.getRoleCode()) || "schedulingRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
         final PageResult<SchedulingEntity> pr = DatabaseUtil.page(request, this::schedulingList);
         final AtomicInteger atomicInteger = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
         return new PageResult<>(pr.getTotal(), formatSchedulingList(pr.getList())
@@ -277,20 +308,43 @@ public class DousonSchedulingController {
      * @return {@link DataResult<SchedulingDetailWrapperResponse>}
      */
     @GetMapping("detail")
-    public DataResult<SchedulingDetailWrapperResponse> detailList(
+    public DataResult<SchedulingDetailWrapperResponse> detail(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute SchedulingDetailRequest request
     ) {
-        final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "schedulingManager".equals(t.getRoleCode()) || "schedulingRecord".equals(t.getRoleCode()) || "schedulingTesterRecord".equals(t.getRoleCode()) || "schedulingRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
         final SchedulingDetailWrapperResponse r = new SchedulingDetailWrapperResponse();
         if (isNotBlank(request.getSchedulingId())) {
             r
                     .setScheduling(CollUtil.getFirst(formatSchedulingList(schedulingList(new SchedulingRequest().setSchedulingId(request.getSchedulingId())))))
                     .setSchedulingList(formatSchedulingDetailList(schedulingDetailList(request)))
             ;
+            r.getSchedulingList().add(0,
+                    r.getSchedulingList().stream().reduce(
+                            new SchedulingDetailResponse()
+                                    .setDeviceNumber("-1")
+                                    .setDeviceNumberFormat("Total")
+                            ,
+                            (t, t1) -> {
+                                CollUtil.addAllIfNotContains(t.getScheduleDayTimeList(), t1.getScheduleDayTimeList());
+                                CollUtil.addAllIfNotContains(t.getScheduleMiddleList(), t1.getScheduleMiddleList());
+                                CollUtil.addAllIfNotContains(t.getScheduleEveningList(), t1.getScheduleEveningList());
+                                CollUtil.addAllIfNotContains(t.getScheduleDayTime12List(), t1.getScheduleDayTime12List());
+                                CollUtil.addAllIfNotContains(t.getScheduleEvening12List(), t1.getScheduleEvening12List());
+                                CollUtil.addAllIfNotContains(t.getScheduleDayTimeTechnologyGroupList(), t1.getScheduleDayTimeTechnologyGroupList());
+                                CollUtil.addAllIfNotContains(t.getScheduleEveningTechnologyGroupList(), t1.getScheduleEveningTechnologyGroupList());
+                                t.setScheduleDayTimeFormat("%s".formatted(t.getScheduleDayTimeList().stream().distinct().count()));
+                                t.setScheduleMiddleFormat("%s".formatted(t.getScheduleMiddleList().stream().distinct().count()));
+                                t.setScheduleEveningFormat("%s".formatted(t.getScheduleEveningList().stream().distinct().count()));
+                                t.setScheduleDayTime12Format("%s".formatted(t.getScheduleDayTime12List().stream().distinct().count()));
+                                t.setScheduleEvening12Format("%s".formatted(t.getScheduleEvening12List().stream().distinct().count()));
+                                // t.setScheduleDayTimeTechnologyGroupFormat("%s".formatted(t.getScheduleDayTimeTechnologyGroupList().stream().distinct().count()));
+                                // t.setScheduleEveningTechnologyGroupFormat("%s".formatted(t.getScheduleEveningTechnologyGroupList().stream().distinct().count()));
+                                t.setScheduleDayTimeTechnologyGroupFormat("Đặng Đình Chiến 邓庭战");
+                                t.setScheduleEveningTechnologyGroupFormat("Nguyễn Văn Việt  阮文越");
+                                return t;
+                            }
+                    )
+            );
             final AtomicInteger atomicInteger = new AtomicInteger(1);
             for (SchedulingDetailResponse t : r.getSchedulingList()) {
                 t.setIndex(atomicInteger.getAndAdd(1));
@@ -300,21 +354,32 @@ public class DousonSchedulingController {
     }
 
     /**
-     * 排班
+     * 更新排班明细
      *
      * @param deviceId 设备id
-     * @param request  {@link SchedulingRequest}
-     * @return {@link DataResult<SchedulingResponse>}
+     * @param request  {@link SchedulingDetailRequest}
+     * @return {@link Result}
      */
-    @GetMapping("")
-    public DataResult<SchedulingResponse> scheduling(
+    @PutMapping("detail")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result updateDetail(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @ModelAttribute SchedulingRequest request
+            @RequestBody SchedulingDetailRequest request
     ) {
+        final Date now = new Date();
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "schedulingManager".equals(t.getRoleCode()) || "schedulingRecord".equals(t.getRoleCode()) || "schedulingTesterRecord".equals(t.getRoleCode()) || "schedulingRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        final SchedulingDetailEntity e = (SchedulingDetailEntity) SCHEDULING_INSTANCE.schedulingDetail(request)
+                .setModifier(u.getUserId());
+        // update
+        if (isNotBlank(e.getId())) {
+            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()))) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            if (!schedulingDetailDao.updateById(e)) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            // insert
         }
-        return new DataResult<>(CollUtil.getFirst(formatSchedulingList(schedulingList(request))));
+        return new DataResult<>(e);
     }
 }

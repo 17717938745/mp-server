@@ -34,7 +34,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.PictureText">
     <div>
-      <h3 v-if="viewConfig.textLabel">{{ row[viewConfig.textLabel] || '--'}}</h3>
+      <h3 v-if="viewConfig.textLabel">{{ row[viewConfig.textLabel] || '--' }}</h3>
       <el-space style="justify-content: center;">
         <img
             v-if="row[viewConfig.value] && row[viewConfig.value].length > 0"
@@ -250,15 +250,30 @@
         (viewConfig.optionList || []).reduce((p, t) => t.value === row[viewConfig.value] ? t.label : p, row[viewConfig.value]) || '--'
       }}
     </span>
-    <el-link
-        v-else-if="!editSelect"
-        automatic-dropdown="true"
-        @click="() => handleEditSelectShow(row)"
-        type="warning">
-      {{
-        (viewConfig.optionList || []).reduce((p, t) => t.value === row[viewConfig.value] ? t.label : p, row[viewConfig.value]) || '--'
-      }}
-    </el-link>
+    <span v-else-if="!editSelect && viewConfig.listShowType === 1">
+      <el-link
+          v-if="'[object Array]' === Object.prototype.toString.call(row[viewConfig.originValue || viewConfig.value])"
+          v-for="(t, i) in row[viewConfig.originValue || viewConfig.value]"
+          :key="`edit-select${i}`"
+          automatic-dropdown="true"
+          @click="() => handleEditSelectShow(row)"
+          type="warning"
+          class="douson-flex"
+      >
+        {{
+          (viewConfig.optionList || []).reduce((p, tt) => tt.value === t ? tt.label : p, row[viewConfig.value]) || '--'
+        }}
+      </el-link>
+      <el-link
+          v-else
+          automatic-dropdown="true"
+          @click="() => handleEditSelectShow(row)"
+          type="warning">
+        {{
+          (viewConfig.optionList || []).reduce((p, t) => t.value === row[viewConfig.value] ? t.label : p, row[viewConfig.value]) || '--'
+        }}
+      </el-link>
+    </span>
     <el-select
         v-else
         v-model="formData[viewConfig.originValue || viewConfig.value]"

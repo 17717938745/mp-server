@@ -24,7 +24,7 @@
       </div>
     </div>
     <view-list
-        idKey="planId"
+        idKey="schedulingId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -40,46 +40,72 @@
     >
       <template #operator="row">
         <el-link
+            :icon="CopyDocument"
+            @click="() => {
+              handleCopyModal(row.param)
+            }"
+            class="mr10"
+            type="info"
+        >
+          <el-tag size="small" type="info">Copy</el-tag>
+        </el-link>
+        <el-link
             :icon="More"
-            @click="handleShowPrintDetail(row)"
+            @click="() => {
+              query.data.schedulingId = row.param.schedulingId
+              handleShowDetail()
+            }"
             class="mr10"
             type="info"
         >
           <el-tag size="small">Detail</el-tag>
         </el-link>
-        <el-link
-            v-if="row.param.serialIndex === 0"
-            :icon="List"
-            @click="handleGenerateListModal(row)"
-            class="mr10"
-            type="info"
-            :disabled="row.param.maxSerialOrderIndex >= row.param.orderCount"
-        >
-          <el-tag size="small" :type="row.param.maxSerialOrderIndex >= row.param.orderCount ? 'info' : 'primary'">Generate</el-tag>
-        </el-link>
       </template>
     </view-list>
-
-    <el-dialog :title="'Generate list'" v-model="generateListVisible" width="60%" :close-on-click-modal="false">
-      <el-form
-          :rules="generateListFormRuleList"
-          :model="formData"
-          ref="generateFormRef"
-          label-width="auto"
-          label-position="top"
+    <el-dialog :title="'Scheduling'" v-model="showDetail" width="80%" :close-on-click-modal="false">
+      <div class="douson-flex" style="text-align: center; justify-content: center; align-items: center;">
+        <h1>{{ tableDetailSummaryData.schedulingTitle }}</h1>
+      </div>
+      <div class="query-container">
+        <el-select v-model="query.data.deviceNumber"
+                   @change="handleShowDetail"
+                   filterable
+                   allow-create
+                   clearable
+                   :placeholder="store.state.label.testDevice"
+                   class="search-item">
+          <el-option
+              v-for="item in config.testDeviceList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
+        <div class="query-btn">
+          <el-button :icon="Search" @click="handleShowDetail" type="primary">Search</el-button>
+          <el-button
+              v-if="editAll"
+              :icon="Plus"
+              @click="handleSaveModal"
+              type="success"
+          >Add
+          </el-button>
+          <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
+        </div>
+      </div>
+      <view-list
+          idKey="schedulingDetailId"
+          :columnConfigList="columnDetailConfigList"
+          :list="tableDetailData"
+          :handleUpdate="handleUpdateDetail"
+          :detail-link="false"
+          :handleTableCellClassName="handleTableCellClassName"
       >
-        <el-form-item prop="createOrderCount" :label="store.state.label.createOrderCount">
-          <el-input-number style="width: 300px;" :min="1" :max="formData.orderCount - formData.maxSerialOrderIndex" v-model="formData.createOrderCount" :placeholder="`1 <= input <= ${formData.orderCount - formData.maxSerialOrderIndex}`"/>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="generateListVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="handleGenerateList">Confirm</el-button>
-        </span>
-      </template>
+        <template #operator="row">
+        </template>
+      </view-list>
     </el-dialog>
-    <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
+    <el-dialog :title="formState === 0 ? 'Save' : formState === 1 ? 'Update' : 'Copy'" v-model="formVisible" width="60%" :close-on-click-modal="false">
       <el-form
           :rules="formRuleList"
           :model="formData"
@@ -87,61 +113,35 @@
           label-width="auto"
           label-position="top"
       >
-        <el-form-item prop="schedulingCompleteDate" :label="store.state.label.schedulingCompleteDate">
+        <el-form-item prop="dateMonth" :label="store.state.label.date">
           <el-date-picker
               type="week"
-              v-model="formData.schedulingCompleteDate"
-              format="YYYY-MM-DD"
-              @change="formData.schedulingCompleteDate = formatDate(formData.schedulingCompleteDate, 'yyyy-MM-dd')"
+              v-model="formData.dateMonth"
+              format="[Week] ww"
+              @change="formData.dateMonth = formatDate(formData.dateMonth, 'yyyy-MM-dd')"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="deviceNumber" :label="store.state.label.deviceNumber">
-          <el-input v-model="formData.deviceNumber"/>
-        </el-form-item>
-        <el-form-item prop="scheduleDayTimeLabel" :label="store.state.label.deviceNumber">
+        <el-form-item prop="scheduleDayTimeLabel" :label="`${store.state.label.scheduleDayTime} label`">
           <el-input v-model="formData.scheduleDayTimeLabel"/>
         </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-affix position="bottom" :offset="20">
-          <span class="dialog-footer">
-            <el-button @click="formVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="handleMerge">Confirm</el-button>
-          </span>
-        </el-affix>
-      </template>
-    </el-dialog>
-    <el-dialog :title="formDetailSave ? 'Add' : 'Edit'" v-model="formDetailVisible" width="60%" :close-on-click-modal="false">
-      <el-form
-          :rules="formDetailRuleList"
-          :model="formDetailData"
-          ref="formRef"
-          label-width="auto"
-          label-position="top"
-      >
-        <el-form-item prop="schedulingCompleteDate" :label="store.state.label.schedulingCompleteDate">
-          <el-date-picker
-              type="week"
-              v-model="formDetailData.schedulingCompleteDate"
-              format="YYYY-MM-DD"
-              :disabled="true"
-              @change="formData.schedulingCompleteDate = formatDate(formData.schedulingCompleteDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
+        <el-form-item prop="scheduleMiddleLabel" :label="`${store.state.label.scheduleMiddle} label`">
+          <el-input v-model="formData.scheduleMiddleLabel"/>
         </el-form-item>
-        <el-form-item prop="deviceNumber" :label="store.state.label.deviceNumber">
-          <el-input v-model="formDetailData.deviceNumber" :disabled="true"/>
+        <el-form-item prop="scheduleEveningLabel" :label="`${store.state.label.scheduleEvening} label`">
+          <el-input v-model="formData.scheduleEveningLabel"/>
         </el-form-item>
-        <el-form-item prop="scheduleDayTime" :label="store.state.label.scheduleDayTime">
-          <el-select v-model="formDetailData.scheduleDayTimeList" clearable filterable multiple placeholder="Please select">
-            <el-option
-                v-for="item in userOptionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+        <el-form-item prop="scheduleDayTime12Label" :label="`${store.state.label.scheduleDayTime12} label`">
+          <el-input v-model="formData.scheduleDayTime12Label"/>
+        </el-form-item>
+        <el-form-item prop="scheduleEvening12Label" :label="`${store.state.label.scheduleEvening12} label`">
+          <el-input v-model="formData.scheduleEvening12Label"/>
+        </el-form-item>
+        <el-form-item prop="scheduleDayTimeTechnologyGroupLabel" :label="`${store.state.label.scheduleDayTimeTechnologyGroup} label`">
+          <el-input v-model="formData.scheduleDayTimeTechnologyGroupLabel"/>
+        </el-form-item>
+        <el-form-item prop="scheduleEveningTechnologyGroupLabel" :label="`${store.state.label.scheduleEveningTechnologyGroup} label`">
+          <el-input v-model="formData.scheduleEveningTechnologyGroupLabel"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -161,7 +161,7 @@ import {onMounted, reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Search, More, UploadFilled, List,} from '@element-plus/icons-vue'
+import {Plus, Search, More, UploadFilled, List, CopyDocument,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload, httpDownloadFile,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
@@ -171,6 +171,7 @@ import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
 import ImageUpload from '../../component/ImageUpload.vue'
+import {DataResult} from "../../../../typing/ma/System";
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
@@ -185,37 +186,45 @@ const editYellow = editAll || includes(roleCodeList, 'schedulingTesterRecord')
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
-  {value: 'deviceNumber', labelKey: 'deviceNumber', width: 189},
-  {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 189},
-  {value: 'scheduleMiddle', labelKey: 'scheduleMiddle', width: 189},
-  {value: 'scheduleEvening', labelKey: 'scheduleEvening', width: 189},
-  {value: 'scheduleDayTime12', labelKey: 'scheduleDayTime12', width: 189},
-  {value: 'scheduleEvening12', labelKey: 'scheduleEvening12', width: 189},
-  {value: 'scheduleDayTimeTechnologyGroup', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189},
-  {value: 'scheduleEveningTechnologyGroup', labelKey: 'scheduleEveningTechnologyGroup', width: 189},
+  {value: 'dateMonthFormat', labelKey: 'date', width: 380},
+  {value: 'scheduleDayTimeLabel', labelKey: 'scheduleMiddle', width: 189},
+  {value: 'scheduleMiddleLabel', labelKey: 'scheduleMiddle', width: 189},
+  {value: 'scheduleEveningLabel', labelKey: 'scheduleEvening', width: 189},
+  {value: 'scheduleDayTime12Label', labelKey: 'scheduleDayTime12', width: 189},
+  {value: 'scheduleEvening12Label', labelKey: 'scheduleEvening12', width: 189},
+  {value: 'scheduleDayTimeTechnologyGroupLabel', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189},
+  {value: 'scheduleEveningTechnologyGroupLabel', labelKey: 'scheduleEveningTechnologyGroup', width: 189},
 ])
-const handleDownloadTemplate = () => {
-  httpDownloadFile("douson/scheduling/template", state.query.data);
-}
+const columnDetailConfigList = ref<ViewConfig[]>([
+  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 189},
+  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 189, listShowType: 1,},
+  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 189, listShowType: 1,},
+  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 189, listShowType: 1,},
+  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 189, listShowType: 1,},
+  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 189, listShowType: 1,},
+  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189, listShowType: 1,},
+  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 189, listShowType: 1,},
+])
 const defaultFormData = {
-  deviceNumber: '',
-  scheduleDayTimeList: [],
-  attachmentList: [],
+  dateMonth: '',
+  scheduleDayTimeLabel: '',
+  scheduleMiddleLabel: '',
+  scheduleEveningLabel: '',
+  scheduleDayTime12Label: '',
+  scheduleEvening12Label: '',
+  scheduleDayTimeTechnologyGroupLabel: '',
+  scheduleEveningTechnologyGroupLabel: '',
 }
 const deliveryDateTimeList = ref([])
-const formDetailSave = ref(false)
-const formDetailVisible = ref(false)
-const formDetailRuleList = ref({})
-const formDetailData = ref({
-  deviceNumber: '',
-  scheduleDayTimeList: [],
-})
+const tableDetailData = ref([])
+const tableDetailSummaryData = ref({})
 const state = reactive({
   photoVisible: false,
   photoList: new Array<any>(),
   expandRowKeys: new Array<string>(),
   query: {
     data: {
+      schedulingId: '',
       deviceNumber: '',
       scheduleDayTime: '',
       scheduleMiddle: '',
@@ -233,22 +242,42 @@ const state = reactive({
   tableData: new Array<any>(),
   total: 0,
   formData: Object.assign({}, defaultFormData),
-  formSave: false,
+  formState: 0,
   config: {
-    processProcedureList: [],
     testDeviceList: [],
-    customerShortNameList: [],
-    departmentList: [],
-    optimizeTypeList: [],
-    responsibleTeamList: [],
   },
   userConfigList: new Array<any>(),
   formVisible: false,
   formRuleList: {
+    dateMonth: [{required: true, message: 'Please check', trigger: 'blur'}],
   },
 })
-const generateListFormRuleList = {
-  createOrderCount: [{required: true, type: 'number', min: 1, message: 'Please check', trigger: 'blur'}],
+let startKeyIndex = 1
+const columnIndexKey = {
+
+}
+columnIndexKey[startKeyIndex++ ] = 'scheduleDayTimeProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleMiddleProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleEveningProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleDayTime12ProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleEvening12ProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleDayTimeTechnologyGroupProfessionFormat'
+columnIndexKey[startKeyIndex++ ] = 'scheduleEveningTechnologyGroupProfessionFormat'
+const handleTableCellClassName = ({
+                                    row,
+                                    column,
+                                    rowIndex,
+                                    columnIndex,
+                                  }: {
+  row: any
+  rowIndex: number
+}) => {
+  const k = columnIndexKey[columnIndex]
+  if (k && row[k] && row[k].indexOf('组长') >= 0) {
+    console.log(`key: ${k}`)
+    return 'cell-red'
+  }
+  return ''
 }
 const handleDateTimeChange = (da: any, qd: any, key: string, format: string = 'yyyy-MM-dd hh:mm:ss') => {
   key = key || 'createDate'
@@ -270,44 +299,6 @@ const handleDateTimeChange = (da: any, qd: any, key: string, format: string = 'y
   }
   handlePage()
 }
-const handleShowPrintDetail = (d: any) => {
-  window.open(`/industry/public/scheduling?schedulingId=${d.param.schedulingId}`)
-}
-const generateListVisible = ref(false)
-const handleGenerateListModal = (d: any) => {
-  state.formData = Object.assign({}, d.param)
-  generateListVisible.value = true
-}
-const handleGenerateList = () => {
-  generateFormRef.value.validate((valid: any) => {
-    if (valid) {
-      httpPostJson('douson/scheduling/generate-list', state.formData).then(() => {
-        generateListVisible.value = false
-        ElMessage.success('Generate list success')
-        handlePage()
-      })
-    }
-  })
-}
-
-const handleJumpOrder = (t: any) => {
-  router.push(
-      {
-        path: '/industry/admin/product/order',
-        query: {
-          orderId: t.orderId,
-        },
-      })
-}
-const handleJumpDevice = (t: any) => {
-  router.push(
-      {
-        path: '/industry/admin/product/device',
-        query: {
-          deviceId: t.testDevice,
-        },
-      })
-}
 const handlePage = () => {
   httpGet(`/douson/scheduling/page`, state.query).then(
       (res: PageResult<typeof state.tableData>) => {
@@ -325,27 +316,12 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
-const handleTableCellClassName = ({
-                                    row,
-                                    column,
-                                    rowIndex,
-                                    columnIndex,
-                                  }: {
-  row: any
-  rowIndex: number
-}) => {
-  if (row.serialIndex === 0 && row.orderCount === row.completedQty) {
-    return 'row-green'
-  }
-  return ''
-}
 let serialNoIndex = -1
 
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
-      'equipmentNo',
-      'equipmentPosition',
+      'device',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -358,157 +334,116 @@ Promise.all([
     }
   })
   columnConfigList.value = columnConfigList.value.map(t => {
-    if (editBlue) {
-      if ('valveBodyPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('valveBodyPhotoList')
-          }, 100)
-        }
-      } else if ('valveCoverPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('valveCoverPhotoList')
-          }, 100)
-        }
-      } else if ('gatePhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('gatePhotoList')
-          }, 100)
-        }
-      } else if ('valveSeatPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('valveSeatPhotoList')
-          }, 100)
-        }
-      } else if ('valveStemPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('valveStemPhotoList')
-          }, 100)
-        }
-      }
-    }
-    if (editYellow) {
-      if ('pressureTestPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('pressureTestPhotoList')
-          }, 100)
-        }
-      } else if ('oilInjectionPhotoCount' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('oilInjectionPhotoList')
-          }, 100)
-        }
-      }
-    }
+    if (editAll) {
 
+    }
+    return t
+  })
+  columnDetailConfigList.value = columnDetailConfigList.value.map(t => {
+    if (editAll) {
+      if (t.value === 'scheduleDayTimeFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleMiddleFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleEveningFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleDayTime12Format') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleEvening12Format') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleDayTimeTechnologyGroupFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      } else if (t.value === 'scheduleEveningTechnologyGroupFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = userOptionList.value
+      }
+    }
     return t
   })
   handlePage()
 })
-const uploadData = ref({})
-const afterUpload = ref(false)
-const fileMap: any = {}
-const handleFileChange = (file: UploadFile, fileList: UploadFiles) => {
-  console.log('file change, length: ' + fileList.length)
-}
-const handleBeforeUpload = (file: UploadFile) => {
-  console.log('before upload file: ' + file.uid)
-  fileMap[file.uid] = file
-  return file
-}
-const handleRequest = (d: any) => {
-  const keys = Object.keys(fileMap)
-  const limit = 1
-  if (keys.length > limit) {
-    ElMessage.error(`Too many upload`)
-    keys.forEach((k: any) => {
-      delete fileMap[k]
-    })
-  } else if (keys.length > 0) {
-    Promise.all(keys.map((k: any) => {
-      const t = fileMap[k]
-      const formData = new FormData()
-      formData.set("filename", t.name)
-      formData.set("file", t)
-      return httpUpload(`douson/scheduling/upload`, formData)
-    }))
-    .then((l: any[]) => {
-      afterUpload.value = true
-      uploadData.value = (l[0] || {}).data || {}
-      handlePage()
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.resolve()
-    })
-    .catch((err) => {
-      ElMessage.error(`Upload failed`)
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.reject()
-    })
-  }
-}
 const handleSaveModal = () => {
   state.formData = Object.assign({}, defaultFormData)
   state.formVisible = true
-  state.formSave = true
+  state.formState = 0
 }
 const handleEdit = (row: any) => {
   state.formVisible = true
-  state.formSave = false
+  state.formState = 1
   state.formData = Object.assign({}, row)
 }
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
-      if (state.formSave) {
-        httpPostJson('douson/admin/plan', state.formData).then(() => {
-          state.formVisible = false
-          ElMessage.success('Add success')
-          handlePage()
-        })
-      } else {
-        handleUpdate(state.formData)
-      }
+      handleUpdate(state.formData)
     }
   })
 }
 const handleUpdate = (row: any) => {
   return httpPutJson('douson/scheduling/merge', row).then(() => {
     state.formVisible = false
-    ElMessage.success('Update success')
+    ElMessage.success(`${formState === 0 ? 'Save' : formState === 1 ? 'Update' : 'Copy'} success`)
     handlePage()
   })
 }
+const handleUpdateDetail = (row: any) => {
+  return httpPutJson('douson/scheduling/detail', row).then(() => {
+    ElMessage.success('Update success')
+    handleShowDetail()
+  })
+}
+const handleCopyModal = (row: any) => {
+  state.formVisible = true
+  state.formState = 2
+  state.formData = Object.assign({}, row, {
+    schedulingId: '',
+    schedulingCopyId: row.schedulingId,
+    dateMonth: '',
+  })
+}
+const handleShowDetail = () => {
+  httpGet(`/douson/scheduling/detail`, state.query.data).then(
+      (res: DataResult<any>) => {
+        showDetail.value = true
+        tableDetailData.value = res.data.schedulingList
+        const d = res.data.scheduling
+        tableDetailSummaryData.value = d
+        columnDetailConfigList.value = columnDetailConfigList.value.map(t => {
+          if (t.value === 'scheduleDayTimeFormat') {
+            t.labelKey = null
+            t.label = d.scheduleDayTimeLabel
+          } else if (t.value === 'scheduleMiddleFormat') {
+            t.labelKey = null
+            t.label = d.scheduleMiddleLabel
+          } else if (t.value === 'scheduleEveningFormat') {
+            t.labelKey = null
+            t.label = d.scheduleEveningLabel
+          } else if (t.value === 'scheduleDayTime12Format') {
+            t.labelKey = null
+            t.label = d.scheduleDayTime12Label
+          } else if (t.value === 'scheduleEvening12Format') {
+            t.labelKey = null
+            t.label = d.scheduleEvening12Label
+          } else if (t.value === 'scheduleDayTimeTechnologyGroupFormat') {
+            t.labelKey = null
+            t.label = d.scheduleDayTimeTechnologyGroupLabel
+          } else if (t.value === 'scheduleEveningTechnologyGroupFormat') {
+            t.labelKey = null
+            t.label = d.scheduleEveningTechnologyGroupLabel
+          }
+          return t
+        })
+        ElMessage.success("Query success")
+      }
+  )
+}
+const showDetail = ref(false)
 const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
@@ -530,7 +465,7 @@ const {
   userConfigList,
   total,
   formData,
-  formSave,
+  formState,
   formVisible,
   formRuleList,
   photoVisible,
