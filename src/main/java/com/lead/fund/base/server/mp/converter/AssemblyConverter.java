@@ -29,7 +29,7 @@ public interface AssemblyConverter extends Serializable {
     AssemblyEntity assembly(AssemblyRequest request);
 
     @Mapping(target = "assemblyId", source = "id")
-    @Mapping(target = "serialNumber", expression = "java(t.getPurchaseOrderNo() + \" \" + t.getPoProject() + \" \" + com.lead.fund.base.common.util.StrUtil.padPre(t.getSerialIndex(), 3, \"0\"))")
+    @Mapping(target = "serialNumber", expression = "java(t.getPurchaseOrderNo() + \" \" + t.getPoProject() + \" \" + com.lead.fund.base.common.util.StrUtil.padPre(java.lang.String.valueOf(t.getSerialIndex()), 3, \"0\"))")
     @Mapping(target = "torqueNmFormat", expression = "java(t.getTorqueNm() + \"N.m\")")
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.dateTime(d.getModifyTime()))")
     AssemblyResponse assembly(AssemblyEntity t);
