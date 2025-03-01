@@ -226,9 +226,9 @@ public class DousonAssemblyController {
                     e,
                     new LambdaUpdateWrapper<AssemblyEntity>()
                             .eq(AssemblyEntity::getId, e.getId())
-                            .le(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()).toSqlDate())
+                            .le(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()))
             ) <= 0) {
-                if (assemblyMapper.selectById(e.getId()).getLastModifiedTime().compareTo(DateUtil.parse(request.getModifyTime()).toSqlDate()) > 0) {
+                if (assemblyMapper.selectById(e.getId()).getLastModifiedTime().compareTo(DateUtil.parse(request.getModifyTime())) > 0) {
                     throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "数据已被修改，请重新获取数据。（Please reload data）");
                 }
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
