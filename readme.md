@@ -55,3 +55,12 @@ EOF
 ```shell
 crontab -l
 ```
+
+# mysql
+
+### 设置时区
+
+```shell
+SET GLOBAL time_zone = '+08:00';
+SET time_zone = '+08:00';
+```
