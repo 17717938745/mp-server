@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.response;
 
+import com.lead.fund.base.common.basic.model.AbstractAdministratorModel;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,7 +22,7 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TaskResponse extends AbstractAdmin {
+public class TaskResponse extends AbstractAdministratorModel {
 
     private static final long serialVersionUID = 5945041243096001165L;
     /**
