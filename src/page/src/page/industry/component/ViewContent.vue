@@ -250,9 +250,9 @@
         (viewConfig.optionList || []).reduce((p, t) => t.value === row[viewConfig.value] ? t.label : p, row[viewConfig.value]) || '--'
       }}
     </span>
-    <span v-else-if="!editSelect && viewConfig.listShowType === 1">
+    <span v-else-if="!editSelect">
       <el-link
-          v-if="'[object Array]' === Object.prototype.toString.call(row[viewConfig.originValue || viewConfig.value])"
+          v-if="viewConfig.listShowType === 1 && '[object Array]' === Object.prototype.toString.call(row[viewConfig.originValue || viewConfig.value])"
           v-for="(t, i) in row[viewConfig.originValue || viewConfig.value]"
           :key="`edit-select${i}`"
           automatic-dropdown="true"

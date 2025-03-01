@@ -89,7 +89,8 @@ const commonConfig = {
         }
       },
     }
-
+const urlPrefix = 'https://douson.natapp4.cc'
+// const urlPrefix = 'http://localhost'
 // @ts-ignore
 export default ({mode}) => {
   // @ts-ignore
@@ -108,7 +109,7 @@ export default ({mode}) => {
               open: false,
               proxy: {
                 '^/index/img/.*': {
-                  target: 'http://localhost',
+                  target: urlPrefix,
                   changeOrigin: true,
                   rewrite: (path: string) => {
                     const targetPath = path
@@ -117,7 +118,7 @@ export default ({mode}) => {
                   }
                 },
                 '^/third/.*': {
-                  target: 'http://localhost',
+                  target: urlPrefix,
                   changeOrigin: true,
                   rewrite: (path: string) => {
                     const targetPath = path
@@ -127,7 +128,7 @@ export default ({mode}) => {
                 },
                 // /api/system/device -> /system/device
                 '^/api/.*': {
-                  target: 'http://localhost',
+                  target: urlPrefix,
                   changeOrigin: true,
                   rewrite: (path: string) => {
                     const targetPath = path.substring(4)
