@@ -89,8 +89,8 @@ const commonConfig = {
         }
       },
     }
-const urlPrefix = 'https://douson.natapp4.cc'
-// const urlPrefix = 'http://localhost'
+// const urlPrefix = 'https://douson.natapp4.cc'
+const urlPrefix = 'http://localhost'
 // @ts-ignore
 export default ({mode}) => {
   // @ts-ignore
