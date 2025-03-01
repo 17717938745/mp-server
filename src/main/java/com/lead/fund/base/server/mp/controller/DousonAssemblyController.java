@@ -222,10 +222,15 @@ public class DousonAssemblyController {
             if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()))) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
-            if (assemblyMapper.selectById(e.getId()).getLastModifiedTime().compareTo(DateUtil.parse(request.getModifyTime())) > 0) {
-                throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "数据已被修改，请重新获取数据。（Please reload data）");
-            }
-            if (assemblyMapper.updateById(e) <= 0) {
+            if (assemblyMapper.update(
+                    e,
+                    new LambdaUpdateWrapper<AssemblyEntity>()
+                            .eq(AssemblyEntity::getId, e.getId())
+                            .le(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()))
+            ) <= 0) {
+                if (assemblyMapper.selectById(e.getId()).getLastModifiedTime().compareTo(DateUtil.parse(request.getModifyTime())) > 0) {
+                    throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "数据已被修改，请重新获取数据。（Please reload data）");
+                }
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             // insert
