@@ -29,13 +29,13 @@ com:
         url-prefix: http://localhost
         database:
           dmmp:
-            url: jdbc:mysql://localhost:3306/dmmp?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT
+            url: jdbc:mysql://localhost:3306/dmmp?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
             username: root
             password: Yn.123456
             driver-class-name: com.mysql.cj.jdbc.Driver
             min-count: 0
           douson:
-            url: jdbc:mysql://localhost:3306/douson?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT
+            url: jdbc:mysql://localhost:3306/douson?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
             username: root
             password: Yn.123456
             driver-class-name: com.mysql.cj.jdbc.Driver

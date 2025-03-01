@@ -1,16 +1,5 @@
 package com.lead.fund.base.server.mp.controller;
 
-import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
-import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
-import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
-import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
-import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
-import static com.lead.fund.base.common.util.StrUtil.isBlank;
-import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
-import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
-import static com.lead.fund.base.server.mp.converter.AssemblyConverter.ASSEMBLY_INSTANCE;
-import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONUtil;
@@ -26,11 +15,7 @@ import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.server.mp.dao.AssemblyAttachmentDao;
-import com.lead.fund.base.server.mp.dao.AssemblyDao;
-import com.lead.fund.base.server.mp.dao.ParamDao;
-import com.lead.fund.base.server.mp.dao.TaskDao;
-import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
+import com.lead.fund.base.server.mp.dao.*;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.AssemblyAttachmentEntity;
 import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
@@ -49,23 +34,6 @@ import com.lead.fund.base.server.mp.response.AssemblyUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -78,17 +46,27 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
+import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
+import static com.lead.fund.base.common.util.StrUtil.*;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
+import static com.lead.fund.base.server.mp.converter.AssemblyConverter.ASSEMBLY_INSTANCE;
+import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
 
 /**
  * DousonAssemblyController
@@ -248,8 +226,11 @@ public class DousonAssemblyController {
                     e,
                     new LambdaUpdateWrapper<AssemblyEntity>()
                             .eq(AssemblyEntity::getId, e.getId())
-                            .ge(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()).toSqlDate())
+                            .le(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()).toSqlDate())
             ) <= 0) {
+                if (assemblyMapper.selectById(e.getId()).getLastModifiedTime().compareTo(DateUtil.parse(request.getModifyTime()).toSqlDate()) > 0) {
+                    throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "数据已被修改，请重新获取数据。（Please reload data）");
+                }
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             // insert
