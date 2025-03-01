@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -603,7 +604,9 @@ public class DousonAssemblyController {
         final boolean valveBodyChange = isNotBlank(valveBodyRequestString) && !valveBodyString.equals(valveBodyRequestString);
         final boolean oilInjectionChange = isNotBlank(oilInjectionRequestString) && !oilInjectionString.equals(oilInjectionRequestString);
         final String dateTime = DateUtil.dateTime(new Date());
-        final LambdaUpdateWrapper<AssemblyEntity> updateLambda = new LambdaUpdateWrapper<AssemblyEntity>().eq(AssemblyEntity::getId, e.getId());
+        final LambdaUpdateWrapper<AssemblyEntity> updateLambda = new LambdaUpdateWrapper<AssemblyEntity>()
+                .set(AssemblyEntity::getLastModifiedTime, DateTime.now())
+                .eq(AssemblyEntity::getId, e.getId());
         if (valveBodyChange) {
             updateLambda
                     .set(AssemblyEntity::getAssemblyCompleteCount, 1)
