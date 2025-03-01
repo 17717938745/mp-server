@@ -1590,6 +1590,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "已完成"
         },
         {
+          "value": "all",
+          "label": "全部"
+        },
+        {
           "value": "notYetComplete",
           "label": "未完成"
         },
@@ -1962,6 +1966,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "alreadyComplete",
           "label": "Đã hoàn thành"
+        },
+        {
+          "value": "all",
+          "label": "All"
         },
         {
           "value": "notYetComplete",

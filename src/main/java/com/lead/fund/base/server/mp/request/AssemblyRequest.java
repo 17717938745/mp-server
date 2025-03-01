@@ -33,6 +33,10 @@ public class AssemblyRequest implements Serializable {
      */
     private String assemblyId;
     /**
+     * 修改时间
+     */
+    private String modifyTime;
+    /**
      * 整机序列号
      */
     private String serialNumber;

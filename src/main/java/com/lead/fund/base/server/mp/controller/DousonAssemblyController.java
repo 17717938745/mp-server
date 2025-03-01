@@ -49,6 +49,7 @@ import com.lead.fund.base.server.mp.response.AssemblyUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -64,6 +65,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -242,7 +244,11 @@ public class DousonAssemblyController {
             if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()))) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
-            if (assemblyMapper.updateById((AssemblyEntity) e
+            if (assemblyMapper.update(
+                    e,
+                    new LambdaUpdateWrapper<AssemblyEntity>()
+                            .eq(AssemblyEntity::getId, e.getId())
+                            .ge(AssemblyEntity::getLastModifiedTime, DateUtil.parse(request.getModifyTime()).toSqlDate())
             ) <= 0) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
@@ -406,7 +412,7 @@ public class DousonAssemblyController {
         if (null != d.getAssemblyCompleteType()) {
             if (0 == d.getAssemblyCompleteType()) {
                 lambda.apply("ASSEMBLY_COMPLETE_COUNT != 0");
-            } else {
+            } else if (1 == d.getAssemblyCompleteType()) {
                 lambda.apply("(SERIAL_INDEX = 0 OR ASSEMBLY_COMPLETE_COUNT = 0)");
             }
         }

@@ -27,6 +27,8 @@ public interface TaskConverter extends Serializable {
     TaskEntity task(TaskRequest request);
 
     @Mapping(target = "taskId", source = "id")
+    @Mapping(target = "createTime", expression = "java(com.lead.fund.base.common.util.DateUtil.dateTime(d.getCreateTime()))")
+    @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.dateTime(d.getModifyTime()))")
     TaskResponse task(TaskEntity d);
 
     List<TaskResponse> taskList(List<TaskEntity> list);

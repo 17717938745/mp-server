@@ -43,7 +43,7 @@
                        :placeholder="`${store.state.label.assemblyCompleteType}`"
                        class="search-item">
               <el-option
-                  v-for="item in [{value: null, label: `All`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+                  v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -79,7 +79,7 @@
       </el-upload>
     </div>
     <view-list
-        idKey="planId"
+        idKey="assemblyId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -107,10 +107,10 @@
             :icon="List"
             @click="handleGenerateListModal(row)"
             class="mr10"
-            type="info"
+            :type="row.param.maxSerialOrderIndex >= row.param.orderCount ? 'info' : 'success'"
             :disabled="row.param.maxSerialOrderIndex >= row.param.orderCount"
         >
-          <el-tag size="small" :type="row.param.maxSerialOrderIndex >= row.param.orderCount ? 'info' : 'primary'">Generate</el-tag>
+          <el-tag size="small" :type="row.param.maxSerialOrderIndex >= row.param.orderCount ? 'info' : 'success'">Generate</el-tag>
         </el-link>
       </template>
     </view-list>
@@ -317,7 +317,7 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 223,
     type: ValueType.Operator,
   },
-  {value: 'serialNumber', labelKey: 'serialNumber', width: 154},
+  {value: 'serialNumber', labelKey: 'serialNumber', width: 161},
   {value: 'purchaseOrderNo', labelKey: 'purchaseOrderNo', width: 98},
   {value: 'poProject', labelKey: 'poProject', width: 56},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 102},
@@ -647,6 +647,7 @@ Promise.all([
         }
       } else if ('description' === t.value) {
         t.type = ValueType.TextEdit
+        console.log(JSON.stringify(t))
       }
     }
     if (editYellow) {
