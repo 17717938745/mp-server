@@ -252,7 +252,7 @@
     </span>
     <span v-else-if="!editSelect">
       <el-link
-          v-if="viewConfig.listShowType === 1 && '[object Array]' === Object.prototype.toString.call(row[viewConfig.originValue || viewConfig.value])"
+          v-if="viewConfig.listShowType === 1 && '[object Array]' === Object.prototype.toString.call(row[viewConfig.originValue || viewConfig.value]) && row[viewConfig.originValue || viewConfig.value].length > 0"
           v-for="(t, i) in row[viewConfig.originValue || viewConfig.value]"
           :key="`edit-select${i}`"
           automatic-dropdown="true"

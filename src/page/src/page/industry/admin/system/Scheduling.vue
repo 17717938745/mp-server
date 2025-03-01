@@ -28,7 +28,7 @@
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
-        :handleEditShow="() => {return editYellow || editBlue}"
+        :handleEditShow="() => {return editAll}"
         :handleUpdate="handleUpdate"
         :handleDelete="'admin' === user.username || editAll ? handleDelete : null"
         :page="query.page"
@@ -177,12 +177,9 @@ const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
-const generateFormRef: Ref = ref(null)
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
-const editAll = includes(roleCodeList, 'admin')
-const editBlue = editAll || includes(roleCodeList, 'schedulingRecord')
-const editYellow = editAll || includes(roleCodeList, 'schedulingTesterRecord')
+const editAll = includes(roleCodeList, 'schedulingManager')
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},

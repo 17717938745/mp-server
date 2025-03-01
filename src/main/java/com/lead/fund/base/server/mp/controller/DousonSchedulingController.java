@@ -337,6 +337,7 @@ public class DousonSchedulingController {
             rl.add(0,
                     rl.stream().reduce(
                             new SchedulingDetailResponse()
+                                    .setSchedulingDetailId("-1")
                                     .setDeviceNumber("-1")
                                     .setDeviceNumberFormat("Total")
                             ,
