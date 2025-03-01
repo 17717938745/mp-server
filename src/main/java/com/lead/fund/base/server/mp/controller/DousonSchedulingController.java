@@ -383,13 +383,12 @@ public class DousonSchedulingController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody SchedulingDetailRequest request
     ) {
-        final Date now = new Date();
         final MpUserResponse u = accountHelper.getUser(deviceId);
         final SchedulingDetailEntity e = (SchedulingDetailEntity) SCHEDULING_INSTANCE.schedulingDetail(request)
                 .setModifier(u.getUserId());
         // update
         if (isNotBlank(e.getId())) {
-            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()))) {
+            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "schedulingManager".equals(t.getRoleCode()))) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             if (!schedulingDetailDao.updateById(e)) {

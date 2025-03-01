@@ -20,6 +20,7 @@ export interface ViewConfig {
   valueHighLight?: Function,
   openLink?: Function,
   listShowType?: number,
+  staticIdList?: string[],
 }
 
 export enum ViewType {
