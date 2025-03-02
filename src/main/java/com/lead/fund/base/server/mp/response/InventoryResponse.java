@@ -3,6 +3,8 @@ package com.lead.fund.base.server.mp.response;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +20,10 @@ import lombok.experimental.Accessors;
  * @version 1.0
  * @date 2023-08-14 10:53
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
 @Accessors(chain = true)
-public class InventoryResponse extends AbstractAdmin {
+public class InventoryResponse implements Serializable {
 
     private static final long serialVersionUID = 5945041243096010704L;
     /**

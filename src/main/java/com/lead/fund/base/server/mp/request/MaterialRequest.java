@@ -1,6 +1,8 @@
 package com.lead.fund.base.server.mp.request;
 
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
+
+import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,11 +20,10 @@ import java.util.Date;
  * @version 1.0
  * @date 2023-08-14 10:53
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
 @Accessors(chain = true)
-public class MaterialRequest extends AbstractAdmin {
+public class MaterialRequest implements Serializable {
 
     private static final long serialVersionUID = 5945041243096001063L;
     /**

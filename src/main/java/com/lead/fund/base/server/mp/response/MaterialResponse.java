@@ -1,8 +1,11 @@
 package com.lead.fund.base.server.mp.response;
 
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
+import com.lead.fund.base.common.basic.model.AbstractAdministratorModel;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import jakarta.validation.constraints.Size;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +23,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Data
 @Accessors(chain = true)
-public class MaterialResponse extends AbstractAdmin {
+public class MaterialResponse extends AbstractAdministratorModel {
 
     private static final long serialVersionUID = 5945041243096001064L;
     /**

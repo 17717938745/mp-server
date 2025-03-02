@@ -3,6 +3,8 @@ package com.lead.fund.base.server.mp.request;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import jakarta.validation.constraints.Size;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,12 +23,11 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @version 1.0
  * @date 2023-08-14 10:53
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TaskRequest extends AbstractAdmin {
+public class TaskRequest implements Serializable {
 
     private static final long serialVersionUID = 5945041243096001164L;
     /**
