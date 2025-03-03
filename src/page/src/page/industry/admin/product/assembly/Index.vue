@@ -317,23 +317,23 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 223,
     type: ValueType.Operator,
   },
-  {value: 'serialNumber', labelKey: 'serialNumber', width: 161},
-  {value: 'purchaseOrderNo', labelKey: 'purchaseOrderNo', width: 98},
-  {value: 'poProject', labelKey: 'poProject', width: 56},
-  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 102},
-  {value: 'orderProject', labelKey: 'orderProject', width: 56},
-  {value: 'materialNo', labelKey: 'materialNo', width: 98},
+  {value: 'serialNumber', labelKey: 'serialNumber', width: 90},
+  {value: 'purchaseOrderNo', labelKey: 'purchaseOrderNo', width: 91},
+  {value: 'poProject', labelKey: 'poProject', width: 49},
+  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 78},
+  {value: 'orderProject', labelKey: 'orderProject', width: 49},
+  {value: 'materialNo', labelKey: 'materialNo', width: 87},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
-  {value: 'designNumber', labelKey: 'designNumber', width: 102},
+  {value: 'designNumber', labelKey: 'designNumber', width: 89},
   {value: 'orderCount', labelKey: 'orderCount', width: 47},
-  {value: 'deliveryDate', labelKey: 'deliveryDate', width: 102},
+  {value: 'deliveryDate', labelKey: 'deliveryDate', width: 91},
   {value: 'completedQty', labelKey: 'completedQty', width: 47},
-  {value: 'description', labelKey: 'description', width: 189},
-  {value: 'valveBody', labelKey: 'valveBody', width: 121},
+  {value: 'description', labelKey: 'description', width: 156},
+  {value: 'valveBody', labelKey: 'valveBody', width: 89},
   {
     value: 'valveBodyPhotoCount', labelKey: 'valveBodyPhoto', width: 52,
   },
-  {value: 'valveBodyPhotoList', labelKey: 'valveBodyPhoto', width: 131, type: ValueType.Image,},
+  {value: 'valveBodyPhotoList', labelKey: 'valveBodyPhoto', width: 112, type: ValueType.Image,},
   {value: 'valveCover', labelKey: 'valveCover', width: 121},
   {
     value: 'valveCoverPhotoCount', labelKey: 'valveCoverPhoto', width: 52,
@@ -343,30 +343,30 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'gatePhotoCount', labelKey: 'gatePhoto', width: 52,
   },
-  {value: 'gatePhotoList', labelKey: 'gatePhoto', width: 189, type: ValueType.Image,},
+  {value: 'gatePhotoList', labelKey: 'gatePhoto', width: 156, type: ValueType.Image,},
   {value: 'valveSeat', labelKey: 'valveSeat', width: 121},
   {
     value: 'valveSeatPhotoCount', labelKey: 'valveSeatPhoto', width: 52,
   },
-  {value: 'valveSeatPhotoList', labelKey: 'valveSeatPhoto', width: 189, type: ValueType.Image,},
-  {value: 'valveStem', labelKey: 'valveStem', width: 189},
+  {value: 'valveSeatPhotoList', labelKey: 'valveSeatPhoto', width: 156, type: ValueType.Image,},
+  {value: 'valveStem', labelKey: 'valveStem', width: 156},
   {
     value: 'valveStemPhotoCount', labelKey: 'valveStemPhoto', width: 65,
   },
   {value: 'valveStemPhotoList', labelKey: 'valveStemPhoto', width: 189, type: ValueType.Image,},
-  {value: 'assemblyPersonFormat', labelKey: 'assemblyPerson', width: 189},
-  {value: 'assemblyStartDate', labelKey: 'assemblyStartDate', width: 189},
+  {value: 'assemblyPersonFormat', labelKey: 'assemblyPerson', width: 136},
+  {value: 'assemblyStartDate', labelKey: 'assemblyStartDate', width: 85},
   {
-    value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 65,
+    value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 67,
   },
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.Image,},
-  {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 189},
+  {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 87},
   {
-    value: 'oilInjectionPhotoCount', labelKey: 'oilInjection', width: 65,
+    value: 'oilInjectionPhotoCount', labelKey: 'oilInjection', width: 62,
   },
-  {value: 'oilInjectionPhotoList', labelKey: 'oilInjectionPhoto', width: 189, type: ValueType.Image,},
-  {value: 'testerFormat', labelKey: 'tester', width: 189},
-  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 189},
+  {value: 'oilInjectionPhotoList', labelKey: 'oilInjectionPhoto', width: 171, type: ValueType.Image,},
+  {value: 'testerFormat', labelKey: 'tester', width: 118},
+  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 85},
 ])
 const handleDownloadTemplate = () => {
   httpDownloadFile("douson/assembly/template", state.query.data);
@@ -672,7 +672,6 @@ Promise.all([
       } else if ('description' === t.value) {
         t.type = ValueType.TextEdit
       } else if ('torqueNmFormat' === t.value) {
-        t.width = 161
         t.type = ValueType.NumberEdit
       }
     }
