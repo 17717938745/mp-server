@@ -43,7 +43,7 @@
                  :placeholder="`${store.state.label.assemblyCompleteType}`"
                  class="search-item">
         <el-option
-            v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+            v-for="item in [{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -57,7 +57,7 @@
                  :placeholder="`${store.state.label.oilInjectionCompleteType}`"
                  class="search-item">
         <el-option
-            v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+            v-for="item in [{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -328,7 +328,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'operator',
     labelKey: 'viewAndEdit',
-    width: 223,
+    width: 189,
     type: ValueType.Operator,
   },
   {value: 'serialNumber', labelKey: 'serialNumber', width: 90},
@@ -337,7 +337,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 78},
   {value: 'orderProject', labelKey: 'orderProject', width: 49},
   {value: 'materialNo', labelKey: 'materialNo', width: 87},
-  {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
+  {value: 'materialDescription', labelKey: 'materialDescription', width: 210},
   {value: 'designNumber', labelKey: 'designNumber', width: 89},
   {value: 'orderCount', labelKey: 'orderCount', width: 47},
   {value: 'deliveryDate', labelKey: 'deliveryDate', width: 91},
@@ -371,7 +371,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'assemblyPersonFormat', labelKey: 'assemblyPerson', width: 136},
   {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 85},
   {
-    value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 67,
+    value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 96,
   },
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.Image,},
   {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 99},
@@ -453,7 +453,7 @@ const state = reactive({
       description: '',
       valveBody: '',
       assemblyCompleteType: includes(roleCodeList, 'assemblyTesterRecord') ? 0 : null,
-      oilInjectionCompleteType: includes(roleCodeList, 'assemblyRecord') ? 0 : includes(roleCodeList, 'assemblyTesterRecord') ? 1 : null,
+      oilInjectionCompleteType: includes(roleCodeList, 'assemblyRecord') ? 1 : includes(roleCodeList, 'assemblyTesterRecord') ? 1 : null,
 
       startCreateDate: '',
       endCreateDate: '',
@@ -468,7 +468,7 @@ const state = reactive({
     },
     page: {
       page: DEFAULT_PAGE,
-      limit: DEFAULT_LIMIT,
+      limit: 120,
     },
   },
   tableData: new Array<any>(),

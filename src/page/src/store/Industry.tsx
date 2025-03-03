@@ -1709,7 +1709,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "orderCount",
-          "label": "Số lượng đơn hàng"
+          "label": "S L đơn hàng"
         },
         {
           "value": "completeMachineAssemblyRecord",
@@ -1865,7 +1865,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "poProject",
-          "label": "hạng mục đơn đặt hàng"
+          "label": "hạng mục D D H"
         },
         {
           "value": "saleOrderNo",
@@ -3079,7 +3079,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "completedQty",
-          "label": "Số lượng hoàn thành"
+          "label": "S L hoàn thành"
         },
         {
           "value": "valveBody",
@@ -3087,7 +3087,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "valveBodyPhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "valveCover",
@@ -3095,7 +3095,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "valveCoverPhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "gate",
@@ -3103,7 +3103,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "gatePhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "valveSeat",
@@ -3111,7 +3111,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "valveSeatPhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "valveStem",
@@ -3119,7 +3119,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "valveStemPhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "assemblyPerson",
@@ -3135,7 +3135,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "pressureTestPhoto",
-          "label": "Kiểm tra áp suất toàn bộ máy và Động cơ(Max 6 ảnh)"
+          "label": "Kiểm tra áp suất toàn bộ máy và Động cơ(Max 6)"
         },
         {"value": "mainDataNotAllowEdit", "label": "Dữ liệu chính không cho phép thay đổi cột này"},
         {
@@ -3153,7 +3153,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "oilInjectionPhoto",
-          "label": "Hình ảnh (Max 4 ảnh)"
+          "label": "Hình ảnh (Max 4)"
         },
         {
           "value": "tester",

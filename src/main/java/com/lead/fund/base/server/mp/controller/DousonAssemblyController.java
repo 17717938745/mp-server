@@ -326,7 +326,7 @@ public class DousonAssemblyController {
         if (isNotBlank(request.getAssemblyId())) {
             final AssemblyEntity db = assemblyDao.getById(request.getAssemblyId());
             if (null != db) {
-                if (db.getSerialIndex() == 0) {
+                /*if (db.getSerialIndex() == 0) {
                     assemblyDao.list(new LambdaQueryWrapper<AssemblyEntity>()
                             .eq(AssemblyEntity::getPurchaseOrderNo, db.getPurchaseOrderNo())
                             .eq(AssemblyEntity::getPoProject, db.getPoProject())
@@ -345,11 +345,11 @@ public class DousonAssemblyController {
                             .eq(AssemblyEntity::getOrderProject, db.getOrderProject())
                     );
                 } else {
-                    assemblyDao.removeById(request.getAssemblyId());
-                    assemblyAttachmentDao.remove(new LambdaUpdateWrapper<AssemblyAttachmentEntity>()
-                            .eq(AssemblyAttachmentEntity::getAssemblyId, db.getId())
-                    );
-                }
+                }*/
+                assemblyDao.removeById(request.getAssemblyId());
+                assemblyAttachmentDao.remove(new LambdaUpdateWrapper<AssemblyAttachmentEntity>()
+                        .eq(AssemblyAttachmentEntity::getAssemblyId, db.getId())
+                );
             }
         }
         return new Result();
@@ -414,16 +414,16 @@ public class DousonAssemblyController {
         }
         if (null != d.getAssemblyCompleteType()) {
             if (0 == d.getAssemblyCompleteType()) {
-                lambda.apply("ASSEMBLY_COMPLETE_COUNT > 0");
+                lambda.apply("ASSEMBLY_COMPLETE_COUNT >= ORDER_COUNT");
             } else if (1 == d.getAssemblyCompleteType()) {
-                lambda.apply("(SERIAL_INDEX = 0 OR ASSEMBLY_COMPLETE_COUNT = 0)");
+                lambda.apply("(ASSEMBLY_COMPLETE_COUNT < ORDER_COUNT)");
             }
         }
         if (null != d.getOilInjectionCompleteType()) {
             if (0 == d.getOilInjectionCompleteType()) {
-                lambda.apply("OIL_INJECTION_COMPLETE_COUNT > 0");
+                lambda.apply("OIL_INJECTION_COMPLETE_COUNT >= ORDER_COUNT");
             } else if (1 == d.getOilInjectionCompleteType()) {
-                lambda.apply("(SERIAL_INDEX = 0 OR OIL_INJECTION_COMPLETE_COUNT = 0)");
+                lambda.apply("(OIL_INJECTION_COMPLETE_COUNT < ORDER_COUNT)");
             }
         }
         lambda.orderByDesc(AssemblyEntity::getAssemblyIndex).orderByAsc(AssemblyEntity::getSerialIndex);
@@ -653,6 +653,8 @@ public class DousonAssemblyController {
                     .set(AssemblyEntity::getAssemblyCompleteDate, "")
                     .set(AssemblyEntity::getAssemblyCompleteCount, 0)
                     .set(AssemblyEntity::getAssemblyPerson, "")
+                    .set(AssemblyEntity::getCompleteDate, "")
+                    .set(AssemblyEntity::getCompletedQty, 0)
             ;
         }
         if (oilInjectionChange) {
@@ -665,6 +667,8 @@ public class DousonAssemblyController {
             updateLambda
                     .set(AssemblyEntity::getOilInjectionCompleteDate, "")
                     .set(AssemblyEntity::getOilInjectionCompleteCount, 0)
+                    .set(AssemblyEntity::getCompleteDate, "")
+                    .set(AssemblyEntity::getCompletedQty, 0)
                     .set(AssemblyEntity::getTester, "")
             ;
         }
@@ -710,23 +714,25 @@ public class DousonAssemblyController {
         );
         for (AssemblyEntity t : assemblyList) {
             int completeCount = Math.min(defaultInt(t.getAssemblyCompleteCount()), defaultInt(t.getOilInjectionCompleteCount()));
-            if (defaultInt(t.getCompletedQty()) != completeCount) {
-                t.setCompletedQty(completeCount);
-                final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
-                        .set(AssemblyEntity::getCompletedQty, completeCount)
-                        .set(AssemblyEntity::getCompleteDate, dateTime)
-                        .eq(AssemblyEntity::getId, t.getId());
-                if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
-                    t.setCompleteDate(t.getAssemblyCompleteDate().compareTo(t.getOilInjectionCompleteDate()) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
-                }
-                lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
-                assemblyMapper.update(null, lam);
+            t.setCompletedQty(completeCount);
+            final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
+                    .set(AssemblyEntity::getCompletedQty, completeCount)
+                    .set(AssemblyEntity::getCompleteDate, dateTime)
+                    .eq(AssemblyEntity::getId, t.getId());
+            if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
+                t.setCompleteDate(t.getAssemblyCompleteDate().compareTo(t.getOilInjectionCompleteDate()) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
             }
+            lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
+            assemblyMapper.update(null, lam);
         }
         final Integer completeCount = assemblyList.stream().map(t -> defaultInt(t.getCompletedQty())).reduce(0, Integer::sum);
+        final Integer assemblyCompleteCount = assemblyList.stream().map(t -> defaultInt(t.getAssemblyCompleteCount())).reduce(0, Integer::sum);
+        final Integer oilInjectionCompleteCount = assemblyList.stream().map(t -> defaultInt(t.getOilInjectionCompleteCount())).reduce(0, Integer::sum);
         final String assemblyCompleteDate = assemblyList.stream().map(AssemblyEntity::getAssemblyCompleteDate).filter(StrUtil::isNotBlank).max(String::compareTo).orElse("");
         final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
                 .set(AssemblyEntity::getCompletedQty, completeCount)
+                .set(AssemblyEntity::getAssemblyCompleteCount, assemblyCompleteCount)
+                .set(AssemblyEntity::getOilInjectionCompleteCount, oilInjectionCompleteCount)
                 .set(AssemblyEntity::getAssemblyCompleteDate, assemblyCompleteDate)
                 .eq(AssemblyEntity::getSerialIndex, 0)
                 .eq(AssemblyEntity::getPurchaseOrderNo, e.getPurchaseOrderNo())

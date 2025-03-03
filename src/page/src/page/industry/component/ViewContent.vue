@@ -41,7 +41,7 @@
             v-for="(t, i) in row[viewConfig.value]"
             :src="fullUrl(t.photoCompressUrl, '')"
             :style="{
-            height: `${viewConfig.pictureHeight || 155 / scale}px`,
+            height: `${viewConfig.pictureHeight || 230 / scale}px`,
           }"
         />
         <el-empty v-else description="Empty"

@@ -71,23 +71,7 @@ registerInterceptor(
                 toast(errorMsg, 4000);
               }
               switch (data.code) {
-                  // html5未登录，自动跳转
-                case 70000:
-                case 73015:
-                  // 分销客户迁移完成
-                case 72024:
-                  // console.log('这里')
-                  setTimeout(() => {
-                    if (getCookie('leadAppType')) {
-                      jsCallNative('jumpLogin', {});
-                    } else if (netNoData.includes(getMerchantId())) {
-                      router.replace(getDistributionSignUrl());
-                    } else {
-                      router.replace(getFullSignUri());
-                    }
-                  }, 1500);
-                  break;
-                  // ma未登录
+                  // 未登录
                 case 74007:
                 case 140000:
                   router.replace(getFullSignUri());

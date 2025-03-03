@@ -1,4 +1,4 @@
-import {BreadCrumb, MenuTree, SidebarTree, Tree} from '@/typing/ma/System'
+import {BreadCrumb, MenuTree, SidebarTree} from '@/typing/ma/System'
 import {RouteRecordRaw} from 'vue-router';
 import {capitalize, unCapitalize} from './StringUtil';
 
@@ -35,6 +35,9 @@ export const menuTreeToBreadCrumbList = (
 
 export const getFullSignUri = (): string => {
   const signUri = getSignUri()
+  if (location.pathname === signUri) {
+    return '/' + location.href.split('://')[1].split('/').slice(1).join('/')
+  }
   const goBack = getFullUri()
   const uriTail = encodeURIComponent(signUri) === goBack ? '' : ('?' + 'goBack' + '=' + encodeURIComponent(getFullUri()))
   return signUri + uriTail
