@@ -710,19 +710,22 @@ public class DousonAssemblyController {
                 .eq(AssemblyEntity::getPoProject, e.getPoProject())
                 .eq(AssemblyEntity::getSaleOrderNo, e.getSaleOrderNo())
                 .eq(AssemblyEntity::getOrderProject, e.getOrderProject())
-                .select(AssemblyEntity::getCompletedQty, AssemblyEntity::getAssemblyCompleteCount, AssemblyEntity::getOilInjectionCompleteCount, AssemblyEntity::getAssemblyCompleteDate, AssemblyEntity::getOilInjectionCompleteDate, AssemblyEntity::getAssemblyPerson, AssemblyEntity::getTester)
+                .select(AssemblyEntity::getId, AssemblyEntity::getCompletedQty, AssemblyEntity::getAssemblyCompleteCount, AssemblyEntity::getOilInjectionCompleteCount, AssemblyEntity::getAssemblyCompleteDate, AssemblyEntity::getOilInjectionCompleteDate, AssemblyEntity::getAssemblyPerson, AssemblyEntity::getTester)
         );
         for (AssemblyEntity t : assemblyList) {
             int completeCount = Math.min(defaultInt(t.getAssemblyCompleteCount()), defaultInt(t.getOilInjectionCompleteCount()));
             t.setCompletedQty(completeCount);
             final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
                     .set(AssemblyEntity::getCompletedQty, completeCount)
-                    .set(AssemblyEntity::getCompleteDate, dateTime)
                     .eq(AssemblyEntity::getId, t.getId());
-            if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
-                t.setCompleteDate(t.getAssemblyCompleteDate().compareTo(t.getOilInjectionCompleteDate()) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
+            if (completeCount > 0) {
+                if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
+                    t.setCompleteDate(t.getAssemblyCompleteDate().compareTo(t.getOilInjectionCompleteDate()) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
+                }
+                lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
+            } else {
+                lam.set(AssemblyEntity::getCompleteDate, "");
             }
-            lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
             assemblyMapper.update(null, lam);
         }
         final Integer completeCount = assemblyList.stream().map(t -> defaultInt(t.getCompletedQty())).reduce(0, Integer::sum);
