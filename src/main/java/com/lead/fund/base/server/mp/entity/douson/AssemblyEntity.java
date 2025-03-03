@@ -6,7 +6,6 @@ import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdministrator;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -42,6 +41,12 @@ public class AssemblyEntity extends AbstractAdministrator {
     @FieldRemark(value = "最大整机序列号索引", constraintGroup = "0")
     @Size(max = 8, message = "最大整机序列号索引长度不合法")
     private Integer maxSerialOrderIndex;
+    /**
+     * 索引，维度：采购订单编号、PO项目、销售订单、订单项目
+     */
+    @FieldRemark(value = "索引")
+    @Size(max = 16, message = "索引长度不合法")
+    private Integer assemblyIndex;
     /**
      * 最大整机序列号索引，维度：采购订单编号、PO项目
      */
@@ -121,6 +126,12 @@ public class AssemblyEntity extends AbstractAdministrator {
     @Size(max = 8, message = "完成数量长度不合法")
     private Integer completedQty;
     /**
+     * 完成日期
+     */
+    @FieldRemark(value = "完成日期")
+    @Size(max = 32, message = "完成日期长度不合法")
+    private String completeDate;
+    /**
      * 备注
      */
     @FieldRemark(value = "备注")
@@ -169,11 +180,17 @@ public class AssemblyEntity extends AbstractAdministrator {
     @Size(max = 64, message = "装配人员长度不合法")
     private String assemblyPerson;
     /**
-     * 开始装配日期
+     * 装配完成日期
      */
-    @FieldRemark(value = "开始装配日期")
-    @Size(max = 32, message = "开始装配日期长度不合法")
-    private String assemblyStartDate;
+    @FieldRemark(value = "装配完成日期")
+    @Size(max = 32, message = "装配完成日期长度不合法")
+    private String assemblyCompleteDate;
+    /**
+     * 装配完成数量（开始）
+     */
+    @FieldRemark(value = "装配完成数量")
+    @Size(max = 16, message = "装配完成数量长度不合法")
+    private Integer assemblyCompleteCount;
     /**
      * 整机和驱动器试压
      */
@@ -192,21 +209,19 @@ public class AssemblyEntity extends AbstractAdministrator {
     @Size(max = 64, message = "注油长度不合法")
     private String oilInjection;
     /**
+     * 注油完成日期
+     */
+    @FieldRemark(value = "注油完成日期")
+    @Size(max = 32, message = "注油完成日期长度不合法")
+    private String oilInjectionCompleteDate;
+    /**
+     * 注油完成数量
+     */
+    private Integer oilInjectionCompleteCount;
+    /**
      * 试压人员
      */
     @FieldRemark(value = "试压人员")
     @Size(max = 64, message = "试压人员长度不合法")
     private String tester;
-    /**
-     * 装配完成数量（开始）
-     */
-    @FieldRemark(value = "装配完成数量")
-    @Size(max = 16, message = "装配完成数量长度不合法")
-    private Integer assemblyCompleteCount;
-    /**
-     * 装配完成日期
-     */
-    @FieldRemark(value = "装配完成日期")
-    @Size(max = 32, message = "装配完成日期长度不合法")
-    private String assemblyCompleteDate;
 }

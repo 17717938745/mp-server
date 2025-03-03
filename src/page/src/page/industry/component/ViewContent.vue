@@ -294,7 +294,7 @@
     </el-select>
   </template>
   <template v-else-if="viewConfig.type === ValueType.NumberEdit">
-    <span v-if="!row[props.idKey]">
+    <span v-if="!row[props.idKey] || (viewConfig.editable && !viewConfig.editable(row))">
         {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">
@@ -380,7 +380,7 @@
   </template>
   <template v-else-if="viewConfig.type === ValueType.Link">
     <el-link
-        v-if="viewConfig.openLink"
+        v-if="viewConfig.openLink && (!viewConfig.editable || viewConfig.editable(row))"
         @click="viewConfig.openLink(row)"
         type="danger"
     >

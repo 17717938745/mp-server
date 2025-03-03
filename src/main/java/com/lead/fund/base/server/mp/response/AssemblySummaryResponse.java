@@ -63,6 +63,14 @@ public class AssemblySummaryResponse implements Serializable {
      */
     private Integer completedQty;
     /**
+     * 注油完成数量
+     */
+    private Integer oilInjectionCompleteCount;
+    /**
+     * 注油完成日期
+     */
+    private String oilInjectionCompleteDate;
+    /**
      * 装配完成日期
      */
     private String assemblyCompleteDate;

@@ -19,6 +19,7 @@ export interface ViewConfig {
   managerEdit?: Function,
   valueHighLight?: Function,
   openLink?: Function,
+  editable?: Function,
   listShowType?: number,
   staticIdList?: string[],
 }

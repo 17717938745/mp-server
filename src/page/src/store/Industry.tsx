@@ -1476,11 +1476,15 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {"value": "pressureTestPhoto", "label": "整机和驱动器试压照片"},
         {"value": "torqueNm", "label": "闸阀开关扭矩，N.m"},
         {"value": "oilInjection", "label": "注油"},
+        {"value": "oilInjectionCompleteCount", "label": "注油完成数量"},
+        {"value": "oilInjectionCompleteDate", "label": "注油完成日期"},
         {"value": "oilInjectionPhoto", "label": "注油照片"},
+        {"value": "mainDataNotAllowEdit", "label": "主数据不允许编辑该列"},
         {"value": "tester", "label": "试压人员"},
         {"value": "assemblyCompleteDate", "label": "装配完成日期"},
         {"value": "assemblyCompleteCount", "label": "装配完成数量"},
         {"value": "assemblyCompleteType", "label": "装配完成情况"},
+        {"value": "oilInjectionCompleteType", "label": "注油完成情况"},
         {
           "value": "vocationChargeUser",
           "label": "主管领导"
@@ -3131,8 +3135,9 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "pressureTestPhoto",
-          "label": "Hình ảnh (Max 6 ảnh)"
+          "label": "Kiểm tra áp suất toàn bộ máy và Động cơ(Max 6 ảnh)"
         },
+        {"value": "mainDataNotAllowEdit", "label": "Dữ liệu chính không cho phép thay đổi cột này"},
         {
           "value": "torqueNm",
           "label": "lực vặn đóng mở van khi có áp suất N.m"
@@ -3140,6 +3145,11 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "oilInjection",
           "label": "Bơm dầu"
+        },
+        {"value": "oilInjectionCompleteCount", "label": "Số lượng bơm dầu hoàn thành"},
+        {
+          "value": "oilInjectionCompleteDate",
+          "label": "Ngày bơm dầu hoàn thành"
         },
         {
           "value": "oilInjectionPhoto",
@@ -3159,6 +3169,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {"value": "assemblyCompleteCount", "label": "Số lượng lắp ráp hoàn thành"},
         {"value": "assemblyCompleteType", "label": "Tình hình hoàn thành lắp ráp"},
+        {"value": "oilInjectionCompleteType", "label": "Tình hình hoàn thành việc bơm dầu"},
         {
           "value": "vocationChargeUser",
           "label": "Chủ quản ca"

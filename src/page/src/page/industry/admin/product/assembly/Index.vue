@@ -35,20 +35,34 @@
                   :value="item.value"
               />
             </el-select>-->
-            <el-select v-model="query.data.assemblyCompleteType"
-                       @change="handlePage"
-                       filterable
-                       allow-create
-                       clearable
-                       :placeholder="`${store.state.label.assemblyCompleteType}`"
-                       class="search-item">
-              <el-option
-                  v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
+      <el-select v-model="query.data.assemblyCompleteType"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="`${store.state.label.assemblyCompleteType}`"
+                 class="search-item">
+        <el-option
+            v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select v-model="query.data.oilInjectionCompleteType"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="`${store.state.label.oilInjectionCompleteType}`"
+                 class="search-item">
+        <el-option
+            v-for="item in [{value: -1, label: `${store.state.label.all}`,},{value: 0, label: `${store.state.label.alreadyComplete}`,},{value: 1, label: `${store.state.label.notYetComplete}`,}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -186,31 +200,31 @@
           <el-input v-model="formData.valveBody" :disabled="!(editBlue)"/>
         </el-form-item>
         <el-form-item prop="valveBodyPhotoList" :label="`${store.state.label.valveBodyPhoto}(${(formRuleList['valveBodyPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.valveBodyPhotoList" :maxSize="Number(`${(formRuleList['valveBodyPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)"></image-upload>
+          <image-upload :photoList="formData.valveBodyPhotoList" :maxSize="Number(`${(formRuleList['valveBodyPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)  || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="valveCover" :label="store.state.label.valveCover">
           <el-input v-model="formData.valveCover" :disabled="!(editBlue)"/>
         </el-form-item>
         <el-form-item prop="valveCoverPhotoList" :label="`${store.state.label.valveCoverPhoto}(${(formRuleList['valveCoverPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.valveCoverPhotoList" :maxSize="Number(`${(formRuleList['valveCoverPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)"></image-upload>
+          <image-upload :photoList="formData.valveCoverPhotoList" :maxSize="Number(`${(formRuleList['valveCoverPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="gate" :label="store.state.label.gate">
           <el-input v-model="formData.gate" :disabled="!(editBlue)"/>
         </el-form-item>
         <el-form-item prop="gatePhotoList" :label="`${store.state.label.gatePhoto}(${(formRuleList['gatePhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.gatePhotoList" :maxSize="Number(`${(formRuleList['gatePhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)"></image-upload>
+          <image-upload :photoList="formData.gatePhotoList" :maxSize="Number(`${(formRuleList['gatePhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="valveSeat" :label="store.state.label.valveSeat">
           <el-input v-model="formData.valveSeat" :disabled="!(editBlue)"/>
         </el-form-item>
         <el-form-item prop="valveSeatPhotoList" :label="`${store.state.label.valveSeatPhoto}(${(formRuleList['valveSeatPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.valveSeatPhotoList" :maxSize="Number(`${(formRuleList['valveSeatPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)"></image-upload>
+          <image-upload :photoList="formData.valveSeatPhotoList" :maxSize="Number(`${(formRuleList['valveSeatPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="valveStem" :label="store.state.label.valveStem">
           <el-input v-model="formData.valveStem" :disabled="!(editBlue)"/>
         </el-form-item>
         <el-form-item prop="valveStemPhotoList" :label="`${store.state.label.valveStemPhoto}(${(formRuleList['valveStemPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.valveStemPhotoList" :maxSize="Number(`${(formRuleList['valveStemPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue)"></image-upload>
+          <image-upload :photoList="formData.valveStemPhotoList" :maxSize="Number(`${(formRuleList['valveStemPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editBlue) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="assemblyPerson" :label="store.state.label.assemblyPerson">
           <el-select v-model="formData.assemblyPerson" clearable filterable :placeholder="`Please upload ${store.state.label.valveBodyPhoto}`" :disabled="true">
@@ -222,13 +236,13 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="assemblyStartDate" :label="store.state.label.assemblyStartDate">
+        <el-form-item prop="oilInjectionCompleteDate" :label="store.state.label.oilInjectionCompleteDate">
           <el-date-picker
               type="date"
-              v-model="formData.assemblyStartDate"
+              v-model="formData.oilInjectionCompleteDate"
               format="YYYY-MM-DD HH:mm:ss"
               :disabled="true"
-              @change="formData.assemblyStartDate = formatDate(formData.assemblyStartDate, 'yyyy-MM-dd')"
+              @change="formData.oilInjectionCompleteDate = formatDate(formData.oilInjectionCompleteDate, 'yyyy-MM-dd')"
           >
           </el-date-picker>
         </el-form-item>
@@ -236,14 +250,14 @@
           <image-upload :photoList="formData.pressureTestPhotoList" :maxSize="Number(`${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow)"></image-upload>
         </el-form-item>
         <el-form-item prop="torqueNm" :label="store.state.label.torqueNm">
-          <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :min="100" :max="300" :disabled="!(editYellow)">
+          <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :min="100" :max="300" :disabled="!(editYellow) || !handleEditable(formData)">
             <template #append>
               N.m
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="oilInjectionPhotoList" :label="`${store.state.label.oilInjectionPhoto}(${(formRuleList['oilInjectionPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.oilInjectionPhotoList" :maxSize="Number(`${(formRuleList['oilInjectionPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow)"></image-upload>
+          <image-upload :photoList="formData.oilInjectionPhotoList" :maxSize="Number(`${(formRuleList['oilInjectionPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="tester" :label="store.state.label.tester">
           <el-select v-model="formData.tester" clearable filterable :placeholder="`Please upload ${store.state.label.oilInjectionPhoto}`" :disabled="true">
@@ -355,18 +369,18 @@ const columnConfigList = ref<ViewConfig[]>([
   },
   {value: 'valveStemPhotoList', labelKey: 'valveStemPhoto', width: 189, type: ValueType.Image,},
   {value: 'assemblyPersonFormat', labelKey: 'assemblyPerson', width: 136},
-  {value: 'assemblyStartDate', labelKey: 'assemblyStartDate', width: 85},
+  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 85},
   {
     value: 'pressureTestPhotoCount', labelKey: 'pressureTestPhoto', width: 67,
   },
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.Image,},
-  {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 87},
+  {value: 'torqueNmFormat', originValue: 'torqueNm', labelKey: 'torqueNm', width: 99},
   {
     value: 'oilInjectionPhotoCount', labelKey: 'oilInjection', width: 62,
   },
   {value: 'oilInjectionPhotoList', labelKey: 'oilInjectionPhoto', width: 171, type: ValueType.Image,},
   {value: 'testerFormat', labelKey: 'tester', width: 118},
-  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 85},
+  {value: 'oilInjectionCompleteDate', labelKey: 'oilInjectionCompleteDate', width: 85},
 ])
 const handleDownloadTemplate = () => {
   httpDownloadFile("douson/assembly/template", state.query.data);
@@ -404,7 +418,7 @@ const defaultFormData = {
   valveStemPhotoCount: 0,
   valveStemPhotoList: [],
   assemblyPerson: '',
-  assemblyStartDate: '',
+  oilInjectionCompleteDate: '',
   pressureTest: '',
   pressureTestPhoto: '',
   pressureTestPhotoCount: 0,
@@ -438,7 +452,8 @@ const state = reactive({
       endDeliveryDate: '',
       description: '',
       valveBody: '',
-      assemblyCompleteType: includes(roleCodeList, 'assemblyRecord') ? 1 : includes(roleCodeList, 'assemblyTesterRecord') ? 0 : null,
+      assemblyCompleteType: includes(roleCodeList, 'assemblyTesterRecord') ? 0 : null,
+      oilInjectionCompleteType: includes(roleCodeList, 'assemblyRecord') ? 0 : includes(roleCodeList, 'assemblyTesterRecord') ? 1 : null,
 
       startCreateDate: '',
       endCreateDate: '',
@@ -479,7 +494,7 @@ const state = reactive({
     valveBodyPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveCoverPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveSeatPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
-    torqueNm: [{required: false, type: 'number', min: 100, max: 300}],
+    torqueNm: [{required: false, type: 'number', min: 0, max: 200}],
     gatePhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveStemPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     pressureTestPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
@@ -572,15 +587,20 @@ const handleTableRowClassName = ({
   rowIndex: number
 }) => {
   if (row.serialIndex === 0) {
-    if( row.orderCount === row.completedQty) {
+    if (row.orderCount === row.completedQty) {
       return 'row-green'
+    } else {
+      return 'row-blue'
     }
   } else {
-    if(row.completedQty > 0) {
+    if (row.completedQty > 0) {
       return 'row-gray'
     }
   }
   return ''
+}
+const handleEditable = (row) => {
+  return row.serialIndex !== 0
 }
 Promise.all([
   httpGet('douson/config', {
@@ -602,7 +622,13 @@ Promise.all([
     if (editBlue) {
       if ('valveBodyPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          console.log(`d.serialIndex: ${d.serialIndex}`)
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -611,7 +637,12 @@ Promise.all([
         }
       } else if ('valveCoverPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -620,7 +651,12 @@ Promise.all([
         }
       } else if ('gatePhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -629,7 +665,12 @@ Promise.all([
         }
       } else if ('valveSeatPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -638,7 +679,12 @@ Promise.all([
         }
       } else if ('valveStemPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -653,7 +699,12 @@ Promise.all([
     if (editYellow) {
       if ('pressureTestPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -662,7 +713,12 @@ Promise.all([
         }
       } else if ('oilInjectionPhotoCount' === t.value) {
         t.type = ValueType.Link
+        t.editable = handleEditable
         t.openLink = (d: any) => {
+          if (d.serialIndex === 0) {
+            ElMessage.warning(store.state.label.mainDataNotAllowEdit)
+            return
+          }
           handleEdit(d)
           setTimeout(() => {
             // formRef.value.$el
@@ -673,6 +729,7 @@ Promise.all([
         t.type = ValueType.TextEdit
       } else if ('torqueNmFormat' === t.value) {
         t.type = ValueType.NumberEdit
+        t.editable = handleEditable
       }
     }
     return t

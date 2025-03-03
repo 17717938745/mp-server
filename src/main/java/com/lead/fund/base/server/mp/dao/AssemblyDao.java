@@ -12,4 +12,5 @@ import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
  */
 public interface AssemblyDao extends IService<AssemblyEntity> {
 
+    Integer assemblyIndex(AssemblyEntity e);
 }

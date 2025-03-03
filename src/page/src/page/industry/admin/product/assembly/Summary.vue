@@ -49,16 +49,16 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 189},
-  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 102},
+  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 92},
+  {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 78},
   {value: 'orderProject', labelKey: 'orderProject', width: 56},
-  {value: 'materialNo', labelKey: 'materialNo', width: 98},
-  {value: 'orderCount', labelKey: 'orderCount', width: 47},
-  {value: 'materialDescription', labelKey: 'materialDescription', width: 189},
+  {value: 'materialNo', labelKey: 'materialNo', width: 109},
+  {value: 'orderCount', labelKey: 'orderCount', width: 67},
+  {value: 'materialDescription', labelKey: 'materialDescription', width: 258},
   {value: 'designNumber', labelKey: 'designNumber', width: 102},
-  {value: 'deliveryDate', labelKey: 'deliveryDate', width: 102},
-  {value: 'completedQty', labelKey: 'completedQty', width: 47},
-  {value: 'assemblyCompleteCount', labelKey: 'assemblyCompleteCount', width: 47},
+  {value: 'deliveryDate', labelKey: 'deliveryDate', width: 109},
+  {value: 'assemblyCompleteCount', labelKey: 'assemblyCompleteCount', width: 69},
+  {value: 'oilInjectionCompleteCount', labelKey: 'oilInjectionCompleteCount', width: 87},
 ])
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],

@@ -33,6 +33,10 @@ public class AssemblyRequest implements Serializable {
      */
     private String assemblyId;
     /**
+     * 索引，维度：采购订单编号、PO项目、销售订单、订单项目
+     */
+    private Integer assemblyIndex;
+    /**
      * 修改时间
      */
     private String modifyTime;
@@ -138,9 +142,13 @@ public class AssemblyRequest implements Serializable {
      */
     private String assemblyPerson;
     /**
-     * 开始装配日期
+     * 注油完成数量
      */
-    private String assemblyStartDate;
+    private Integer oilInjectionCompleteCount;
+    /**
+     * 注油完成日期
+     */
+    private String oilInjectionCompleteDate;
     /**
      * 整机和驱动器试压
      */
@@ -172,7 +180,11 @@ public class AssemblyRequest implements Serializable {
      */
     private Integer assemblyCompleteCount;
     /**
-     * 装配完成情况，0-ok，1-no
+     * 装配完成情况，-1-全部，0-yes，1-no
      */
     private Integer assemblyCompleteType;
+    /**
+     * 装配完成情况，-1-全部，0-yes，1-no
+     */
+    private Integer oilInjectionCompleteType;
 }

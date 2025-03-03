@@ -37,6 +37,10 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      */
     private Integer index;
     /**
+     * 索引，维度：采购订单编号、PO项目、销售订单、订单项目
+     */
+    private Integer assemblyIndex;
+    /**
      * 整机ID
      */
     private String assemblyId;
@@ -141,9 +145,9 @@ public class AssemblyResponse extends AbstractAdministratorModel {
     private String assemblyPerson;
     private String assemblyPersonFormat;
     /**
-     * 开始装配日期
+     * 注油完成日期
      */
-    private String assemblyStartDate;
+    private String oilInjectionCompleteDate;
     /**
      * 整机和驱动器试压
      */
@@ -159,6 +163,10 @@ public class AssemblyResponse extends AbstractAdministratorModel {
      * 注油
      */
     private String oilInjection;
+    /**
+     * 注油完成数量
+     */
+    private Integer oilInjectionCompleteCount;
     private Integer oilInjectionPhotoCount;
     private List<PhotoImgModel> oilInjectionPhotoList = new ArrayList<>();
     /**

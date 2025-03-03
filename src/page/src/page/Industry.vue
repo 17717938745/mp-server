@@ -93,7 +93,7 @@ $containerLeftGap: 5px;
 
 .el-table {
   .row-blue {
-    background-color: #97adda;
+    background-color: #bdcff4;
   }
   .row-light-blue {
     background-color: #409eff;
