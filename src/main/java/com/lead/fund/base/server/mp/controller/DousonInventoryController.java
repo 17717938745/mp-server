@@ -116,7 +116,7 @@ public class DousonInventoryController {
         if (BigDecimal.ZERO.equals(e.getMaterialCount())) {
             e.setMaterialDate("");
         } else {
-            e.setMaterialDate(null == db || !db.getMaterialCount().equals(e.getMaterialCount()) ? DateUtil.day(new Date()) : db.getMaterialDate());
+            e.setMaterialDate(null == db || !defaultDecimal(db.getMaterialCount()).equals(e.getMaterialCount()) ? DateUtil.day(new Date()) : db.getMaterialDate());
         }
         if (isBlank(e.getId())) {
             inventoryDao.save(e);

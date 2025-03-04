@@ -247,7 +247,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="pressureTestPhotoList" :label="`${store.state.label.pressureTestPhoto}(${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.pressureTestPhotoList" :maxSize="Number(`${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow)"></image-upload>
+          <image-upload :photoList="formData.pressureTestPhotoList" :maxSize="Number(`${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="torqueNm" :label="store.state.label.torqueNm">
           <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :min="100" :max="300" :disabled="!(editYellow) || !handleEditable(formData)">

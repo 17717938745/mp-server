@@ -3153,7 +3153,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "oilInjectionPhoto",
-          "label": "Hình ảnh (Max 4)"
+          "label": "Bơm dầu Hình ảnh (Max 4)"
         },
         {
           "value": "tester",

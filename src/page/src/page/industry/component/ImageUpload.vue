@@ -10,15 +10,17 @@
         multiple
         :drag="true"
         :disabled="props.disabled"
+        v-if="!props.disabled"
     >
       <div>
-        <el-icon style="width: 76px; height: 76px">
+        <el-icon style="width: 76px; height: 76px;">
           <upload-filled style="width: 5em; height: 5em"/>
         </el-icon>
         <div class="el-upload__text">Click to upload image</div>
       </div>
     </el-upload>
     <div
+        v-if="props.photoList && props.photoList.length > 0"
         v-for="(t, i) in props.photoList" :key="t.photoUrl"
         class="resources-view"
     >
@@ -33,6 +35,7 @@
         <CircleClose/>
       </el-icon>
     </div>
+    <el-empty v-else-if="props.disabled" description="Empty"/>
   </div>
 </template>
 
