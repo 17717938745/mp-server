@@ -4073,10 +4073,10 @@ public class DousonController {
             lambda.like(BoxFlagEntity::getPoProject, request.getPoProject());
         }
         if (null != request.getStartDate()) {
-            lambda.ge(BoxFlagEntity::getDate, request.getStartDate());
+            lambda.ge(BoxFlagEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getStartDate())));
         }
         if (null != request.getEndDate()) {
-            lambda.le(BoxFlagEntity::getDate, cn.hutool.core.date.DateUtil.endOfDay(request.getEndDate()).toJdkDate());
+            lambda.le(BoxFlagEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndDate())));
         }
         if (null != request.getAlreadySend()) {
             if (request.getAlreadySend()) {
