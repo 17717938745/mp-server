@@ -12,6 +12,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  font-family: 'Times New Roman',serif;
 
   #app {
     margin: 0;
