@@ -1,11 +1,23 @@
 # 本地开发
 
+### 打包
+
+```shell
+mvn clean package -DskipTests
+```
+
 ### 启动java
 
 需要配置Environment variables
 
 ```text
 --spring.config.location=./application-prd.yml
+```
+
+### 外网启动
+
+```text
+java -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m -Dfile.encoding=utf-8 -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=pch -jar ${app_jar_name} --spring.config.location=./application-pch.yml
 ```
 
 # 发布帮助
@@ -64,3 +76,4 @@ crontab -l
 SET GLOBAL time_zone = '+08:00';
 SET time_zone = '+08:00';
 ```
+

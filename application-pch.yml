@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: mp-server
+  web:
+    resources:
+      static-locations: ./static/
+  cache:
+    jcache:
+      config: ./ehcache.xml
+server:
+  undertow:
+    buffer-size: 1024
+  port: 80
+  servlet:
+    context-path: /
+wx:
+  mp:
+    configs:
+      - appid: wx8c967dded27ba5e2
+        secret: eb38c40ae87e33b06f02e42ad460d6ca
+        token:
+        aesKey:
+        msgDataFormat:
+com:
+  lead:
+    fund:
+      base:
+        log-dir: ../
+        url-prefix: https://pch.mynatapp.cc
+        database:
+          dmmp:
+            url: jdbc:mysql://localhost:3306/dmmp?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+            username: root
+            password: Yn.123456
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            min-count: 0
+          douson:
+            url: jdbc:mysql://localhost:3306/douson?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+            username: root
+            password: Yn.123456
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            min-count: 0
