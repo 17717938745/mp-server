@@ -97,12 +97,12 @@ bind-address=0.0.0.0
 lower_case_table_names=1
 max_allowed_packet=104857600
 init_connect='SET NAMES utf8mb4'
-character-set-server = utf8mb4
-collation-server = utf8mb4_unicode_ci
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
 
 [client]
-default-character-set = utf8mb4
+default-character-set=utf8mb4
 
 [mysql]
-default-character-set = utf8mb4
+default-character-set=utf8mb4
 ```
