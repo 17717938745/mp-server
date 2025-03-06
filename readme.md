@@ -77,3 +77,32 @@ SET GLOBAL time_zone = '+08:00';
 SET time_zone = '+08:00';
 ```
 
+### 设置字符集
+
+```shell
+ALTER DATABASE dmmp CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+ALTER DATABASE douson CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+```
+
+### my.cnf配置
+
+```text
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+symbolic-links=0
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+bind-address=0.0.0.0
+lower_case_table_names=1
+max_allowed_packet=104857600
+init_connect='SET NAMES utf8mb4'
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
+```
