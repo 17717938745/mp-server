@@ -182,28 +182,28 @@ const userOptionList = ref(new Array<any>())
 const editAll = includes(roleCodeList, 'schedulingManager')
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
-  {value: 'dateMonthFormat', labelKey: 'date', width: 380},
-  {value: 'scheduleDayTimeLabel', labelKey: 'scheduleMiddle', width: 189},
-  {value: 'scheduleMiddleLabel', labelKey: 'scheduleMiddle', width: 189},
-  {value: 'scheduleEveningLabel', labelKey: 'scheduleEvening', width: 189},
-  {value: 'scheduleDayTime12Label', labelKey: 'scheduleDayTime12', width: 189},
-  {value: 'scheduleEvening12Label', labelKey: 'scheduleEvening12', width: 189},
-  {value: 'scheduleDayTimeTechnologyGroupLabel', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189},
-  {value: 'scheduleEveningTechnologyGroupLabel', labelKey: 'scheduleEveningTechnologyGroup', width: 189},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 203, type: ValueType.Operator,},
+  {value: 'dateMonthFormat', labelKey: 'date', width: 201},
+  {value: 'scheduleDayTimeLabel', labelKey: 'scheduleMiddle', width: 103},
+  {value: 'scheduleMiddleLabel', labelKey: 'scheduleMiddle', width: 103},
+  {value: 'scheduleEveningLabel', labelKey: 'scheduleEvening', width: 103},
+  {value: 'scheduleDayTime12Label', labelKey: 'scheduleDayTime12', width: 103},
+  {value: 'scheduleEvening12Label', labelKey: 'scheduleEvening12', width: 103},
+  {value: 'scheduleDayTimeTechnologyGroupLabel', labelKey: 'scheduleDayTimeTechnologyGroup', width: 129},
+  {value: 'scheduleEveningTechnologyGroupLabel', labelKey: 'scheduleEveningTechnologyGroup', width: 129},
 ])
 const handleValueHighLight = (row, t) => {
   return includes(highLightUserIdList.value || [], t)
 }
 const columnDetailConfigList = ref<ViewConfig[]>([
-  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 189},
-  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 189, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 126},
+  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
 ])
 const defaultFormData = {
   dateMonth: '',

@@ -38,11 +38,9 @@ import com.lead.fund.base.server.mp.request.SchedulingDetailRequest;
 import com.lead.fund.base.server.mp.request.SchedulingPageRequest;
 import com.lead.fund.base.server.mp.request.SchedulingRequest;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
-import com.lead.fund.base.server.mp.response.ParamConfigResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailWrapperResponse;
 import com.lead.fund.base.server.mp.response.SchedulingResponse;
-import com.lead.fund.base.server.mp.response.VocationResponse;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -146,6 +143,7 @@ public class DousonSchedulingController {
             );
             MultitaskUtil.batchInvokeAll(
                     deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>()
+                                    .eq(DeviceEntity::getSupplier, false)
                                     .select(DeviceEntity::getId, DeviceEntity::getSorter))
                             .stream()
                             .sorted(Comparator.comparing(DeviceEntity::getSorter))
