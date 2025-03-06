@@ -62,7 +62,7 @@
         </el-link>
       </template>
     </view-list>
-    <el-dialog :title="'Scheduling'" v-model="showDetail" width="80%" :close-on-click-modal="false">
+    <el-dialog :title="'Scheduling'" v-model="showDetail" width="90%" :close-on-click-modal="false">
       <div class="douson-flex" style="text-align: center; justify-content: center; align-items: center;">
         <h1>{{ tableDetailSummaryData.schedulingTitle }}</h1>
       </div>
@@ -83,14 +83,6 @@
         </el-select>
         <div class="query-btn">
           <el-button :icon="Search" @click="handleShowDetail" type="primary">Search</el-button>
-          <el-button
-              v-if="editAll"
-              :icon="Plus"
-              @click="handleSaveModal"
-              type="success"
-          >Add
-          </el-button>
-          <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
         </div>
       </div>
       <view-list
