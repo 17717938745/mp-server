@@ -1100,7 +1100,7 @@ const handleTableRowClassName = ({
     return 'row-light-blue'
   }
   if (row.processCount && row.planReformCount && row.processCount === row.planReformCount) {
-    return 'row-done'
+    return 'row-green'
   }
   if (row.receiptCount && row.planReformCount && row.receiptCount === row.planReformCount) {
     return 'row-done'

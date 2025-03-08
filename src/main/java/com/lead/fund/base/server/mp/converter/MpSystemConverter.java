@@ -38,6 +38,7 @@ public interface MpSystemConverter extends Serializable {
     @Mapping(target = "createTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getCreateTime()))")
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getModifyTime()))")
     @Mapping(target = "passwordExpire", expression = "java(null != d.getPasswordExpireTime() && cn.hutool.core.date.DateTime.now().compareTo(d.getPasswordExpireTime()) >= 0)")
+    @Mapping(target = "planIncreaseSalaryDateCount", expression = "java(null == d.getPlanIncreaseSalaryDate() ? null : (int)cn.hutool.core.date.DateUtil.between(new java.util.Date(), com.lead.fund.base.common.util.DateUtil.parse(d.getPlanIncreaseSalaryDate()), cn.hutool.core.date.DateUnit.DAY, false))")
     MpUserResponse data(MpUserEntity d);
 
     /**

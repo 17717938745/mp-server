@@ -58,6 +58,7 @@ public class AssemblySummaryResponse implements Serializable {
      * 承诺交期
      */
     private String deliveryDate;
+    private String deliveryDateFormat;
     /**
      * 完成数量
      */
@@ -74,6 +75,7 @@ public class AssemblySummaryResponse implements Serializable {
      * 装配完成日期
      */
     private String assemblyCompleteDate;
+    private String assemblyCompleteDateFormat;
     /**
      * 装配完成数量
      */

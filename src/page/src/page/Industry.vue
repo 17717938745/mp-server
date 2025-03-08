@@ -7,6 +7,13 @@
 </script>
 
 <style lang="scss">
+/* 在你的全局样式文件中（如 main.css 或 App.vue 的 style 标签中） */
+:root {
+  --el-text-color-primary: #111111 !important;
+  --el-text-color-regular: #222222;
+  --el-text-color-secondary: #333333;
+  --el-text-color-placeholder: #888888;
+}
 html,
 body {
   margin: 0;
@@ -18,6 +25,21 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    --el-input-placeholder-color: rgba(196, 196, 196, 1);
+    --el-text-size-placeholder: 14px;
+    --el-border-width: 1px;
+    --el-border-color: rgba(232, 232, 232, 1);
+    --el-input-height: 36px;
+    --el-border-radius-base: 4px;
+    --el-input-text-color: rgba(51, 51, 51, 1);
+    --el-font-size-base: 14px;
+    --el-border-radius-base: 4px;
+    --el-input-inner-height: 36px;
+    --el-component-size: 36px;
+    --el-menu-item-height: 40px;
+    --el-menu-sub-item-height: 40px;
+    --el-radio-input-width: 16px;
+    --el-radio-input-height: 16px;
   }
 }
 
@@ -94,10 +116,16 @@ $containerLeftGap: 5px;
 
 .el-table {
   .row-blue {
-    background-color: #bdcff4;
+    background-color: #c8d5ef;
+    color: #111111 !important;
+  }
+  .row-yellow {
+    background-color: #eae8c2;
+    color: #111111 !important;
   }
   .row-light-blue {
     background-color: #409eff;
+    color: #111111 !important;
   }
   .row-red {
     background-color: #f1f15b !important;
@@ -113,13 +141,13 @@ $containerLeftGap: 5px;
   }
   .row-green {
     background-color: #9bc567 !important;
-    //color: #ca3434 !important;
+    color: #111111 !important;
     font-weight: 900;
     font-size: 16px;
   }
   .row-gray {
     background-color: #e2e3df !important;
-    color: #3b2424 !important;
+    color: #111111 !important;
     font-weight: 900;
     font-size: 16px;
   }
@@ -166,24 +194,6 @@ p, ul {
   line-height: 1;
   margin: 0;
   padding: 0;
-}
-
-body {
-  --el-input-placeholder-color: rgba(196, 196, 196, 1);
-  --el-text-size-placeholder: 14px;
-  --el-border-width: 1px;
-  --el-border-color: rgba(232, 232, 232, 1);
-  --el-input-height: 36px;
-  --el-border-radius-base: 4px;
-  --el-input-text-color: rgba(51, 51, 51, 1);
-  --el-font-size-base: 14px;
-  --el-border-radius-base: 4px;
-  --el-input-inner-height: 36px;
-  --el-component-size: 36px;
-  --el-menu-item-height: 40px;
-  --el-menu-sub-item-height: 40px;
-  --el-radio-input-width: 16px;
-  --el-radio-input-height: 16px;
 }
 
 .el-link.el-link--info.is-underline:hover:after {

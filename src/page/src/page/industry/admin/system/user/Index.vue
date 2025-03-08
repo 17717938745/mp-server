@@ -74,7 +74,7 @@
             :value="item.value"
         />
       </el-select>
-      <el-select
+<!--      <el-select
           v-model="query.data.schedule"
           @change="handleList"
           clearable
@@ -85,7 +85,7 @@
             :label="item.label"
             :value="item.value"
         />
-      </el-select>
+      </el-select>-->
       <el-select v-model="query.data.leaderUserId"
                  @change="handleList"
                  filterable
@@ -114,6 +114,7 @@
         idKey="userId"
         :columnConfigList="columnConfigList"
         :list="tableData"
+        :handleTableRowClassName="handleTableRowClassName"
         :handleEdit="includes(roleCodeList, 'admin') ? handleEdit : null"
         :handle-update="includes(roleCodeList, 'admin') ? handleUpdate : null"
     >
@@ -167,7 +168,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="schedule" :label="store.state.label.schedule">
+<!--        <el-form-item prop="schedule" :label="store.state.label.schedule">
           <el-select
               v-model="formData.schedule"
               clearable
@@ -179,7 +180,7 @@
                 :value="item.value"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="profession" :label="store.state.label.profession">
           <el-select v-model="formData.profession"
                      filterable
@@ -245,6 +246,24 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="userEdit" prop="lastIncreaseSalaryDate" :label="store.state.label.lastIncreaseSalaryDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.lastIncreaseSalaryDate"
+              format="YYYY-MM-DD"
+              @change="formData.lastIncreaseSalaryDate = formatDate(formData.lastIncreaseSalaryDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item v-if="userEdit" prop="planIncreaseSalaryDate" :label="store.state.label.planIncreaseSalaryDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.date"
+              format="YYYY-MM-DD"
+              @change="formData.planIncreaseSalaryDate = formatDate(formData.planIncreaseSalaryDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -268,6 +287,7 @@ import {StoreType} from '@/store'
 import ViewList from '../../../component/ViewList.vue'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ImageUpload from '../../../component/ImageUpload.vue'
+import {formatDate} from '@/util/DateUtil'
 
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
@@ -287,13 +307,14 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 180,
     type: ValueType.Operator,
   },
+  {value: 'createTime', labelKey: 'createTime', width: 152,},
   {value: 'username', labelKey: 'username', width: 152,},
-  {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 152,},
   {value: 'departmentFormat', labelKey: 'department', width: 186,},
   {value: 'name', labelKey: 'chineseName', width: 168,},
   {value: 'userPropertyFormat', labelKey: 'userProperty', width: 168,},
-  {value: 'scheduleFormat', originValue: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
-  {value: 'professionFormat', labelKey: 'profession', width: 432,},
+  {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 152,},
+  // {value: 'scheduleFormat', originValue: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
+  {value: 'professionFormat', labelKey: 'profession', width: 361,},
   {value: 'mobile', labelKey: 'mobile', width: 128,},
   {value: 'roleNameList', labelKey: 'role', width: 256, type: ValueType.TagList},
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
@@ -302,6 +323,8 @@ const columnConfigList = ref<ViewConfig[]>([
 ])
 const defaultFormData = {
   userId: '',
+  lastIncreaseSalaryDate: '',
+  planIncreaseSalaryDate: '',
   photoList: [],
   roleIdList: ['user'],
   username: '',
@@ -381,6 +404,18 @@ const handleEdit = (row: any, index: number = 0) => {
   state.formSave = false
   state.formData = Object.assign({}, row)
 }
+const handleTableRowClassName = ({
+                                   row,
+                                   rowIndex,
+                                 }: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.planIncreaseSalaryDateCount != null && row.planIncreaseSalaryDateCount < 30) {
+    return 'row-yellow'
+  }
+  return ''
+}
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
@@ -404,6 +439,7 @@ const handleUpdate = (row: any) => {
   })
 }
 const userOptionList = ref(new Array<any>())
+const userEdit = user.username === 'admin' || includes(roleCodeList, 'userManager')
 Promise.all([
   httpGet('douson/config', {
     categoryIdList: [
@@ -441,6 +477,12 @@ Promise.all([
   }
   if (!includes(roleCodeList, 'userManager')) {
     columnConfigList.value = columnConfigList.value.filter((t: any) => t.value !== 'interviewResume')
+  }
+  if(userEdit) {
+    columnConfigList.value.push(...[
+      {value: 'lastIncreaseSalaryDate', labelKey: 'lastIncreaseSalaryDate', width: 101, type: ValueType.DateEdit,},
+      {value: 'planIncreaseSalaryDate', labelKey: 'planIncreaseSalaryDate', width: 101, type: ValueType.DateEdit,},
+    ])
   }
   handleList()
 })

@@ -35,6 +35,7 @@ import com.lead.fund.base.server.mp.response.AssemblyUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -626,6 +627,105 @@ public class DousonAssemblyController {
         );
     }
 
+    /**
+     * 汇总列表2
+     *
+     * @param deviceId 设备id
+     * @param request  {@link AssemblyRequest}
+     * @return {@link ListResult <AssemblySummaryResponse>}
+     */
+    @GetMapping("summary-list2")
+    public ListResult<AssemblySummaryResponse> summaryList2(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute AssemblyRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "assemblyManager".equals(t.getRoleCode()) || "assemblyRecord".equals(t.getRoleCode()) || "assemblyTesterRecord".equals(t.getRoleCode()) || "assemblyRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final List<AssemblyEntity> l = assemblyList(request, lambda -> {
+            lambda
+                    .ne(AssemblyEntity::getSerialIndex, 0)
+                    .gt(AssemblyEntity::getCompletedQty, 0)
+                    .isNotNull(AssemblyEntity::getCompleteDate)
+                    .select(
+                            AssemblyEntity::getPurchaseOrderNo,
+                            AssemblyEntity::getPoProject,
+                            AssemblyEntity::getSaleOrderNo,
+                            AssemblyEntity::getOrderProject,
+                            AssemblyEntity::getMaterialNo,
+                            AssemblyEntity::getOrderCount,
+                            AssemblyEntity::getMaterialDescription,
+                            AssemblyEntity::getDesignNumber,
+                            AssemblyEntity::getDeliveryDate,
+                            AssemblyEntity::getCompleteDate,
+                            AssemblyEntity::getCompletedQty,
+                            AssemblyEntity::getAssemblyCompleteDate,
+                            AssemblyEntity::getAssemblyCompleteCount,
+                            AssemblyEntity::getOilInjectionCompleteCount,
+                            AssemblyEntity::getOilInjectionCompleteDate
+                    );
+        });
+        final DateTime now = DateTime.now();
+        final String startTime = DateUtil.day(now) + " 08:00:00";
+        final String endTime = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(now, 1)) + " 08:00:00";
+        final Map<String, Map<List<String>, AssemblySummaryResponse>> completeListMap = ASSEMBLY_INSTANCE.assemblySummaryList(l)
+                .stream().peek(t -> {
+                    final DateTime completeDate = DateUtil.parse(t.getAssemblyCompleteDate());
+                    t.setAssemblyCompleteDateFormat(
+                                    DateUtil.daySimple(DateUtil.hourSecond(completeDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : completeDate)
+                            )
+                            .setDeliveryDateFormat(DateUtil.daySimple(t.getDeliveryDate()))
+                    ;
+                })
+                .sorted(Comparator.comparing(AssemblySummaryResponse::getAssemblyCompleteDate))
+                .collect(Collectors.groupingBy(
+                        AssemblySummaryResponse::getAssemblyCompleteDateFormat,
+                        Collectors.groupingBy(
+                                t -> CollUtil.toList(t.getPurchaseOrderNo(), t.getPoProject(), t.getSaleOrderNo(), t.getOrderProject()),
+                                Collectors.reducing(defaultAssemblySummary(), (t1, t2) -> {
+                                    return defaultAssemblySummary()
+                                            .setPurchaseOrderNo(t2.getPurchaseOrderNo())
+                                            .setPoProject(t2.getPoProject())
+                                            .setSaleOrderNo(t2.getSaleOrderNo())
+                                            .setOrderProject(t2.getOrderProject())
+                                            .setMaterialNo(t2.getMaterialNo())
+                                            .setMaterialDescription(t2.getMaterialDescription())
+                                            .setDesignNumber(t2.getDesignNumber())
+                                            .setDeliveryDate(t2.getDeliveryDate())
+                                            .setDeliveryDateFormat(t2.getDeliveryDateFormat())
+                                            .setAssemblyCompleteDate(t2.getAssemblyCompleteDate())
+                                            .setAssemblyCompleteDateFormat(t2.getAssemblyCompleteDateFormat())
+                                            .setAssemblyCompleteCount(t1.getAssemblyCompleteCount() + t2.getAssemblyCompleteCount())
+                                            .setCompletedQty(t1.getCompletedQty() + t2.getCompletedQty())
+                                            .setOilInjectionCompleteCount(t1.getOilInjectionCompleteCount() + t2.getOilInjectionCompleteCount())
+                                            .setOrderCount(t1.getOrderCount() + t2.getOrderCount())
+                                            ;
+                                })
+                        )
+                ));
+        final List<AssemblySummaryResponse> rl = completeListMap.entrySet().stream().sorted(Comparator.comparing(Entry::getKey)).flatMap(t -> t.getValue().entrySet().stream().sorted(Comparator.comparing(o -> o.getKey().toString())).map(Entry::getValue)).collect(Collectors.toList());
+        rl.add(
+                rl.stream().reduce(
+                        defaultAssemblySummary().setAssemblyCompleteDateFormat("合计")
+                        ,
+                        (t, t1) -> {
+                            return defaultAssemblySummary().setAssemblyCompleteDateFormat("合计")
+                                    .setAssemblyCompleteCount(t.getAssemblyCompleteCount() + t1.getAssemblyCompleteCount())
+                                    .setOilInjectionCompleteCount(t.getOilInjectionCompleteCount() + t1.getOilInjectionCompleteCount())
+                                    .setCompletedQty(t.getCompletedQty() + t1.getCompletedQty())
+                                    .setOrderCount(t.getOrderCount() + t1.getOrderCount())
+                                    ;
+                        }
+                )
+        );
+        return new ListResult<>(
+                rl.stream()
+                        .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
     private void updateSummaryInfo(AssemblyEntity e, AssemblyRequest request) {
         final List<AssemblyAttachmentEntity> attachList = assemblyAttachmentMapper.selectList(new LambdaQueryWrapper<AssemblyAttachmentEntity>()
                 .eq(AssemblyAttachmentEntity::getAssemblyId, e.getId())
@@ -713,20 +813,23 @@ public class DousonAssemblyController {
                 .select(AssemblyEntity::getId, AssemblyEntity::getCompletedQty, AssemblyEntity::getAssemblyCompleteCount, AssemblyEntity::getOilInjectionCompleteCount, AssemblyEntity::getAssemblyCompleteDate, AssemblyEntity::getOilInjectionCompleteDate, AssemblyEntity::getAssemblyPerson, AssemblyEntity::getTester)
         );
         for (AssemblyEntity t : assemblyList) {
-            int completeCount = Math.min(defaultInt(t.getAssemblyCompleteCount()), defaultInt(t.getOilInjectionCompleteCount()));
-            t.setCompletedQty(completeCount);
-            final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
-                    .set(AssemblyEntity::getCompletedQty, completeCount)
-                    .eq(AssemblyEntity::getId, t.getId());
-            if (completeCount > 0) {
-                if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
-                    t.setCompleteDate(t.getAssemblyCompleteDate().compareTo(t.getOilInjectionCompleteDate()) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
+            final int completeCount = Math.min(defaultInt(t.getAssemblyCompleteCount()), defaultInt(t.getOilInjectionCompleteCount()));
+            final String completeDate = defaultIfBlank(defaultIfBlank(t.getAssemblyCompleteDate()).compareTo(defaultIfBlank(t.getOilInjectionCompleteDate())) >= 0 ? t.getAssemblyCompleteDate() : t.getOilInjectionCompleteDate());
+            if (completeCount != defaultInt(t.getCompletedQty()) || !completeDate.equals(t.getCompleteDate())) {
+                t.setCompletedQty(completeCount);
+                final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
+                        .set(AssemblyEntity::getCompletedQty, completeCount)
+                        .eq(AssemblyEntity::getId, t.getId());
+                if (completeCount > 0) {
+                    if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
+                        t.setCompleteDate(completeDate);
+                    }
+                    lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
+                } else {
+                    lam.set(AssemblyEntity::getCompleteDate, "");
                 }
-                lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
-            } else {
-                lam.set(AssemblyEntity::getCompleteDate, "");
+                assemblyMapper.update(null, lam);
             }
-            assemblyMapper.update(null, lam);
         }
         final Integer completeCount = assemblyList.stream().map(t -> defaultInt(t.getCompletedQty())).reduce(0, Integer::sum);
         final Integer assemblyCompleteCount = assemblyList.stream().map(t -> defaultInt(t.getAssemblyCompleteCount())).reduce(0, Integer::sum);
@@ -749,5 +852,25 @@ public class DousonAssemblyController {
                 .set(AssemblyEntity::getAssemblyCompleteDate, oilInjectionCompleteEntity.getAssemblyCompleteDate())
                 .set(AssemblyEntity::getAssemblyPerson, oilInjectionCompleteEntity.getAssemblyPerson()));
         assemblyMapper.update(null, lam);
+    }
+
+    public static AssemblySummaryResponse defaultAssemblySummary() {
+        return new AssemblySummaryResponse()
+                .setPurchaseOrderNo("")
+                .setPoProject("")
+                .setSaleOrderNo("")
+                .setOrderProject("")
+                .setMaterialNo("")
+                .setMaterialDescription("")
+                .setDesignNumber("")
+                .setDeliveryDate("--")
+                .setDeliveryDateFormat("--")
+                .setAssemblyCompleteDate("--")
+                .setAssemblyCompleteDateFormat("--")
+                .setAssemblyCompleteCount(0)
+                .setCompletedQty(0)
+                .setOilInjectionCompleteCount(0)
+                .setOrderCount(0)
+                ;
     }
 }

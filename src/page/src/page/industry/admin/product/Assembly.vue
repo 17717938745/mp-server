@@ -20,6 +20,7 @@ import {useRoute} from 'vue-router'
 import {TabsPaneContext} from 'element-plus'
 import Index from './assembly/Index.vue'
 import Summary from './assembly/Summary.vue'
+import Summary2 from './assembly/Summary2.vue'
 const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 
@@ -30,8 +31,12 @@ const componentList = ref([
     component: shallowRef(Index),
   },
   {
-    label: `${store.state.label.completeMachineAssemblyRecord} Summary`,
+    label: `1${store.state.label.completeMachineAssemblyRecord} Summary`,
     component: shallowRef(Summary),
+  },
+  {
+    label: `2${store.state.label.completeMachineAssemblyRecord} Summary`,
+    component: shallowRef(Summary2),
   },
 ]);
 let tabIndex

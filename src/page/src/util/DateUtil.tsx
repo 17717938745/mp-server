@@ -132,6 +132,10 @@ export const getMonthStart = () => {
   const now = new Date()
   return new Date(now.getFullYear(), now.getMonth(), 1)
 }
+export const getYesterday = () => {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+}
 export const getMonthEnd = () => {
   const now = new Date()
   const y = now.getFullYear()

@@ -125,4 +125,16 @@ public class MpUserResponse extends AbstractAdministratorModel {
      */
     private String leaderUserId;
     private String leaderUserIdFormat;
+    /**
+     * 最后一次调薪日期
+     */
+    private String lastIncreaseSalaryDate;
+    /**
+     * 计划下次调薪日期
+     */
+    private String planIncreaseSalaryDate;
+    /**
+     * 计划下次调薪日期剩余天数
+     */
+    private Integer planIncreaseSalaryDateCount;
 }

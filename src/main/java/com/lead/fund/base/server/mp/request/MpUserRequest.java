@@ -57,4 +57,12 @@ public class MpUserRequest implements Serializable {
      * 当班主管
      */
     private String leaderUserId;
+    /**
+     * 计划下次调薪日期
+     */
+    private String lastIncreaseSalaryDate;
+    /**
+     * 最后一次调薪日期
+     */
+    private String planIncreaseSalaryDate;
 }

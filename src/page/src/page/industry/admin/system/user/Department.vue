@@ -40,12 +40,12 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'workShop', labelKey: 'workShop', width: 123},
   {value: 'office', labelKey: 'office', width: 128},
   {value: 'total', labelKey: 'total', width: 128},
-  {value: 'scheduleNull', labelKey: 'scheduleNull', width: 128},
-  {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 128},
-  {value: 'scheduleDayTime12', labelKey: 'scheduleDayTime12', width: 128},
-  {value: 'scheduleMiddle', labelKey: 'scheduleMiddle', width: 128},
-  {value: 'scheduleEvening', labelKey: 'scheduleEvening', width: 128},
-  {value: 'scheduleEvening12', labelKey: 'scheduleEvening12', width: 128},
+  // {value: 'scheduleNull', labelKey: 'scheduleNull', width: 128},
+  // {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 128},
+  // {value: 'scheduleDayTime12', labelKey: 'scheduleDayTime12', width: 128},
+  // {value: 'scheduleMiddle', labelKey: 'scheduleMiddle', width: 128},
+  // {value: 'scheduleEvening', labelKey: 'scheduleEvening', width: 128},
+  // {value: 'scheduleEvening12', labelKey: 'scheduleEvening12', width: 128},
 ])
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],
