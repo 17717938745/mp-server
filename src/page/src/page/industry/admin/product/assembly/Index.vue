@@ -250,11 +250,11 @@
           <image-upload :photoList="formData.pressureTestPhotoList" :maxSize="Number(`${(formRuleList['pressureTestPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow) || !handleEditable(formData)"></image-upload>
         </el-form-item>
         <el-form-item prop="torqueNm" :label="store.state.label.torqueNm">
-          <el-input type="number" v-model="formData.torqueNm" style="width: 180px;" :min="100" :max="300" :disabled="!(editYellow) || !handleEditable(formData)">
-            <template #append>
-              N.m
+          <el-input-number v-model="formData.torqueNm" style="width: 180px;" :controls="true" :min="100" :max="300" :disabled="!(editYellow) || !handleEditable(formData)">
+            <template #suffix>
+              <span>N.m</span>
             </template>
-          </el-input>
+          </el-input-number>
         </el-form-item>
         <el-form-item prop="oilInjectionPhotoList" :label="`${store.state.label.oilInjectionPhoto}(${(formRuleList['oilInjectionPhotoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
           <image-upload :photoList="formData.oilInjectionPhotoList" :maxSize="Number(`${(formRuleList['oilInjectionPhotoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!(editYellow) || !handleEditable(formData)"></image-upload>
@@ -423,7 +423,7 @@ const defaultFormData = {
   pressureTestPhoto: '',
   pressureTestPhotoCount: 0,
   pressureTestPhotoList: [],
-  torqueNm: '',
+  torqueNm: null,
   oilInjectionPhotoCount: 0,
   oilInjectionPhotoList: [],
   tester: '',
@@ -494,7 +494,7 @@ const state = reactive({
     valveBodyPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveCoverPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveSeatPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
-    torqueNm: [{required: false, type: 'number', min: 0, max: 200}],
+    torqueNm: [{required: false, type: 'number', min: 100, max: 300}],
     gatePhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     valveStemPhotoList: [{required: false, type: 'array', min: 0, max: 4}],
     pressureTestPhotoList: [{required: false, type: 'array', min: 0, max: 6}],
