@@ -16,7 +16,7 @@
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
     </div>
-    <el-alert :title="`${store.state.label.assemblySummaryTips}`" type="info" :closable="false"/>
+    <el-alert :title="`${store.state.label.assemblySummaryTips}`" type="info" :closable="true"/>
     <view-list
         idKey="assemblyId"
         :columnConfigList="columnConfigList"

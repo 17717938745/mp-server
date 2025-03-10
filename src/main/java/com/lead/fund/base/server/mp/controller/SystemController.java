@@ -39,7 +39,6 @@ import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserPhotoEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserRoleEntity;
-import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;

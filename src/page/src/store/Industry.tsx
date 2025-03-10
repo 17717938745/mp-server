@@ -1488,6 +1488,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {"value": "assemblyCompleteDate", "label": "装配完成日期"},
         {"value": "assemblyCompleteCount", "label": "装配完成数量"},
         {"value": "assemblyCompleteType", "label": "装配完成情况"},
+        {"value": "assemblySummary1Tips", "label": "此处只统计主数据"},
         {"value": "assemblySummaryTips", "label": "按照采购订单编号、PO项目、销售订单、订单项目的维度统计数据，统计时间为当天早上8点（含8点整）至第二早上8点（不含8点整）"},
         {"value": "oilInjectionCompleteType", "label": "注油完成情况"},
         {"value": "lastIncreaseSalaryDate", "label": "最后一次调薪日期"},
@@ -3174,6 +3175,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "value": "assemblyCompleteDate",
           "label": "Ngày lắp ráp hoàn thành"
         },
+        {"value": "assemblySummary1Tips", "label": "Ở đây chỉ thống kê dữ liệu chính."},
         {"value": "assemblySummaryTips", "label": "Thống kê dữ liệu theo các chiều số đơn đặt hàng mua (PO), hạng mục PO, đơn đặt hàng bán, hạng mục đơn hàng, thời gian thống kê là từ 8 giờ sáng hôm nay (bao gồm 8 giờ đúng) đến 8 giờ sáng ngày hôm sau (không bao gồm 8 giờ đúng)."},
         {"value": "lastIncreaseSalaryDate", "label": "Ngày điều chỉnh lương gần đây nhất"},
         {"value": "planIncreaseSalaryDate", "label": "Ngày dự kiến điều chỉnh lương lần tiếp theo"},
