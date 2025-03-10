@@ -1,9 +1,11 @@
 package com.lead.fund.base.server.mp.request;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * MpUserRequest
@@ -58,11 +60,25 @@ public class MpUserRequest implements Serializable {
      */
     private String leaderUserId;
     /**
-     * 计划下次调薪日期
+     * 最后一次调薪日期
      */
     private String lastIncreaseSalaryDate;
     /**
-     * 最后一次调薪日期
+     * 计划下次调薪日期
      */
     private String planIncreaseSalaryDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startPlanIncreaseSalaryDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endPlanIncreaseSalaryDate;
+    /**
+     * 开始时间@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startCreateTime;
+    /**
+     * 结束时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endCreateTime;
 }

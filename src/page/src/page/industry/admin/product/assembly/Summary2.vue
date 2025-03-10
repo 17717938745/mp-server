@@ -50,7 +50,7 @@ const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'assemblyCompleteDateFormat', labelKey: 'assemblyCompleteDate', width: 92},
+  {value: 'oilInjectionCompleteDateFormat', labelKey: 'oilInjectionCompleteDate', width: 92},
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 78},
   {value: 'orderProject', labelKey: 'orderProject', width: 56},
   {value: 'materialNo', labelKey: 'materialNo', width: 109},

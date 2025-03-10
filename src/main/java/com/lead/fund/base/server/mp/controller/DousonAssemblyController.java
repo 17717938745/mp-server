@@ -1,5 +1,16 @@
 package com.lead.fund.base.server.mp.controller;
 
+import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
+import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
+import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
+import static com.lead.fund.base.common.util.StrUtil.isBlank;
+import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
+import static com.lead.fund.base.server.mp.converter.AssemblyConverter.ASSEMBLY_INSTANCE;
+import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.IoUtil;
@@ -16,7 +27,11 @@ import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.server.mp.dao.*;
+import com.lead.fund.base.server.mp.dao.AssemblyAttachmentDao;
+import com.lead.fund.base.server.mp.dao.AssemblyDao;
+import com.lead.fund.base.server.mp.dao.ParamDao;
+import com.lead.fund.base.server.mp.dao.TaskDao;
+import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.douson.AssemblyAttachmentEntity;
 import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
@@ -35,7 +50,22 @@ import com.lead.fund.base.server.mp.response.AssemblyUploadResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -48,28 +78,17 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
-import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
-import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
-import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
-import static com.lead.fund.base.common.util.StrUtil.*;
-import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
-import static com.lead.fund.base.server.mp.converter.AssemblyConverter.ASSEMBLY_INSTANCE;
-import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
-import static org.checkerframework.checker.nullness.Opt.orElse;
 
 /**
  * DousonAssemblyController
@@ -396,10 +415,10 @@ public class DousonAssemblyController {
             lambda.le(AssemblyEntity::getDeliveryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndDeliveryDate())));
         }
         if (null != d.getStartOilInjectionCompleteDate()) {
-            lambda.ge(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartOilInjectionCompleteDate())));
+            lambda.ge(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.dateTime(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartOilInjectionCompleteDate())));
         }
         if (null != d.getEndOilInjectionCompleteDate()) {
-            lambda.le(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndOilInjectionCompleteDate())));
+            lambda.le(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.dateTime(cn.hutool.core.date.DateUtil.endOfDay(d.getEndOilInjectionCompleteDate())));
         }
         if (null != d.getStartAssemblyCompleteDate()) {
             lambda.ge(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartAssemblyCompleteDate())) + " 08:00:00");
@@ -676,9 +695,10 @@ public class DousonAssemblyController {
                 .stream().peek(t -> {
                     final DateTime completeDate = DateUtil.parse(t.getAssemblyCompleteDate());
                     t.setAssemblyCompleteDateFormat(
-                                    DateUtil.daySimple(DateUtil.hourSecond(completeDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : completeDate)
+                                    DateUtil.day(DateUtil.hourSecond(completeDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : completeDate)
                             )
-                            .setDeliveryDateFormat(DateUtil.daySimple(t.getDeliveryDate()))
+                            .setDeliveryDateFormat(DateUtil.day(t.getDeliveryDate()))
+                            .setOilInjectionCompleteDateFormat(DateUtil.day(t.getOilInjectionCompleteDate()))
                     ;
                 })
                 .sorted(Comparator.comparing(AssemblySummaryResponse::getAssemblyCompleteDate))
@@ -699,6 +719,8 @@ public class DousonAssemblyController {
                                             .setDeliveryDateFormat(t2.getDeliveryDateFormat())
                                             .setAssemblyCompleteDate(t2.getAssemblyCompleteDate())
                                             .setAssemblyCompleteDateFormat(t2.getAssemblyCompleteDateFormat())
+                                            .setOilInjectionCompleteDate(t2.getOilInjectionCompleteDate())
+                                            .setOilInjectionCompleteDateFormat(t2.getOilInjectionCompleteDateFormat())
                                             .setAssemblyCompleteCount(t1.getAssemblyCompleteCount() + t2.getAssemblyCompleteCount())
                                             .setCompletedQty(t1.getCompletedQty() + t2.getCompletedQty())
                                             .setOilInjectionCompleteCount(t1.getOilInjectionCompleteCount() + t2.getOilInjectionCompleteCount())
@@ -710,10 +732,14 @@ public class DousonAssemblyController {
         final List<AssemblySummaryResponse> rl = completeListMap.entrySet().stream().sorted(Comparator.comparing(Entry::getKey)).flatMap(t -> t.getValue().entrySet().stream().sorted(Comparator.comparing(o -> o.getKey().toString())).map(Entry::getValue)).collect(Collectors.toList());
         rl.add(
                 rl.stream().reduce(
-                        defaultAssemblySummary().setAssemblyCompleteDateFormat("合计")
+                        defaultAssemblySummary()
+                                .setAssemblyCompleteDateFormat("合计")
+                                .setOilInjectionCompleteDateFormat("合计")
                         ,
                         (t, t1) -> {
-                            return defaultAssemblySummary().setAssemblyCompleteDateFormat("合计")
+                            return defaultAssemblySummary()
+                                    .setAssemblyCompleteDateFormat("合计")
+                                    .setOilInjectionCompleteDateFormat("合计")
                                     .setAssemblyCompleteCount(t.getAssemblyCompleteCount() + t1.getAssemblyCompleteCount())
                                     .setOilInjectionCompleteCount(t.getOilInjectionCompleteCount() + t1.getOilInjectionCompleteCount())
                                     .setCompletedQty(t.getCompletedQty() + t1.getCompletedQty())

@@ -39,6 +39,7 @@ import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserPhotoEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserRoleEntity;
+import com.lead.fund.base.server.mp.entity.douson.AssemblyEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
@@ -328,6 +329,18 @@ public class SystemController {
             }
             if (isNotBlank(request.getLeaderUserId())) {
                 lambda.eq(MpUserEntity::getLeaderUserId, request.getLeaderUserId());
+            }
+            if (null != request.getStartCreateTime()) {
+                lambda.ge(MpUserEntity::getCreateTime, DateUtil.dateTime(cn.hutool.core.date.DateUtil.beginOfDay(request.getStartCreateTime())));
+            }
+            if (null != request.getEndCreateTime()) {
+                lambda.le(MpUserEntity::getCreateTime, DateUtil.dateTime(cn.hutool.core.date.DateUtil.endOfDay(request.getEndCreateTime())));
+            }
+            if (null != request.getStartPlanIncreaseSalaryDate()) {
+                lambda.ge(MpUserEntity::getPlanIncreaseSalaryDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getStartPlanIncreaseSalaryDate())));
+            }
+            if (null != request.getEndPlanIncreaseSalaryDate()) {
+                lambda.le(MpUserEntity::getPlanIncreaseSalaryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndPlanIncreaseSalaryDate())));
             }
         }
         final List<MpUserResponse> list = userMapper.selectList(lambda

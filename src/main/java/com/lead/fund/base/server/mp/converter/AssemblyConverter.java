@@ -51,6 +51,7 @@ public interface AssemblyConverter extends Serializable {
 
     @Mapping(target = "completedQty", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getCompletedQty()))")
     @Mapping(target = "assemblyCompleteCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getAssemblyCompleteCount()))")
+    @Mapping(target = "deliveryDateFormat", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getDeliveryDate()))")
     AssemblySummaryResponse assemblySummary(AssemblyEntity t);
 
     List<AssemblySummaryResponse> assemblySummaryList(List<AssemblyEntity> list);

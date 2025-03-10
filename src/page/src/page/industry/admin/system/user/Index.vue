@@ -74,18 +74,6 @@
             :value="item.value"
         />
       </el-select>
-<!--      <el-select
-          v-model="query.data.schedule"
-          @change="handleList"
-          clearable
-          :placeholder="store.state.label.schedule">
-        <el-option
-            v-for="item in config.scheduleList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>-->
       <el-select v-model="query.data.leaderUserId"
                  @change="handleList"
                  filterable
@@ -100,6 +88,28 @@
             :value="item.value"
         />
       </el-select>
+      <el-date-picker
+          v-model="createTimeDateTimeList"
+          @change="() => {handleDateTimeChange(createTimeDateTimeList, query.data, 'createTime')}"
+          type="daterange"
+          format="YYYY-MM-DD"
+          range-separator="-"
+          :start-placeholder="`Start ${store.state.label.createTime}`"
+          :end-placeholder="`End ${store.state.label.createTime}`"
+          style="width: 180px; margin-right: 20px;"
+      >
+      </el-date-picker>
+      <el-date-picker
+          v-model="planIncreaseSalaryDateDateTimeList"
+          @change="() => {handleDateTimeChange(planIncreaseSalaryDateDateTimeList, query.data, 'planIncreaseSalaryDate')}"
+          type="daterange"
+          format="YYYY-MM-DD"
+          range-separator="-"
+          :start-placeholder="`Start ${store.state.label.planIncreaseSalaryDate}`"
+          :end-placeholder="`End ${store.state.label.planIncreaseSalaryDate}`"
+          style="width: 180px; margin-right: 20px;"
+      >
+      </el-date-picker>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
         <el-button v-if="includes(roleCodeList, 'admin')"
@@ -293,6 +303,28 @@ const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
+const createTimeDateTimeList = ref([])
+const planIncreaseSalaryDateDateTimeList = ref([])
+const handleDateTimeChange = (da: any, qd: any, key: string, format: string = 'yyyy-MM-dd hh:mm:ss') => {
+  key = key || 'createDate'
+  const upfKey = key.charAt(0).toUpperCase() + key.slice(1)
+  const sk = `start${upfKey}`
+  const ek = `end${upfKey}`
+  if (da && da.length > 1) {
+    qd[sk] = formatDate(
+        da[0],
+        format
+    )
+    qd[ek] = formatDate(
+        da[1],
+        format
+    )
+  } else {
+    qd[sk] = ''
+    qd[ek] = ''
+  }
+  handleList()
+}
 const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'expand',
@@ -307,19 +339,19 @@ const columnConfigList = ref<ViewConfig[]>([
     width: 180,
     type: ValueType.Operator,
   },
-  {value: 'createTime', labelKey: 'createTime', width: 152,},
+  {value: 'createTime', labelKey: 'createTime', width: 91,},
   {value: 'username', labelKey: 'username', width: 152,},
-  {value: 'departmentFormat', labelKey: 'department', width: 186,},
+  {value: 'departmentFormat', labelKey: 'department', width: 168,},
   {value: 'name', labelKey: 'chineseName', width: 168,},
   {value: 'userPropertyFormat', labelKey: 'userProperty', width: 168,},
-  {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 152,},
+  {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 139,},
   // {value: 'scheduleFormat', originValue: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
-  {value: 'professionFormat', labelKey: 'profession', width: 361,},
+  {value: 'professionFormat', labelKey: 'profession', width: 289,},
   {value: 'mobile', labelKey: 'mobile', width: 128,},
   {value: 'roleNameList', labelKey: 'role', width: 256, type: ValueType.TagList},
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
-  {value: 'stateFormat', labelKey: 'state', width: 143,},
+  {value: 'stateFormat', labelKey: 'state', width: 72,},
 ])
 const defaultFormData = {
   userId: '',
@@ -342,6 +374,10 @@ const defaultFormData = {
 const state = reactive({
   query: {
     data: {
+      startPlanIncreaseSalaryDate: '',
+      endPlanIncreaseSalaryDate: '',
+      startCreateTime: '',
+      endCreateTime: '',
       department: '',
       profession: '',
       username: '',
@@ -468,7 +504,6 @@ Promise.all([
         t.type = ValueType.SelectEdit
         t.optionList = state.config.scheduleList
       } else if (t.value === 'leaderUserIdFormat') {
-        t.width = 198
         t.type = ValueType.SelectEdit
         t.optionList = userOptionList.value
       }

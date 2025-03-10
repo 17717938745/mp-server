@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 用户
@@ -128,11 +129,11 @@ public class MpUserEntity extends AbstractAdmin {
     @FieldRemark(value = "当班主管")
     private String leaderUserId;
     /**
-     * 计划下次调薪日期
+     * 最后一次调薪日期
      */
     private String lastIncreaseSalaryDate;
     /**
-     * 最后一次调薪日期
+     * 计划下次调薪日期
      */
     private String planIncreaseSalaryDate;
 }

@@ -71,6 +71,7 @@ public class AssemblySummaryResponse implements Serializable {
      * 注油完成日期
      */
     private String oilInjectionCompleteDate;
+    private String oilInjectionCompleteDateFormat;
     /**
      * 装配完成日期
      */
