@@ -1,4 +1,7 @@
 export const formatDate = (dateParam: Date | string, fmt: string): string => {
+  if(!dateParam) {
+    return ''
+  }
   let date: Date
   if (dateParam instanceof Date) {
     date = dateParam

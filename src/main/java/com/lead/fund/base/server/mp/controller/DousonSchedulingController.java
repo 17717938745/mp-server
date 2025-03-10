@@ -112,7 +112,6 @@ public class DousonSchedulingController {
         if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "schedulingManager".equals(t.getRoleCode()))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
-        final Date now = new Date();
         final SchedulingEntity e = (SchedulingEntity) SCHEDULING_INSTANCE.scheduling(request)
                 .setWeekIndex(DateUtil.parse(request.getDateMonth()).getField(DateField.WEEK_OF_YEAR))
                 .setModifier(u.getUserId());
@@ -217,12 +216,11 @@ public class DousonSchedulingController {
         final List<SchedulingResponse> rl = SCHEDULING_INSTANCE.schedulingList(list);
         for (SchedulingResponse t : rl) {
             final DateTime dateTime = DateUtil.parse(t.getDateMonth());
-            final DateTime startDate = DateTime.of(dateTime.getTime());
+            final DateTime startDate = DateTime.of(dateTime.getTime()).offset(DateField.DAY_OF_YEAR, 1);
             final DateTime endDate = DateTime.of(startDate.getTime());
-            endDate.setField(DateField.DAY_OF_WEEK, 1);
-            endDate.offset(DateField.WEEK_OF_MONTH, 1).offset(DateField.DAY_OF_YEAR, -1);
+            endDate.offset(DateField.DAY_OF_YEAR, 6);
             t.setDateMonthFormat(dateTime.toString("yyyy-MM ") + "Week " + dateTime.getField(DateField.WEEK_OF_MONTH) + "（" + dateTime.toString("yyyy") + "Week " + t.getWeekIndex() + ", " + DateUtil.day(startDate) + " - " + DateUtil.day(endDate) + "）")
-                    .setSchedulingTitle("Bảng chia ca CNC 排班表，Tuần %2d năm %s,(%s đến %s)".formatted(t.getWeekIndex(), dateTime.toString("yyyy"), startDate.toString("dd/MM"), endDate.toString("dd/MM")))
+                    .setSchedulingTitle("Bảng chia ca CNC 排班表，Tuần %2d năm %s(%s đến %s)".formatted(t.getWeekIndex(), dateTime.toString("yyyy"), startDate.toString("dd/MM"), endDate.toString("dd/MM")))
             ;
         }
         return rl;

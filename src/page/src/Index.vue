@@ -10,14 +10,10 @@
 import {initClient, registerInterceptor} from './util/HttpUtil';
 import {ref} from 'vue';
 import {DataResult} from '@/typing/ma/System';
-import {getFullSignUri, getDistributionSignUrl} from '@/util/RouterUtil';
+import {getFullSignUri} from '@/util/RouterUtil';
 import {useRouter} from 'vue-router';
-import {getCookie} from './util/StorageUtil';
-import {jsCallNative} from './util/jsBridge';
 import {toast} from './component/lead/toast';
 import {Toast} from 'vant';
-import {getMerchantId} from '@/util/EnvUtil';
-import {netNoData} from '@/util/Platform';
 
 try {
   // @ts-ignore

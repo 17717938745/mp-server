@@ -2,13 +2,10 @@
   <div>
     <div class="query-container">
       <el-date-picker
-          v-model="deliveryDateTimeList"
-          @change="() => {handleDateTimeChange(deliveryDateTimeList, query.data, 'deliveryDate')}"
           type="week"
-          format="YYYY-MM"
-          range-separator="-"
-          :start-placeholder="`Start ${store.state.label.date}`"
-          :end-placeholder="`End ${store.state.label.date}`"
+          v-model="query.data.dateMonth"
+          format="[Week] ww"
+          @change="query.data.dateMonth = formatDate(query.data.dateMonth, 'yyyy-MM-dd'); handlePage();"
       >
       </el-date-picker>
       <div class="query-btn">
@@ -218,6 +215,9 @@ const state = reactive({
   query: {
     data: {
       schedulingId: '',
+      dateMonth: '',
+      startDateMonth: '',
+      endDateMonth: '',
       deviceNumber: '',
       scheduleDayTime: '',
       scheduleMiddle: '',
@@ -276,7 +276,9 @@ const handleDateTimeChange = (da: any, qd: any, key: string, format: string = 'y
   const upfKey = key.charAt(0).toUpperCase() + key.slice(1)
   const sk = `start${upfKey}`
   const ek = `end${upfKey}`
+  console.log(JSON.stringify(da))
   if (da && da.length > 1) {
+    console.log(1111111)
     qd[sk] = formatDate(
         da[0],
         format
@@ -286,6 +288,7 @@ const handleDateTimeChange = (da: any, qd: any, key: string, format: string = 'y
         format
     )
   } else {
+    console.log(2222222)
     qd[sk] = ''
     qd[ek] = ''
   }
