@@ -590,12 +590,8 @@ public class DousonAssemblyController {
         final List<AssemblySummaryResponse> rl = ASSEMBLY_INSTANCE.assemblySummaryList(l)
                 .stream().peek(t -> {
                     t.setDeliveryDate(DateUtil.day(t.getDeliveryDate()));
-                    if (isNotBlank(t.getAssemblyCompleteDate()) && t.getCompletedQty() > 0) {
-                        t.setAssemblyCompleteDate(DateUtil.day(t.getAssemblyCompleteDate()));
-                    } else {
-                        t.setAssemblyCompleteDate("--")
-                                .setCompletedQty(0);
-                    }
+                    t.setAssemblyCompleteDate(DateUtil.day(t.getAssemblyCompleteDate()));
+                    t.setAssemblyCompleteDateFormat(DateUtil.day(t.getAssemblyCompleteDate()));
                 })
                 .sorted(Comparator.comparing(AssemblySummaryResponse::getAssemblyCompleteDate))
                 .collect(Collectors.toList());

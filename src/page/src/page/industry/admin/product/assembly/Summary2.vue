@@ -72,8 +72,6 @@ const state = reactive({
       date: '',
       startOilInjectionCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
       endOilInjectionCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
-      startAssemblyCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
-      endAssemblyCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
     },
     page: {
       page: DEFAULT_PAGE,
