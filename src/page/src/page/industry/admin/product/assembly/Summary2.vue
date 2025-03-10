@@ -3,12 +3,12 @@
     <div class="query-container">
       <el-date-picker
           v-model="dateTimeList"
-          @change="() => {handleDateTimeChange(dateTimeList, query.data, 'assemblyCompleteDate')}"
+          @change="() => {handleDateTimeChange(dateTimeList, query.data, 'oilInjectionCompleteDate')}"
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
-          start-placeholder="Start due date"
-          end-placeholder="End due date"
+          :start-placeholder="`Start ${store.state.label.oilInjectionCompleteDate}`"
+          :end-placeholder="`End ${store.state.label.oilInjectionCompleteDate}`"
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
@@ -70,6 +70,8 @@ const state = reactive({
       assemblyType: '',
       user: '',
       date: '',
+      startOilInjectionCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
+      endOilInjectionCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
       startAssemblyCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
       endAssemblyCompleteDate: formatDate(getYesterday(), 'yyyy-MM-dd'),
     },

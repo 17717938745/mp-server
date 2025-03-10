@@ -395,11 +395,17 @@ public class DousonAssemblyController {
         if (null != d.getEndDeliveryDate()) {
             lambda.le(AssemblyEntity::getDeliveryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndDeliveryDate())));
         }
+        if (null != d.getStartOilInjectionCompleteDate()) {
+            lambda.ge(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartOilInjectionCompleteDate())));
+        }
+        if (null != d.getEndOilInjectionCompleteDate()) {
+            lambda.le(AssemblyEntity::getOilInjectionCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndOilInjectionCompleteDate())));
+        }
         if (null != d.getStartAssemblyCompleteDate()) {
-            lambda.ge(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartAssemblyCompleteDate())));
+            lambda.ge(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(d.getStartAssemblyCompleteDate())) + " 08:00:00");
         }
         if (null != d.getEndAssemblyCompleteDate()) {
-            lambda.le(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndAssemblyCompleteDate())));
+            lambda.le(AssemblyEntity::getAssemblyCompleteDate, DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(DateTime.of(d.getEndAssemblyCompleteDate()), 1)) + " 08:00:00");
         }
         if (isNotBlank(d.getOrderCount())) {
             lambda.eq(AssemblyEntity::getOrderCount, d.getOrderCount());

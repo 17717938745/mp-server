@@ -149,6 +149,10 @@ public class AssemblyRequest implements Serializable {
      * 注油完成日期
      */
     private String oilInjectionCompleteDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startOilInjectionCompleteDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endOilInjectionCompleteDate;
     /**
      * 整机和驱动器试压
      */
