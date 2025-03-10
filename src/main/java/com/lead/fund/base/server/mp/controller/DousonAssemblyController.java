@@ -694,16 +694,15 @@ public class DousonAssemblyController {
         final Map<String, Map<List<String>, AssemblySummaryResponse>> completeListMap = ASSEMBLY_INSTANCE.assemblySummaryList(l)
                 .stream().peek(t -> {
                     final DateTime completeDate = DateUtil.parse(t.getAssemblyCompleteDate());
-                    t.setAssemblyCompleteDateFormat(
-                                    DateUtil.day(DateUtil.hourSecond(completeDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : completeDate)
-                            )
+                    final DateTime oilInjectionCompleteDate = DateUtil.parse(t.getOilInjectionCompleteDate());
+                    t.setAssemblyCompleteDateFormat(DateUtil.day(DateUtil.hourSecond(completeDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : completeDate))
                             .setDeliveryDateFormat(DateUtil.day(t.getDeliveryDate()))
-                            .setOilInjectionCompleteDateFormat(DateUtil.day(t.getOilInjectionCompleteDate()))
+                            .setOilInjectionCompleteDateFormat(DateUtil.day(DateUtil.hourSecond(oilInjectionCompleteDate).compareTo("08:00:00") < 0 ? cn.hutool.core.date.DateUtil.offsetDay(completeDate, -1) : oilInjectionCompleteDate))
                     ;
                 })
                 .sorted(Comparator.comparing(AssemblySummaryResponse::getAssemblyCompleteDate))
                 .collect(Collectors.groupingBy(
-                        AssemblySummaryResponse::getAssemblyCompleteDateFormat,
+                        AssemblySummaryResponse::getOilInjectionCompleteDateFormat,
                         Collectors.groupingBy(
                                 t -> CollUtil.toList(t.getPurchaseOrderNo(), t.getPoProject(), t.getSaleOrderNo(), t.getOrderProject()),
                                 Collectors.reducing(defaultAssemblySummary(), (t1, t2) -> {
