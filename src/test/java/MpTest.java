@@ -1,3 +1,4 @@
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import com.lead.fund.base.common.basic.cons.ds.DatabaseType;
 import com.lead.fund.base.common.database.helper.DdlEntry;
@@ -25,8 +26,7 @@ public class MpTest {
     @Test
     @DisplayName("test database...")
     void database() throws Exception {
-        System.out.println(DateUtil.dateTime(DateTime.of(17408317980012L), com.lead.fund.base.common.basic.cons.util.date.DateFormat.DOT_MILLIS.getCode(), "--"));
-        System.out.println(DateUtil.parse(DateUtil.dateTime(DateTime.of(17408317980012L), com.lead.fund.base.common.basic.cons.util.date.DateFormat.DOT_MILLIS.getCode(), "--")).getTime());
+        System.out.println(CollUtil.toList("3","6","8").stream().filter(StrUtil::isNotBlank).max(String::compareTo).orElse(""));
         System.out.println(new DdlEntry("15110").generateDdl(SchedulingEntity.class, DatabaseType.MYSQL));
         System.out.println(new DdlEntry("15110").generateDdl(SchedulingDetailEntity.class, DatabaseType.MYSQL));
     }

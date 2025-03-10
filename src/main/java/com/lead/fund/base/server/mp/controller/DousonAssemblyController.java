@@ -827,23 +827,24 @@ public class DousonAssemblyController {
                         .set(AssemblyEntity::getCompletedQty, completeCount)
                         .eq(AssemblyEntity::getId, t.getId());
                 if (completeCount > 0) {
-                    if (defaultInt(t.getAssemblyCompleteCount()) > 0 && defaultInt(t.getOilInjectionCompleteCount()) > 0) {
-                        t.setCompleteDate(completeDate);
-                    }
+                    t.setCompleteDate(completeDate);
                     lam.set(AssemblyEntity::getCompleteDate, t.getCompleteDate());
                 } else {
+                    t.setCompleteDate("");
                     lam.set(AssemblyEntity::getCompleteDate, "");
                 }
                 assemblyMapper.update(null, lam);
             }
         }
-        final Integer completeCount = assemblyList.stream().map(t -> defaultInt(t.getCompletedQty())).reduce(0, Integer::sum);
         final Integer assemblyCompleteCount = assemblyList.stream().map(t -> defaultInt(t.getAssemblyCompleteCount())).reduce(0, Integer::sum);
         final Integer oilInjectionCompleteCount = assemblyList.stream().map(t -> defaultInt(t.getOilInjectionCompleteCount())).reduce(0, Integer::sum);
         final String assemblyCompleteDate = assemblyList.stream().map(AssemblyEntity::getAssemblyCompleteDate).filter(StrUtil::isNotBlank).max(String::compareTo).orElse("");
+        final Integer completeCount = assemblyList.stream().map(t -> defaultInt(t.getCompletedQty())).reduce(0, Integer::sum);
+        final String completeDate = assemblyList.stream().map(AssemblyEntity::getCompleteDate).filter(StrUtil::isNotBlank).max(String::compareTo).orElse("");
         final LambdaUpdateWrapper<AssemblyEntity> lam = new LambdaUpdateWrapper<AssemblyEntity>()
                 .set(AssemblyEntity::getCompletedQty, completeCount)
                 .set(AssemblyEntity::getAssemblyCompleteCount, assemblyCompleteCount)
+                .set(AssemblyEntity::getCompleteDate, completeDate)
                 .set(AssemblyEntity::getOilInjectionCompleteCount, oilInjectionCompleteCount)
                 .set(AssemblyEntity::getAssemblyCompleteDate, assemblyCompleteDate)
                 .eq(AssemblyEntity::getSerialIndex, 0)
