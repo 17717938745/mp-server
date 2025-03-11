@@ -22,6 +22,8 @@ java -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m -Dfile.encoding=utf-8
 
 # 发布帮助
 
+> 需要node@18+
+
 ### 参考命令
 
 ```shell
@@ -55,10 +57,23 @@ EOF
 
 ### deploy page
 
+in server
+
 ```shell
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
 cd /opt/douson/mp-server/
 ./page
+EOF
+```
+
+remote
+
+```shell
+./page remote
+ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+cd /opt/douson/mp-server/static
+rm -rf industry
+unzip industry.zip
 EOF
 ```
 
