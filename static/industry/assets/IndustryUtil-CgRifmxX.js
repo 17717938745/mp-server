@@ -1,1 +1,0 @@
-import{i as r}from"./main-Dirrnzcr.js";const b=(o=[],s=[],a=!1,f=!1,i=[],l=[],t=0)=>{i=i||[],l=l||[];const n=[];return(o||[]).filter(e=>!e.hide).filter(e=>!r(s,e.type)).filter(e=>!r(i,e.labelKey||e.label||"")||r(l,e.labelKey||e.label||"")).forEach(e=>{const h=(e.children||[]).length;(h===0||f)&&n.push(e),a&&h>0&&n.push(...b(e.children||[],s,a,f,i,l,t+1))}),n};export{b as h};

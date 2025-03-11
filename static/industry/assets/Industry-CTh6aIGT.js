@@ -1,1 +1,0 @@
-import{_ as o}from"./main-Dirrnzcr.js";const r={};function t(n,c){const e=Vue.resolveComponent("router-view");return Vue.openBlock(),Vue.createBlock(e)}const s=o(r,[["render",t]]);export{s as default};
