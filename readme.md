@@ -1,3 +1,25 @@
+# 开发准备
+
+### Java
+
+需要配置Environment variables
+
+> Idea open "Edit Configurations"
+
+```text
+--spring.config.location=./application-prd.yml
+```
+
+### Page
+
+- node@18+
+
+- yarn
+
+```shell
+yarn local
+```
+
 # 本地开发
 
 ### 打包
@@ -6,36 +28,20 @@
 mvn clean package -DskipTests
 ```
 
-### 启动java
+### 外网启动（[https://pch.mynatapp.cc/local](https://pch.mynatapp.cc/local)）
 
-需要配置Environment variables
-
-```text
---spring.config.location=./application-prd.yml
-```
-
-### 外网启动
-
-```text
-java -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m -Dfile.encoding=utf-8 -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=pch -jar ${app_jar_name} --spring.config.location=./application-pch.yml
-```
-
-# 发布帮助
-
-> 需要node@18+
-
-### 参考命令
+- Terminal 1
 
 ```shell
-# ssh
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
-# ssh(natapp)
-./ssh
-# https(natapp)
-./ssl
-# 蒲公英
-./sun
+java -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m -Dfile.encoding=utf-8 -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=pch -jar target/mp-server.jar --spring.config.location=./application-pch.yml
 ```
+
+- Terminal 2
+```shell
+- cd ~/program && ./ssl
+```
+
+# 发布帮助（需要node@18+）
 
 ### deploy all(java & page, need node@18+)
 
@@ -57,7 +63,7 @@ EOF
 
 ### deploy page
 
-remote(recommend)
+Remote(recommend)
 
 ```shell
 ./page remote
@@ -66,7 +72,7 @@ cd /opt/douson/mp-server/static && rm -rf industry && unzip industry.zip
 EOF
 ```
 
-in server(need node@18+)
+By server(need node@18+)
 
 ```shell
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
@@ -78,6 +84,19 @@ EOF
 
 ```shell
 crontab -l
+```
+
+### 其他命令
+
+```shell
+# ssh
+ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
+# ssh(natapp)
+./ssh
+# https(natapp)
+./ssl
+# 蒲公英
+./sun
 ```
 
 # mysql
