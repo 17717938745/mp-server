@@ -5,7 +5,7 @@ mvn clean package -DskipTests
 ./run
 deploy_type=$1
 if [ "${deploy_type}" == "all" ]; then
-    echo "deploy type: ${deploy_type}"
+    echo "deploy page, deploy_type: ${deploy_type}"
     cd ./src/page
     yarn industry-java-build
     cd ../../

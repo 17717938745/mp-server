@@ -1,0 +1,1 @@
+.infinite-list{padding:0;margin:0;list-style:none}.infinite-list .infinite-list-item{display:flex;flex-wrap:wrap;align-items:start;justify-content:start;padding:0}.infinite-list .infinite-list-item+.list-item{margin-top:10px}.icon-text{display:inline-flex;justify-content:center;align-items:center;height:30px}

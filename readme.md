@@ -37,7 +37,7 @@ ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
 ./sun
 ```
 
-### deploy java & page
+### deploy all(java & page, need node@18+)
 
 ```shell
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
@@ -57,23 +57,20 @@ EOF
 
 ### deploy page
 
-in server
-
-```shell
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
-cd /opt/douson/mp-server/
-./page
-EOF
-```
-
-remote
+remote(recommend)
 
 ```shell
 ./page remote
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
-cd /opt/douson/mp-server/static
-rm -rf industry
-unzip industry.zip
+cd /opt/douson/mp-server/static && rm -rf industry && unzip industry.zip
+EOF
+```
+
+in server(need node@18+)
+
+```shell
+ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+cd /opt/douson/mp-server/ && ./page
 EOF
 ```
 
