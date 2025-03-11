@@ -1,11 +1,8 @@
 // @ts-ignore
-// import wx from 'weixin-js-sdk'
-// import wx from 'weixin-jsapi'
-import { httpGet } from './HttpUtil';
-import { DataResult } from '../typing/ma/System';
-import { Toast } from 'vant';
-import { changeURLArg } from './StringUtil';
-import { Base64 } from 'js-base64';
+import {httpGet} from './HttpUtil';
+import {DataResult} from '../typing/ma/System';
+import {changeURLArg} from './StringUtil';
+import {Base64} from 'js-base64';
 
 export const initShare = (token: string = '') => {
   let url = location.href.split('#')[0];
