@@ -2,16 +2,14 @@
 import {defineConfig, loadEnv} from 'vite'
 // 官方插件，支持Vue
 import VuePlugin from '@vitejs/plugin-vue'
+// 浏览器兼容插件
+import legacy from '@vitejs/plugin-legacy'
 // html文本替换插件
 import InjectExternals from 'vite-plugin-inject-externals'
 // @ts-ignore
 import path from 'path'
-// 浏览器兼容插件
-import legacy from '@vitejs/plugin-legacy'
 // @ts-ignore
 import {execSync} from 'child_process'
-// @ts-ignore
-import {visualizer} from 'rollup-plugin-visualizer'
 
 export const GLOBAL_LEAD_GIT_INFO = {
   // SHA
@@ -63,20 +61,19 @@ const commonConfig = {
     axiosModule = {
       name: 'axios',
       global: 'axios',
-      path: '/third/axios@0.27.2/dist/axios.min.js',
+      path: '/third/axios@1.8.2/dist/axios.min.js',
     },
     elementPlusModule = {
       name: 'element-plus',
       global: 'ElementPlus',
-      // path: '/third/element-plus@2.2.16/dist/index.full.min.js',
-      path: '/third/element-plus@2.2.6/dist/index.full.min.js',
+      path: '/third/element-plus@2.9.6/dist/index.full.min.js',
     },
     elementPlusCssModule = {
       htmlTag: {
         tag: 'link',
         attrs: {
           rel: 'stylesheet',
-          href: '/third/element-plus@2.2.6/dist/index.css',
+          href: '/third/element-plus@2.9.6/dist/index.css',
         }
       },
     },
@@ -107,10 +104,12 @@ export default ({mode}) => {
               host: '0.0.0.0',
               port: 9090,
               open: false,
+              secure: false,
               proxy: {
                 '^/index/img/.*': {
                   target: urlPrefix,
                   changeOrigin: true,
+                  secure: false,
                   rewrite: (path: string) => {
                     const targetPath = path
                     console.log(`Convert /index/img/ path: ${path}, targetPath: ${targetPath}`)
@@ -120,6 +119,7 @@ export default ({mode}) => {
                 '^/third/.*': {
                   target: urlPrefix,
                   changeOrigin: true,
+                  secure: false,
                   rewrite: (path: string) => {
                     const targetPath = path
                     console.log(`Convert /third/, path: ${path}, targetPath: ${targetPath}`)
@@ -130,6 +130,7 @@ export default ({mode}) => {
                 '^/api/.*': {
                   target: urlPrefix,
                   changeOrigin: true,
+                  secure: false,
                   rewrite: (path: string) => {
                     const targetPath = path.substring(4)
                     console.log(`Convert /api/, path: ${path}, targetPath: ${targetPath}`)

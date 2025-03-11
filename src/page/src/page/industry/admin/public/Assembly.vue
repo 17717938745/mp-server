@@ -78,12 +78,12 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'valveStem', labelKey: 'valveStem', width: 189},
   {value: 'valveStemPhotoList', labelKey: 'valveStemPhoto', width: 189, type: ValueType.PictureText, textLabel: 'valveStem',},
   {value: 'assemblyPersonFormat', labelKey: 'assemblyPerson', width: 189},
-  {value: 'oilInjectionCompleteDate', labelKey: 'oilInjectionCompleteDate', width: 189},
+  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 189},
   {value: 'pressureTestPhotoList', labelKey: 'pressureTestPhoto', width: 189, type: ValueType.PictureText,},
   {value: 'torqueNm', labelKey: 'torqueNm', width: 189},
   {value: 'oilInjectionPhotoList', labelKey: 'oilInjection', width: 189, type: ValueType.PictureText, textLabel: 'oilInjection',},
   {value: 'testerFormat', labelKey: 'tester', width: 189},
-  {value: 'assemblyCompleteDate', labelKey: 'assemblyCompleteDate', width: 189},
+  {value: 'oilInjectionCompleteDate', labelKey: 'oilInjectionCompleteDate', width: 189},
 
 ])
 const data = ref({})

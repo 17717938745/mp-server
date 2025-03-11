@@ -1,8 +1,4 @@
 import axios, { AxiosInstance } from 'axios'
-// @ts-ignore
-import settle from 'axios/lib/core/settle'
-// @ts-ignore
-import buildURL from 'axios/lib/helpers/buildURL'
 import { getDeviceId, getSalt, setDeviceId, setSalt } from './StorageUtil'
 import { getBbcChannelCode, getMerchantId, getServiceId, getUrlPrefix, getUserId } from './EnvUtil'
 import Platform, { isMp } from './Platform'
@@ -17,7 +13,7 @@ interface AxiosMap {
 if (isMp) {
   axios.defaults.adapter = function (config: any) {
     return new Promise((resolve, reject) => {
-      const url: string = String(buildURL(config.url, config.params, config.paramsSerializer)) || ''
+      const url: string = String(axios.getUri(config.url, config.params, config.paramsSerializer)) || ''
       const prefix: string = url.startsWith('http://') || url.startsWith("https://") ? '' : (config.baseURL || '')
       // @ts-ignore
       wx.showLoading({
@@ -75,7 +71,7 @@ if (isMp) {
             }
             console.log('接口报错', response.data)
           }
-          settle(resolve, reject, response)
+          axios(resolve, reject, response)
         }
       })
     })

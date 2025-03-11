@@ -18,7 +18,7 @@ Promise.all([
   import('../store/Index'),
   // 2, 3
   import('element-plus'),
-  import('element-plus/lib/locale/lang/zh-cn'),
+  import('element-plus/es/locale/lang/zh-cn'),
   // @ts-ignore 4
   import('element-plus/dist/index.css'),
 ]).then((list: any[]) => {

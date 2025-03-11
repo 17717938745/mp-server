@@ -33,12 +33,9 @@
 <script lang="tsx" setup>
 import {useRoute, useRouter} from 'vue-router'
 import {ref} from 'vue'
-import {getSalt} from '../../util/StorageUtil'
 import SwitchEnv from './LeadSwitchEnv.vue'
-import {httpPostJson, httpPutJson} from '../../util/HttpUtil'
+import {httpPutJson} from '../../util/HttpUtil'
 import {toast} from './toast'
-import {sha1Hex} from '@/util/CipherUtil'
-import {sm4Encrypt} from '@/util/SecurityUtil'
 
 const props = defineProps({
   onMerchantIdChange: {
@@ -48,8 +45,6 @@ const props = defineProps({
     },
   },
 })
-const mobileInput = ref(null)
-const directLogin = ref(false)
 const pathList = ref([
   {
     value: '/industry/',

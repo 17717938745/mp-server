@@ -13,7 +13,6 @@ import {DataResult} from '@/typing/ma/System';
 import {getFullSignUri} from '@/util/RouterUtil';
 import {useRouter} from 'vue-router';
 import {toast} from './component/lead/toast';
-import {Toast} from 'vant';
 
 try {
   // @ts-ignore
@@ -36,7 +35,6 @@ if (!initialized.value) {
 }
 registerInterceptor(
     (result: any) => {
-      // Toast("哈哈哈哈哈");
       if (result) {
         if (result.status === 401) {
           router.replace(getFullSignUri());
@@ -57,10 +55,9 @@ registerInterceptor(
                 return;
               }
               if (location.pathname.startsWith('/html5/')) {
-                Toast.clear();
                 if (data.code !== 73015 && data.code !== 70000) {
                   // 除了“客户未登录”不弹，其他错误都弹出
-                  Toast(errorMsg);
+                  toast(errorMsg);
                 }
                 console.log(`code: ${code}, message: ${errorMsg}`);
               } else {

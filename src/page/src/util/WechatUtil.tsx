@@ -2,7 +2,7 @@
 import {httpGet} from './HttpUtil';
 import {DataResult} from '../typing/ma/System';
 import {changeURLArg} from './StringUtil';
-import {Base64} from 'js-base64';
+import {Base64} from 'js-base64'
 
 export const initShare = (token: string = '') => {
   let url = location.href.split('#')[0];
