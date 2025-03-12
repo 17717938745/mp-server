@@ -104,3 +104,20 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     echo "${app_jar_name} not run, now start, command: java ${java_param} -jar ${app_jar_name} ${java_tail}"
     nohup java ${java_param} -jar ${app_jar_name} ${java_tail} >/dev/null 2>&1 &
 fi
+
+# Deploy page
+PAGE_STRINGS=("page" "all")
+if echo "${PAGE_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+    cd ./static
+    rm -rf industry
+    cd ../src/page
+    yarn industry-java-build
+    cd ../../static
+    zip -r industry.zip industry
+    scp -P 33333 industry.zip root@085a8d1e51b66c57.natapp.cc:/opt/douson/mp-server/static/
+    ls -lh | grep industry
+    rm -rf industry.zip
+    ls -lh | grep industry
+    cd ../
+fi
+

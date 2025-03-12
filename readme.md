@@ -66,9 +66,9 @@ EOF
 Remote(recommend)
 
 ```shell
-./page remote
+./deploy page
 ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
-cd /opt/douson/mp-server/static && rm -rf industry && unzip industry.zip
+cd /opt/douson/mp-server/static && rm -rf industry && unzip industry.zip && rm -rf industry.zip
 EOF
 ```
 
