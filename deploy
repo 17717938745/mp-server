@@ -19,8 +19,8 @@ if [[ "$java_version" == 17* ]]; then
 else
     echo "Java 17 is not installed. Current version: $java_version, now try to find java 17."
     # sdk use java 17.0.8-zulu
-    DIRS=("~/.sdkman/candidates/java/17.0.8-zulu" "~/.sdkman/candidates/java/current")
-    for DIR in "${DIRS[@]}"; do
+    JAVA_DIRS=("~/.sdkman/candidates/java/17.0.8-zulu" "~/.sdkman/candidates/java/current")
+    for DIR in "${JAVA_DIRS[@]}"; do
         if [ -d "$DIR" ]; then
             echo "$DIR exists."
             JAVA_HOME=${DIR}
@@ -77,6 +77,19 @@ fi
 # Deploy java
 JAVA_STRINGS=("java" "all")
 if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+# Package by mvn
+    mvn_path=$(which mvn)
+    if [ -z "mvn_path" ]; then
+        echo "Mvn is not installed."
+        MVN_DIRS=("/opt/apache-maven-3.8.8")
+        for DIR in "${MVN_DIRS[@]}"; do
+            if [ -d "$DIR" ]; then
+                echo "$DIR exists."
+                MAVEN_HOME=${DIR}
+                export PATH=${MAVEN_HOME}/bin:$PATH
+            fi
+        done
+    fi
     mvn clean package -DskipTests
     if ! [ "${java_pid}" == "" ]; then
         echo "${app_jar_name} is running, now kill pid: ${java_pid}, then run."
