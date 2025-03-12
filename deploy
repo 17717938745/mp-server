@@ -7,6 +7,12 @@ java_param="${java_param} -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m"
 java_param="${java_param} -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prd"
 java_tail="--spring.config.location=./application-prd.yml"
 
+# Prepare
+#!/bin/bash
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+echo "script dir: ${script_dir}"
+cd ${script_dir}
+
 # Set default java version to 17
 java_path=$(which java)
 if [ -z "$java_path" ]; then
