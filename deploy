@@ -112,7 +112,7 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 fi
 
 # Deploy page
-PAGE_STRINGS=("page" "all")
+PAGE_STRINGS=("page")
 if echo "${PAGE_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     cd ./static
     rm -rf industry
