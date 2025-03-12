@@ -50,13 +50,13 @@ if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
         echo "mysqld not run, now start."
         systemctl start mysqld
     else
-        echo "mysqld is running, do nothing, pid: ${sql_pid}"
+        echo "mysqld is running, pid: ${sql_pid}"
     fi
     if [ "${java_pid}" == "" ]; then
         echo "${app_jar_name} not run, now start, command: java ${java_param} -jar ${app_jar_name} ${java_tail}"
         nohup java ${java_param} -jar ${app_jar_name} ${java_tail} >/dev/null 2>&1 &
     else
-        echo "${app_jar_name} is running, pid: ${java_pid}."
+        echo "${app_jar_name} is running, pid: ${java_pid}"
     fi
     ssh_pid=`ps aux|grep '/natapp -authtoken=3162aaa953f69209'|grep -v grep|awk '{print $2}'`
     if [ "${ssh_pid}" == "" ]; then
