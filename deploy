@@ -25,11 +25,12 @@ else
             echo "$DIR exists."
             JAVA_HOME=${DIR}
             export PATH=${JAVA_HOME}/bin:$PATH
+            break
         fi
     done
 fi
 
-# Check firewd、mysqld、java、ssh、ssl status
+# Check firewalld、mysqld、java、ssh、ssl status
 CHECK_STRINGS=("check")
 if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     if systemctl is-active --quiet firewalld; then
@@ -88,10 +89,13 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
                 echo "$DIR exists."
                 MAVEN_HOME=${DIR}
                 export PATH=${MAVEN_HOME}/bin:$PATH
+                break
             fi
         done
     fi
     mvn clean package -DskipTests
+    app_jar_name=`ls -rt target/*.jar|grep jar|tail -1`
+    java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
     if ! [ "${java_pid}" == "" ]; then
         echo "${app_jar_name} is running, now kill pid: ${java_pid}, then run."
         kill ${pid}
