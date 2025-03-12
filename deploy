@@ -78,9 +78,10 @@ fi
 JAVA_STRINGS=("java" "all")
 if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 # Package by mvn
-    mvn_path=$(which mvn)
-    if [ -z "mvn_path" ]; then
-        echo "Mvn is not installed."
+    if command -v mvn >/dev/null 2>&1; then
+        echo "Maven is installed and executable."
+    else
+        echo "mvn is not installed."
         MVN_DIRS=("/opt/apache-maven-3.8.8")
         for DIR in "${MVN_DIRS[@]}"; do
             if [ -d "$DIR" ]; then
