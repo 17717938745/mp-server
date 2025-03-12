@@ -59,14 +59,14 @@ if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     else
         echo "${app_jar_name} is running, pid: ${java_pid}."
     fi
-    ssh_pid=`ps aux|grep './natapp -authtoken=3162aaa953f69209'|grep -v grep|awk '{print $2}'`
+    ssh_pid=`ps aux|grep '/natapp -authtoken=3162aaa953f69209'|grep -v grep|awk '{print $2}'`
     if [ "${ssh_pid}" == "" ]; then
         echo "ssh not run, now start."
         nohup ./natapp -authtoken=3162aaa953f69209 >/dev/null 2>&1 &
     else
         echo "ssh is run, pid: ${ssh_pid}"
     fi
-    ssl_pid=`ps aux|grep './natapp -authtoken=e31a7c7ff0de2c14'|grep -v grep|awk '{print $2}'`
+    ssl_pid=`ps aux|grep '/natapp -authtoken=e31a7c7ff0de2c14'|grep -v grep|awk '{print $2}'`
     if [ "${pid}" == "" ]; then
         echo "ssl not run, now start."
         nohup ./natapp -authtoken=e31a7c7ff0de2c14  >/dev/null 2>&1 &
