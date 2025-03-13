@@ -1,5 +1,7 @@
 <template>
-  <div class="login-wrap">
+  <div class="login-wrap" :style="{
+    backgroundImage: `url(${fullUrl('/third/img/login-bg.jpg', '')})`
+  }">
     <div class="ms-login">
       <div class="ms-title">管理平台</div>
       <el-form
@@ -51,9 +53,10 @@ import {refreshRouter} from "../../router/Industry"
 import {Unlock, User} from "@element-plus/icons-vue"
 import {DataResult, ListResult, MenuTree, SignParam} from "../../typing/ma/System"
 import {StoreType} from "../../store/Industry"
-import {getParam, shownMenuTreeList, getFirstPath} from "../../util/RouterUtil"
-import {httpGet, httpPutJson, initClient} from "@/util/HttpUtil";
-import {sm4Encrypt} from "@/util/SecurityUtil";
+import {getParam, shownMenuTreeList, getFirstPath} from '../../util/RouterUtil'
+import {httpGet, httpPutJson, initClient} from '@/util/HttpUtil'
+import {sm4Encrypt} from '@/util/SecurityUtil'
+import {fullUrl} from '@/util/EnvUtil'
 
 const router = useRouter();
 const login: Ref = ref(null);
@@ -498,9 +501,7 @@ const handleSubmit = (retry: boolean = true) => {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url(../../asset/img/login-bg.jpg);
   background-size: 100%;
-
   display: flex;
   align-content: center;
   justify-content: center;

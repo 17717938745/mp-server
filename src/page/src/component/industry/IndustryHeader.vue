@@ -30,9 +30,9 @@
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link" style="display: flex;">
           <div class="user-avatar">
-            <img :src="Avatar" alt="avatar"/>
+            <img :src="fullUrl('/third/img/img.jpg', '')" alt="avatar"/>
           </div>
-          <img :src="arrowDownSVG" alt=""/>
+          <img :src="fullUrl('/third/img/arrow-down.svg', '')" alt=""/>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -66,17 +66,16 @@
 </template>
 <script lang="tsx" setup>
 import {ElMessage} from 'element-plus'
-import arrowDownSVG from '../../asset/img/arrow-down.svg'
-import Avatar from '../../asset/img/img.jpg'
 import {ref} from 'vue'
 import {Store, useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
 import {StoreType} from '@/store/Industry'
 import {getFullUri} from '@/util/RouterUtil'
-import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
+import {httpDelete, httpGet, httpPutJson} from '@/util/HttpUtil'
 import {includes} from '@/util/ArrayUtil'
 import {sm4Encrypt} from '@/util/SecurityUtil'
-import {DataResult, PageResult} from "@/typing/ma/System";
+import {DataResult} from "@/typing/ma/System"
+import {fullUrl} from '@/util/EnvUtil'
 
 const languageList = [
   {

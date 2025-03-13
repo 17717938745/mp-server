@@ -77,6 +77,11 @@ const commonConfig = {
         }
       },
     },
+    tinymceVueModule = {
+      name: 'tinymce-vue',
+      global: 'tinymce',
+      path: '/third/@tinymce/tinymce-vue@6.1.0/lib/browser/tinymce-vue.min.js',
+    },
     reportPlusCssModule = {
       htmlTag: {
         tag: 'link',
@@ -126,17 +131,6 @@ export default ({mode}) => {
                     return targetPath
                   }
                 },
-                // /api/system/device -> /system/device
-                '^/api/.*': {
-                  target: urlPrefix,
-                  changeOrigin: true,
-                  secure: false,
-                  rewrite: (path: string) => {
-                    const targetPath = path.substring(4)
-                    console.log(`Convert /api/, path: ${path}, targetPath: ${targetPath}`)
-                    return targetPath
-                  }
-                },
               }
             }
           }
@@ -180,7 +174,7 @@ export default ({mode}) => {
                   InjectExternals({
                     injectTo: '<!-- Custom placeholder for vite plugin inject externals -->',
                     // @ts-ignore
-                    modules: [vueModule, vueRouterModule, vuexModule, axiosModule, elementPlusModule, elementPlusCssModule, reportPlusCssModule]
+                    modules: [vueModule, vueRouterModule, vuexModule, axiosModule, elementPlusModule, elementPlusCssModule, tinymceVueModule, reportPlusCssModule]
                   }),
                 ],
               }

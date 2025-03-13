@@ -26,7 +26,7 @@
 
 <script lang="tsx" setup>
 import {reactive, toRefs} from 'vue'
-import {clearAllCache, getMerchantId, getMerchantIdList, getProfile, getProfileList, getServiceId, getServiceIdList, getUrlPrefix, getUrlPrefixList, setMerchantId, setServiceId, setUrlPrefix, URL_PREFIX_PRD, URL_PREFIX_SIT, URL_PREFIX_TEST2, URL_PREFIX_UAT,} from '../../util/EnvUtil'
+import {clearAllCache, getMerchantId, getProfile, getServiceId, getUrlPrefix, getUrlPrefixList, setServiceId, setUrlPrefix,} from '../../util/EnvUtil'
 import {getDeviceId, getSalt, setDeviceId, setSalt} from "../../util/StorageUtil"
 import {useRoute} from 'vue-router'
 import {clearHttp} from "../../util/HttpUtil";
@@ -44,60 +44,30 @@ const props = defineProps({
     },
   },
 })
-const a = getProfileList()
-const b = getUrlPrefixList()
-const c = getServiceIdList()
-const d = getMerchantIdList()
 const state = reactive<{
   show: boolean
-  serviceId: string[][]
-  profileList: any[]
   urlPrefixList: any[]
-  merchantIdList: any[]
-  serviceIdList: any[]
-  profile: string
   urlPrefix: string
   deviceId: string
-  merchantId: string
   salt: string
 }>({
   show: true,
-  profileList: a,
-  urlPrefixList: b,
-  serviceIdList: c,
-  merchantIdList: d,
-  profile: '',
+  urlPrefixList: getUrlPrefixList(),
   urlPrefix: '',
-  serviceId: [],
   deviceId: '',
-  merchantId: '',
   salt: ''
 })
 
 const {
   show,
-  profileList,
   urlPrefixList,
-  serviceIdList,
-  merchantIdList,
-  profile,
   urlPrefix,
-  serviceId,
-  merchantId,
   deviceId,
   salt,
 } = {...toRefs(state)}
 
 const handleUrlPrefixChange = () => {
   setUrlPrefix(state.urlPrefix)
-}
-const handleMerhantIdChange = () => {
-  setMerchantId(state.merchantId)
-  props.onMerchantIdChange(state.merchantId)
-}
-const handleServiceIdChange = () => {
-  console.log(state.serviceId.map(t => t.join('-')).join(','))
-  setServiceId(state.serviceId.map(t => t.join('-')).join(','))
 }
 const handleClearAll = () => {
   clearAllCache()
@@ -108,27 +78,9 @@ const handleSwitchPrd = () => {
   setUrlPrefix('https://douson.natapp4.cc/')
   handleInitValue()
 }
-const handleAddService = () => {
-  state.serviceId.push(["", ""])
-  handleServiceIdChange()
-}
-const handleRemoveService = (index: number) => {
-  state.serviceId.splice(index, 1)
-  handleServiceIdChange()
-}
 const handleInitValue = () => {
-  state.profile = getProfile()
-  state.urlPrefix = getUrlPrefix()
-  state.serviceId = getServiceId().split(',').filter(t => t && t.length > 0).map(t => {
-    const index = t.indexOf('-')
-    if (index >= 0) {
-      return [t.substring(0, index), t.substring(index + 1)]
-    } else {
-      return [t, '']
-    }
-  })
+  state.urlPrefix = getUrlPrefix('http://localhost')
   handleGetDeviceIdAndSalt()
-  handleGetMerchantId()
   clearHttp()
 }
 const handleGetDeviceIdAndSalt = () => {

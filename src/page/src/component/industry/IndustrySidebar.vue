@@ -14,7 +14,7 @@
         router
     >
       <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;" target="_blank">
-        <img :src="logo" alt="" style="height: 30px; margin-right: 10px;"/>
+        <img :src="fullUrl('/third/img/industry/logo.ico', '')" alt="" style="height: 30px; margin-right: 10px;"/>
         https://vn.douson.cn/
       </a>
       <template v-for="sidebarTree in sidebarTreeList">
@@ -22,14 +22,13 @@
       </template>
     </el-menu>
     <div style="background-color: #324157; z-index: 99999;position: fixed; bottom: 5px;left: 5px;">
-      <img :src="collapseSVG" alt="" @click="collapseChange" style="width: 16px; height: 16px;margin-bottom: 5px;"/>
+      <img :src="fullUrl('/third/img/collapse.svg', '')" alt="" @click="collapseChange" style="width: 16px; height: 16px;margin-bottom: 5px;"/>
     </div>
   </div>
 </template>
 
 <script lang="tsx">
-import logo from "@/asset/img/industry/logo.ico"
-import collapseSVG from "@/asset/img/collapse.svg"
+import {fullUrl} from '@/util/EnvUtil'
 import {computed, reactive, ref, toRefs} from "vue"
 import {Store, useStore} from "vuex"
 import {useRoute} from "vue-router"
@@ -80,9 +79,8 @@ export default {
       handleGetWidth,
       handleGetDom,
       sidebarRef,
-      collapseSVG,
       collapseChange,
-      logo,
+      fullUrl
     };
   },
 };
