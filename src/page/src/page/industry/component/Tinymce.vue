@@ -35,12 +35,13 @@
           />
         </el-form-item>
         <el-form-item class="lead-header" prop="content">
+          <!--Download tinymceScriptSrc from github: https://github.com/tinymce/tinymce/tags-->
           <editor
               style="width: 100%;"
-              api-key="nbcnaniqofnu4g2dlwt1fw508zxng4kwwve58f4lny5sx5nl"
+              api-key="uzd5kec740x8lw118ozl7qsq9040f1h2z4f65f7zkrxh12mn"
               v-model="formData.content"
               :init="editConfig"
-              tinymceScriptSrc="/third/tinymce/5.10.2-126/tinymce.min.js"
+              tinymceScriptSrc="/third/tinymce/7.7.1/tinymce.min.js"
               model-events="change keydown blur focus paste"
               output-format="html"
               cloud-channel="5-stable"
@@ -51,7 +52,6 @@
   </div>
 </template>
 
-<!--suppress TypeScriptUnresolvedFunction, JSUnusedGlobalSymbols, TypeScriptUnresolvedVariable -->
 <script lang="tsx" setup>
 import {onMounted, reactive, ref, toRefs, watch, watchEffect,} from 'vue'
 import {Store, useStore} from 'vuex'
@@ -307,4 +307,7 @@ watch(
 </script>
 
 <style lang="scss">
+.tox-promotion {
+  display: none !important;
+}
 </style>

@@ -1,38 +1,47 @@
 # Prepare
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-echo "script dir: ${script_dir}"
+echo "Script dir: ${script_dir}, will goto there."
 cd ${script_dir}
 
 deploy_type=$1
+java_path=""
 java_version=""
+dir=""
+sql_pid=""
 app_jar_name=`ls -rt target/*.jar|grep jar|tail -1`
+app_jar_name=${app_jar_name:-"target/mp-server.jar"}
 java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
 java_param="-Dfile.encoding=utf-8"
 java_param="${java_param} -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m"
 java_param="${java_param} -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prd"
 java_tail="--spring.config.location=./application-prd.yml"
+java_command="java ${java_param} -jar ${app_jar_name} ${java_tail}"
+nohup_java_command="nohup ${java_command} >/dev/null 2>&1 &"
 
 # Set default java version to 17
-java_path=$(which java)
-if [ -z "$java_path" ]; then
-    echo "Java is not installed."
-else
-    java_version=$("$java_path" -version 2>&1 | awk -F '"' '/version/ {print $2}')
-fi
-if [[ "$java_version" == 17* ]]; then
-    echo "Java 17 is installed. Version: $java_version"
-else
-    echo "Java 17 is not installed. Current version: $java_version, now try to find java 17."
-    # sdk use java 17.0.8-zulu
-    JAVA_DIRS=("~/.sdkman/candidates/java/17.0.8-zulu" "~/.sdkman/candidates/java/current")
-    for DIR in "${JAVA_DIRS[@]}"; do
-        if [ -d "$DIR" ]; then
-            echo "$DIR exists."
-            JAVA_HOME=${DIR}
-            export PATH=${JAVA_HOME}/bin:$PATH
-            break
-        fi
-    done
+PREPARE_JAVA_STRINGS=("java" "all" "check")
+if echo "${PREPARE_JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+    java_path=$(which java)
+    if [ -z "$java_path" ]; then
+        echo "Java is not installed."
+    else
+        java_version=$("$java_path" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+    fi
+    if ! [[ "$java_version" == 17* ]]; then
+        echo "Java 17 is not installed. Current version: $java_version, now try to find java 17."
+        # sdk use java 17.0.8-zulu
+        JAVA_DIRS=("~/.sdkman/candidates/java/17.0.8-zulu" "~/.sdkman/candidates/java/current")
+        for dir in "${JAVA_DIRS[@]}"; do
+            if [ -d "${dir}" ]; then
+                echo "${dir} exists."
+                JAVA_HOME=${dir}
+                export PATH=${JAVA_HOME}/bin:$PATH
+                java_version=$("$java_path" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+                break
+            fi
+        done
+    fi
+    echo "Java version is: ${java_version}"
 fi
 
 # Check firewalld、mysqld、java、ssh、ssl status
@@ -53,8 +62,8 @@ if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
         echo "mysqld is running, pid: ${sql_pid}"
     fi
     if [ "${java_pid}" == "" ]; then
-        echo "${app_jar_name} not run, now start, command: java ${java_param} -jar ${app_jar_name} ${java_tail}"
-        nohup java ${java_param} -jar ${app_jar_name} ${java_tail} >/dev/null 2>&1 &
+        echo "${app_jar_name} not run, now start, command: ${java_command}"
+        eval ${nohup_java_command}
     else
         echo "${app_jar_name} is running, pid: ${java_pid}"
     fi
@@ -75,7 +84,7 @@ if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 fi
 
 # Git pull
-GIT_STRINGS=("java" "all" "page")
+GIT_STRINGS=("java" "all")
 if echo "${GIT_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     git pull origin master
 fi
@@ -85,14 +94,14 @@ JAVA_STRINGS=("java" "all")
 if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 # Package by mvn
     if command -v mvn >/dev/null 2>&1; then
-        echo "Maven is installed and executable."
+        echo "Maven(mvn) is installed and executable."
     else
-        echo "mvn is not installed."
-        MVN_DIRS=("/opt/apache-maven-3.8.8")
-        for DIR in "${MVN_DIRS[@]}"; do
-            if [ -d "$DIR" ]; then
-                echo "$DIR exists."
-                MAVEN_HOME=${DIR}
+        echo "Maven(mvn) is not installed."
+        MAVEN_DIRS=("/opt/apache-maven-3.8.8")
+        for dir in "${MAVEN_DIRS[@]}"; do
+            if [ -d "${dir}" ]; then
+                echo "${dir} exists."
+                MAVEN_HOME=${dir}
                 export PATH=${MAVEN_HOME}/bin:$PATH
                 break
             fi
@@ -103,14 +112,13 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
     if ! [ "${java_pid}" == "" ]; then
         echo "${app_jar_name} is running, now kill pid: ${java_pid}, then run."
-        kill ${pid}
-        kill -9 ${pid}
+        kill ${java_pid} && kill -9 ${java_pid}
     fi
-    echo "${app_jar_name} not run, now start, command: java ${java_param} -jar ${app_jar_name} ${java_tail}"
-    nohup java ${java_param} -jar ${app_jar_name} ${java_tail} >/dev/null 2>&1 &
+    echo "${app_jar_name} not run, now start, command: ${java_command}"
+    eval ${nohup_java_command}
 fi
 
-# Deploy page
+# Deploy page, package in local, sftp to server, then execute ssh command
 PAGE_STRINGS=("page")
 if echo "${PAGE_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     cd ./static
