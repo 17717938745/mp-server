@@ -241,9 +241,9 @@
     </div>
     <div>
       <el-radio-group v-model="showType" @change="handleShowTypeChange">
-        <el-radio :label="0">管理员 nhân viên quản lý</el-radio>
-        <el-radio :label="1">台机管理员 NV quản lý điều hành</el-radio>
-        <el-radio :label="2">供应商管理员 NV quản lý nhà cung cấp</el-radio>
+        <el-radio :value="0">管理员 nhân viên quản lý</el-radio>
+        <el-radio :value="1">台机管理员 NV quản lý điều hành</el-radio>
+        <el-radio :value="2">供应商管理员 NV quản lý nhà cung cấp</el-radio>
       </el-radio-group>
     </div>
     <div>

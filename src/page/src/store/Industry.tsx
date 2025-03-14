@@ -3264,8 +3264,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
       const a = arr[i] || ''
       const index = a.indexOf(split)
       if (index > -1) {
-        chsArr[i] = a.substring(0, index)
-        thaArr[i] = a.substring(index + 1)
+        chsArr[i] = a.substring(0, index).replace("\"", "")
+        thaArr[i] = a.substring(index + 1).replace("\"", "")
       } else {
         chsArr[i] = a
         thaArr[i] = ''
@@ -3317,6 +3317,29 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
 // printMultipleText('设备编号\t白班\t中班\t夜班\t白班12H\t夜班12H\t白班技术组\t夜班技术组\n' +
 //     'Mã máy\tCa ngày\tCa hai\tCa đêm\tCa ngày 12H\tCa đêm 12H\tNhóm kỹ thuật ca ngày\tNhóm kỹ thuật ca đêm')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
+// printMultipleText('"报检单号\n' +
+//     'Số phiếu nhập kho"\t"报检单合计数量\n' +
+//     'Số lượng  dự kiến nhập kho"\t"标识\n' +
+//     'Khắc dấu"\t"硬度\n' +
+//     'Độ cứng"\t"标识/硬度备注\n' +
+//     'Khắc dấu/Độ cứng ghi chú"\t"NDE\n' +
+//     ' NDE"\t"尺寸\n' +
+//     'Kích thước"\t"NDE/尺寸备注\n' +
+//     'NDE/Kích thước ghi chú"\t"检验完成数量\n' +
+//     'Số lượng hoàn thành kiểm tra"\t"客户简称\n' +
+//     'Tên khách hàng"\t"销售订单\n' +
+//     'Đơn đặt hàng"\t"订单项目号\n' +
+//     'Số hạng mục đơn hàng"\t"物料号\n' +
+//     'Mã vật liệu"\t"加工物料描述\n' +
+//     'Mô tả vật liệu"\t"图号\n' +
+//     'Số bản vẽ"\t"订单数量\n' +
+//     'SL đơn hàng"\t"承诺完成日期\n' +
+//     'Ngày sản xuất chịu trách nhiệm nhập kho"\t"备注\n' +
+//     'Ghi chú"\t"标识人员\n' +
+//     'Nhân viên khắc dấu"\t"标识日期\n' +
+//     'Ngày khắc dấu"\t"检验人员\n' +
+//     'Nhân viên kiểm tra "\t"检验完成日期\n' +
+//     'Ngày hoàn thành kiểm tra"', '\n')
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {
