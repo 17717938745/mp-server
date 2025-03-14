@@ -100,7 +100,7 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
         echo "Maven(mvn) is installed and executable."
     else
         echo "Maven(mvn) is not installed."
-        MAVEN_DIRS=("/opt/apache-maven-3.8.8")
+        MAVEN_DIRS=("${HOME}/.sdkman/candidates/maven/3.8.3" "/opt/apache-maven-3.8.8")
         for dir in "${MAVEN_DIRS[@]}"; do
             if [ -d "${dir}" ]; then
                 echo "${dir} exists."
