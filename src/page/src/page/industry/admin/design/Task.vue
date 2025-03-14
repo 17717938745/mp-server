@@ -550,13 +550,13 @@
 <script lang="tsx" setup>
 import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
-import {StoreType,} from '@/store'
-import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Search, UploadFilled, DocumentCopy, ArrowUp, ArrowDown, Sort, } from '@element-plus/icons-vue'
+import {StoreType,} from '@/store/Industry'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {ArrowDown, ArrowUp, DocumentCopy, Search, Sort,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
-import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
+import {httpDelete, httpGet, httpPutJson,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
-import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
+import {DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
@@ -860,11 +860,6 @@ const handleShowTypeChange = () => {
   }
 }
 handleShowTypeChange()
-const handleSaveModal = () => {
-  state.formData = Object.assign({}, defaultFormData)
-  state.formVisible = true
-  state.formSave = true
-}
 const handleEdit = (row: any) => {
   state.formVisible = true
   state.formSave = false
@@ -918,13 +913,13 @@ const handleDown = (d) => {
 }
 const sortVisible = ref(false)
 const sortList = ref([])
-const handleAllowDrop = (t, t1, type)=> {
-  if(t.level === t1.level) {
-    if(t.parent.taskId === t1.parent.taskId) {
+const handleAllowDrop = (t, t1, type) => {
+  if (t.level === t1.level) {
+    if (t.parent.taskId === t1.parent.taskId) {
       return type === 'prev' || type === 'next'
     }
   } else {
-    if(t.level !== 1) {
+    if (t.level !== 1) {
       return type === 'inner'
     } else {
       return false
@@ -940,7 +935,7 @@ const handleSort = (d) => {
     data: Object.assign({}, /*state.query.data, */{deviceId: d.deviceId,}),
   }).then(
       (res: PageResult<typeof state.tableData>) => {
-        sortList.value  = (res.list || []).filter(t=> !(t.taskId.indexOf('auto-') >= 0)).map(t=> {
+        sortList.value = (res.list || []).filter(t => !(t.taskId.indexOf('auto-') >= 0)).map(t => {
           return {
             taskId: t.taskId,
             label: `${t.index},${t.customerShortName},${t.saleOrderNo},${t.orderProjectNo},${t.materialNo},${t.supplierDoneDate || '--'}`,
@@ -1047,7 +1042,7 @@ Promise.all([
       } else if ('deliverDate' === t.value) {
         t.width = 102
         t.type = ValueType.DateEdit
-      }  else if ('supplierRemark' === t.value) {
+      } else if ('supplierRemark' === t.value) {
         t.type = ValueType.TextEdit
       } else if ('deliverDateRemark' === t.value) {
         t.type = ValueType.TextEdit

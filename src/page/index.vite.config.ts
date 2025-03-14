@@ -34,29 +34,27 @@ const commonConfig = {
       base: './',
       resolve: {
         alias: {
-          // @ts-ignore
-          "@": path.resolve(__dirname, "src"),
-          // @ts-ignore
-          "@util": path.resolve(__dirname, "src/util"),
-          // @ts-ignore
-          "@typing": path.resolve(__dirname, "src/typing")
+          "@/util": path.resolve(__dirname, "./src/util"),
+          "@/store": path.resolve(__dirname, "./src/store"),
+          "@/router": path.resolve(__dirname, "./src/router"),
+          "@/typing": path.resolve(__dirname, "./src/typing")
         }
       }
     },
     vueModule = {
       name: 'vue',
       global: 'Vue',
-      path: '/third/vue@3.2.37/dist/vue.global.prod.js',
+      path: '/third/vue@3.5.13/dist/vue.global.prod.js',
     },
     vueRouterModule = {
       name: 'vue-router',
       global: 'VueRouter',
-      path: '/third/vue-router@4.0.16/dist/vue-router.global.prod.js',
+      path: '/third/vue-router@4.5.0/dist/vue-router.global.prod.js',
     },
     vuexModule = {
       name: 'vuex',
       global: 'Vuex',
-      path: '/third/vuex@4.0.2/dist/vuex.global.prod.js',
+      path: '/third/vuex@4.1.0/dist/vuex.global.prod.js',
     },
     axiosModule = {
       name: 'axios',

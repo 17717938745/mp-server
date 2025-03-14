@@ -1,0 +1,23 @@
+/*让Webstorm可以识别import，例如：import {includes} from '@/util/ArrayUtil'*/
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/util/*": [
+        "./src/util/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/router/*": [
+        "./src/router/*"
+      ],
+      "@/typing/*": [
+        "./src/typing/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
