@@ -101,7 +101,7 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
         for dir in "${MAVEN_DIRS[@]}"; do
             if [ -d "${dir}" ]; then
                 echo "${dir} exists."
-                MAVEN_HOME=${dir}
+                export MAVEN_HOME=${dir}
                 export PATH=${MAVEN_HOME}/bin:$PATH
                 break
             fi
