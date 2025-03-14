@@ -134,6 +134,8 @@ mvn clean package -DskipTests
 
 # 外网启动
 
+> 仅针对本人的mac生效
+
 - Terminal 1
 
 ```shell
@@ -142,7 +144,7 @@ java -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m -Dfile.encoding=utf-8
 
 - Terminal 2
 ```shell
-- cd ~/program && ./ssl
+cd ~/program && ./ssl
 ```
 
 访问：[https://pch.mynatapp.cc/local](https://pch.mynatapp.cc/local)
@@ -176,4 +178,16 @@ ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
 
 ```shell
 crontab -l
+```
+
+# 创建、修改定时任务
+
+```shell
+crontab -e
+```
+
+输入
+
+```text
+*/5 * * * * /opt/douson/mp-server/deploy check >> /opt/douson/mp-server/cron.log 2>&1
 ```
