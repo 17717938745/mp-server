@@ -36,7 +36,7 @@ if echo "${PREPARE_JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
                 echo "${dir} exists."
                 export JAVA_HOME=${dir}
                 export PATH=${JAVA_HOME}/bin:$PATH
-                java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+                java_version=${(java -version 2>&1 | awk -F '"' '/version/ {print $2}')}
                 break
             fi
         done
