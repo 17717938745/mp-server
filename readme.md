@@ -1,5 +1,12 @@
 # 开发准备
 
+如果后续软件需要使用sdkman，可优先安装（命令行安装方式）
+
+```shell
+curl -s "https://get.sdkman.io" | bash
+source ~/.sdkman/bin/sdkman-init.sh
+```
+
 ## Java
 
 <span style="color: #FF0000;">安装17+</span>，测试命令：
@@ -9,6 +16,13 @@ $ java -version
 openjdk version "17.0.8" 2023-07-18 LTS
 OpenJDK Runtime Environment Zulu17.44+15-CA (build 17.0.8+7-LTS)
 OpenJDK 64-Bit Server VM Zulu17.44+15-CA (build 17.0.8+7-LTS, mixed mode, sharing)
+```
+
+使用sdk方式安装jdk17
+
+```shell
+sdk install java 17.0.8-zulu
+sdk default java 17.0.8-zulu
 ```
 
 需要配置Environment variables，例如使用Idea，打开"Edit Configurations"，输入以下：
@@ -29,6 +43,13 @@ Maven home: /Users/panchaohui/program/apache-maven-3.6.3
 Java version: 17.0.8, vendor: Azul Systems, Inc., runtime: /Users/panchaohui/.sdkman/candidates/java/17.0.8-zulu/zulu-17.jdk/Contents/Home
 Default locale: en_CN, platform encoding: UTF-8
 OS name: "mac os x", version: "15.3.2", arch: "aarch64", family: "mac"
+```
+
+使用sdk方式安装jdk17
+
+```shell
+sdk install maven 3.8.3
+sdk default maven 3.8.3
 ```
 
 <span style="color: #FF0000;">Copy必须依赖的包至本地仓库</span>
