@@ -48,7 +48,7 @@ fi
 CHECK_STRINGS=("check")
 if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
     echo "================ Check start ================"
-    echo "Check firewalld、mysqld、java、ssh、ssl status, now: ${date}"
+    echo "Check firewalld、mysqld、java、ssh、ssl status, now: `date`"
     if systemctl is-active --quiet firewalld; then
         echo "Firewalld is running. Stopping and disabling it."
         sudo systemctl stop firewalld
