@@ -46,7 +46,7 @@ MANAGE_DIR="./resources/lib/manage/${PROJECT_VERSION}/"
 rm -rf ${MANAGE_DIR}
 mkdir -p ${MANAGE_DIR}
 cp -rf ~/.m2/repository/com/lead/fund/base/manage/${PROJECT_VERSION}/ ${MANAGE_DIR}
-COMMON_MODULES=("basic" "util" "log" "database" "spring" "web")
+COMMON_MODULES=("manage" "basic" "util" "log" "database" "spring" "web")
 for module in "${COMMON_MODULES[@]}"; do
     dir="./resources/lib/common/common-${module}/${PROJECT_VERSION}/"
     rm -rf ${dir}
