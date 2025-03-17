@@ -17,9 +17,9 @@ echo "Script dir: ${script_dir}, will goto there."
 cd ${script_dir}
 
 deploy_type=$1
-app_jar_name=`ls -rt target/*.jar|grep jar|tail -1`
+app_jar_name=$(ls -rt target/*.jar|grep jar|tail -1)
 app_jar_name=${app_jar_name:-"target/mp-server.jar"}
-java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
+java_pid=$(ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}')
 java_param="-Dfile.encoding=utf-8"
 java_param="${java_param} -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m"
 java_param="${java_param} -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prd"
@@ -44,7 +44,7 @@ if [[ " java all check " =~ " ${deploy_type} " ]]; then
                 echo "${dir} exists."
                 export JAVA_HOME=${dir}
                 export PATH=${JAVA_HOME}/bin:$PATH
-                java_version=`java -version 2>&1 | awk -F '"' '/version/ {print $2}'`
+                java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
                 break
             fi
         done
@@ -55,7 +55,7 @@ fi
 # Check firewalld、mysqld、java、ssh、ssl status
 if [[ " check " =~ " ${deploy_type} " ]]; then
     echo "================ Check start ================"
-    echo "Check firewalld、mysqld、java、ssh、ssl status, now: `date`"
+    echo "Check firewalld、mysqld、java、ssh、ssl status, now: $(date)"
     if command -v systemctl >/dev/null 2>&1; then
         if systemctl is-active --quiet firewalld; then
             echo "Firewalld is running. Stopping and disabling it."
@@ -97,8 +97,7 @@ if [[ " java all " =~ " ${deploy_type} " ]]; then
         done
     fi
     mvn clean package -DskipTests
-    app_jar_name=`ls -rt target/*.jar|grep jar|tail -1`
-    java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
+    java_pid=$(ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}')
     if ! [ "${java_pid}" == "" ]; then
         echo "${app_jar_name} is running, now kill pid: ${java_pid}, then run."
         kill ${java_pid} && kill -9 ${java_pid}
