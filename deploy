@@ -2,7 +2,7 @@
 check_and_start_service() {
     local service_name=$1
     local service_command=$2
-    local service_pid=$(ps aux|grep '$service_command'|grep -v grep|awk '{print $2}')
+    local service_pid=$(ps aux|grep '$service_name'|grep -v grep|awk '{print $2}')
     if [ -z "$service_pid" ]; then
         echo "$service_name not running, now start."
         eval "$service_command"
