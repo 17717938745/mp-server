@@ -150,7 +150,7 @@ import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
 import {ListResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {includes} from '@/util/ArrayUtil'
-import {StoreType} from '@/store'
+import {StoreType} from '@/store/Index'
 
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList

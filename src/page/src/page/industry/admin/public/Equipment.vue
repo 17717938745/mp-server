@@ -39,7 +39,7 @@
 <script lang="tsx" setup>
 import {ref,} from 'vue'
 import {Store, useStore} from 'vuex'
-import {StoreType} from '@/store'
+import {StoreType} from '@/store/Index'
 import {ElMessage} from 'element-plus'
 import {useRoute, useRouter} from 'vue-router'
 import {httpGet} from '@/util/HttpUtil'

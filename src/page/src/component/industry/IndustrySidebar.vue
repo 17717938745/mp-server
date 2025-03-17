@@ -33,7 +33,7 @@ import {computed, reactive, ref, toRefs} from "vue"
 import {Store, useStore} from "vuex"
 import {useRoute} from "vue-router"
 import IndustrySidebarItem from "./IndustrySidebarItem.vue"
-import {StoreType} from "@/store/Industry"
+import {StoreType} from '@/store/Industry'
 
 const sidebarRef = ref(null)
 export default {

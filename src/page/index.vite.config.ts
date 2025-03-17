@@ -37,7 +37,8 @@ const commonConfig = {
           "@/util": path.resolve(__dirname, "./src/util"),
           "@/store": path.resolve(__dirname, "./src/store"),
           "@/router": path.resolve(__dirname, "./src/router"),
-          "@/typing": path.resolve(__dirname, "./src/typing")
+          "@/typing": path.resolve(__dirname, "./src/typing"),
+          "@/component": path.resolve(__dirname, "./src/component")
         }
       }
     },

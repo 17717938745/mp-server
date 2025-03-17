@@ -40,7 +40,7 @@ import {Search} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import {httpGet} from '@/util/HttpUtil'
 import {PageResult} from '@/typing/ma/System'
-import {StoreType} from '@/store'
+import {StoreType} from '@/store/Index'
 import ViewList from '../../component/ViewList.vue'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import {DEFAULT_LIMIT, DEFAULT_PAGE} from "@/typing/Common";

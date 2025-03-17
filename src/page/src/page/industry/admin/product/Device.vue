@@ -138,7 +138,7 @@ import {ListResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {includes} from '@/util/ArrayUtil'
 import {Store, useStore} from "vuex";
-import {StoreType} from "@/store";
+import {StoreType} from '@/store/Index';
 
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList

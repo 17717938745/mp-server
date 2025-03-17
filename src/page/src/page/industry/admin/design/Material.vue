@@ -406,7 +406,7 @@
 <script lang="tsx" setup>
 import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
-import {StoreType,} from '@/store'
+import {StoreType,} from '@/store/Index'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
 import {Plus, Printer, Search, UploadFilled,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'

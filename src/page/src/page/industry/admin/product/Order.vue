@@ -97,7 +97,7 @@ import {Edit, Search} from '@element-plus/icons-vue'
 import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
 import {includes} from '@/util/ArrayUtil'
-import {StoreType} from '@/store'
+import {StoreType} from '@/store/Index'
 import {DEFAULT_LIMIT, DEFAULT_PAGE, PAGE_SIZE_LIST,} from '@/typing/Common'
 import ViewList from '../../component/ViewList.vue'
 import {ValueType, ViewConfig} from "@/typing/industry/ViewItem";

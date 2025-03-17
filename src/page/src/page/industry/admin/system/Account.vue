@@ -90,7 +90,7 @@ import {Edit} from '@element-plus/icons-vue'
 import {httpGet, httpPutJson} from '@/util/HttpUtil'
 import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE, PAGE_SIZE_LIST,} from '@/typing/Common'
-import {StoreType} from '@/store'
+import {StoreType} from '@/store/Index'
 import {includes} from '@/util/ArrayUtil'
 
 const store: Store<StoreType> = useStore<StoreType>()

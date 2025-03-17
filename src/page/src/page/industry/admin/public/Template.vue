@@ -132,7 +132,7 @@
 <script lang="tsx" setup>
 import {ref} from 'vue'
 import {Store, useStore} from 'vuex'
-import {StoreType,} from '@/store'
+import {StoreType,} from '@/store/Index'
 import {useRoute, useRouter} from 'vue-router'
 import {fullUrl} from '@/util/EnvUtil'
 import {httpGet} from '@/util/HttpUtil'

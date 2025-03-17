@@ -1,13 +1,22 @@
+# Functions
+check_and_start_service() {
+    local service_name=$1
+    local service_command=$2
+    local service_pid=$(ps aux|grep '$service_command'|grep -v grep|awk '{print $2}')
+    if [ -z "$service_pid" ]; then
+        echo "$service_name not running, now start."
+        eval "$service_command"
+    else
+        echo "$service_name is running, pid: $service_pid"
+    fi
+}
+
 # Prepare
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 echo "Script dir: ${script_dir}, will goto there."
 cd ${script_dir}
 
 deploy_type=$1
-java_path=""
-java_version=""
-dir=""
-sql_pid=""
 app_jar_name=`ls -rt target/*.jar|grep jar|tail -1`
 app_jar_name=${app_jar_name:-"target/mp-server.jar"}
 java_pid=`ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}'`
@@ -19,8 +28,7 @@ java_command="java ${java_param} -jar ${app_jar_name} ${java_tail}"
 nohup_java_command="nohup ${java_command} >/dev/null 2>&1 &"
 
 # Set default java version to 17
-PREPARE_JAVA_STRINGS=("java" "all" "check")
-if echo "${PREPARE_JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+if [[ " java all check " =~ " ${deploy_type} " ]]; then
     java_path=$(which java)
     if [ -z "$java_path" ]; then
         echo "Java is not installed."
@@ -45,56 +53,34 @@ if echo "${PREPARE_JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 fi
 
 # Check firewalld、mysqld、java、ssh、ssl status
-CHECK_STRINGS=("check")
-if echo "${CHECK_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+if [[ " check " =~ " ${deploy_type} " ]]; then
     echo "================ Check start ================"
     echo "Check firewalld、mysqld、java、ssh、ssl status, now: `date`"
-    if systemctl is-active --quiet firewalld; then
-        echo "Firewalld is running. Stopping and disabling it."
-        sudo systemctl stop firewalld
-        sudo systemctl disable firewalld
+    if command -v systemctl >/dev/null 2>&1; then
+        if systemctl is-active --quiet firewalld; then
+            echo "Firewalld is running. Stopping and disabling it."
+            sudo systemctl stop firewalld
+            sudo systemctl disable firewalld
+        else
+            echo "Firewalld is not running."
+        fi
     else
-        echo "Firewalld is not running."
+        echo "systemctl is not installed."
     fi
-    sql_pid=`ps aux|grep 'mysqld'|grep -v grep|awk '{print $2}'`
-    if [ "${sql_pid}" == "" ]; then
-        echo "mysqld not run, now start."
-        systemctl start mysqld
-    else
-        echo "mysqld is running, pid: ${sql_pid}"
-    fi
-    if [ "${java_pid}" == "" ]; then
-        echo "${app_jar_name} not run, now start, command: ${java_command}"
-        eval ${nohup_java_command}
-    else
-        echo "${app_jar_name} is running, pid: ${java_pid}"
-    fi
-    ssh_pid=`ps aux|grep '/natapp -authtoken=3162aaa953f69209'|grep -v grep|awk '{print $2}'`
-    if [ "${ssh_pid}" == "" ]; then
-        echo "ssh not run, now start."
-        nohup ./natapp -authtoken=3162aaa953f69209 >/dev/null 2>&1 &
-    else
-        echo "ssh is run, pid: ${ssh_pid}"
-    fi
-    ssl_pid=`ps aux|grep '/natapp -authtoken=e31a7c7ff0de2c14'|grep -v grep|awk '{print $2}'`
-    if [ "${ssl_pid}" == "" ]; then
-        echo "ssl not run, now start."
-        nohup ./natapp -authtoken=e31a7c7ff0de2c14  >/dev/null 2>&1 &
-    else
-        echo "ssl is running, pid: ${ssl_pid}"
-    fi
+    check_and_start_service "mysqld" "systemctl start mysqld"
+    check_and_start_service "${app_jar_name}" "${nohup_java_command}"
+    check_and_start_service "natapp -authtoken=3162aaa953f69209" "nohup ./natapp -authtoken=3162aaa953f69209 >/dev/null 2>&1 &"
+    check_and_start_service "natapp -authtoken=e31a7c7ff0de2c14" "nohup ./natapp -authtoken=e31a7c7ff0de2c14 >/dev/null 2>&1 &"
     echo "================ Check end ================"
 fi
 
 # Git pull
-GIT_STRINGS=("java" "all")
-if echo "${GIT_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+CHECK_STRINGS=("check")
     git pull origin master
 fi
 
 # Deploy java
-JAVA_STRINGS=("java" "all")
-if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+if [[ " java all " =~ " ${deploy_type} " ]]; then
 # Package by mvn
     if command -v mvn >/dev/null 2>&1; then
         echo "Maven(mvn) is installed and executable."
@@ -122,8 +108,7 @@ if echo "${JAVA_STRINGS[@]}" | grep -qw "${deploy_type}"; then
 fi
 
 # Deploy page, package in local, sftp to server, then execute ssh command
-PAGE_STRINGS=("page")
-if echo "${PAGE_STRINGS[@]}" | grep -qw "${deploy_type}"; then
+if [[ " page " =~ " ${deploy_type} " ]]; then
     cd ./static
     rm -rf industry
     cd ../src/page

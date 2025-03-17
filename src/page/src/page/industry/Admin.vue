@@ -31,7 +31,7 @@ import IndustrySidebar from "../../component/industry/IndustrySidebar.vue";
 import IndustryTagList from "../../component/industry/IndustryTagList.vue";
 import IndustryBreadCrumb from "../../component/industry/IndustryBreadCrumb.vue";
 import {menuTreeListToSidebarTreeList} from "@/util/RouterUtil";
-import {StoreType} from "@/store";
+import {StoreType} from '@/store/Index';
 
 const middleDeviceWidth: number = 1792;
 let previousBodyWidth: number = window.innerWidth;
