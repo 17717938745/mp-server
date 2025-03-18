@@ -1,6 +1,6 @@
 # 开发准备
 
-如果后续软件需要使用sdkman，可优先安装（命令行安装方式）
+如果后续安装、升级软件需要使用sdkman，可优先安装（命令行安装方式）：
 
 ```shell
 curl -s "https://get.sdkman.io" | bash

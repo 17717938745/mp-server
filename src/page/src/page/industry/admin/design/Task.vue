@@ -522,10 +522,11 @@
         </el-form-item>
       </el-form>
       <template #footer>
+        <el-affix position="bottom" :offset="20">
         <span class="dialog-footer">
           <el-button @click="formVisible = false">Cancel</el-button>
           <el-button type="primary" @click="handleMerge">Confirm</el-button>
-        </span>
+        </span></el-affix>
       </template>
     </el-dialog>
     <el-dialog :title="'Sort'" v-model="sortVisible" width="60%" :close-on-click-modal="false">
@@ -1019,8 +1020,14 @@ Promise.all([
         t.width = 95
         t.type = ValueType.NumberEdit
       } else if ('onlineDate' === t.value) {
-        t.width = 102
-        t.type = ValueType.DateEdit
+        t.type = ValueType.Link
+        t.openLink = (d: any) => {
+          handleEdit(d)
+          setTimeout(() => {
+            // formRef.value.$el
+            formRef.value.scrollToField('onlineDate')
+          }, 100)
+        }
       } else if ('processCount' === t.value) {
         t.width = 95
         t.type = ValueType.NumberEdit

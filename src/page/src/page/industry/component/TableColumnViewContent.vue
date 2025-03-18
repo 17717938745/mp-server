@@ -1,5 +1,6 @@
 <template>
   <el-table-column
+      :class-name="viewConfig.className || ''"
       :type="viewConfig.type === ValueType.Expand ? 'expand' : viewConfig.type === ValueType.Selection ? 'selection' : ''"
       :key="viewConfig.value"
       :prop="viewConfig.value"
@@ -83,13 +84,7 @@ import ViewContent from './ViewContent.vue'
 import {handleColumnConfigList} from '@/util/IndustryUtil'
 import {includes} from '@/util/ArrayUtil'
 import {ref, watch} from 'vue'
-import TableViewContent from './TableViewContent.vue'
 import TableColumnViewContent from './TableColumnViewContent.vue'
-
-const handleIsTemplate = (row: any, cv: any) => {
-  console.log(cv.type === ValueType.Template, JSON.stringify(cv))
-  return cv.type === ValueType.Template
-}
 
 interface PropType {
   idKey: string;

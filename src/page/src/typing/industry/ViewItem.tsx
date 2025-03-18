@@ -6,6 +6,7 @@ export interface ViewConfig {
   optionList?: OptionItem<any>[],
   value: string,
   originValue?: string,
+  className?: string,
   label?: string,
   labelKey?: string,
   width?: number,

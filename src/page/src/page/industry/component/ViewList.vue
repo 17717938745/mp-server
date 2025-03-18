@@ -195,7 +195,6 @@ const spanArray: any = {}
 const scale: Ref = ref(Number(getStorage(scaleKey) || '1'))
 const defaultTableHeight = Math.max(window.innerHeight - 380, 550)
 const column: Ref = ref(Math.max(2, 1 + Number((window.innerWidth / 256).toFixed(0))))
-const detailColumn: Ref = ref(Math.max(2, 1 + Number((window.innerWidth * 0.8 / 256).toFixed(0))))
 const pcModel: Ref = ref(window.innerWidth >= 512)
 const tableHeight = ref(defaultTableHeight / scale.value)
 const showDetail = ref(false)
@@ -245,7 +244,6 @@ interface SpanMethodProps {
 }
 
 const expandRowKeys = ref([])
-const emit = defineEmits([])
 const columnConfigList = ref(props.columnConfigList)
 const groupList = ref<string[]>(columnConfigList.value.filter(t => t.children && t.children.length > 0).map((t: ViewConfig) => t.labelKey || t.label || ''))
 const checkedGroupList = ref<string[]>(groupList.value.map((t: string) => t))

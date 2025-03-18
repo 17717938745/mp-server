@@ -384,7 +384,7 @@
         @click="viewConfig.openLink(row)"
         type="danger"
     >
-      {{ row[viewConfig.value] }}
+      {{ row[viewConfig.value] || '--'}}
     </el-link>
     <span v-else>{{ row[viewConfig.value] }}</span>
   </template>

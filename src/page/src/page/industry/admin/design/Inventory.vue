@@ -147,12 +147,12 @@
 import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType,} from '@/store/Index'
-import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Search, UploadFilled, DocumentCopy, ArrowUp, ArrowDown,} from '@element-plus/icons-vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {Plus, Search,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
-import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
+import {httpDelete, httpGet, httpPutJson,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
-import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
+import {DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
@@ -173,7 +173,7 @@ const defaultColumnConfigList = [
   {value: 'materialNo', labelKey: 'materialNo', width: 163},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 210},
   {value: 'designNumber', labelKey: 'designNumber', width: 147},
-  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56},
+  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56/*, className: 'highlight-inventory-count',*/},
   {value: 'inventoryDate', labelKey: 'inventoryDate', width: 102},
   {value: 'typeFormat', labelKey: 'type', width: 89},
   {value: 'description', labelKey: 'description', width: 189,},
