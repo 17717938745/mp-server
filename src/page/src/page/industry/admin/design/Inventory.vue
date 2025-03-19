@@ -93,17 +93,11 @@
         <el-form-item prop="designNumber" :label="store.state.label.designNumber">
           <el-input v-model="formData.designNumber"/>
         </el-form-item>
-        <el-form-item prop="inventoryCount" :label="store.state.label.inventoryCount">
-          <el-input-number v-model="formData.inventoryCount" style="width: 60px;" :controls="false" :min="0" :max="999999"/>
+        <el-form-item prop="planQuantity" :label="store.state.label.planQuantity">
+          <el-input-number v-model="formData.planQuantity" style="width: 60px;" :controls="false" :min="0" :max="999999"/>
         </el-form-item>
-        <el-form-item prop="inventoryDate" :label="store.state.label.inventoryDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.inventoryDate"
-              format="YYYY-MM-DD"
-              @change="formData.inventoryDate = formatDate(formData.inventoryDate, 'yyyy-MM-dd')"
-          >
-          </el-date-picker>
+        <el-form-item prop="description" :label="store.state.label.description">
+          <el-input v-model="formData.description"/>
         </el-form-item>
         <el-form-item prop="type" :label="store.state.label.type">
           <el-select v-model="formData.type"
@@ -120,8 +114,17 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="description" :label="store.state.label.description">
-          <el-input v-model="formData.description"/>
+        <el-form-item prop="inventoryCount" :label="store.state.label.inventoryCount">
+          <el-input-number v-model="formData.inventoryCount" style="width: 60px;" :controls="false" :min="0" :max="999999"/>
+        </el-form-item>
+        <el-form-item prop="inventoryDate" :label="store.state.label.inventoryDate">
+          <el-date-picker
+              type="date"
+              v-model="formData.inventoryDate"
+              format="YYYY-MM-DD"
+              @change="formData.inventoryDate = formatDate(formData.inventoryDate, 'yyyy-MM-dd')"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item prop="materialCount" :label="store.state.label.materialCount">
           <el-input-number v-model="formData.materialCount" style="width: 60px;" :controls="false" :min="0" :max="999999" :disabled="!formSave && !editMore"/>
@@ -173,15 +176,18 @@ const defaultColumnConfigList = [
   {value: 'materialNo', labelKey: 'materialNo', width: 163},
   {value: 'materialDescription', labelKey: 'materialDescription', width: 210},
   {value: 'designNumber', labelKey: 'designNumber', width: 147},
-  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56/*, className: 'highlight-inventory-count',*/},
-  {value: 'inventoryDate', labelKey: 'inventoryDate', width: 102},
-  {value: 'typeFormat', labelKey: 'type', width: 89},
+  {value: 'planQuantity', labelKey: 'planQuantity', width: 100, className: 'highlight-text',},
   {value: 'description', labelKey: 'description', width: 189,},
-  {value: 'materialCount', labelKey: 'materialCount', width: 76,},
+  {value: 'typeFormat', labelKey: 'type', width: 89},
+  {value: 'inventoryCount', labelKey: 'inventoryCount', width: 56, className: 'highlight-text',},
+  {value: 'inventoryDate', labelKey: 'inventoryDate', width: 102},
+  {value: 'materialCount', labelKey: 'materialCount', width: 76, className: 'highlight-text',},
+  {value: 'remainingQuantity', labelKey: 'remainingQuantity', width: 76, className: 'highlight-text',},
   {value: 'materialDate', labelKey: 'materialDate', width: 102},
   {value: 'photoCount', labelKey: 'photoCount', width: 56},
   {value: 'photoList', labelKey: 'photoDescribe', width: 189, type: ValueType.Image,},
   {value: 'attachmentList', labelKey: 'attachment', width: 189, type: ValueType.Attachment,},
+  {value: 'outOfPlanOrderNo', labelKey: 'outOfPlanOrderNo', width: 150, className: 'highlight-text',},
 ]
 const columnConfigList = ref<ViewConfig[]>(defaultColumnConfigList.map(t => t))
 httpGet(`system/user/config/list`, {}).then(
@@ -206,6 +212,8 @@ const defaultFormData = {
   materialCount: null,
   materialDate: '',
   photoList: [],
+  planQuantity: 0,
+  remainingQuantity: 0,
   attachmentList: [],
 }
 const state = reactive({
@@ -350,17 +358,24 @@ Promise.all([
     }
   })
 
-  if (editMore) {
-    columnConfigList.value = defaultColumnConfigList.map(t => {
+  columnConfigList.value = defaultColumnConfigList.map(t => {
+    if ('planQuantity' === t.value) {
+      t.type = ValueType.NumberEdit
+      t.width = 95
+    } else if ('description' === t.value) {
+      t.type = ValueType.TextEdit
+    }
+    if (editMore) {
       if ('materialCount' === t.value) {
         t.type = ValueType.NumberEdit
         t.width = 95
-      } else if ('description' === t.value) {
-        t.type = ValueType.TextEdit
+      } else if ('inventoryCount' === t.value) {
+        t.type = ValueType.NumberEdit
+        t.width = 95
       }
-      return t
-    })
-  }
+    }
+    return t
+  })
   handlePage()
 })
 const {

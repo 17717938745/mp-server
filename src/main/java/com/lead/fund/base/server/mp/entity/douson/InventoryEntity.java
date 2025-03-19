@@ -83,4 +83,22 @@ public class InventoryEntity extends AbstractAdmin {
     @FieldRemark(value = "领料日期")
     @Size(max = 32, message = "领料日期长度不合法")
     private String materialDate;
+    /**
+     * 计划数量
+     */
+    @FieldRemark(value = "计划数量")
+    @Size(max = 16, message = "计划数量长度不合法")
+    private BigDecimal planQuantity;
+    /**
+     * 剩余数量
+     */
+    @FieldRemark(value = "剩余数量")
+    @Size(max = 16, message = "剩余数量长度不合法")
+    private BigDecimal remainingQuantity;
+    /**
+     * 计划外单号
+     */
+    @FieldRemark(value = "计划外单号")
+    @Size(max = 64, message = "计划外单号长度不合法")
+    private String outOfPlanOrderNo;
 }

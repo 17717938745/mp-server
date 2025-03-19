@@ -82,4 +82,16 @@ public class InventoryRequest implements Serializable {
      * 库存数量类型，0=库存数量=领料数量
      */
     private Integer inventoryCountType;
+    /**
+     * 计划数量
+     */
+    private BigDecimal planQuantity;
+    /**
+     * 剩余数量
+     */
+    private BigDecimal remainingQuantity;
+    /**
+     * 计划外单号
+     */
+    private String outOfPlanOrderNo;
 }

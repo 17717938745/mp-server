@@ -1,5 +1,5 @@
 <template>
-  <router-view/>
+  <router-view class="douson"/>
 </template>
 
 <script lang="tsx" setup>

@@ -23,6 +23,7 @@ public interface InventoryConverter extends Serializable {
     InventoryConverter INVENTORY_INSTANCE = Mappers.getMapper(InventoryConverter.class);
 
     @Mapping(target = "id", source = "inventoryId")
+    @Mapping(target = "remainingQuantity", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getInventoryCount()).subtract(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getMaterialCount())))")
     InventoryEntity inventory(InventoryRequest request);
 
     @Mapping(target = "inventoryId", source = "id")

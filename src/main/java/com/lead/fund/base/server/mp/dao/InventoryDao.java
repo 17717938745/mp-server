@@ -12,4 +12,5 @@ import com.lead.fund.base.server.mp.entity.douson.InventoryEntity;
  */
 public interface InventoryDao extends IService<InventoryEntity> {
 
+    String nextSerialNo();
 }

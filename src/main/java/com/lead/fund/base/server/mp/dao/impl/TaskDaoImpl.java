@@ -192,7 +192,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     }
                 }
                 if (isNotBlank(pdb.getOfflineDate())) {
-                    final String onlineDate = DateUtil.day(DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), defaultDecimal(db.getOnlineDateDiff()).intValue())));
+                    final String onlineDate = DateUtil.dateTime(cn.hutool.core.date.DateUtil.offsetHour(com.lead.fund.base.common.util.DateUtil.parse(pdb.getOfflineDate()), defaultDecimal(db.getOnlineDateDiff()).intValue()));
                     lambda.set(TaskEntity::getOnlineDate, onlineDate);
                     db.setOnlineDate(onlineDate);
                 }
@@ -201,7 +201,7 @@ public class TaskDaoImpl extends ServiceImpl<TaskMapper, TaskEntity> implements 
                     db.setOfflineDate(null);
                 } else {
                     final int diff = db.getPlanReformCount().multiply(db.getProcessWorkingHour()).divide(new BigDecimal(60 * 18), 2, RoundingMode.HALF_UP).add(new BigDecimal("0.5")).setScale(0, RoundingMode.HALF_UP).intValue();
-                    final String offlineDate = DateUtil.day(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
+                    final String offlineDate = DateUtil.dateTime(cn.hutool.core.date.DateUtil.offsetDay(com.lead.fund.base.common.util.DateUtil.parse(db.getOnlineDate()), diff));
                     lambda.set(TaskEntity::getOfflineDate, offlineDate);
                     db.setOfflineDate(offlineDate);
                 }

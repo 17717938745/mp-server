@@ -119,7 +119,7 @@ public class DousonInventoryController {
             e.setMaterialDate(null == db || !defaultDecimal(db.getMaterialCount()).equals(e.getMaterialCount()) ? DateUtil.day(new Date()) : db.getMaterialDate());
         }
         if (isBlank(e.getId())) {
-            inventoryDao.save(e);
+            inventoryDao.save(e.setOutOfPlanOrderNo(inventoryDao.nextSerialNo()));
         } else {
             inventoryDao.updateById(e);
         }

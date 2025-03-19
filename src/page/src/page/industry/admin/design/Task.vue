@@ -390,15 +390,16 @@
         <el-form-item prop="processWorkingHour" :label="store.state.label.processWorkingHour" v-if="taskShow">
           <el-input-number v-model="formData.processWorkingHour" style="width: 60px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="onlineDateDiff" :label="store.state.label.onlineDateDiff" v-if="taskShow">
+        <el-form-item prop="onlineDateDiff" :label="`${store.state.label.onlineDateDiff}（${store.state.label.unitHour}）`" v-if="taskShow">
           <el-input-number v-model="formData.onlineDateDiff" style="width: 60px;" :controls="false"/>
         </el-form-item>
         <el-form-item prop="onlineDate" :label="store.state.label.onlineDate" v-if="taskShow">
           <el-date-picker
-              type="date"
+              type="datetime"
               v-model="formData.onlineDate"
-              format="YYYY-MM-DD"
-              @change="formData.onlineDate = formatDate(formData.onlineDate, 'yyyy-MM-dd')"
+              format="YYYY-MM-DD HH:mm:ss"
+              time-format="HH"
+              @change="formData.onlineDate = formatDate(formData.onlineDate, 'yyyy-MM-dd HH:mm:ss')"
           >
           </el-date-picker>
         </el-form-item>
@@ -522,11 +523,12 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-affix position="bottom" :offset="20">
         <span class="dialog-footer">
-          <el-button @click="formVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="handleMerge">Confirm</el-button>
-        </span></el-affix>
+          <el-affix position="bottom" :offset="20">
+            <el-button @click="formVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="handleMerge">Confirm</el-button>
+          </el-affix>
+        </span>
       </template>
     </el-dialog>
     <el-dialog :title="'Sort'" v-model="sortVisible" width="60%" :close-on-click-modal="false">

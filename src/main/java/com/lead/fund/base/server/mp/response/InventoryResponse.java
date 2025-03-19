@@ -80,4 +80,16 @@ public class InventoryResponse implements Serializable {
      * 附件列表
      */
     private List<FileModel> attachmentList = new ArrayList<>();
+    /**
+     * 计划数量
+     */
+    private BigDecimal planQuantity;
+    /**
+     * 剩余数量
+     */
+    private BigDecimal remainingQuantity;
+    /**
+     * 计划外单号
+     */
+    private String outOfPlanOrderNo;
 }

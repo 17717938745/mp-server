@@ -33,6 +33,22 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "物料描述"
         },
         {
+          "value": "planQuantity",
+          "label": "计划数量"
+        },
+        {
+          "value": "remainingQuantity",
+          "label": "剩余数量"
+        },
+        {
+          "value": "outOfPlanOrderNo",
+          "label": "计划外单号"
+        },
+        {
+          "value": "unitHour",
+          "label": "单位：小时"
+        },
+        {
           "value": "templateCount",
           "label": "数量"
         },
@@ -1614,6 +1630,21 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "materialDescription",
           "label": "miêu tả vật liệu"
+        },{
+          "value": "planQuantity",
+          "label": "Số lượng kế hoạch"
+        },
+        {
+          "value": "remainingQuantity",
+          "label": "Số lượng còn dư"
+        },
+        {
+          "value": "outOfPlanOrderNo",
+          "label": "Mã đơn ngoài kế hoạch"
+        },
+        {
+          "value": "unitHour",
+          "label": "Đơn vị: giờ"
         },
         {
           "value": "templateCount",
