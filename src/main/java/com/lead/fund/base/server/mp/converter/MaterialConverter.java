@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.converter;
 
+import com.lead.fund.base.server.mp.entity.douson.ExamineEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialDetailEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
 import com.lead.fund.base.server.mp.entity.douson.TaskEntity;
@@ -35,6 +36,7 @@ public interface MaterialConverter extends Serializable {
 
     @Mapping(target = "materialId", source = "id")
     @Mapping(target = "generateTaskFormat", expression = "java(Boolean.TRUE.equals(d.getGenerateTask()) ? \"Yes\" : \"No\")")
+    @Mapping(target = "generateExamineFormat", expression = "java(Boolean.TRUE.equals(d.getGenerateExamine()) ? \"Yes\" : \"No\")")
     MaterialResponse material(MaterialEntity d);
 
     List<MaterialResponse> materialList(List<MaterialEntity> list);
@@ -42,4 +44,15 @@ public interface MaterialConverter extends Serializable {
     @Mapping(target = "roughcastExpireDate", source = "productionDate")
     @Mapping(target = "materialCount", source = "sumMaterialCount")
     TaskEntity generateTask(MaterialEntity e);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createTime", ignore = true)
+    @Mapping(target = "modifyTime", ignore = true)
+    @Mapping(target = "creator", ignore = true)
+    @Mapping(target = "modifier", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "materialId", source = "id")
+    @Mapping(target = "orderQuantity", source = "orderCount")
+    ExamineEntity examine(MaterialEntity materialEntity);
 }

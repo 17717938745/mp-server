@@ -26,8 +26,7 @@ public class MpTest {
     @Test
     @DisplayName("test database...")
     void database() throws Exception {
-        System.out.println(CollUtil.toList("3","6","8").stream().filter(StrUtil::isNotBlank).max(String::compareTo).orElse(""));
-        System.out.println(new DdlEntry("15110").generateDdl(SchedulingEntity.class, DatabaseType.MYSQL));
-        System.out.println(new DdlEntry("15110").generateDdl(SchedulingDetailEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(ExamineEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(ExamineAttachmentEntity.class, DatabaseType.MYSQL));
     }
 }

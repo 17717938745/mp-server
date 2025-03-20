@@ -175,4 +175,8 @@ public class MaterialRequest implements Serializable {
      * 0-不排，1-正序，2-倒叙
      */
     private int orderByPromiseDoneDate;
+    /**
+     * 是否生成订单检验记录
+     */
+    private Boolean generateExamine;
 }

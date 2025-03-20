@@ -2,3 +2,57 @@ ALTER TABLE `MP_INVENTORY`
     ADD COLUMN `PLAN_QUANTITY`        DECIMAL(16, 2) COMMENT '计划数量',
     ADD COLUMN `REMAINING_QUANTITY`   DECIMAL(16, 2) COMMENT '剩余数量',
     ADD COLUMN `OUT_OF_PLAN_ORDER_NO` VARCHAR(64) COMMENT '计划外单号';
+ALTER TABLE `MP_MATERIAL`
+    ADD `GENERATE_EXAMINE` INT(1) DEFAULT 0 COMMENT '是否生成检验单，0-否 1-是';
+CREATE TABLE MP_EXAMINE
+(
+    `MATERIAL_ID`                    VARCHAR(128) COMMENT '生产工单ID',
+    `CHECK_ORDER_NO`                 VARCHAR(128) COMMENT '报检单号',
+    `ORDER_TOTAL_QUANTITY`           DECIMAL(38, 10) COMMENT '报检单合计数量',
+    `IDENTIFICATION_HARDNESS_REMARK` VARCHAR(512) COMMENT '标识/硬度备注',
+    `NDE_DIMENSION_REMARK`           VARCHAR(512) COMMENT 'NDE/尺寸备注',
+    `INSPECTION_COMPLETED_QUANTITY`  DECIMAL(38, 10) COMMENT '检验完成数量',
+    `CUSTOMER_SHORT_NAME`            VARCHAR(64) COMMENT '客户简称',
+    `SALE_ORDER_NO`                  VARCHAR(64) COMMENT '销售订单',
+    `ORDER_PROJECT_NO`               VARCHAR(64) COMMENT '订单项目号',
+    `MATERIAL_NO`                    VARCHAR(64) COMMENT '物料号',
+    `IMPROVE_MATERIAL_DESCRIBE`      VARCHAR(512) COMMENT '加工物料描述',
+    `DESIGN_NUMBER`                  VARCHAR(64) COMMENT '图号',
+    `ORDER_QUANTITY`                 DECIMAL(38, 10) COMMENT '订单数量',
+    `PROMISE_DONE_DATE`              VARCHAR(32) COMMENT '承诺完成日期',
+    `DESCRIPTION`                    VARCHAR(512) COMMENT '备注',
+    `IDENTIFICATION_PERSON`          VARCHAR(64) COMMENT '标识人员',
+    `IDENTIFICATION_DATE`            VARCHAR(32) COMMENT '标识日期',
+    `INSPECTION_PERSON`              VARCHAR(64) COMMENT '检验人员',
+    `INSPECTION_COMPLETED_DATE`      VARCHAR(32) COMMENT '检验完成日期',
+    `CREATOR`                        VARCHAR(64) COMMENT '创建人用户id',
+    `MODIFIER`                       VARCHAR(64) COMMENT '修改人用户id',
+    `STATE`                          INT(2) DEFAULT 0 COMMENT '状态，0-正常 1-删除',
+    `CREATE_TIME`                    DATETIME COMMENT '创建时间',
+    `MODIFY_TIME`                    DATETIME COMMENT '修改时间',
+    `ID`                             VARCHAR(64) COMMENT '唯一标志',
+    CONSTRAINT PK_15110_Examine_0 PRIMARY KEY (ID)
+);
+ALTER TABLE MP_EXAMINE
+    COMMENT '订单检验记录';
+CREATE UNIQUE INDEX UNQ_15110_Examine_0 ON MP_EXAMINE (MATERIAL_ID);
+CREATE TABLE MP_EXAMINE_ATTACHMENT
+(
+    `EXAMINE_ID`          VARCHAR(64) COMMENT '检验记录id',
+    `ATTACHMENT_CATEGORY` VARCHAR(64) COMMENT '附件分类',
+    `ATTACHMENT_TYPE`     VARCHAR(32) COMMENT '附件类型',
+    `URL`                 VARCHAR(256) COMMENT '链接',
+    `FILE_ID`             VARCHAR(256) COMMENT '文件ID',
+    `FILENAME`            VARCHAR(256) COMMENT '文件名',
+    `COMPRESS_URL`        VARCHAR(256) COMMENT '压缩链接',
+    `CREATOR`             VARCHAR(64) COMMENT '创建人用户id',
+    `MODIFIER`            VARCHAR(64) COMMENT '修改人用户id',
+    `STATE`               INT(2) DEFAULT 0 COMMENT '状态，0-正常 1-删除',
+    `CREATE_TIME`         DATETIME COMMENT '创建时间',
+    `MODIFY_TIME`         DATETIME COMMENT '修改时间',
+    `ID`                  VARCHAR(64) COMMENT '唯一标志',
+    CONSTRAINT PK_15110_ExamineAttachment_0 PRIMARY KEY (ID)
+);
+ALTER TABLE MP_EXAMINE_ATTACHMENT
+    COMMENT '订单检验记录附件';
+CREATE UNIQUE INDEX UNQ_15110_ExamineAttachment_0 ON MP_EXAMINE_ATTACHMENT (EXAMINE_ID, ATTACHMENT_CATEGORY, ATTACHMENT_TYPE, URL, FILE_ID);

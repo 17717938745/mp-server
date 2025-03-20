@@ -171,4 +171,9 @@ public class MaterialResponse extends AbstractAdministratorModel {
      */
     private Boolean generateTask;
     private String generateTaskFormat;
+    /**
+     * 是否生成订单检验记录
+     */
+    private Boolean generateExamine;
+    private String generateExamineFormat;
 }

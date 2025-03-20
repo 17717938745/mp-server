@@ -5,7 +5,6 @@ import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY
 import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
-import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_DATA_QUERY_ERROR;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
 import static com.lead.fund.base.server.mp.converter.MaterialConverter.MATERIAL_INSTANCE;
 import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
@@ -23,12 +22,14 @@ import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.StrUtil;
+import com.lead.fund.base.server.mp.dao.ExamineDao;
 import com.lead.fund.base.server.mp.dao.MaterialDao;
 import com.lead.fund.base.server.mp.dao.MaterialDetailDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.TaskDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
+import com.lead.fund.base.server.mp.entity.douson.ExamineEntity;
 import com.lead.fund.base.server.mp.entity.douson.MaterialEntity;
 import com.lead.fund.base.server.mp.entity.douson.TaskEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
@@ -44,19 +45,17 @@ import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -97,6 +96,8 @@ public class DousonMaterialController {
     @Resource
     private MaterialMapper materialMapper;
     @Resource
+    private ExamineDao examineDao;
+    @Resource
     private TaskDao taskDao;
     @Resource
     private MaterialDao materialDao;
@@ -111,6 +112,64 @@ public class DousonMaterialController {
     @Resource
     private LockHelper lockHelper;
 
+
+    /**
+     * 生成订单检验记录
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("examine-list")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result examineList(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody MaterialRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleList().stream().noneMatch(t -> "identificationRecord".equals(t.getRoleCode()) || "hardnessRecord".equals(t.getRoleCode()) || "ndeRecord".equals(t.getRoleCode()) || "dimensionRecord".equals(t.getRoleCode()) || "examineManager".equals(t.getRoleCode()))
+                && !"admin".equals(u.getUsername())
+        ) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        final Map<String, BigDecimal> checkCountMap = new ConcurrentHashMap<>();
+        if (CollUtil.isNotEmpty(request.getMaterialIdList())) {
+            final List<ExamineEntity> list = MultitaskUtil.batchInvokeAll(request.getMaterialIdList(), l -> {
+                final List<ExamineEntity> rl = materialMapper.selectList(DatabaseUtil.or(new LambdaQueryWrapper<MaterialEntity>().ne(MaterialEntity::getGenerateExamine, Boolean.TRUE), l, (lam, ll) -> {
+                    lam.in(MaterialEntity::getId, ll);
+                })).stream().map(MATERIAL_INSTANCE::examine).peek(t -> {
+                    t
+                            .setOrderTotalQuantity(
+                                    checkCountMap.computeIfAbsent(t.getCheckOrderNo(), k -> {
+                                        return materialMapper.selectList(
+                                                new LambdaQueryWrapper<MaterialEntity>()
+                                                        .eq(MaterialEntity::getCheckOrderNo, k)
+                                                        .select(MaterialEntity::getMaterialCount)
+                                        ).stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                    })
+                            )
+                            .setCreator(u.getUserId())
+                            .setModifier(u.getUserId())
+                    ;
+                }).collect(Collectors.toList());
+                if (CollUtil.isNotEmpty(rl)) {
+                    examineDao.saveBatch(
+                            rl
+                    );
+                    for (ExamineEntity t : rl) {
+                        materialMapper.update(
+                                null,
+                                new LambdaUpdateWrapper<MaterialEntity>()
+                                        .set(MaterialEntity::getGenerateExamine, true)
+                                        .eq(MaterialEntity::getId, t.getMaterialId())
+                        );
+                    }
+                }
+                return rl;
+            });
+        }
+        return new Result();
+    }
 
     /**
      * 保存、更新生产工单
@@ -384,6 +443,9 @@ public class DousonMaterialController {
         }
         if (null != d.getEndPromiseDoneDate()) {
             lambda.le(MaterialEntity::getPromiseDoneDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndPromiseDoneDate()).toJdkDate()));
+        }
+        if (null != d.getGenerateExamine()) {
+            lambda.eq(MaterialEntity::getGenerateExamine, d.getGenerateExamine());
         }
         if (null != d.getSurplusCountType()) {
             if (d.getSurplusCountType() == 0) {

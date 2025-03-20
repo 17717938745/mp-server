@@ -256,6 +256,15 @@ const handleSubmit = (retry: boolean = true) => {
                       {
                         "children": [],
                         "id": "-1",
+                        "path": "examine",
+                        "component": "examine",
+                        "nameKey": "orderInspectionRecord",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
                         "path": "assembly",
                         "component": "assembly",
                         "nameKey": "completeMachineAssemblyRecord",

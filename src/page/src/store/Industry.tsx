@@ -33,6 +33,58 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "物料描述"
         },
         {
+          "value": "generateOrderInspectionRecord",
+          "label": "生成订单检验记录"
+        },
+        {
+          "value": "orderTotalQuantity",
+          "label": "报检单合计数量"
+        },
+        {
+          "value": "identification",
+          "label": "标识"
+        },
+        {
+          "value": "hardness",
+          "label": "硬度"
+        },
+        {
+          "value": "identificationHardnessRemark",
+          "label": "标识/硬度备注"
+        },
+        {
+          "value": "dimension",
+          "label": "尺寸"
+        },
+        {
+          "value": "ndeDimensionRemark",
+          "label": "NDE/尺寸备注"
+        },
+        {
+          "value": "inspectionCompletedQuantity",
+          "label": "检验完成数量"
+        },
+        {
+          "value": "orderQuantity",
+          "label": "订单数量"
+        },
+        {
+          "value": "identificationPerson",
+          "label": "标识人员"
+        },
+        {
+          "value": "identificationDate",
+          "label": "标识日期"
+        },
+        {
+          "value": "inspectionPerson",
+          "label": "检验人员"
+        },
+        {
+          "value": "inspectionCompletedDate",
+          "label": "检验完成日期"
+        },
+        {
           "value": "planQuantity",
           "label": "计划数量"
         },
@@ -537,6 +589,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "orderManage",
           "label": "订单管理"
+        },
+        {
+          "value": "orderInspectionRecord",
+          "label": "订单检验记录"
         },
         {
           "value": "deviceManage",
@@ -1630,7 +1686,60 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "materialDescription",
           "label": "miêu tả vật liệu"
-        },{
+        },
+        {
+          "value": "generateOrderInspectionRecord",
+          "label": "Tạo hồ sơ kiểm tra đơn hàng"
+        },
+        {
+          "value": "orderTotalQuantity",
+          "label": "Số lượng  dự kiến nhập kho"
+        },
+        {
+          "value": "identification",
+          "label": "Khắc dấu"
+        },
+        {
+          "value": "hardness",
+          "label": "Độ cứng"
+        },
+        {
+          "value": "identificationHardnessRemark",
+          "label": "Khắc dấu/Độ cứng ghi chú"
+        },
+        {
+          "value": "dimension",
+          "label": "Kích thước"
+        },
+        {
+          "value": "ndeDimensionRemark",
+          "label": "NDE/Kích thước ghi chú"
+        },
+        {
+          "value": "inspectionCompletedQuantity",
+          "label": "Số lượng hoàn thành kiểm tra"
+        },
+        {
+          "value": "orderQuantity",
+          "label": "SL đơn hàng"
+        },
+        {
+          "value": "identificationPerson",
+          "label": "Nhân viên khắc dấu"
+        },
+        {
+          "value": "identificationDate",
+          "label": "Ngày khắc dấu"
+        },
+        {
+          "value": "inspectionPerson",
+          "label": "Nhân viên kiểm tra"
+        },
+        {
+          "value": "inspectionCompletedDate",
+          "label": "Ngày hoàn thành kiểm tra"
+        },
+        {
           "value": "planQuantity",
           "label": "Số lượng kế hoạch"
         },
@@ -2188,6 +2297,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "orderManage",
           "label": "Đơn hàng"
+        },
+        {
+          "value": "orderInspectionRecord",
+          "label": "Hồ sơ kiểm tra đơn hàng"
         },
         {
           "value": "deviceManage",

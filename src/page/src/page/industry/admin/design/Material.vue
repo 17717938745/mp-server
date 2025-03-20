@@ -166,6 +166,20 @@
                 @change="handlePage"
                 :placeholder="store.state.label.checkOrderNo"
                 class="search-item"/>
+      <el-select v-model="query.data.generateExamine"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.generateOrderInspectionRecord"
+                 class="search-item">
+        <el-option
+            v-for="item in [{value: false, label: 'No'},{value: true, label: 'Yes'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-upload
             action="#"
@@ -200,6 +214,18 @@
             @click="handleShowMaterialOrderPrintList"
             type="warning"
         >Print plan
+        </el-button>
+        <el-button
+            :icon="Printer"
+            @click="handleShowMaterialOrderPrintList"
+            type="warning"
+        >Print plan
+        </el-button>
+        <el-button
+            :icon="List"
+            @click="handleGenerateOrderInspectionRecord"
+            type="danger"
+        >{{ store.state.label.generateOrderInspectionRecord }}
         </el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
@@ -408,7 +434,7 @@ import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType,} from '@/store/Index'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Search, UploadFilled,} from '@element-plus/icons-vue'
+import {Plus, Printer, Search, UploadFilled, List,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
@@ -573,6 +599,11 @@ const columnConfigList = ref<ViewConfig[]>([
     labelKey: 'generateTask',
     width: 61,
   },
+  {
+    value: 'generateExamineFormat',
+    labelKey: 'generateOrderInspectionRecord',
+    width: 61,
+  },
 ])
 
 const selectIdList = ref([])
@@ -591,6 +622,16 @@ const handleShowMaterialOrderPrintList = () => {
     ElMessage.error('Please select')
   } else {
     window.open(`/industry/public/material/index?materialIdList=${selectIdList.value}`)
+  }
+}
+const handleGenerateOrderInspectionRecord = () => {
+  if (selectIdList.value.length <= 0) {
+    ElMessage.error('Please select')
+  } else {
+    httpPostJson('douson/material/examine-list', {materialIdList: selectIdList.value}).then(() => {
+      ElMessage.success('Generate success')
+      handlePage()
+    })
   }
 }
 const fileMap: any = {}
@@ -676,6 +717,7 @@ const defaultFormData = {
   arrangeProductionDate: '',
   materialOrderNo: '',
   productionCount: 0,
+  generateExamine: null,
   checkOrderNo: '',
 }
 const checkOrNotList = ref([
@@ -699,6 +741,7 @@ const state = reactive({
       orderProjectNo: '',
       materialNo: '',
       designNumber: '',
+      generateExamine: null,
       surplusCountType: null,
       remainCountType: includes(roleCodeList, 'materialManager') ? 2 : null,
       chargeCompany: '',

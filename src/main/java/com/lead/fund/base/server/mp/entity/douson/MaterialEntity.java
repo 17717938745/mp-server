@@ -221,4 +221,10 @@ public class MaterialEntity extends AbstractAdmin {
     @FieldRemark(value = "是否生成计划")
     @Size(max = 2, message = "是否生成计划长度不合法")
     private Boolean generateTask;
+    /**
+     * 是否生成订单检验记录
+     */
+    @FieldRemark(value = "是否生成订单检验记录")
+    @Size(max = 2, message = "是否生成订单检验记录")
+    private Boolean generateExamine;
 }
