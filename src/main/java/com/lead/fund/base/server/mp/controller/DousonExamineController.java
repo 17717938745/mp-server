@@ -207,6 +207,9 @@ public class DousonExamineController {
         final ExamineEntity db = examineDao.getById(request.getExamineId());
         if (null != db) {
             examineDao.removeById(request.getExamineId());
+            examineAttachmentDao.remove(new LambdaUpdateWrapper<ExamineAttachmentEntity>()
+                    .eq(ExamineAttachmentEntity::getExamineId, db.getId())
+            );
             if (isNotBlank(db.getMaterialId())) {
                 materialMapper.update(
                         null,
