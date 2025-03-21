@@ -51,13 +51,13 @@
         />
       </el-select>
       <el-date-picker
-          v-model="inspectionCompletedDateList"
-          @change="() => {handleDateTimeChange(inspectionCompletedDateList, query.data, 'inspectionCompletedDate')}"
+          v-model="identificationDateList"
+          @change="() => {handleDateTimeChange(identificationDateList, query.data, 'identificationDate')}"
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
-          :start-placeholder="`Start ${store.state.label.inspectionCompletedDate}`"
-          :end-placeholder="`End ${store.state.label.inspectionCompletedDate}`"
+          :start-placeholder="`Start ${store.state.label.identificationDate}`"
+          :end-placeholder="`End ${store.state.label.identificationDate}`"
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
@@ -76,8 +76,8 @@
         />
       </el-select>
       <el-date-picker
-          v-model="identificationDateList"
-          @change="() => {handleDateTimeChange(identificationDateList, query.data, 'inspectionCompletedDate')}"
+          v-model="inspectionCompletedDateList"
+          @change="() => {handleDateTimeChange(inspectionCompletedDateList, query.data, 'inspectionCompletedDate')}"
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
@@ -284,10 +284,10 @@ const state = reactive({
       description: '',
       identificationPerson: '',
       identificationDate: '',
+      startIdentificationDate: '',
+      endIdentificationDate: '',
       inspectionPerson: '',
       inspectionCompletedDate: '',
-      startInspectionCompletedDate: '',
-      endInspectionCompletedDate: '',
       startInspectionCompletedDate: '',
       endInspectionCompletedDate: '',
     },
