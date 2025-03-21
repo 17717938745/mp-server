@@ -33,10 +33,6 @@ public class ExamineRequest implements Serializable {
      */
     private String examineId;
     /**
-     * 生产工单ID
-     */
-    private String materialId;
-    /**
      * 报检单号
      */
     private String checkOrderNo;

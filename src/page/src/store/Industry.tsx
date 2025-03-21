@@ -41,6 +41,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "报检单合计数量"
         },
         {
+          "value": "totalMaterialQuantity",
+          "label": "领料合计数量"
+        },
+        {
           "value": "identification",
           "label": "标识"
         },
@@ -1694,6 +1698,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "orderTotalQuantity",
           "label": "Số lượng  dự kiến nhập kho"
+        },
+        {
+          "value": "totalMaterialQuantity",
+          "label": "Tổng số lượng vật liệu"
         },
         {
           "value": "identification",

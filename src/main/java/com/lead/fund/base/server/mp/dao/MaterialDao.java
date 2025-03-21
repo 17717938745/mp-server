@@ -17,4 +17,8 @@ public interface MaterialDao extends IService<MaterialEntity> {
     String nextCheckOrderNo();
 
     String nextMaterialOrderNo();
+
+    String checkOrderNo(MaterialEntity e);
+
+    String materialOrderNo(MaterialEntity e);
 }

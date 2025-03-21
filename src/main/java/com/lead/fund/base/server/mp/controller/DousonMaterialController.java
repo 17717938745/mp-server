@@ -48,11 +48,11 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -120,9 +120,9 @@ public class DousonMaterialController {
      * @param request  {@link MaterialRequest}
      * @return {@link Result}
      */
-    @PostMapping("examine-list")
+    @PostMapping("examine")
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
-    public Result examineList(
+    public Result examine(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody MaterialRequest request
     ) {
@@ -133,41 +133,63 @@ public class DousonMaterialController {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         final Map<String, BigDecimal> checkCountMap = new ConcurrentHashMap<>();
-        if (CollUtil.isNotEmpty(request.getMaterialIdList())) {
-            final List<ExamineEntity> list = MultitaskUtil.batchInvokeAll(request.getMaterialIdList(), l -> {
-                final List<ExamineEntity> rl = materialMapper.selectList(DatabaseUtil.or(new LambdaQueryWrapper<MaterialEntity>().ne(MaterialEntity::getGenerateExamine, Boolean.TRUE), l, (lam, ll) -> {
-                    lam.in(MaterialEntity::getId, ll);
-                })).stream().map(MATERIAL_INSTANCE::examine).peek(t -> {
-                    t
-                            .setOrderTotalQuantity(
-                                    checkCountMap.computeIfAbsent(t.getCheckOrderNo(), k -> {
-                                        return materialMapper.selectList(
-                                                new LambdaQueryWrapper<MaterialEntity>()
-                                                        .eq(MaterialEntity::getCheckOrderNo, k)
-                                                        .select(MaterialEntity::getMaterialCount)
-                                        ).stream().map(MaterialEntity::getMaterialCount).reduce(BigDecimal.ZERO, BigDecimal::add);
-                                    })
-                            )
-                            .setCreator(u.getUserId())
-                            .setModifier(u.getUserId())
-                    ;
-                }).collect(Collectors.toList());
-                if (CollUtil.isNotEmpty(rl)) {
-                    examineDao.saveBatch(
-                            rl
-                    );
-                    for (ExamineEntity t : rl) {
-                        materialMapper.update(
-                                null,
-                                new LambdaUpdateWrapper<MaterialEntity>()
-                                        .set(MaterialEntity::getGenerateExamine, true)
-                                        .eq(MaterialEntity::getId, t.getMaterialId())
-                        );
-                    }
-                }
-                return rl;
-            });
+        if (isNotBlank(request.getSaleOrderNo()) && isNotBlank(request.getOrderProjectNo())) {
+            final List<MaterialEntity> el = materialMapper.selectList(
+                    new LambdaQueryWrapper<MaterialEntity>()
+                            .ne(MaterialEntity::getGenerateExamine, Boolean.TRUE)
+                            .eq(MaterialEntity::getSaleOrderNo, request.getSaleOrderNo())
+                            .eq(MaterialEntity::getOrderProjectNo, request.getOrderProjectNo())
+            );
+            List<ExamineEntity> rl = el.stream().map(MATERIAL_INSTANCE::examine).peek(t -> {
+                t
+                        .setCreator(u.getUserId())
+                        .setModifier(u.getUserId());
+            }).collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(rl)) {
+                final ExamineEntity e = rl.get(0);
+                e.setCheckOrderNo(el.stream().map(MaterialEntity::getCheckOrderNo).distinct().filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
+                e.setOrderTotalQuantity(rl.stream().map(ExamineEntity::getOrderTotalQuantity).reduce(BigDecimal.ZERO, BigDecimal::add));
+                examineDao.save(e);
+                materialMapper.update(
+                        null,
+                        new LambdaUpdateWrapper<MaterialEntity>()
+                                .set(MaterialEntity::getGenerateExamine, true)
+                                .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
+                                .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
+                );
+            }
         }
+        return new Result();
+    }
+
+    /**
+     * 修复数据，curl -X PUT -H "Content-Type: application/json" -H "Device-Id:0000000000000000000" -d '{}' "http://localhost/douson/material/repair"
+     *
+     * @param deviceId 设备id
+     * @param request  {@link MaterialRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("repair")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result repair(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody MaterialRequest request
+    ) {
+        materialList(request.setOrderByPromiseDoneDate(1), lam -> {
+            lam.select(MaterialEntity::getId, MaterialEntity::getSaleOrderNo, MaterialEntity::getOrderProjectNo, MaterialEntity::getProductionDate, MaterialEntity::getCheckOrderNo, MaterialEntity::getMaterialOrderNo);
+        }).stream()
+                .collect(Collectors.groupingBy(e -> CollUtil.toList(e.getSaleOrderNo(), e.getOrderProjectNo(), e.getProductionDate()),
+                        Collectors.reducing((t, t1) -> t)
+                )).values().forEach(o -> o.ifPresent(t -> {
+                    materialMapper.update(null,
+                            new LambdaUpdateWrapper<MaterialEntity>()
+                                    .set(MaterialEntity::getCheckOrderNo, t.getCheckOrderNo())
+                                    .set(MaterialEntity::getMaterialOrderNo, t.getMaterialOrderNo())
+                                    .eq(MaterialEntity::getSaleOrderNo, t.getSaleOrderNo())
+                                    .eq(MaterialEntity::getOrderProjectNo, t.getOrderProjectNo())
+                                    .eq(MaterialEntity::getProductionDate, t.getProductionDate())
+                    );
+                }));
         return new Result();
     }
 
@@ -197,6 +219,8 @@ public class DousonMaterialController {
                     .setGenerateTask(defaultDecimal(e.getProductionCount()).compareTo(BigDecimal.ZERO) > 0 ? true : null)
                     .setModifier(u.getUserId());
             final boolean alreadyGenerateTask = isNotBlank(e.getId()) && Boolean.TRUE.equals(materialMapper.selectById(e.getId()).getGenerateTask());
+            e.setMaterialOrderNo(materialDao.materialOrderNo(e))
+                    .setCheckOrderNo(materialDao.checkOrderNo(e));
             // update
             if (isNotBlank(e.getId())) {
                 if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode()) || "materialManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
@@ -212,9 +236,6 @@ public class DousonMaterialController {
                 if (u.getRoleList().stream().noneMatch(t -> "material".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
                     throw new BusinessException(AUTHORITY_AUTH_FAIL);
                 }
-                e
-                        .setMaterialOrderNo(materialDao.nextMaterialOrderNo())
-                        .setCheckOrderNo(materialDao.nextCheckOrderNo());
                 materialMapper.insert((MaterialEntity) e
                         .setCreator(u.getUserId())
                         .setModifier(u.getUserId())
@@ -308,15 +329,15 @@ public class DousonMaterialController {
                 );
                 materialDao.init();*/
                 final List<MaterialEntity> il = new ArrayList<>();
-                final Map<List<String>, String> orderNoMap = new HashMap<>(8);
-                final Map<List<String>, String> indexMap = new HashMap<>(8);
+
                 for (MaterialRequest t : el) {
-                    final List<String> key = CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo());
+                    final List<String> key = CollUtil.toList(t.getSaleOrderNo(), t.getOrderProjectNo(), t.getProductionDate());
                     final MaterialEntity e = (MaterialEntity) MATERIAL_INSTANCE.material(t)
-                            .setMaterialOrderNo(orderNoMap.computeIfAbsent(key, k -> materialDao.nextMaterialOrderNo()))
-                            .setCheckOrderNo(indexMap.computeIfAbsent(key, k -> materialDao.nextCheckOrderNo()))
                             .setCreator(u.getUserId())
                             .setModifier(u.getUserId());
+                    e.setMaterialOrderNo(materialDao.materialOrderNo(e))
+                            .setCheckOrderNo(materialDao.checkOrderNo(e))
+                    ;
                     il.add(e);
                 }
                 materialDao.saveBatch(
@@ -410,6 +431,10 @@ public class DousonMaterialController {
     }
 
     private List<MaterialEntity> materialList(MaterialRequest d) {
+        return materialList(d, null);
+    }
+
+    private List<MaterialEntity> materialList(MaterialRequest d, Consumer<LambdaQueryWrapper<MaterialEntity>> lambdaQueryWrapperConsumer) {
         LambdaQueryWrapper<MaterialEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(d.getMaterialId())) {
             lambda.eq(MaterialEntity::getId, d.getMaterialId());
@@ -505,6 +530,9 @@ public class DousonMaterialController {
         } else {
             lambda.orderByDesc(MaterialEntity::getPromiseDoneDate);
         }
+        if (null != lambdaQueryWrapperConsumer) {
+            lambdaQueryWrapperConsumer.accept(lambda);
+        }
         return materialDao.list(lambda);
     }
 
@@ -528,13 +556,6 @@ public class DousonMaterialController {
                 (t, r) -> t.getCreator().equals(r.getId()),
                 (t, r) -> t.setCreatorFormat(r.getName())
         );
-        /*MultitaskUtil.supplementList(
-                rl,
-                MaterialResponse::getOptimizeType,
-                l -> paramDao.listByCategoryId("optimizeType"),
-                (t, r) -> t.getOptimizeType().equals(r.getValue()),
-                (t, r) -> t.setOptimizeTypeFormat(r.getLabel())
-        );*/
         for (MaterialResponse t : rl) {
             t.setMaterialOrderNoFormat(t.getMaterialOrderNo() + tail(t.getMaterialPrintCount()));
             t.setCheckOrderNoFormat(t.getCheckOrderNo() + tail(t.getCheckPrintCount()));
@@ -642,8 +663,18 @@ public class DousonMaterialController {
                         .set(MaterialEntity::getGenerateTask, e.getGenerateTask())
                         .set(MaterialEntity::getSumMaterialCount, sumMaterialCount)
                         .set(MaterialEntity::getSurplusCount, surplusCount)
+                        .set(MaterialEntity::getGenerateExamine, e.getGenerateExamine())
                         .eq(MaterialEntity::getSaleOrderNo, e.getSaleOrderNo())
                         .eq(MaterialEntity::getOrderProjectNo, e.getOrderProjectNo())
         );
+        examineDao.update(new LambdaUpdateWrapper<ExamineEntity>()
+                .set(ExamineEntity::getCheckOrderNo, el.stream().map(MaterialEntity::getCheckOrderNo).distinct().filter(StrUtil::isNotBlank).collect(Collectors.joining(",")))
+                .set(ExamineEntity::getOrderTotalQuantity, sumMaterialCount)
+                .eq(ExamineEntity::getSaleOrderNo, e.getSaleOrderNo())
+                .eq(ExamineEntity::getOrderProjectNo, e.getOrderProjectNo())
+        )
+        ;
     }
+
+
 }

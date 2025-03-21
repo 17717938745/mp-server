@@ -14,12 +14,13 @@
   --el-text-color-secondary: #333333;
   --el-text-color-placeholder: #888888;
 }
+
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  font-family: 'Times New Roman',serif;
+  font-family: 'Times New Roman', serif;
 
   #app {
     margin: 0;
@@ -90,6 +91,11 @@ $containerLeftGap: 5px;
 }
 
 .resources-upload {
+  :focus {
+    outline: 2px solid #d62d4c;
+    box-shadow: 0 0 5px rgba(64, 158, 255, 0.5);
+  }
+
   display: flex;
   flex-direction: column;
 
@@ -119,32 +125,38 @@ $containerLeftGap: 5px;
     background-color: #c8d5ef;
     color: #111111 !important;
   }
+
   .row-yellow {
     background-color: #eae8c2;
     color: #111111 !important;
   }
+
   .row-light-blue {
     background-color: #409eff;
     color: #111111 !important;
   }
+
   .row-red {
     background-color: #f1f15b !important;
     color: #ff0000 !important;
     font-weight: 900;
     font-size: 16px;
   }
+
   .cell-red {
     background-color: #f1f15b !important;
     color: #ff0000 !important;
     font-weight: 900;
     font-size: 16px;
   }
+
   .row-green {
     background-color: #9bc567 !important;
     color: #111111 !important;
     font-weight: 900;
     font-size: 16px;
   }
+
   .row-gray {
     background-color: #e2e3df !important;
     color: #111111 !important;

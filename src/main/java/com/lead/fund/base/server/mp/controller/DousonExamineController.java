@@ -210,12 +210,13 @@ public class DousonExamineController {
             examineAttachmentDao.remove(new LambdaUpdateWrapper<ExamineAttachmentEntity>()
                     .eq(ExamineAttachmentEntity::getExamineId, db.getId())
             );
-            if (isNotBlank(db.getMaterialId())) {
+            if (isNotBlank(db.getSaleOrderNo()) && isNotBlank(db.getOrderProjectNo())) {
                 materialMapper.update(
                         null,
                         new LambdaUpdateWrapper<MaterialEntity>()
                                 .set(MaterialEntity::getGenerateExamine, false)
-                                .eq(MaterialEntity::getId, db.getMaterialId())
+                                .eq(MaterialEntity::getId, db.getSaleOrderNo())
+                                .eq(MaterialEntity::getId, db.getOrderProjectNo())
                 );
             }
         }

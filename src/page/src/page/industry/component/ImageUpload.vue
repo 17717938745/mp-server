@@ -1,5 +1,5 @@
 <template>
-  <div class="resources-upload" v-if="props.photoList">
+  <div class="resources-upload" tabindex="1" v-if="props.photoList">
     <el-upload
         v-show="props.photoList.length < props.maxSize"
         action="#"

@@ -215,18 +215,6 @@
             type="warning"
         >Print plan
         </el-button>
-        <el-button
-            :icon="Printer"
-            @click="handleShowMaterialOrderPrintList"
-            type="warning"
-        >Print plan
-        </el-button>
-        <el-button
-            :icon="List"
-            @click="handleGenerateOrderInspectionRecord"
-            type="danger"
-        >{{ store.state.label.generateOrderInspectionRecord }}
-        </el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>
@@ -603,6 +591,7 @@ const columnConfigList = ref<ViewConfig[]>([
     value: 'generateExamineFormat',
     labelKey: 'generateOrderInspectionRecord',
     width: 61,
+    mergeKey: ['saleOrderNo', 'orderProjectNo',],
   },
 ])
 
@@ -622,16 +611,6 @@ const handleShowMaterialOrderPrintList = () => {
     ElMessage.error('Please select')
   } else {
     window.open(`/industry/public/material/index?materialIdList=${selectIdList.value}`)
-  }
-}
-const handleGenerateOrderInspectionRecord = () => {
-  if (selectIdList.value.length <= 0) {
-    ElMessage.error('Please select')
-  } else {
-    httpPostJson('douson/material/examine-list', {materialIdList: selectIdList.value}).then(() => {
-      ElMessage.success('Generate success')
-      handlePage()
-    })
   }
 }
 const fileMap: any = {}
@@ -843,7 +822,11 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
-
+const roleIdentificationRecord = includes(roleCodeList, 'identificationRecord')
+const roleHardnessRecord = includes(roleCodeList, 'hardnessRecord')
+const roleNdeRecord = includes(roleCodeList, 'ndeRecord')
+const roleDimensionRecord = includes(roleCodeList, 'dimensionRecord')
+const roleExamineManager = includes(roleCodeList, 'examineManager')
 if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
   columnConfigList.value = columnConfigList.value.map(t => {
     if ('description' === t.value) {
@@ -853,6 +836,20 @@ if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
     } else if ('productionCount' === t.value) {
       t.width = 101
       t.type = ValueType.NumberEdit
+    }
+    if ('generateExamineFormat' === t.value) {
+      if (roleIdentificationRecord || roleHardnessRecord || roleNdeRecord || roleDimensionRecord || roleExamineManager) {
+        t.type = ValueType.Link
+        t.editable = (d: any) => {
+          return d.generateExamine !== true
+        }
+        t.openLink = (d: any) => {
+          httpPostJson('douson/material/examine', d).then(() => {
+            ElMessage.success('Generate success')
+            handlePage()
+          })
+        }
+      }
     }
     return t
   })

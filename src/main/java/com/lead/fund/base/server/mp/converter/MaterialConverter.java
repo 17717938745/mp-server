@@ -52,7 +52,7 @@ public interface MaterialConverter extends Serializable {
     @Mapping(target = "modifier", ignore = true)
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "description", ignore = true)
-    @Mapping(target = "materialId", source = "id")
     @Mapping(target = "orderQuantity", source = "orderCount")
-    ExamineEntity examine(MaterialEntity materialEntity);
+    @Mapping(target = "orderTotalQuantity", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getMaterialCount()))")
+    ExamineEntity examine(MaterialEntity t);
 }

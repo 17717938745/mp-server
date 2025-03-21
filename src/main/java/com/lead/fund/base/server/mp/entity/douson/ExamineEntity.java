@@ -30,18 +30,13 @@ public class ExamineEntity extends AbstractAdmin {
 
     private static final long serialVersionUID = 5945041243096010700L;
     /**
-     * 生产工单ID
-     */
-    @FieldRemark(value = "报检单号", unique = true, indexGroup = "0")
-    private String materialId;
-    /**
      * 报检单号
      */
     @FieldRemark(value = "报检单号")
     @Size(max = 128, message = "报检单号长度不合法")
     private String checkOrderNo;
     /**
-     * 报检单合计数量
+     * 报检单合计数量->领料合计数量
      */
     @FieldRemark(value = "报检单合计数量")
     private BigDecimal orderTotalQuantity;

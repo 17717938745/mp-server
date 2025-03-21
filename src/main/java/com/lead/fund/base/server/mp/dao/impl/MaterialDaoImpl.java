@@ -15,9 +15,13 @@ import jakarta.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
@@ -37,6 +41,8 @@ public class MaterialDaoImpl extends ServiceImpl<MaterialMapper, MaterialEntity>
 
     private static final AtomicInteger MATERIAL_ORDER_NO = new AtomicInteger(0);
     private static final Map<String, AtomicInteger> CHECK_ORDER_NO_MAP = new HashMap<>(8);
+    private static final Map<List<String>, String> MATERIAL_ORDER_NO_STRING_MAP = new ConcurrentHashMap<>();
+    private static final Map<List<String>, String> CHECK_ORDER_NO_STRING_MAP = new ConcurrentHashMap<>();
 
     @PostConstruct
     @Override
@@ -76,6 +82,24 @@ public class MaterialDaoImpl extends ServiceImpl<MaterialMapper, MaterialEntity>
     @Override
     public String nextMaterialOrderNo() {
         return StrUtil.padPre(String.valueOf(MATERIAL_ORDER_NO.addAndGet(1)), 7, "0");
+    }
+
+    @Override
+    public String checkOrderNo(MaterialEntity e) {
+        return getData(e, CHECK_ORDER_NO_STRING_MAP, MaterialEntity::getCheckOrderNo, this::nextCheckOrderNo);
+    }
+
+    @Override
+    public String materialOrderNo(MaterialEntity e) {
+        return getData(e, MATERIAL_ORDER_NO_STRING_MAP, MaterialEntity::getMaterialOrderNo, this::nextMaterialOrderNo);
+    }
+
+    private String getData(MaterialEntity e, Map<List<String>, String> cacheMap, Function<MaterialEntity, String> mappingFunction, Supplier<String> defaultSupplier) {
+        return cacheMap.computeIfAbsent(CollUtil.toList(e.getSaleOrderNo(), e.getOrderProjectNo(), e.getProductionDate()), k -> getBaseMapper().selectList(new LambdaQueryWrapper<MaterialEntity>()
+                .eq(MaterialEntity::getSaleOrderNo, k.get(0))
+                .eq(MaterialEntity::getOrderProjectNo, k.get(1))
+                .eq(MaterialEntity::getProductionDate, k.get(2))
+        ).stream().findFirst().map(mappingFunction).orElse(defaultSupplier.get()));
     }
 
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)

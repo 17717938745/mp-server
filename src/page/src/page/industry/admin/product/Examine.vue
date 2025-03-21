@@ -215,8 +215,8 @@ const defaultColumnConfigList = [
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 215, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 51},
-  {value: 'checkOrderNo', labelKey: 'checkOrderNo', width: 112},
-  {value: 'orderTotalQuantity', labelKey: 'orderTotalQuantity', width: 76},
+  {value: 'checkOrderNo', labelKey: 'checkOrderNo', width: 112, showOverflow: true,},
+  {value: 'orderTotalQuantity', labelKey: 'totalMaterialQuantity', width: 76},
   {value: 'identificationCount', labelKey: 'identification', width: 65},
   {value: 'identificationList', labelKey: 'identification', type: ValueType.Image,},
   {value: 'hardnessCount', labelKey: 'hardness', width: 65},
@@ -232,7 +232,7 @@ const defaultColumnConfigList = [
   {value: 'saleOrderNo', labelKey: 'saleOrderNo', width: 78},
   {value: 'orderProjectNo', labelKey: 'orderProjectNo', width: 54},
   {value: 'materialNo', labelKey: 'materialNo', width: 100},
-  {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189},
+  {value: 'improveMaterialDescribe', labelKey: 'improveMaterialDescribe', width: 189, showOverflow: true,},
   {value: 'designNumber', labelKey: 'designNumber', width: 100},
   {value: 'orderQuantity', labelKey: 'orderQuantity', width: 46},
   {value: 'promiseDoneDate', labelKey: 'promiseDoneDate', width: 102},
@@ -305,7 +305,7 @@ const state = reactive({
   formSave: true,
   formVisible: false,
   formRuleList: {
-    identificationList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 10,}],
+    identificationList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 20,}],
     hardnessList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 999,}],
     ndeList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6,}],
     dimensionList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 6,}],
@@ -434,7 +434,7 @@ Promise.all([
           setTimeout(() => {
             // formRef.value.$el
             formRef.value.scrollToField('hardnessList')
-          }, 100)
+          }, 200)
         }
       }
     } else if ('identificationHardnessRemark' === t.value) {
