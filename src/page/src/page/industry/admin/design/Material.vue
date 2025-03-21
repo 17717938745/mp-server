@@ -638,22 +638,22 @@ const handleRequest = (d: any) => {
       formData.set("file", t)
       return httpUpload(`douson/material/upload`, formData)
     }))
-    .then((l: any[]) => {
-      afterUpload.value = true
-      uploadData.value = (l[0] || {}).data || {}
-      handlePage()
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.resolve()
-    })
-    .catch((err) => {
-      ElMessage.error(`Upload failed`)
-      keys.forEach((k: any) => {
-        delete fileMap[k]
-      })
-      return Promise.reject()
-    })
+        .then((l: any[]) => {
+          afterUpload.value = true
+          uploadData.value = (l[0] || {}).data || {}
+          handlePage()
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.resolve()
+        })
+        .catch((err) => {
+          ElMessage.error(`Upload failed`)
+          keys.forEach((k: any) => {
+            delete fileMap[k]
+          })
+          return Promise.reject()
+        })
   }
 }
 httpGet(`system/user/config/list`, {}).then(
@@ -827,8 +827,9 @@ const roleHardnessRecord = includes(roleCodeList, 'hardnessRecord')
 const roleNdeRecord = includes(roleCodeList, 'ndeRecord')
 const roleDimensionRecord = includes(roleCodeList, 'dimensionRecord')
 const roleExamineManager = includes(roleCodeList, 'examineManager')
-if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
-  columnConfigList.value = columnConfigList.value.map(t => {
+const editable = user.username === 'admin' || includes(roleCodeList, 'materialManager')
+columnConfigList.value = columnConfigList.value.map(t => {
+  if (editable) {
     if ('description' === t.value) {
       t.type = ValueType.TextEdit
     } else if ('chargeCompany' === t.value) {
@@ -837,23 +838,23 @@ if (user.username === 'admin' || includes(roleCodeList, 'materialManager')) {
       t.width = 101
       t.type = ValueType.NumberEdit
     }
-    if ('generateExamineFormat' === t.value) {
-      if (roleIdentificationRecord || roleHardnessRecord || roleNdeRecord || roleDimensionRecord || roleExamineManager) {
-        t.type = ValueType.Link
-        t.editable = (d: any) => {
-          return d.generateExamine !== true
-        }
-        t.openLink = (d: any) => {
-          httpPostJson('douson/material/examine', d).then(() => {
-            ElMessage.success('Generate success')
-            handlePage()
-          })
-        }
+  }
+  if ('generateExamineFormat' === t.value) {
+    if (roleIdentificationRecord || roleHardnessRecord || roleNdeRecord || roleDimensionRecord || roleExamineManager || user.username === 'admin') {
+      t.type = ValueType.Link
+      t.editable = (d: any) => {
+        return d.generateExamine !== true
+      }
+      t.openLink = (d: any) => {
+        httpPostJson('douson/material/examine', d).then(() => {
+          ElMessage.success('Generate success')
+          handlePage()
+        })
       }
     }
-    return t
-  })
-}
+  }
+  return t
+})
 handlePage()
 const handleSaveModal = () => {
   state.formData = Object.assign({}, defaultFormData)
@@ -901,10 +902,10 @@ const handleDelete = (row: any) => {
     httpDelete('douson/material', {
       materialId: row.materialId,
     })
-    .then(() => {
-      ElMessage.success('Delete success')
-      handlePage()
-    })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handlePage()
+        })
   })
 }
 const {
