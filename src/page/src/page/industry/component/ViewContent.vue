@@ -383,6 +383,9 @@
         v-if="viewConfig.openLink && (!viewConfig.editable || viewConfig.editable(row))"
         @click="viewConfig.openLink(row)"
         type="danger"
+        :style="{
+          wordBreak: 'break-all',
+        }"
     >
       {{ row[viewConfig.value] || '--'}}
     </el-link>
