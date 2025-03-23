@@ -39,6 +39,7 @@ import com.lead.fund.base.server.mp.request.ExamineRequest;
 import com.lead.fund.base.server.mp.response.ExamineResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -111,7 +113,7 @@ public class DousonExamineController {
             @RequestBody ExamineRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "examineManager".equals(t) || "examineView".equals(t))) {
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "examineManager".equals(t) || "identificationRecord".equals(t) || "hardnessRecord".equals(t) || "ndeRecord".equals(t) || "dimensionRecord".equals(t))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         final DateTime now = DateTime.now();
