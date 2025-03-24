@@ -12,6 +12,21 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
+      <el-input v-model="query.data.saleOrderNo"
+                @change="handleList"
+                clearable
+                :placeholder="store.state.label.saleOrderNo"
+                class="search-item"/>
+      <el-input v-model="query.data.orderProjectNo"
+                @change="handleList"
+                clearable
+                :placeholder="store.state.label.orderProjectNo"
+                class="search-item"/>
+      <el-input v-model="query.data.materialNo"
+                @change="handleList"
+                clearable
+                :placeholder="store.state.label.materialNo"
+                class="search-item"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
@@ -68,9 +83,12 @@ const state = reactive({
       department: '',
       assemblyType: '',
       user: '',
+      saleOrderNo: '',
+      orderProject: '',
+      materialNo: '',
       date: '',
-      startDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
-      endDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
+      startAssemblyCompleteDate: formatDate(getMonthStart(), 'yyyy-MM-dd'),
+      endAssemblyCompleteDate: formatDate(getMonthEnd(), 'yyyy-MM-dd'),
     },
     page: {
       page: DEFAULT_PAGE,
@@ -86,17 +104,17 @@ const state = reactive({
 
 const handleDateTimeChange = () => {
   if (state.dateTimeList && state.dateTimeList.length > 1) {
-    state.query.data.startDate = formatDate(
+    state.query.data.startAssemblyCompleteDate = formatDate(
         state.dateTimeList[0],
         'yyyy-MM-dd'
     );
-    state.query.data.endDate = formatDate(
+    state.query.data.endAssemblyCompleteDate = formatDate(
         state.dateTimeList[1],
         'yyyy-MM-dd'
     );
   } else {
-    state.query.data.startDate = ''
-    state.query.data.endDate = ''
+    state.query.data.startAssemblyCompleteDate = ''
+    state.query.data.endAssemblyCompleteDate = ''
   }
   handleList()
 }

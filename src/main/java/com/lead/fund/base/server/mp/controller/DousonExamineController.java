@@ -292,7 +292,7 @@ public class DousonExamineController {
                                 )
                 ),
                 (t, r) -> t.getInspectionPerson().equals(r.getId()),
-                (t, r) -> t.setInspectionPersonFormat(r.getUsername())
+                (t, r) -> t.setInspectionPersonFormat(r.getName())
         );
         MultitaskUtil.supplementList(
                 rl.stream().filter(t -> isNotBlank(t.getIdentificationPerson())).collect(Collectors.toList()),
@@ -307,7 +307,7 @@ public class DousonExamineController {
                                 )
                 ),
                 (t, r) -> t.getIdentificationPerson().equals(r.getId()),
-                (t, r) -> t.setIdentificationPersonFormat(r.getUsername())
+                (t, r) -> t.setIdentificationPersonFormat(r.getName())
         );
         final Map<String, List<ExamineAttachmentEntity>> am = examineAttachmentDao.list(
                         DatabaseUtil.or(new LambdaQueryWrapper<>(), rl.stream().map(ExamineResponse::getExamineId).collect(Collectors.toList()), (lam, l) -> lam.in(ExamineAttachmentEntity::getExamineId, l))
