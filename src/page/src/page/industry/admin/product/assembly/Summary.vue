@@ -7,8 +7,8 @@
           type="daterange"
           format="YYYY-MM-DD"
           range-separator="-"
-          start-placeholder="Start due date"
-          end-placeholder="End due date"
+          :start-placeholder="`Start ${store.state.label.assemblyCompleteDate}`"
+          :end-placeholder="`End ${store.state.label.assemblyCompleteDate}`"
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
@@ -17,10 +17,10 @@
                 clearable
                 :placeholder="store.state.label.saleOrderNo"
                 class="search-item"/>
-      <el-input v-model="query.data.orderProjectNo"
+      <el-input v-model="query.data.orderProject"
                 @change="handleList"
                 clearable
-                :placeholder="store.state.label.orderProjectNo"
+                :placeholder="store.state.label.orderProject"
                 class="search-item"/>
       <el-input v-model="query.data.materialNo"
                 @change="handleList"
