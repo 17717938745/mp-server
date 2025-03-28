@@ -142,7 +142,7 @@ const todo = ref({
 const forumRequest = ref({
   page: {
     page: DEFAULT_PAGE,
-    limit: 10,
+    limit: 5,
   },
   data: {
     title: '',
