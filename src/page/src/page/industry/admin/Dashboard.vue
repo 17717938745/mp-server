@@ -4,18 +4,23 @@
         style="background-color: #ffffff; margin-right:40px ;border-radius: 5px; padding: 0; margin-bottom: 20px;"
         class="forum-content"
     >
-      <div style="font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px; background: radial-gradient(circle, #7b6262, #be8b5a, #6facb7); color: #2927cf;">
-        {{ store.state.label.forum }}
-        <el-input
-            v-model="forumRequest.data.title"
-            @keyup.enter="handleResetForumPage"
-            style="width: 240px"
-            placeholder="Please Input"
-            :suffix-icon="Search"
-            input-style="margin-left: 5px;"
-        />
-      </div>
-      <ul v-infinite-scroll="handlePageChange" style="overflow-y: auto;">
+      <el-affix position="top" :offset="90">
+        <div class="douson-flex" style="justify-content: space-between; font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px; background: radial-gradient(circle, #7b6262, #be8b5a, #6facb7); color: #2927cf;">
+        <span>
+          {{ store.state.label.forum }}
+          <el-input
+              v-model="forumRequest.data.title"
+              @keyup.enter="handleResetForumPage"
+              style="width: 240px"
+              placeholder="Please Input"
+              :suffix-icon="Search"
+              input-style="margin-left: 5px;"
+          />
+        </span>
+          <el-button class="login-btn" type="primary" @click="handlePageChange" style="margin-right: 10px;" v-if="forumData.list.length < forumData.total">加载更多</el-button>
+        </div>
+      </el-affix>
+      <ul style="overflow-y: auto;">
         <li v-for="(d, i) in (forumData.list || [])" :key="`forum-${i}`" style="border-bottom: 1px solid #eeeeee; padding: 20px;">
           <div style="display: inline-flex; align-items: center;">
             <el-icon v-if="d.userId === user.userId" style="margin-right: 5px;" @click="router.push({
@@ -137,7 +142,7 @@ const todo = ref({
 const forumRequest = ref({
   page: {
     page: DEFAULT_PAGE,
-    limit: DEFAULT_LIMIT,
+    limit: 10,
   },
   data: {
     title: '',
