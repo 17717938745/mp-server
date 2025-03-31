@@ -184,7 +184,7 @@ const handleDelete = (row: any) => {
     })
     .then(() => {
       ElMessage.success('Delete success')
-      handleForumPage()
+      handleForumPage(true)
     })
   })
 }

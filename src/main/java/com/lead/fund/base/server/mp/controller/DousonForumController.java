@@ -71,7 +71,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/forum")
 @Slf4j
 @Validated
-public class ForumController {
+public class DousonForumController {
 
     @Resource
     private ForumMapper forumMapper;
