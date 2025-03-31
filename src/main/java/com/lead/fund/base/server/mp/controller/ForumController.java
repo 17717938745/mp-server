@@ -41,7 +41,9 @@ import com.lead.fund.base.server.mp.response.ForumThumbsUpResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
@@ -99,6 +101,15 @@ public class ForumController {
         MpUserResponse u = accountHelper.getUser(deviceId);
         final ForumEntity e = (ForumEntity) MP_FORUM_INSTANCE.entity(request)
                 .setModifier(u.getUserId());
+        switch (defaultIfBlank(request.getCategory())) {
+            case "processGroupCheck":
+            case "ehsSafetyGroupCheck":
+            case "qualityDepartmentCheck":
+                e.setCommentaryShowType(1);
+                break;
+            default:
+                e.setCommentaryShowType(0);
+        }
         if (isNotBlank(e.getId())) {
             forumMapper.updateById(e.setThumbsUp(null).setCommentary(null));
         } else {
@@ -129,7 +140,8 @@ public class ForumController {
         final String title = request.getData().getTitle();
         final boolean searchTitle = isNotBlank(title);
         if (searchTitle) {
-            final List<String> h5IdList = h5Mapper.selectList(new LambdaQueryWrapper<MpH5Entity>().like(MpH5Entity::getTitle, title)
+            final List<String> h5IdList = h5Mapper.selectList(new LambdaQueryWrapper<MpH5Entity>()
+                            .like(MpH5Entity::getTitle, title)
                             .select(MpH5Entity::getId)
                     ).stream().map(AbstractPrimaryKey::getId)
                     .distinct().collect(Collectors.toList());
@@ -154,6 +166,9 @@ public class ForumController {
         final LambdaQueryWrapper<ForumEntity> lambda = new LambdaQueryWrapper<>();
         if (isNotBlank(request.getForumId())) {
             lambda.eq(ForumEntity::getId, request.getForumId());
+        }
+        if (isNotBlank(request.getCategory())) {
+            lambda.eq(ForumEntity::getCategory, request.getCategory());
         }
         if (CollUtil.isNotEmpty(request.getH5IdList())) {
             DatabaseUtil.or(lambda, request.getH5IdList(), (lam, l) -> lam.in(ForumEntity::getH5Id, l));
@@ -387,13 +402,18 @@ public class ForumController {
     private List<ForumCommentaryResponse> formatForumCommentaryList(MpUserResponse u, List<ForumCommentaryEntity> list) {
         final List<ForumCommentaryResponse> rl = MP_FORUM_INSTANCE.commentaryList(list);
         boolean admin = "admin".equals(u.getUsername());
+        final List<String> idList = rl.stream().map(ForumCommentaryResponse::getForumId).distinct().collect(Collectors.toList());
+        final Map<String, Boolean> realNameMap = CollUtil.isEmpty(idList) ? new HashMap<>(8) : forumMapper.selectList(new LambdaQueryWrapper<ForumEntity>()
+                .in(ForumEntity::getId, idList)
+                .select(ForumEntity::getId, ForumEntity::getCommentaryShowType)
+        ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> null != t.getCommentaryShowType() &&  1 == t.getCommentaryShowType()));
         MultitaskUtil.supplementList(
                 rl,
                 ForumCommentaryResponse::getUserId,
                 l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
                 (t, r) -> t.getUserId().equals(r.getId()),
                 (t, r) -> t
-                        .setUserIdFormat(!admin ? ("匿名用户（Người dùng ẩn danh）" + r.getId().substring(r.getId().length() - 4)) : defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
+                        .setUserIdFormat(!admin && !realNameMap.getOrDefault(t.getForumId(), false) ? ("匿名用户（Người dùng ẩn danh）" + r.getId().substring(r.getId().length() - 4)) : defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
         );
         return rl;
     }

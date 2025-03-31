@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter,} from 'vue-router'
-import Tinymce from '../component/Tinymce.vue'
+import Tinymce from './Tinymce.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -89,6 +89,22 @@ public class ExamineResponse implements Serializable {
      */
     private String description;
     /**
+     * NDE
+     */
+    private String nde;
+    /**
+     * 装配
+     */
+    private String assemble;
+    /**
+     * 试压
+     */
+    private String testPress;
+    /**
+     * 表面处理
+     */
+    private String surfaceTreatment;
+    /**
      * 标识人员
      */
     private String identificationPerson;

@@ -11,6 +11,7 @@
           {{ formData.forumId ? 'Update' : 'Save' }}
         </el-button>
         <el-button
+            v-if="!props.afterSuccess"
             @click="props.goBack? props.goBack() : router.back()"
         >
           Go back
@@ -66,23 +67,25 @@ import {StoreType} from '@/store/Industry'
 interface PropType {
   forumId?: string
   goBack?: Function
+  afterSuccess?: Function
+  category?: string
 }
 
 const props = withDefaults(defineProps<PropType>(), {
   forumId: '',
+  category: '',
 })
 
 
 const formRef = ref(null)
-const defaultTimeFormat = "${yyyy-MM-dd HH:mm}";
 const store: Store<StoreType> = useStore()
-const storeState: StoreType = store.state
 const router = useRouter()
 const formData = ref({
   forumId: props.forumId,
   h5Id: '',
   title: '',
   content: '',
+  category: props.category,
 })
 const state = reactive({
   submitDisable: false,
@@ -266,6 +269,9 @@ const handleValueChange = () => {
               ElMessage.success("Merge success")
               formData.value.forumId = result.data.forumId
               state.submitDisable = false
+              if(props.afterSuccess) {
+                props.afterSuccess(formData.value)
+              }
             })
             .catch((r: any) => {
               state.submitDisable = false

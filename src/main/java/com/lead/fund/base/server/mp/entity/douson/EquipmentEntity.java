@@ -76,4 +76,9 @@ public class EquipmentEntity extends AbstractAdministrator {
      */
     @FieldRemark(value = "位置")
     private String position;
+    /**
+     * API设备
+     */
+    @FieldRemark(value = "API设备")
+    private String apiDevice;
 }

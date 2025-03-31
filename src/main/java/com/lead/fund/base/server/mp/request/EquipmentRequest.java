@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.io.Serializable;
@@ -94,4 +95,8 @@ public class EquipmentRequest implements Serializable {
      * 文件列表
      */
     private List<FileModel> fileList = new ArrayList<>();
+    /**
+     * API设备
+     */
+    private String apiDevice;
 }

@@ -42,6 +42,11 @@ import {ElMessage, UploadFile, UploadFiles} from 'element-plus'
 import {fullUrl} from '@/util/EnvUtil'
 import {httpUpload} from '@/util/HttpUtil'
 
+interface PropType {
+  fileList: File[]
+  maxSize?: number
+  disabled: boolean
+}
 const props = withDefaults(defineProps<PropType>(), {
   maxSize: 4,
   disabled: false,
@@ -54,12 +59,6 @@ interface File {
   url: string
   filename: string
   fileId: string
-}
-
-interface PropType {
-  fileList: File[]
-  maxSize?: number
-  disabled: boolean
 }
 
 defineExpose({})

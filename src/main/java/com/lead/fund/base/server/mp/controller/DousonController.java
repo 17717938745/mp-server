@@ -477,6 +477,7 @@ public class DousonController {
                 case "vocationType" -> builder.vocationTypeList(paramDao.listByCategoryId(categoryId));
                 case "inventoryOutOfPlanType" -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
                 case "responsibleTeam" -> builder.responsibleTeamList(paramDao.listByCategoryId(categoryId));
+                case "apiDevice" -> builder.apiDeviceList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -3217,6 +3218,13 @@ public class DousonController {
                 l1 -> paramDao.listByCategoryId("equipmentPosition"),
                 (r, t) -> r.getPosition().equals(t.getValue()),
                 (r, t) -> r.setPositionFormat(t.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getApiDevice())).collect(Collectors.toList()),
+                EquipmentResponse::getApiDevice,
+                l1 -> paramDao.listByCategoryId("apiDevice"),
+                (r, t) -> r.getApiDevice().equals(t.getValue()),
+                (r, t) -> r.setApiDeviceFormat(t.getLabel())
         );
         MultitaskUtil.supplementList(
                 list,

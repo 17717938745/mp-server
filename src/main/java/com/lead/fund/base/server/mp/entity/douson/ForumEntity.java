@@ -53,4 +53,16 @@ public class ForumEntity extends AbstractAdministrator {
     @FieldRemark(value = "评论")
     @Size(max = 16, message = "评论长度不合法")
     private BigDecimal commentary;
+    /**
+     * 分类，processGroupCheck：工艺组检查；ehsSafetyGroupCheck：EHS安全组检查；qualityDepartmentCheck：质量部检查；其他：首页；
+     */
+    @FieldRemark(value = "评论")
+    @Size(max = 16, message = "评论长度不合法")
+    private String category;
+    /**
+     * 评论类型，1:实名；其他：匿名；
+     */
+    @FieldRemark(value = "评论", constraintGroup = "1")
+    @Size(max = 16, message = "评论长度不合法")
+    private Integer commentaryShowType;
 }

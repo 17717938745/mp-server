@@ -85,4 +85,9 @@ public class EquipmentResponse implements Serializable {
      * 文件列表
      */
     private List<FileModel> fileList = new ArrayList<>();
+    /**
+     * API设备
+     */
+    private String apiDevice;
+    private String apiDeviceFormat;
 }

@@ -218,6 +218,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'positionFormat', labelKey: 'equipmentPosition', width: 189,},
   {value: 'photoList', labelKey: 'photo', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'supportAttachment', width: 128, type: ValueType.Attachment,},
+  {value: 'apiDeviceFormat', originValue: 'apiDevice', labelKey: 'apiDevice', width: 127,},
 ])
 const handleTableRowClassName = ({
                                    row,
@@ -280,6 +281,7 @@ const state = reactive({
   config: {
     equipmentNoList: [],
     equipmentPositionList: [],
+    apiDeviceList: [],
   },
   userOptionList: new Array<any>(),
   formVisible: false,
@@ -299,6 +301,7 @@ Promise.all([
     categoryIdList: [
       'equipmentNo',
       'equipmentPosition',
+      'apiDevice',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -310,6 +313,15 @@ Promise.all([
       label: t.name,
     }
   })
+  if (includes(roleCodeList, 'equipmentManager')) {
+    columnConfigList.value = columnConfigList.value.map(t => {
+      if (t.value === 'apiDeviceFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.apiDeviceList
+      }
+      return t
+    })
+  }
   handlePage()
 })
 const handlePage = () => {

@@ -273,7 +273,7 @@ public class DousonExamineController {
         if (null != d.getEndInspectionCompletedDate()) {
             lambda.le(ExamineEntity::getInspectionCompletedDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(d.getEndInspectionCompletedDate())));
         }
-        return examineMapper.selectList(lambda);
+        return examineMapper.selectList(lambda.orderByDesc(ExamineEntity::getCreateTime));
     }
 
 

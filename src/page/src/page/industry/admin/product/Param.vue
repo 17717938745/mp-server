@@ -393,6 +393,15 @@ const paramCategoryGroupList = [
       },
     ],
   },
+  {
+    labelKey: 'equipment',
+    paramCategoryIdOptionList: [
+      {
+        value: 'apiDevice',
+        label: store.state.label.apiDevice,
+      },
+    ],
+  },
 ]
 
 const handleFormatValue = (val: any) => {

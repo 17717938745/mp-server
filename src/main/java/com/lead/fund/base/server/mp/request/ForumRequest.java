@@ -50,5 +50,9 @@ public class ForumRequest implements Serializable {
      * 评论
      */
     private BigDecimal commentary;
+    /**
+     * 分类，processGroupCheck：工艺组检查；ehsSafetyGroupCheck：EHS安全组检查；qualityDepartmentCheck：质量部检查；其他：首页；
+     */
+    private String category;
 
 }

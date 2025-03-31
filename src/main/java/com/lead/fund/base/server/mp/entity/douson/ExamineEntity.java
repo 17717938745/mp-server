@@ -112,6 +112,30 @@ public class ExamineEntity extends AbstractAdmin {
     @Size(max = 512, message = "备注长度不合法")
     private String description;
     /**
+     * NDE
+     */
+    @FieldRemark(value = "NDE")
+    @Size(max = 256, message = "NDE长度不合法")
+    private String nde;
+    /**
+     * 装配
+     */
+    @FieldRemark(value = "装配")
+    @Size(max = 256, message = "装配长度不合法")
+    private String assemble;
+    /**
+     * 试压
+     */
+    @FieldRemark(value = "试压")
+    @Size(max = 256, message = "试压长度不合法")
+    private String testPress;
+    /**
+     * 表面处理
+     */
+    @FieldRemark(value = "表面处理")
+    @Size(max = 256, message = "表面处理长度不合法")
+    private String surfaceTreatment;
+    /**
      * 标识人员
      */
     @FieldRemark(value = "标识人员")

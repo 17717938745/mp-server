@@ -33,8 +33,32 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "物料描述"
         },
         {
+          "value": "inspectionReport",
+          "label": "检查报告"
+        },
+        {
+          "value": "processGroupCheck",
+          "label": "工艺组检查"
+        },
+        {
+          "value": "ehsSafetyGroupCheck",
+          "label": "EHS安全组检查"
+        },
+        {
+          "value": "qualityDepartmentCheck",
+          "label": "质量部检查"
+        },
+        {
+          "value": "apiDevice",
+          "label": "API设备"
+        },
+        {
           "value": "generateOrderInspectionRecord",
           "label": "生成订单检验记录"
+        },
+        {
+          "value": "loadMore",
+          "label": "加载更多"
         },
         {
           "value": "orderTotalQuantity",
@@ -664,6 +688,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "forum",
+          "label": "道森心声社区"
+        },
+        {
+          "value": "dousonVoiceCommunity",
           "label": "道森心声社区"
         },
         {
@@ -1692,8 +1720,32 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "miêu tả vật liệu"
         },
         {
+          "value": "inspectionReport",
+          "label": "Báo cáo kiểm tra",
+        },
+        {
+          "value": "processGroupCheck",
+          "label": "Kiểm tra tổ công nghệ"
+        },
+        {
+          "value": "ehsSafetyGroupCheck",
+          "label": "Kiểm tra tổ an toàn EHS"
+        },
+        {
+          "value": "qualityDepartmentCheck",
+          "label": "Kiểm tra bộ phận chất lượng"
+        },
+        {
           "value": "generateOrderInspectionRecord",
           "label": "Tạo hồ sơ kiểm tra đơn hàng"
+        },
+        {
+          "value": "apiDevice",
+          "label": "Thiết bị dùng Audit"
+        },
+        {
+          "value": "loadMore",
+          "label": "Tải thêm"
         },
         {
           "value": "orderTotalQuantity",
@@ -2376,6 +2428,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "forum",
+          "label": "Bạn đang nghĩ gì vậy?"
+        },
+        {
+          "value": "dousonVoiceCommunity",
           "label": "Bạn đang nghĩ gì vậy?"
         },
         {

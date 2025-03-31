@@ -173,4 +173,8 @@ public class ParamResponse implements Serializable {
      * 负责小组
      */
     private List<ParamConfigResponse> responsibleTeamList;
+    /**
+     * API设备
+     */
+    private List<ParamConfigResponse> apiDeviceList;
 }

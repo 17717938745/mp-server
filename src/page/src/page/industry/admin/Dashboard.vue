@@ -1,94 +1,10 @@
 <template>
   <div style="background-color: #f4f6f9; display: flex; align-items: start; justify-content: center; padding: 10px 10px 10px 10px; flex-wrap: wrap;">
-    <div
-        style="background-color: #ffffff; margin-right:40px ;border-radius: 5px; padding: 0; margin-bottom: 20px;"
-        class="forum-content"
-    >
-      <el-affix position="top" :offset="90">
-        <div class="douson-flex" style="justify-content: space-between; font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px; background: radial-gradient(circle, #7b6262, #be8b5a, #6facb7); color: #2927cf;">
-        <span>
-          {{ store.state.label.forum }}
-          <el-input
-              v-model="forumRequest.data.title"
-              @keyup.enter="handleResetForumPage"
-              style="width: 240px"
-              placeholder="Please Input"
-              :suffix-icon="Search"
-              input-style="margin-left: 5px;"
-          />
-        </span>
-          <el-button class="login-btn" type="primary" @click="handlePageChange" style="margin-right: 10px;" v-if="forumData.list.length < forumData.total">加载更多</el-button>
-        </div>
-      </el-affix>
-      <ul style="overflow-y: auto;">
-        <li v-for="(d, i) in (forumData.list || [])" :key="`forum-${i}`" style="border-bottom: 1px solid #eeeeee; padding: 20px;">
-          <div style="display: inline-flex; align-items: center;">
-            <el-icon v-if="d.userId === user.userId" style="margin-right: 5px;" @click="router.push({
-                path: '/industry/admin/forum',
-                query: {
-                  forumId: d.forumId
-                }
-              })">
-              <Edit/>
-            </el-icon>
-            <h3 style="font-size: 18px;" v-html="d.title"></h3>
-          </div>
-          <div v-if="showAll[d.forumId]" style="margin-bottom: 15px; display: flex; align-items: center; padding-left: 5px;">
-            <el-icon style="margin-right: 5px;">
-              <UserFilled/>
-            </el-icon>
-            {{ d.userIdFormat }}
-          </div>
-          <div :style="{
-             maxHeight: showAll[d.forumId] ? null : '120px',
-             overflowY: 'hidden',
-             marginBottom: 10,
-             position: 'relative'
-            }">
-            <div v-html="d.content" class="douson-h5"></div>
-          </div>
-          <div style="height: 50px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #c4c7ce">
-              <span style="display: flex; align-items: center;">
-                <el-button :icon="CaretTop" :type="d.thumbsUpType === 1 ? 'success' : 'primary'" class="thumbs-up-btn" @click="handleForumThumbsUp(d, true)" plain>{{ store.state.label.agree }} {{ d.thumbsUp }}</el-button>
-                <el-button :icon="CaretBottom" :type="d.thumbsUpType === 2 ? 'success' : 'primary'" class="thumbs-down-btn" @click="handleForumThumbsUp(d, false)" plain></el-button>
-                <span style="margin-left: 30px; margin-right: 15px;" class="icon-text" @click="showCommentaryAll[d.forumId] = !showCommentaryAll[d.forumId]">
-                  <el-icon style="margin-right: 5px;"><ChatDotSquare/></el-icon>{{ d.commentary }} 条{{ store.state.label.comment }}
-                </span>
-                <span v-if="user.username === 'admin' || user.userId === d.userId" style="cursor: pointer; margin-right: 15px;" class="icon-text" @click="handleDelete(d)">
-                  <el-icon style="margin-right: 5px;"><Delete/></el-icon>{{ store.state.label.delete }}
-                </span>
-              </span>
-            <span style="display: flex; align-items: center;">
-                <span @click="showAll[d.forumId] = !showAll[d.forumId]" class="icon-text">
-                  <span v-if="showAll[d.forumId]" class="icon-text">
-                    {{ store.state.label.readSummary }} <el-icon style="margin-right: 5px;"><ArrowUp/></el-icon>
-                  </span>
-                  <span v-else class="icon-text">
-                    {{ store.state.label.readAll }} <el-icon style="margin-right: 5px;"><ArrowDown/></el-icon>
-                  </span>
-                </span>
-              </span>
-          </div>
-          <div>
-            <commentary v-if="showCommentaryAll[d.forumId]" :forum-id="d.forumId"/>
-          </div>
-        </li>
-      </ul>
-    </div>
+    <forum-component :title-label-key="'dousonVoiceCommunity'"/>
     <div
         style="background-color: #ffffff;  padding: 10px; border-radius: 5px;"
         class="todo-content"
     >
-      <div style="display: flex; justify-content: start; margin: 10px 0 10px;">
-        <el-button round :icon="EditPen" @click="router.push({
-          path: '/industry/admin/forum',
-          query: {
-            forumId: ''
-          }
-        })">
-          {{ store.state.label.comment }}
-        </el-button>
-      </div>
       <div style="width: 100%; display: flex; justify-content: center;">
         <el-card style="width: 100%; max-width: 260px;">
           <template #header>
@@ -107,7 +23,6 @@
               </el-link>
             </li>
           </ul>
-          <!--          <template #footer>Footer content</template>-->
         </el-card>
       </div>
     </div>
@@ -116,15 +31,12 @@
 
 <script lang="ts" setup>
 import {ref,} from 'vue'
-import {useRouter, useRoute,} from 'vue-router'
-import {httpGet, httpPutJson, httpDelete,} from '@/util/HttpUtil'
+import {useRoute, useRouter,} from 'vue-router'
+import {httpGet,} from '@/util/HttpUtil'
 import {DataResult} from '@/typing/ma/System'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {PageResult} from '@/typing/ma/System'
-import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
-import {CaretTop, CaretBottom, ChatDotSquare, Delete, ArrowDown, ArrowUp, UserFilled, EditPen, Edit, Search,} from '@element-plus/icons-vue'
+import {ElMessage} from 'element-plus'
 import {Store, useStore} from 'vuex'
-import Commentary from '../component/Commentary.vue'
+import ForumComponent from '../component/ForumComponent.vue'
 
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
@@ -139,21 +51,6 @@ const todo = ref({
   count: 0,
   list: [],
 })
-const forumRequest = ref({
-  page: {
-    page: DEFAULT_PAGE,
-    limit: 5,
-  },
-  data: {
-    title: '',
-  },
-})
-const forumData = ref({
-  total: 0,
-  list: [],
-})
-const showAll = ref({})
-const showCommentaryAll = ref({})
 const handleTodoList = () => {
   httpGet(`douson/todo/list`, {}).then(
       (res: DataResult<any>) => {
@@ -238,60 +135,7 @@ const handleJumpToMaintain = (t: any) => {
     }
   })
 }
-const handlePageChange = () => {
-  if (forumData.value.list.length < forumData.value.total) {
-    forumRequest.value.page.page = forumRequest.value.page.page + 1
-    handleForumPage()
-  } else {
-    console.log(`not change...`)
-  }
-}
-
-const handleResetForumPage = () => {
-  forumRequest.value.page.page = 1
-  handleForumPage(true)
-}
-const handleForumPage = (reset: boolean = false) => {
-  httpGet(`forum/page`, forumRequest.value).then(
-      (res: PageResult<any>) => {
-        forumData.value.total = res.total
-        if (reset) {
-          forumData.value.list = res.list || []
-        } else {
-          forumData.value.list.push(...(res.list || []))
-        }
-        ElMessage.success("Query success")
-      }
-  )
-}
-const handleForumThumbsUp = (t: any, thumbsUp: boolean) => {
-  const param = {
-    thumbsUp: thumbsUp,
-    forumId: t.forumId
-  }
-  httpPutJson(`forum/thumbs-up/merge`, param).then(
-      (res: DataResult<any>) => {
-        t.thumbsUp += res.data.thumbsUpChange
-        t.thumbsUpType = res.data.thumbsUpType
-        ElMessage.success("Thumbs up success")
-      }
-  )
-}
-const handleDelete = (row: any) => {
-  ElMessageBox.confirm('Confirm Delete?', 'Tips', {
-    type: 'warning',
-  }).then(() => {
-    httpDelete('forum', {
-      forumId: row.forumId,
-    })
-    .then(() => {
-      ElMessage.success('Delete success')
-      handleForumPage()
-    })
-  })
-}
 handleTodoList()
-handleForumPage()
 </script>
 
 <style scoped>
