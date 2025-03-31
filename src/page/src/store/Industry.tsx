@@ -53,6 +53,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "API设备"
         },
         {
+          "value": "refuelPhoto",
+          "label": "设备加油照片"
+        },
+        {
           "value": "generateOrderInspectionRecord",
           "label": "生成订单检验记录"
         },
@@ -1742,6 +1746,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "apiDevice",
           "label": "Thiết bị dùng Audit"
+        },
+        {
+          "value": "refuelPhoto",
+          "label": "Hình ảnh loại dầu thêm vào thiết bị"
         },
         {
           "value": "loadMore",

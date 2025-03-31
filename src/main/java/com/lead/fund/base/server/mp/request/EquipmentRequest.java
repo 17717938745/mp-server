@@ -92,6 +92,10 @@ public class EquipmentRequest implements Serializable {
      */
     private List<PhotoImgModel> photoList = new ArrayList<>();
     /**
+     * 设备加油照片
+     */
+    private List<PhotoImgModel> refuelList = new ArrayList<>();
+    /**
      * 文件列表
      */
     private List<FileModel> fileList = new ArrayList<>();

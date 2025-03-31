@@ -3070,6 +3070,9 @@ public class DousonController {
                                 CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
                                         .stream()
                                         .map(t -> INDUSTRY_INSTANCE.equipmentAttachment(e.getId(), "0", t)),
+                                CollUtil.defaultIfEmpty(request.getRefuelList(), new ArrayList<>())
+                                        .stream()
+                                        .map(t -> INDUSTRY_INSTANCE.equipmentAttachment(e.getId(), "refuel", t)),
                                 CollUtil.defaultIfEmpty(request.getFileList(), new ArrayList<>())
                                         .stream()
                                         .map(t -> INDUSTRY_INSTANCE.equipmentAttachment(e.getId(), "1", t))
@@ -3235,6 +3238,9 @@ public class DousonController {
                 (t, r) -> {
                     switch (r.getAttachmentCategory()) {
                         case "0" -> t.getPhotoList().add(
+                                INDUSTRY_INSTANCE.equipmentPhoto(r, urlHelper.getUrlPrefix())
+                        );
+                        case "refuel" -> t.getRefuelList().add(
                                 INDUSTRY_INSTANCE.equipmentPhoto(r, urlHelper.getUrlPrefix())
                         );
                         case "1" -> t.getFileList().add(

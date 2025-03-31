@@ -126,6 +126,9 @@
         <el-form-item prop="gasolineType" :label="store.state.label.gasolineType">
           <el-input type="textarea" :rows=4 v-model="formData.gasolineType"/>
         </el-form-item>
+        <el-form-item prop="refuelList" :label="`${store.state.label.refuelPhoto}(${(formRuleList['refuelList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.refuelList" :maxSize="Number(`${(formRuleList['refuelList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
+        </el-form-item>
         <el-form-item prop="chargeUser" :label="store.state.label.chargeUser">
           <el-select v-model="formData.chargeUserList" clearable filterable multiple placeholder="Please select">
             <el-option
@@ -214,6 +217,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'remark', labelKey: 'description', width: 232, showOverflow: true,},
   {value: 'detailDescribe', labelKey: 'equipmentDetailDescribe', width: 232, showOverflow: true,},
   {value: 'gasolineType', labelKey: 'gasolineType', width: 187, showOverflow: true,},
+  {value: 'refuelList', labelKey: 'refuelPhoto', width: 187, type: ValueType.Image,},
   {value: 'chargeUserFormat', labelKey: 'chargeUser', width: 135, showOverflow: true,},
   {value: 'positionFormat', labelKey: 'equipmentPosition', width: 189,},
   {value: 'photoList', labelKey: 'photo', width: 128, type: ValueType.Image,},
@@ -248,6 +252,7 @@ const defaultFormData = {
   gasolineType: '',
   chargeUser: '',
   chargeUserList: [],
+  refuelList: [],
   position: '',
   photoList: [],
   fileList: [],
@@ -293,6 +298,7 @@ const state = reactive({
     useUserList: [{required: true, type: 'array', message: 'Please check', min: 1, max: 999,}],
     position: [{required: true, message: 'Please check', trigger: 'blur'}],
     photoList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 10,}],
+    refuelList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 10,}],
     fileList: [{required: false, type: 'array', message: 'Please check', min: 0, max: 10,}],
   },
 })

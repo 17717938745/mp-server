@@ -35,7 +35,7 @@ public class EquipmentAttachmentEntity extends AbstractPrimaryKey {
     @Size(max = 64, message = "设备编号")
     private String equipmentId;
     /**
-     * 附件分类，0-问题照片，1-问题附件
+     * 附件分类，0-问题照片，1-问题附件，refuel-设备加油照片
      */
     @FieldRemark(value = "附件分类", unique = true, constraintGroup = "0")
     @Size(max = 64, message = "附件分类")
