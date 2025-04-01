@@ -241,6 +241,8 @@ public class SystemController {
         final BigDecimal[] bl = new BigDecimal[]{
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO
         };
         l = l.stream().peek(t -> {
@@ -251,6 +253,8 @@ public class SystemController {
                     bl[0] = bl[0].add(t.getWorkShop());
                     bl[1] = bl[1].add(t.getOffice());
                     bl[2] = bl[2].add(t.getTotal());
+                    bl[3] = bl[3].add(t.getVietnamCount());
+                    bl[4] = bl[4].add(t.getChinaCount());
                 }).sorted((t, t1) -> {
                     int i = dm1.getOrDefault(t.getDepartment(), 0) - dm1.getOrDefault(t1.getDepartment(), 0);
                     int i1 = pm1.getOrDefault(t.getProfession(), 0) - pm1.getOrDefault(t1.getProfession(), 0);
@@ -269,6 +273,8 @@ public class SystemController {
                         .setWorkShop(bl[0])
                         .setOffice(bl[1])
                         .setTotal(bl[2])
+                        .setVietnamCount(bl[3])
+                        .setChinaCount(bl[4])
         );
         return new ListResult<>(l);
     }

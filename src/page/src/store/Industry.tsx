@@ -29,6 +29,14 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "vietnamCount",
+          "label": "Vietnam"
+        },
+        {
+          "value": "chinaCount",
+          "label": "China"
+        },
+        {
           "value": "nationality",
           "label": "国籍"
         },
@@ -1723,6 +1731,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        {
+          "value": "vietnamCount",
+          "label": "Vietnam"
+        },
+        {
+          "value": "chinaCount",
+          "label": "China"
+        },
         {
           "value": "nationality",
           "label": "Quốc tịch"

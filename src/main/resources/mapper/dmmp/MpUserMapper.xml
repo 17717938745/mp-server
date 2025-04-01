@@ -25,10 +25,12 @@
                PROFESSION,
                SUM(CASE WHEN T.USER_PROPERTY = 1 THEN 1 ELSE 0 END) WORK_SHOP,
                SUM(CASE WHEN T.USER_PROPERTY = 2 THEN 1 ELSE 0 END) OFFICE,
-               COUNT(1)                                             TOTAL
+               COUNT(1)                                             TOTAL,
+               SUM(CASE WHEN T.NATIONALITY = 1 THEN 1 ELSE 0 END)   VIETNAM_COUNT,
+               SUM(CASE WHEN T.NATIONALITY = 2 THEN 1 ELSE 0 END)   CHINA_COUNT
         FROM MP_USER T
         WHERE T.PROFESSION != '101'
-        AND T.STATE = 0
+          AND T.STATE = 0
         GROUP BY DEPARTMENT, PROFESSION
         ORDER BY DEPARTMENT, PROFESSION
     </select>

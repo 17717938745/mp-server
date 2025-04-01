@@ -29,4 +29,6 @@ public class MpUserProfessionSummaryResponse extends AbstractAdministratorModel 
     private BigDecimal workShop;
     private BigDecimal office;
     private BigDecimal total;
+    private BigDecimal vietnamCount;
+    private BigDecimal chinaCount;
 }
