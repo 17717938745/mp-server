@@ -29,6 +29,10 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "nationality",
+          "label": "国籍"
+        },
+        {
           "value": "materialDescription",
           "label": "物料描述"
         },
@@ -1719,6 +1723,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        {
+          "value": "nationality",
+          "label": "Quốc tịch"
+        },
         {
           "value": "materialDescription",
           "label": "miêu tả vật liệu"

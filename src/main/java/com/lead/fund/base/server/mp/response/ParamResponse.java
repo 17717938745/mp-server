@@ -177,4 +177,8 @@ public class ParamResponse implements Serializable {
      * API设备
      */
     private List<ParamConfigResponse> apiDeviceList;
+    /**
+     * 国籍
+     */
+    private List<ParamConfigResponse> nationalityList;
 }

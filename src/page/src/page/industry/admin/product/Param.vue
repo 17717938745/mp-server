@@ -237,6 +237,10 @@ const paramCategoryGroupList = [
         value: 'profession',
         label: store.state.label.profession,
       },
+      {
+        value: 'nationality',
+        label: store.state.label.nationality,
+      },
     ],
   },
   {

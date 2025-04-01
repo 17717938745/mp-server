@@ -478,6 +478,7 @@ public class DousonController {
                 case "inventoryOutOfPlanType" -> builder.inventoryOutOfPlanTypeList(paramDao.listByCategoryId(categoryId));
                 case "responsibleTeam" -> builder.responsibleTeamList(paramDao.listByCategoryId(categoryId));
                 case "apiDevice" -> builder.apiDeviceList(paramDao.listByCategoryId(categoryId));
+                case "nationality" -> builder.nationalityList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -3172,6 +3173,9 @@ public class DousonController {
         }
         if (isNotBlank(request.getEquipmentNo())) {
             lambda.eq(EquipmentEntity::getEquipmentNo, request.getEquipmentNo());
+        }
+        if (isNotBlank(request.getApiDevice())) {
+            lambda.eq(EquipmentEntity::getApiDevice, request.getApiDevice());
         }
         if (isNotBlank(request.getEquipmentName())) {
             lambda.like(EquipmentEntity::getEquipmentName, request.getEquipmentName());

@@ -137,4 +137,9 @@ public class MpUserResponse extends AbstractAdministratorModel {
      * 计划下次调薪日期剩余天数
      */
     private Integer planIncreaseSalaryDateCount;
+    /**
+     * 国际
+     */
+    private String nationality;
+    private String nationalityFormat;
 }

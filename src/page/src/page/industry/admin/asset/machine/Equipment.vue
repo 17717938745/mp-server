@@ -49,6 +49,20 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.apiDevice"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.apiDevice"
+      >
+        <el-option
+            v-for="item in config.apiDeviceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button :icon="Plus" @click="handleSaveModal" type="success" v-if="includes(roleCodeList, 'equipmentManager')">Add</el-button>

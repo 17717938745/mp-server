@@ -67,6 +67,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'positionFormat', labelKey: 'equipmentPosition', width: 100,},
   {value: 'photoList', labelKey: 'photo', width: 128, type: ValueType.Image,},
   {value: 'fileList', labelKey: 'supportAttachment', width: 128, type: ValueType.Attachment,},
+  {value: 'apiDeviceFormat', originValue: 'apiDevice', labelKey: 'apiDevice', width: 127,},
 ])
 /*const userOptionList = ref(new Array<any>())
 Promise.all([

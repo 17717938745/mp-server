@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -81,4 +82,8 @@ public class MpUserRequest implements Serializable {
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endCreateTime;
+    /**
+     * 国际
+     */
+    private String nationality;
 }

@@ -314,6 +314,9 @@ public class SystemController {
             if (isNotBlank(request.getProfession())) {
                 lambda.eq(MpUserEntity::getProfession, request.getProfession());
             }
+            if (isNotBlank(request.getNationality())) {
+                lambda.eq(MpUserEntity::getNationality, request.getNationality());
+            }
             if (isNotBlank(request.getName())) {
                 lambda.like(MpUserEntity::getName, request.getName());
             }
@@ -384,6 +387,13 @@ public class SystemController {
                 l -> paramDao.listByCategoryId("schedule"),
                 (t, r) -> t.getSchedule().equals(r.getValue()),
                 (t, r) -> t.setScheduleFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getNationality())).collect(Collectors.toList()),
+                MpUserResponse::getNationality,
+                l -> paramDao.listByCategoryId("nationality"),
+                (t, r) -> t.getNationality().equals(r.getValue()),
+                (t, r) -> t.setNationalityFormat(r.getLabel())
         );
         final List<ParamConfigResponse> professionList = paramDao.listByCategoryId("profession");
         MultitaskUtil.supplementList(

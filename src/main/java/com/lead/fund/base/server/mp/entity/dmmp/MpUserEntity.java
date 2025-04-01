@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 用户
@@ -136,4 +135,9 @@ public class MpUserEntity extends AbstractAdmin {
      * 计划下次调薪日期
      */
     private String planIncreaseSalaryDate;
+    /**
+     * 国籍
+     */
+    @FieldRemark(value = "国籍")
+    private String nationality;
 }

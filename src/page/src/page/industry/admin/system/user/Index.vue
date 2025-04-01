@@ -27,6 +27,19 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.nationality"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.nationality"
+                 @change="handleList">
+        <el-option
+            v-for="item in config.nationalityList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <el-input v-model="query.data.username" @keyup.enter="handleList" :placeholder="store.state.label.username"/>
       <el-input v-model="query.data.name" @keyup.enter="handleList" :placeholder="store.state.label.chineseName"/>
       <el-select
@@ -178,19 +191,6 @@
             />
           </el-select>
         </el-form-item>
-<!--        <el-form-item prop="schedule" :label="store.state.label.schedule">
-          <el-select
-              v-model="formData.schedule"
-              clearable
-              :placeholder="store.state.label.schedule">
-            <el-option
-                v-for="item in config.scheduleList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
-        </el-form-item>-->
         <el-form-item prop="profession" :label="store.state.label.profession">
           <el-select v-model="formData.profession"
                      filterable
@@ -200,6 +200,21 @@
                      :disabled="!includes(roleCodeList, 'admin')">
             <el-option
                 v-for="item in config.professionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="nationality" :label="store.state.label.nationality">
+          <el-select v-model="formData.nationality"
+                     filterable
+                     allow-create
+                     clearable
+                     :placeholder="store.state.label.nationality"
+                     :disabled="!includes(roleCodeList, 'admin')">
+            <el-option
+                v-for="item in config.nationalityList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -347,6 +362,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 139,},
   // {value: 'scheduleFormat', originValue: 'schedule', labelKey: 'schedule', width: 168, type: ValueType.SelectEdit, optionList: [],},
   {value: 'professionFormat', labelKey: 'profession', width: 289,},
+  {value: 'nationalityFormat', originValue: 'nationality', labelKey: 'nationality', width: 139,},
   {value: 'mobile', labelKey: 'mobile', width: 128,},
   {value: 'roleNameList', labelKey: 'role', width: 256, type: ValueType.TagList},
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
@@ -385,6 +401,7 @@ const state = reactive({
       name: '',
       userProperty: '',
       schedule: '',
+      nationality: '',
       leaderUserId: '',
       state: 0,
     },
@@ -398,6 +415,7 @@ const state = reactive({
     optimizeTypeList: [],
     userPropertyList: [],
     scheduleList: [],
+    nationalityList: [],
   },
   formData: Object.assign({}, defaultFormData),
   formRuleList: {
@@ -487,6 +505,7 @@ Promise.all([
       'optimizeType',
       'userProperty',
       'schedule',
+      'nationality',
     ]
   }),
   httpGet(`system/user/config/list`, {}),
@@ -506,6 +525,9 @@ Promise.all([
       } else if (t.value === 'leaderUserIdFormat') {
         t.type = ValueType.SelectEdit
         t.optionList = userOptionList.value
+      } else if (t.value === 'nationalityFormat') {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.nationalityList
       }
       return t;
     })

@@ -92,4 +92,8 @@ public class MpUserMergeRequest implements Serializable {
      * 最后一次调薪日期
      */
     private String planIncreaseSalaryDate;
+    /**
+     * 国际
+     */
+    private String nationality;
 }
