@@ -55,6 +55,7 @@ registerInterceptor(
                   // 未登录
                 case 74007:
                 case 140000:
+                case 310008:
                   router.replace(getFullSignUri());
                   break;
                 default:
