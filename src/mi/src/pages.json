@@ -1,0 +1,94 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "page/index/index",
+      "style": {
+        "navigationBarTitleText": "index",
+        "navigationBarBackgroundColor": "#ffffff"
+      }
+    },
+    {
+      "path": "page/product/index",
+      "style": {
+        "navigationBarTitleText": "product",
+        "navigationBarBackgroundColor": "#ffffff"
+      }
+    },
+    {
+      "path": "page/form/index",
+      "style": {
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "page/mine/mine",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarBackgroundColor": "#ffffff"
+      }
+    },
+    {
+      "path": "page/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationBarBackgroundColor": "#ffffff"
+      }
+    }
+  ],
+  "tabBar": {
+    "fontSize": "20",
+    "color": "#838894",
+    "selectedColor": "#40527E",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "height": "98",
+    "spacing": "2",
+    "iconWidth": "50",
+    "blurEffect": "light",
+    "list": [
+      {
+        "pagePath": "page/index/index",
+        "iconPath": "static/image/defaultVideo.png",
+        "selectedIconPath": "static/image/activeVideo.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "page/form/index",
+        "iconPath": "static/image/defaultService.png",
+        "selectedIconPath": "static/image/activeService.png",
+        "text": "表单"
+      },
+      {
+        "pagePath": "page/product/index",
+        "iconPath": "static/image/defaultCollection.png",
+        "selectedIconPath": "static/image/activeCollection.png",
+        "text": "查询"
+      },
+      {
+        "pagePath": "page/mine/mine",
+        "iconPath": "static/image/defaultMine.png",
+        "selectedIconPath": "static/image/activeMine.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "douson",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "app-plus": {
+    "background": "#fff",
+    "bottom": {
+      "offset": "auto"
+    }
+  }
+}
