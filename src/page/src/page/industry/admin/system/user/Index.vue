@@ -363,7 +363,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'nationalityFormat', originValue: 'nationality', labelKey: 'nationality', width: 101,},
   {value: 'leaderUserIdFormat', originValue: 'leaderUserId', labelKey: 'leaderUserId', width: 139,},
   {value: 'mobile', labelKey: 'mobile', width: 128,},
-  {value: 'roleNameList', labelKey: 'role', width: 256, type: ValueType.TagList, showOverflow: true,},
+  {value: 'roleNameFormat', labelKey: 'role', width: 256, showOverflow: true,},
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
   {value: 'stateFormat', labelKey: 'state', width: 72,},
@@ -435,6 +435,7 @@ const handleList = () => {
       (res: PageResult<typeof state.tableData>) => {
         state.tableData = (res.list || []).map((t: any) => {
           t.roleNameList = (t.roleList || []).map((t1: any) => t1.roleName)
+          t.roleNameFormat = (t.roleList || []).map((t1: any) => t1.roleName).join(', ')
           return t
         })
         ElMessage.success("Query success")
