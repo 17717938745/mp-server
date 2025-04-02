@@ -39,6 +39,8 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'departmentFormat', labelKey: 'department', width: 168},
   {value: 'workShop', labelKey: 'workShop', width: 123},
   {value: 'office', labelKey: 'office', width: 128},
+  {value: 'vietnamCount', labelKey: 'vietnamCount', width: 110},
+  {value: 'chinaCount', labelKey: 'chinaCount', width: 110},
   {value: 'total', labelKey: 'total', width: 128},
   // {value: 'scheduleNull', labelKey: 'scheduleNull', width: 128},
   // {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 128},

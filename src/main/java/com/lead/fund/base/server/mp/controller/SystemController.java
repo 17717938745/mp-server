@@ -174,6 +174,8 @@ public class SystemController {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO
         };
         l = l.stream().peek(t -> {
@@ -189,6 +191,8 @@ public class SystemController {
                     bl[6] = bl[6].add(t.getScheduleEvening());
                     bl[7] = bl[7].add(t.getScheduleEvening12());
                     bl[8] = bl[8].add(t.getScheduleMiddle());
+                    bl[9] = bl[9].add(t.getVietnamCount());
+                    bl[10] = bl[10].add(t.getChinaCount());
                 }).sorted(Comparator.comparingInt(t -> m1.getOrDefault(t.getDepartment(), 0)))
                 .collect(Collectors.toList());
         l.add(
@@ -205,6 +209,8 @@ public class SystemController {
                         .setScheduleEvening(bl[6])
                         .setScheduleEvening12(bl[7])
                         .setScheduleMiddle(bl[8])
+                        .setVietnamCount(bl[9])
+                        .setChinaCount(bl[10])
         );
         return new ListResult<>(l);
     }

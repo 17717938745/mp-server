@@ -33,4 +33,6 @@ public class MpUserDepartmentSummaryResponse extends AbstractAdministratorModel 
     private BigDecimal scheduleEvening;
     private BigDecimal scheduleEvening12;
     private BigDecimal scheduleMiddle;
+    private BigDecimal vietnamCount;
+    private BigDecimal chinaCount;
 }
