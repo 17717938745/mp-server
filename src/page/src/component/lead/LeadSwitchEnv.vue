@@ -79,7 +79,7 @@ const handleSwitchPrd = () => {
   handleInitValue()
 }
 const handleInitValue = () => {
-  state.urlPrefix = getUrlPrefix('http://localhost')
+  state.urlPrefix = getUrlPrefix()
   handleGetDeviceIdAndSalt()
   clearHttp()
 }
