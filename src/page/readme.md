@@ -1,3 +1,10 @@
+# 环境准备
+
+```shell
+nvm install node v20.18.3
+nvm use node v20.18.3
+```
+
 # 开发准备
 
 推荐使用Webstorm开发

@@ -14,18 +14,6 @@ import {getFullSignUri} from '@/util/RouterUtil';
 import {useRouter} from 'vue-router';
 import {toast} from './component/lead/toast';
 
-try {
-  // @ts-ignore
-  console.log(
-      `--------========<<<<<<<<>>>>>>>>========--------\n${JSON.stringify(
-          GLOBAL_LEAD_GIT_INFO,
-          null,
-          2
-      )}--------========<<<<<<<<>>>>>>>>========--------`
-  );
-} catch (e) {
-}
-
 const router = useRouter();
 const initialized = ref(false /*location && location.pathname && location.pathname.length <= 1*/);
 if (!initialized.value) {
