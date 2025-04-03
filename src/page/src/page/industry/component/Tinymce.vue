@@ -36,14 +36,14 @@
           />
         </el-form-item>
         <el-form-item class="lead-header" prop="content">
-          <!--Download tinymceScriptSrc from github: https://github.com/tinymce/tinymce/tags-->
+          <!--Download tinymceScriptSrc from tiny.cloud: https://www.tiny.cloud/my-account/downloads/, and github: https://github.com/tinymce/tinymce/tags-->
           <editor
               style="width: 100%;"
               api-key="uzd5kec740x8lw118ozl7qsq9040f1h2z4f65f7zkrxh12mn"
               v-model="formData.content"
               :init="editConfig"
-              tinymceScriptSrc="/third/tinymce/7.7.1/tinymce.min.js"
-              model-events="change keydown blur focus paste"
+              tinymceScriptSrc="/third/tinymce@7.7.2/tinymce.min.js"
+              model-events="change keydown blur focus"
               output-format="html"
               cloud-channel="5-stable"
           />
@@ -100,6 +100,8 @@ const state = reactive({
   },
   editConfig: {
     height: 1024,
+    selector: 'textarea',
+    license_key: 'uzd5kec740x8lw118ozl7qsq9040f1h2z4f65f7zkrxh12mn',
     body_class: 'douson-h5',
     content_css: ['/third/css/report.css'],
     menubar: "",
@@ -110,7 +112,7 @@ const state = reactive({
     fontsize_formats: "12px 14px 16px 18px 20px 24px 26px 28px 30px 32px 36px",
     font_formats:
         "Times New Roman=times new roman;微软雅黑=Microsoft YaHei,Helvetica Neue;PingFang SC;sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun;serifsans-serif;Terminal=terminal;monaco;times",
-    plugins: "autolink lists link image anchor media table paste fullscreen",
+    plugins: "autolink lists link image anchor media table fullscreen",
     toolbar: [
       "h1 h2 h3 h4 h5 h6",
       "fontselect fontsizeselect | bold italic underline strikethrough blockquote | forecolor backcolor |",
@@ -130,21 +132,21 @@ const state = reactive({
         });
       }
     },
-    images_upload_handler: function (blobInfo, success, failure) {
+    images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
       const formData = new FormData()
       formData.set("file", blobInfo.blob())
       formData.set("filename", blobInfo.filename)
-      httpUpload(`index/img`, formData).then(function (res) {
-        success(res.data.url, {
-          src: res.data.url /*, class: 'full-width'*/,
+      httpUpload(`index/img`, formData).then(res => {
+        ElMessage.success(`Image upload success`)
+        resolve(res.data.url, {
+          src: res.data.url,
           width: '100%',
         })
-        ElMessage.success(`Image upload success`)
       })
       .catch((err) => {
-        failure(`Image upload error: ${err}`)
+        reject(`Image upload error: ${err}`)
       })
-    },
+    }),
     setup: function (editor) {
       let img;
       editor.ui.registry.addToggleButton('fullWidthImage', {
@@ -269,7 +271,7 @@ const handleValueChange = () => {
               ElMessage.success("Merge success")
               formData.value.forumId = result.data.forumId
               state.submitDisable = false
-              if(props.afterSuccess) {
+              if (props.afterSuccess) {
                 props.afterSuccess(formData.value)
               }
             })

@@ -78,14 +78,22 @@
         </li>
       </ul>
     </div>
-    <el-dialog :title="'Forum'" v-model="formVisible" width="60%" :close-on-click-modal="false">
+
+    <el-drawer
+        v-model="formVisible"
+        size="90%"
+        :append-to-body="true"
+        :lock-scroll="false"
+        modal-class="print-drawer"
+        :z-index="1"
+    >
       <tinymce :forum-id="forumId" :category="props.titleLabelKey" :after-success="() => {formVisible = false; handleForumPage(true);}"></tinymce>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="formVisible = false">Cancel</el-button>
         </span>
       </template>
-    </el-dialog>
+    </el-drawer>
   </div>
 </template>
 
