@@ -227,4 +227,9 @@ public class MaterialEntity extends AbstractAdmin {
     @FieldRemark(value = "是否生成订单检验记录")
     @Size(max = 2, message = "是否生成订单检验记录")
     private Boolean generateExamine;
+    /**
+     * 是否流转文件
+     */
+    @FieldRemark(value = "是否流转文件")
+    private Boolean circulatedDocument;
 }

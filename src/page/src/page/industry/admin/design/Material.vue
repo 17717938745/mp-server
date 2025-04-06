@@ -444,6 +444,9 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'selection', labelKey: '', width: 55, type: ValueType.Selection,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 112, type: ValueType.Operator,},
   {
+    value: 'circulatedDocumentFormat', labelKey: 'isCirculatedDocument', width: 65,
+  },
+  {
     value: 'customerShortName',
     labelKey: 'customerShortName',
     width: 111,
@@ -638,22 +641,22 @@ const handleRequest = (d: any) => {
       formData.set("file", t)
       return httpUpload(`douson/material/upload`, formData)
     }))
-        .then((l: any[]) => {
-          afterUpload.value = true
-          uploadData.value = (l[0] || {}).data || {}
-          handlePage()
-          keys.forEach((k: any) => {
-            delete fileMap[k]
-          })
-          return Promise.resolve()
-        })
-        .catch((err) => {
-          ElMessage.error(`Upload failed`)
-          keys.forEach((k: any) => {
-            delete fileMap[k]
-          })
-          return Promise.reject()
-        })
+    .then((l: any[]) => {
+      afterUpload.value = true
+      uploadData.value = (l[0] || {}).data || {}
+      handlePage()
+      keys.forEach((k: any) => {
+        delete fileMap[k]
+      })
+      return Promise.resolve()
+    })
+    .catch((err) => {
+      ElMessage.error(`Upload failed`)
+      keys.forEach((k: any) => {
+        delete fileMap[k]
+      })
+      return Promise.reject()
+    })
   }
 }
 httpGet(`system/user/config/list`, {}).then(
@@ -731,6 +734,7 @@ const state = reactive({
       checkOrderNo: '',
       startPromiseDoneDate: '',
       endPromiseDoneDate: '',
+      circulatedDocument: null,
     },
     page: {
       page: DEFAULT_PAGE,
@@ -837,6 +841,16 @@ columnConfigList.value = columnConfigList.value.map(t => {
     } else if ('productionCount' === t.value) {
       t.width = 101
       t.type = ValueType.NumberEdit
+    } else if ('circulatedDocumentFormat' === t.value) {
+      t.type = ValueType.Link
+      t.openLink = (d: any) => {
+        d.circulatedDocument = !d.circulatedDocument
+        httpPutJson('douson/material/merge', d).then(() => {
+          state.formVisible = false
+          ElMessage.success('Update success')
+          handlePage()
+        })
+      }
     }
   }
   if ('generateExamineFormat' === t.value) {
@@ -902,10 +916,10 @@ const handleDelete = (row: any) => {
     httpDelete('douson/material', {
       materialId: row.materialId,
     })
-        .then(() => {
-          ElMessage.success('Delete success')
-          handlePage()
-        })
+    .then(() => {
+      ElMessage.success('Delete success')
+      handlePage()
+    })
   })
 }
 const {

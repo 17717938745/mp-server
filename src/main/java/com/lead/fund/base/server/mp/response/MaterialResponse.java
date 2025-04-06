@@ -176,4 +176,9 @@ public class MaterialResponse extends AbstractAdministratorModel {
      */
     private Boolean generateExamine;
     private String generateExamineFormat;
+    /**
+     * 是否流转文件
+     */
+    private Boolean circulatedDocument;
+    private String circulatedDocumentFormat;
 }

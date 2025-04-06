@@ -29,6 +29,10 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "isCirculatedDocument",
+          "label": "是否流转单据"
+        },
+        {
           "value": "vietnamCount",
           "label": "Vietnam"
         },
@@ -1731,6 +1735,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        {
+          "value": "isCirculatedDocument",
+          "label": "Đơn hàng đã được ban hành"
+        },
         {
           "value": "vietnamCount",
           "label": "Vietnam"

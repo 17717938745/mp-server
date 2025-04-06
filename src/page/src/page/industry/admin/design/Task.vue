@@ -1045,7 +1045,7 @@ Promise.all([
   }
   if (supplierShow) {
     columnConfigList.value = columnConfigList.value.map(t => {
-      if ('deliverCount' === t.value) {
+      /*if ('deliverCount' === t.value) {
         t.width = 95
         t.type = ValueType.NumberEdit
       } else if ('deliverDate' === t.value) {
@@ -1066,7 +1066,7 @@ Promise.all([
       } else if ('scrapCount' === t.value) {
         t.width = 95
         t.type = ValueType.NumberEdit
-      } else if ('supplierPromiseDoneDate' === t.value) {
+      } else */if ('supplierPromiseDoneDate' === t.value) {
         t.width = 102
         t.type = ValueType.DateEdit
       }

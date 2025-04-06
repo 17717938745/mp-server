@@ -125,6 +125,10 @@ public class DisqualificationOrderRequest implements Serializable {
      */
     private String defectType;
     /**
+     * 人员属性
+     */
+    private String userProperty;
+    /**
      * 图片列表
      */
     private List<PhotoImgModel> photoList;

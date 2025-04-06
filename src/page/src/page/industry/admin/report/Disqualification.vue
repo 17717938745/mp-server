@@ -99,6 +99,32 @@
                 @change="handlePage"
                 :placeholder="store.state.label.disqualificationContent"
                 class="search-item"/>
+      <el-select v-model="query.data.process"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.process"
+                 class="search-item">
+        <el-option
+            v-for="item in config.processList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-select
+          v-model="query.data.userProperty"
+          @change="handlePage"
+          clearable
+          :placeholder="store.state.label.userProperty">
+        <el-option
+            v-for="item in config.userPropertyList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -407,6 +433,7 @@ const state = reactive({
       startCreateTime: '',
       endCreateTime: '',
       skillDealOpinion: '',
+      userProperty: '',
     },
     page: {
       page: DEFAULT_PAGE,
@@ -426,6 +453,7 @@ const state = reactive({
     qualityDealOpinionList: [],
     skillDealOpinionList: [],
     defectTypeList: [],
+    userPropertyList: [],
   },
   userConfigList: new Array<any>(),
   formVisible: false,
@@ -442,7 +470,7 @@ const state = reactive({
     dutyPersonList: [{required: true, type: 'array', min: 1, max: 99999}],
     serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
     defectType: [{required: true, message: 'Please check', trigger: 'blur'}],
-    photoList: [{required: false, type: 'array', min: 0, max: 4}],
+    photoList: [{required: false, type: 'array', min: 1, max: 4}],
   },
 })
 
@@ -478,12 +506,19 @@ const handleAutoInsertSerialNo = (t: any, i: number, arr: any[]) => {
     }
   }
 }
-const handleFormatValue = (key: string, val: any) => {
-  // @ts-ignore
-  const a = (state.config[key] || []).filter(t => t.value === val)
-  return a.length > 0 ? a[0].label : val
-}
-httpGet('douson/config').then(r => {
+httpGet('douson/config',{
+  categoryIdList: [
+    'processProcedure',
+    'testDevice',
+    'customerShortName',
+    'process',
+    'checkPoint',
+    'qualityDealOpinion',
+    'skillDealOpinion',
+    'defectType',
+    'userProperty'
+  ]
+}).then(r => {
   state.config = r.data
   if (includes(roleCodeList, 'qualityManager') || includes(roleCodeList, 'technologyManager') || includes(roleCodeList, 'manager')) {
     columnConfigList.value = columnConfigList.value.map(t => {

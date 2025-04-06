@@ -4311,12 +4311,22 @@ public class DousonController {
         if (isNotBlank(d.getDisqualificationOrder())) {
             lambda.like(DisqualificationOrderEntity::getDisqualificationOrder, d.getDisqualificationOrder());
         }
+        if (isNotBlank(d.getProcess())) {
+            lambda.eq(DisqualificationOrderEntity::getProcess, d.getProcess());
+        }
         if (isNotBlank(d.getDutyPerson())) {
             lambda.and(true, lam -> {
                 lam.eq(DisqualificationOrderEntity::getCreator, d.getDutyPerson())
                         .or(true, lam1 -> {
                             lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + d.getDutyPerson() + ",");
                         });
+            });
+        }
+        if (CollUtil.isNotEmpty(d.getDutyPersonList())) {
+            DatabaseUtil.singleOr(lambda, d.getDutyPersonList(), (lam, l) -> {
+                lam.and(true, lam1 -> {
+                    lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + l + ",");
+                });
             });
         }
         if (isNotBlank(d.getDefectType())) {
@@ -4353,11 +4363,12 @@ public class DousonController {
                 .distinct()
                 .collect(Collectors.toList());
         final List<MpUserEntity> userList = CollUtil.isEmpty(userIdList) ? new ArrayList<>() : userMapper.selectList(
-                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName, MpUserEntity::getUserProperty),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
-        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, MpUserEntity::getName, (t, t1) -> t1, HashMap::new));
+        final Map<String, String> upm = paramDao.listByCategoryId("userProperty").stream().collect(Collectors.toMap(t -> defaultIfBlank(t.getValue()), t -> t.getLabel()));
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> "%s（%s）".formatted(t.getName(), upm.getOrDefault(t.getUserProperty(), t.getUserProperty())), (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 rl,
                 DisqualificationOrderResponse::getDisqualificationOrderId,
@@ -4428,6 +4439,18 @@ public class DousonController {
         MpUserResponse user = accountHelper.getUser(deviceId);
         if (user.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "disqualificationView".equals(t))) {
             request.getData().setDutyPerson(user.getUserId());
+        }
+        if (isNotBlank(request.getData().getUserProperty())) {
+            List<String> userIdList = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>()
+                            .eq(MpUserEntity::getUserProperty, request.getData().getUserProperty())
+                            .select(MpUserEntity::getId))
+                    .stream().map(AbstractPrimaryKey::getId)
+                    .collect(Collectors.toList());
+            if (CollUtil.isEmpty(userIdList)) {
+                return new PageResult<>(0, new ArrayList<>());
+            } else {
+                request.getData().setDutyPersonList(userIdList);
+            }
         }
         PageResult<DisqualificationOrderEntity> pr = DatabaseUtil.page(request, this::disqualificationOrderList);
         return new PageResult<>(pr.getTotal(), formatDisqualificationOrderList(pr.getList()));

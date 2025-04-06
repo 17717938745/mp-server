@@ -1,5 +1,6 @@
 package com.lead.fund.base.server.mp.request;
 
+import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
 
 import java.io.Serializable;
@@ -179,4 +180,8 @@ public class MaterialRequest implements Serializable {
      * 是否生成订单检验记录
      */
     private Boolean generateExamine;
+    /**
+     * 是否流转文件
+     */
+    private Boolean circulatedDocument;
 }
