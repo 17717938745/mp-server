@@ -831,17 +831,11 @@ const roleHardnessRecord = includes(roleCodeList, 'hardnessRecord')
 const roleNdeRecord = includes(roleCodeList, 'ndeRecord')
 const roleDimensionRecord = includes(roleCodeList, 'dimensionRecord')
 const roleExamineManager = includes(roleCodeList, 'examineManager')
+const roleMaterial = includes(roleCodeList, 'material')
 const editable = user.username === 'admin' || includes(roleCodeList, 'materialManager')
 columnConfigList.value = columnConfigList.value.map(t => {
-  if (editable) {
-    if ('description' === t.value) {
-      t.type = ValueType.TextEdit
-    } else if ('chargeCompany' === t.value) {
-      t.type = ValueType.TextEdit
-    } else if ('productionCount' === t.value) {
-      t.width = 101
-      t.type = ValueType.NumberEdit
-    } else if ('circulatedDocumentFormat' === t.value) {
+  if(roleMaterial) {
+    if ('circulatedDocumentFormat' === t.value) {
       t.type = ValueType.Link
       t.openLink = (d: any) => {
         d.circulatedDocument = !d.circulatedDocument
@@ -851,6 +845,16 @@ columnConfigList.value = columnConfigList.value.map(t => {
           handlePage()
         })
       }
+    }
+  }
+  if (editable) {
+    if ('description' === t.value) {
+      t.type = ValueType.TextEdit
+    } else if ('chargeCompany' === t.value) {
+      t.type = ValueType.TextEdit
+    } else if ('productionCount' === t.value) {
+      t.width = 101
+      t.type = ValueType.NumberEdit
     }
   }
   if ('generateExamineFormat' === t.value) {
