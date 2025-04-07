@@ -4441,7 +4441,7 @@ public class DousonController {
     ) {
         MpUserResponse user = accountHelper.getUser(deviceId);
         if (user.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "disqualificationView".equals(t))) {
-            request.getData().getDutyPersonList().add(user.getUserId());
+            request.getData().setDutyPerson(user.getUserId());
         }
         if (isNotBlank(request.getData().getUserProperty())) {
             List<String> userIdList = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>()
@@ -5454,6 +5454,10 @@ public class DousonController {
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
+            request.getData().setCreator(u.getUserId());
+        }
+        // 供应商只能看自己
+        if ("3".equals(u.getUserProperty())) {
             request.getData().setCreator(u.getUserId());
         }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);

@@ -31,6 +31,10 @@ public class TaskRequest implements Serializable {
 
     private static final long serialVersionUID = 5945041243096001164L;
     /**
+     * 创建人用户id
+     */
+    private String creator;
+    /**
      * 生产计划ID
      */
     private String taskId;
