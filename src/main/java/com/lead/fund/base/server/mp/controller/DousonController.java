@@ -5458,7 +5458,7 @@ public class DousonController {
         }
         // 供应商只能看自己
         if ("3".equals(u.getUserProperty())) {
-            request.getData().setCreator(u.getUserId());
+            request.getData().setBorrowTemplatePerson(u.getUserId());
         }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
         return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())

@@ -327,7 +327,7 @@ public class DousonTaskController {
         }
         // 供应商只能看自己
         if ("3".equals(u.getUserProperty())) {
-            request.getData().setCreator(u.getUserId());
+            request.getData().setSupplier(true);
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
         final AtomicInteger index = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
