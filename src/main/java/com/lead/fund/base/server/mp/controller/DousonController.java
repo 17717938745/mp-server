@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.cons.frame.AdminRole;
 import com.lead.fund.base.common.basic.cons.frame.AdminState;
 import com.lead.fund.base.common.basic.cons.frame.AdminUser;
+import com.lead.fund.base.common.basic.cons.frame.ExceptionType;
 import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.request.Page;
@@ -193,6 +194,7 @@ import com.lead.fund.base.server.mp.response.DeviceResponse;
 import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
 import com.lead.fund.base.server.mp.response.EquipmentResponse;
 import com.lead.fund.base.server.mp.response.EventResponse;
+import com.lead.fund.base.server.mp.response.ForumResponse;
 import com.lead.fund.base.server.mp.response.ImproveResponse;
 import com.lead.fund.base.server.mp.response.MaintainResponse;
 import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
@@ -1237,7 +1239,16 @@ public class DousonController {
             @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
-        return new ListResult<>(INDUSTRY_INSTANCE.deviceList(deviceList(request)));
+        final List<DeviceResponse> rl = INDUSTRY_INSTANCE.deviceList(deviceList(request));
+        MultitaskUtil.supplementList(
+                rl,
+                DeviceResponse::getManager,
+                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
+                (t, r) -> defaultIfBlank(t.getManager()).equals(r.getId()),
+                (t, r) -> t
+                        .setManagerFormat(defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
+        );
+        return new ListResult<>(rl);
     }
 
     /**
@@ -5453,8 +5464,8 @@ public class DousonController {
             @ModelAttribute TemplatePageRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
-            request.getData().setCreator(u.getUserId());
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t)) && !"3".equals(u.getUserProperty())) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         // 供应商只能看自己
         if ("3".equals(u.getUserProperty())) {

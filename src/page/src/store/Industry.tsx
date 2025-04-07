@@ -29,6 +29,10 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "managerUser",
+          "label": "管理者"
+        },
+        {
           "value": "isCirculatedDocument",
           "label": "是否流转单据"
         },
@@ -1735,6 +1739,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        {
+          "value": "managerUser",
+          "label": "Người quản lý"
+        },
         {
           "value": "isCirculatedDocument",
           "label": "Đơn hàng đã được ban hành"

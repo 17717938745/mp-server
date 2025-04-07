@@ -64,4 +64,9 @@ public class DeviceResponse extends AbstractPrimaryKey {
      * 排序
      */
     private Integer sorter;
+    /**
+     * 管理人
+     */
+    private String manager;
+    private String managerFormat;
 }

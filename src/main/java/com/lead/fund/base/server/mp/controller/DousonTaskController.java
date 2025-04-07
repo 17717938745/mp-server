@@ -224,14 +224,14 @@ public class DousonTaskController {
                 lambda.and(true, lambdaTemp -> lambdaTemp.ne(TaskEntity::getSurplus, 0).or(true, lam -> lam.isNull(TaskEntity::getSurplus)));
             }
         }
-        if (Boolean.TRUE.equals(d.getSupplier())) {
+        /*if (Boolean.TRUE.equals(d.getSupplier())) {
             DatabaseUtil.or(lambda, deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getSupplier, true))
                     .stream().map(AbstractPrimaryKey::getId)
                     .collect(Collectors.toList()), (lam, l) -> {
                 lam.in(TaskEntity::getDeviceId, l);
             })
             ;
-        }
+        }*/
         if (null != d.getDelayType()) {
             if (1 == d.getDelayType()) {
                 lambda.eq(TaskEntity::getSurplus, 0)
@@ -310,7 +310,7 @@ public class DousonTaskController {
      * 生产工单分页
      *
      * @param deviceId 设备id
-     * @param request  {@link TaskPagRequest}
+     * @param request  {@link TaskPageRequest}
      * @return {@link PageResult <TaskResponse>}
      */
     @GetMapping("page")
@@ -319,15 +319,13 @@ public class DousonTaskController {
             @ModelAttribute TaskPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername()) && !"3".equals(u.getUserProperty())) {
             return new PageResult<>(0, new ArrayList<>());
-        }
-        if (u.getRoleList().stream().anyMatch(t -> !"admin".equals(t.getRoleCode()) && !"taskManager".equals(t.getRoleCode()) && !"taskView".equals(t.getRoleCode()) && "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
-            request.getData().setSupplier(true);
         }
         // 供应商只能看自己
         if ("3".equals(u.getUserProperty())) {
-            request.getData().setSupplier(true);
+            request.getData().setDeviceId(deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getManager, u.getUserId()))
+                    .stream().map(AbstractPrimaryKey::getId).findFirst().orElse("null"));
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
         final AtomicInteger index = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
