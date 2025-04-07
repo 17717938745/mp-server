@@ -326,6 +326,8 @@ public class DousonTaskController {
         if ("3".equals(u.getUserProperty())) {
             request.getData().setDeviceId(deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getManager, u.getUserId()))
                     .stream().map(AbstractPrimaryKey::getId).findFirst().orElse("null"));
+        } else if (u.getRoleList().stream().anyMatch(t -> !"admin".equals(t.getRoleCode()) && !"taskManager".equals(t.getRoleCode()) && !"taskView".equals(t.getRoleCode()) && "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+            request.getData().setSupplier(true);
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);
         final AtomicInteger index = new AtomicInteger((request.getPage().getPage() - 1) * request.getPage().getLimit());
