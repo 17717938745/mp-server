@@ -688,6 +688,7 @@ const checkOrNotList = ref([
   },
 ])
 const taskEdit = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
+const supplier = '3' === user.userProperty
 const taskDelete = 'admin' === user.username || (includes(roleCodeList, 'taskManager'))
 const taskShow = 'admin' === user.username || (includes(roleCodeList, 'taskManager') && !includes(roleCodeList, 'supplierManager'))
 const adminRole = (includes(roleCodeList, 'admin'))
@@ -1008,70 +1009,80 @@ Promise.all([
       label: t.name,
     }
   })
-  if (taskEdit) {
+  if (supplier) {
     columnConfigList.value = columnConfigList.value.map(t => {
-      if ('deviceIdFormat' === t.value) {
-        t.type = ValueType.SelectEdit
-        t.optionList = state.config.testDeviceList
-      } else if ('planReformCount' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else if ('supplierRemark' === t.value) {
-        t.type = ValueType.TextEdit
-      } else if ('processWorkingHour' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else if ('onlineDate' === t.value) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('onlineDate')
-          }, 100)
+      if ('supplierPromiseDoneDate' === t.value) {
+        t.width = 102
+        t.type = ValueType.DateEdit
+      }
+      return t
+    })
+  } else {
+    if (taskEdit) {
+      columnConfigList.value = columnConfigList.value.map(t => {
+        if ('deviceIdFormat' === t.value) {
+          t.type = ValueType.SelectEdit
+          t.optionList = state.config.testDeviceList
+        } else if ('planReformCount' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('supplierRemark' === t.value) {
+          t.type = ValueType.TextEdit
+        } else if ('processWorkingHour' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('onlineDate' === t.value) {
+          t.type = ValueType.Link
+          t.openLink = (d: any) => {
+            handleEdit(d)
+            setTimeout(() => {
+              // formRef.value.$el
+              formRef.value.scrollToField('onlineDate')
+            }, 100)
+          }
+        } else if ('processCount' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('processProcedure' === t.value) {
+          t.width = 170
+          t.type = ValueType.TextEdit
+        } else if ('supplierPromiseDoneDate' === t.value) {
+          t.width = 102
+          t.type = ValueType.DateEdit
         }
-      } else if ('processCount' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else if ('processProcedure' === t.value) {
-        t.width = 170
-        t.type = ValueType.TextEdit
-      } else if ('supplierPromiseDoneDate' === t.value) {
-        t.width = 265
-        t.type = ValueType.TextEdit
-      }
-      return t
-    })
-  }
-  if (supplierShow) {
-    columnConfigList.value = columnConfigList.value.map(t => {
-      /*if ('deliverCount' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else if ('deliverDate' === t.value) {
-        t.width = 102
-        t.type = ValueType.DateEdit
-      } else if ('supplierRemark' === t.value) {
-        t.type = ValueType.TextEdit
-      } else if ('deliverDateRemark' === t.value) {
-        t.type = ValueType.TextEdit
-      } else if ('receiptCount' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else if ('receiptDate' === t.value) {
-        t.width = 102
-        t.type = ValueType.DateEdit
-      } else if ('receiptDateRemark' === t.value) {
-        t.type = ValueType.TextEdit
-      } else if ('scrapCount' === t.value) {
-        t.width = 95
-        t.type = ValueType.NumberEdit
-      } else */if ('supplierPromiseDoneDate' === t.value) {
-        t.width = 102
-        t.type = ValueType.DateEdit
-      }
-      return t
-    })
+        return t
+      })
+    }
+    if (supplierShow) {
+      columnConfigList.value = columnConfigList.value.map(t => {
+        if ('deliverCount' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('deliverDate' === t.value) {
+          t.width = 102
+          t.type = ValueType.DateEdit
+        } else if ('supplierRemark' === t.value) {
+          t.type = ValueType.TextEdit
+        } else if ('deliverDateRemark' === t.value) {
+          t.type = ValueType.TextEdit
+        } else if ('receiptCount' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('receiptDate' === t.value) {
+          t.width = 102
+          t.type = ValueType.DateEdit
+        } else if ('receiptDateRemark' === t.value) {
+          t.type = ValueType.TextEdit
+        } else if ('scrapCount' === t.value) {
+          t.width = 95
+          t.type = ValueType.NumberEdit
+        } else if ('supplierPromiseDoneDate' === t.value) {
+          t.width = 102
+          t.type = ValueType.DateEdit
+        }
+        return t
+      })
+    }
   }
   handlePage()
 })

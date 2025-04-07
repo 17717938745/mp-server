@@ -4323,10 +4323,12 @@ public class DousonController {
             });
         }
         if (CollUtil.isNotEmpty(d.getDutyPersonList())) {
-            DatabaseUtil.singleOr(lambda, d.getDutyPersonList(), (lam, l) -> {
-                lam.and(true, lam1 -> {
-                    lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + l + ",");
-                });
+            lambda.and(true, lam -> {
+                for (String t : d.getDutyPersonList()) {
+                    lam.or(true, lam1 -> {
+                        lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + t + ",");
+                    });
+                }
             });
         }
         if (isNotBlank(d.getDefectType())) {
@@ -4368,7 +4370,8 @@ public class DousonController {
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
         final Map<String, String> upm = paramDao.listByCategoryId("userProperty").stream().collect(Collectors.toMap(t -> defaultIfBlank(t.getValue()), t -> t.getLabel()));
-        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> "%s（%s）".formatted(t.getName(), upm.getOrDefault(t.getUserProperty(), t.getUserProperty())), (t, t1) -> t1, HashMap::new));
+        //（%s） , upm.getOrDefault(t.getUserProperty(), t.getUserProperty())
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> "%s".formatted(t.getName()), (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 rl,
                 DisqualificationOrderResponse::getDisqualificationOrderId,
@@ -4438,7 +4441,7 @@ public class DousonController {
     ) {
         MpUserResponse user = accountHelper.getUser(deviceId);
         if (user.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "disqualificationView".equals(t))) {
-            request.getData().setDutyPerson(user.getUserId());
+            request.getData().getDutyPersonList().add(user.getUserId());
         }
         if (isNotBlank(request.getData().getUserProperty())) {
             List<String> userIdList = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>()
@@ -5224,7 +5227,7 @@ public class DousonController {
             @ModelAttribute ComputerPageRequest request
     ) {
         MpUserResponse user = accountHelper.getUser(deviceId);
-        if (user.getRoleCodeList().stream().noneMatch(t -> AdminRole.ADMIN.getCode().equals(t) || "itManager".equals(t) || "itView".equals(t))) {
+        if (user.getRoleCodeList().stream().noneMatch(t -> "itManager".equals(t) || "itView".equals(t)) && !"admin".equals(user.getUsername())) {
             request.getData().setUserId(user.getUserId());
         }
         if (isNotBlank(request.getData().getUsername())) {
@@ -5357,6 +5360,9 @@ public class DousonController {
         if (isNotBlank(request.getTemplateId())) {
             lambda.eq(TemplateEntity::getId, request.getTemplateId());
         }
+        if (isNotBlank(request.getCreator())) {
+            lambda.eq(TemplateEntity::getCreator, request.getCreator());
+        }
         if (isNotBlank(request.getTemplateOrderNo())) {
             lambda.like(TemplateEntity::getTemplateOrderNo, request.getTemplateOrderNo());
         }
@@ -5448,7 +5454,7 @@ public class DousonController {
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            request.getData().setCreator(u.getUserId());
         }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
         return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())

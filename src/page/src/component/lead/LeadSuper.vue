@@ -54,6 +54,18 @@ const pathList = ref([
     value: '/industry/admin/dashboard',
     label: '首页',
   },
+  {
+    value: '/industry/admin/system/user',
+    label: '用户管理',
+  },
+  {
+    value: '/industry/admin/system/account',
+    label: '人员管理',
+  },
+  {
+    value: '/industry/admin/product/param',
+    label: '参数管理',
+  },
 ])
 const router = useRouter()
 const route = useRoute()
