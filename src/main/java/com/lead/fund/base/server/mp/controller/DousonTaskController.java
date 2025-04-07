@@ -224,14 +224,14 @@ public class DousonTaskController {
                 lambda.and(true, lambdaTemp -> lambdaTemp.ne(TaskEntity::getSurplus, 0).or(true, lam -> lam.isNull(TaskEntity::getSurplus)));
             }
         }
-        /*if (Boolean.TRUE.equals(d.getSupplier())) {
+        if (Boolean.TRUE.equals(d.getSupplier())) {
             DatabaseUtil.or(lambda, deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getSupplier, true))
                     .stream().map(AbstractPrimaryKey::getId)
                     .collect(Collectors.toList()), (lam, l) -> {
                 lam.in(TaskEntity::getDeviceId, l);
             })
             ;
-        }*/
+        }
         if (null != d.getDelayType()) {
             if (1 == d.getDelayType()) {
                 lambda.eq(TaskEntity::getSurplus, 0)
