@@ -1,3 +1,5 @@
+create database if not exists douson;
+use douson;
 create table douson.MP_ASSEMBLY
 (
     SERIAL_NUMBER                varchar(256)    null comment '整机序列号',

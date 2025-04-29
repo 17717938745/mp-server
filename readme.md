@@ -98,13 +98,10 @@ $ npm -v
 
 ```text
 [mysqld]
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-symbolic-links=0
-log-error=/var/log/mysqld.log
-pid-file=/var/run/mysqld/mysqld.pid
+datadir=/opt/homebrew/var/mysql
+log-error=/opt/homebrew/mysql/mysqld-error.log
+pid-file=/opt/homebrew/mysql/mysqld.pid
 bind-address=0.0.0.0
-lower_case_table_names=1
 max_allowed_packet=104857600
 init_connect='SET NAMES utf8mb4'
 character-set-server=utf8mb4
