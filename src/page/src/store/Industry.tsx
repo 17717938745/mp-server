@@ -28,6 +28,55 @@ export interface Label {
 
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
+
+        {
+          "value": "workDressType",
+          "label": "工装类型"
+        },
+        {
+          "value": "remark",
+          "label": "描述"
+        },
+        {
+          "value": "designNumberOfPdf",
+          "label": "图号（挂PDF）"
+        },
+        {
+          "value": "applyCount",
+          "label": "申请数量"
+        },
+        {
+          "value": "applyDate",
+          "label": "申请日期"
+        },
+        {
+          "value": "storePosition",
+          "label": "库存位置"
+        },
+        {
+          "value": "checkAccept",
+          "label": "验收"
+        },
+        {
+          "value": "descriptionOfOrder",
+          "label": "备注（注明为哪个订单服务）"
+        },
+        {
+          "value": "storeCount",
+          "label": "入库数量"
+        },
+        {
+          "value": "storeDateDescription",
+          "label": "入库日期备注"
+        },
+        {
+          "value": "storePicture",
+          "label": "入库图片"
+        },
+        {
+          "value": "workDressManage",
+          "label": "工装管理"
+        },
         {
           "value": "managerUser",
           "label": "管理者"
@@ -505,10 +554,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         }, {
           "value": "processWorkingHour",
           "label": "工序工时/件"
-        },
-        {
-          "value": "designNumber",
-          "label": "图号"
         },
         {
           "value": "process",
@@ -1740,6 +1785,54 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
       ],
       'THA': [
         {
+          "value": "workDressType",
+          "label": "Loại đồ gá"
+        },
+        {
+          "value": "remark",
+          "label": "Mô tả"
+        },
+        {
+          "value": "designNumberOfPdf",
+          "label": "Mã bản vẽ (theo PDF)"
+        },
+        {
+          "value": "applyCount",
+          "label": "Số lượng yêu cầu"
+        },
+        {
+          "value": "applyDate",
+          "label": "Thời gian yêu cầu"
+        },
+        {
+          "value": "storePosition",
+          "label": "Vị trí lưu trữ"
+        },
+        {
+          "value": "checkAccept",
+          "label": "Người kiểm duyệt"
+        },
+        {
+          "value": "descriptionOfOrder",
+          "label": "Ghi chú (nêu rõ dụng cụ này dành cho đơn hàng nào)"
+        },
+        {
+          "value": "storeCount",
+          "label": "Số lượng nhập kho"
+        },
+        {
+          "value": "storeDateDescription",
+          "label": "Thời gian nhập kho"
+        },
+        {
+          "value": "storePicture",
+          "label": "Hình ảnh nhập kho"
+        },
+        {
+          "value": "workDressManage",
+          "label": "Quản lí đồ gá"
+        },
+        {
           "value": "managerUser",
           "label": "Người quản lý"
         },
@@ -1961,7 +2054,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "designNumber",
-          "label": "Bản vẽ"
+          "label": "Mã bản vẽ"
         },
         {
           "value": "orderCount",
@@ -3553,6 +3646,9 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
       )
       formRuleString += (key + ': [{required: true, message: \'Please check\', trigger: \'blur\'}],\n')
     } else {
+      if(arr.length > 0) {
+        console.log(`Found CHS key, but not found match:${JSON.stringify(arr)}`)
+      }
       data['CHS'].push({
         value: `${i}`,
         label: chs,
@@ -3571,9 +3667,9 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formRuleString)
 }
 
-printMultipleText('序号\t工装类型\t物料号\t描述\t图号\t图号（挂PDF）\t申请数量\t申请日期\t库存位置\t验收\t备注（注明为哪个订单服务）\t入库数量\t入库日期备注\t入库图片'
-    + '\n' +
-    'STT\tLoại công cụ\tMã vật liệu\tMiêu tả\tSố bản vẽ\tSố bản vẽ (đính kèm PDF)\tSố lượng yêu cầu\tNgày yêu cầu\tVị trí kho\tXác nhận\tGhi chú (ghi rõ phục vụ cho đơn hàng nào)\tSố lượng nhập kho\tNgày nhập kho\tGhi chú ngày nhập kho\tHình ảnh nhập kho')
+// printMultipleText('序号\t工装类型\t物料号\t描述\t图号\t图号（挂PDF）\t申请数量\t申请日期\t库存位置\t验收\t备注（注明为哪个订单服务）\t入库数量\t入库日期备注\t入库图片'
+//     + '\n' +
+//     'STT\tLoại đồ gá \tMã vật liệu\tMô tả \tMã bản vẽ\tMã bản vẽ (theo PDF)\tSố lượng yêu cầu\tThời gian yêu cầu\tVị trí lưu trữ\tNgười kiểm duyệt\tGhi chú (nêu rõ dụng cụ này dành cho đơn hàng nào)\tSố lượng nhập kho\tThời gian nhập kho\tHình ảnh nhập kho')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 // printMultipleText('"报检单号\n' +
 //     'Số phiếu nhập kho"\t"报检单合计数量\n' +

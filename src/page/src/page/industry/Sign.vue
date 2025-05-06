@@ -526,6 +526,15 @@ const handleSubmit = (retry: boolean = true) => {
                       {
                         "children": [],
                         "id": "-1",
+                        "path": "dress",
+                        "component": "dress",
+                        "nameKey": "workDressManage",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
                         "path": "computer",
                         "component": "computer",
                         "nameKey": "computerManage",

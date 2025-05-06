@@ -481,6 +481,8 @@ public class DousonController {
                 case "responsibleTeam" -> builder.responsibleTeamList(paramDao.listByCategoryId(categoryId));
                 case "apiDevice" -> builder.apiDeviceList(paramDao.listByCategoryId(categoryId));
                 case "nationality" -> builder.nationalityList(paramDao.listByCategoryId(categoryId));
+                case "workDressType" -> builder.workDressTypeList(paramDao.listByCategoryId(categoryId));
+                case "storePosition" -> builder.storePositionList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
