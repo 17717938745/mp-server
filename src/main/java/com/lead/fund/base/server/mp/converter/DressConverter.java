@@ -23,9 +23,11 @@ public interface DressConverter extends Serializable {
     DressConverter DRESS_INSTANCE = Mappers.getMapper(DressConverter.class);
 
     @Mapping(target = "id", source = "dressId")
+    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(request.getApplyDate()))")
     DressEntity dress(DressRequest request);
 
     @Mapping(target = "dressId", source = "id")
+    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(d.getApplyDate()))")
     DressResponse dress(DressEntity d);
 
     List<DressResponse> dressList(List<DressEntity> list);

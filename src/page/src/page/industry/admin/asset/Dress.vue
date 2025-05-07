@@ -101,16 +101,16 @@
           <el-input v-model="formData.materialNo" :disabled="!dressManager"/>
         </el-form-item>
         <el-form-item prop="remark" :label="store.state.label.remark">
-          <el-input v-model="formData.remark"/>
+          <el-input v-model="formData.remark" :disabled="!dressManager"/>
         </el-form-item>
         <el-form-item prop="designNumber" :label="store.state.label.designNumber">
-          <el-input v-model="formData.designNumber"/>
+          <el-input v-model="formData.designNumber" :disabled="!dressManager"/>
         </el-form-item>
         <el-form-item prop="designNumberList" :label="`${store.state.label.designNumberOfPdf}(${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <file-upload :fileList="formData.designNumberList" :maxSize="Number(`${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></file-upload>
+          <file-upload :fileList="formData.designNumberList" :maxSize="Number(`${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!dressManager"></file-upload>
         </el-form-item>
         <el-form-item prop="applyCount" :label="store.state.label.applyCount">
-          <el-input-number v-model="formData.applyCount" style="width: 60px;" :controls="false" :min="0"/>
+          <el-input-number v-model="formData.applyCount" style="width: 60px;" :controls="false" :min="0" :disabled="!dressManager"/>
         </el-form-item>
         <el-form-item prop="applyDate" :label="store.state.label.applyDate">
           <el-date-picker
@@ -118,6 +118,7 @@
               v-model="formData.applyDate"
               format="YYYY-MM-DD"
               @change="formData.applyDate = formatDate(formData.applyDate, 'yyyy-MM-dd')"
+              :disabled="!dressManager"
           >
           </el-date-picker>
         </el-form-item>
@@ -127,6 +128,7 @@
                      allow-create
                      clearable
                      :placeholder="store.state.label.storePosition"
+                     :disabled="!(dressManager || storeDressManager)"
           >
             <el-option
                 v-for="item in config.storePositionList"
@@ -142,6 +144,7 @@
                      allow-create
                      clearable
                      :placeholder="store.state.label.checkAccept"
+                     :disabled="!(dressManager || storeDressManager)"
           >
             <el-option
                 v-for="item in userOptionList"
@@ -152,13 +155,16 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="descriptionOfOrder" :label="store.state.label.descriptionOfOrder">
-          <el-input v-model="formData.descriptionOfOrder"/>
+          <el-input v-model="formData.descriptionOfOrder" :disabled="!(dressManager || storeDressManager)"/>
         </el-form-item>
         <el-form-item prop="storeCount" :label="store.state.label.storeCount">
-          <el-input-number v-model="formData.storeCount" style="width: 60px;" :controls="false" :min="0"/>
+          <el-input-number v-model="formData.storeCount" style="width: 60px;" :controls="false" :min="0" :disabled="!dressManager"/>
+        </el-form-item>
+        <el-form-item prop="storeDateDescription" :label="store.state.label.storeDateDescription">
+          <el-input v-model="formData.storeDateDescription" :disabled="!dressManager"/>
         </el-form-item>
         <el-form-item prop="storePictureList" :label="`${store.state.label.storePicture}(${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.storePictureList" :maxSize="Number(`${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
+          <image-upload :photoList="formData.storePictureList" :maxSize="Number(`${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!dressManager"></image-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -337,8 +343,8 @@ import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Search,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
-import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
-import {ListResult, PageResult} from '@/typing/ma/System'
+import {httpDelete, httpGet, httpPutJson} from '@/util/HttpUtil'
+import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
@@ -361,19 +367,21 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 189},
-  {value: 'workDressType', labelKey: 'workDressType', width: 189},
+  {value: 'workDressTypeFormat', originValue: 'workDressType', labelKey: 'workDressType', width: 189},
   {value: 'materialNo', labelKey: 'materialNo', width: 189},
   {value: 'remark', labelKey: 'remark', width: 189},
-  {value: 'designNumber', labelKey: 'designNumber', width: 189},
+  {value: 'designNumber', originValue: 'designNumber', labelKey: 'designNumber', width: 189},
   {value: 'designNumberCount', labelKey: 'designNumberOfPdf', width: 189},
+  {value: 'designNumberList', labelKey: 'designNumberOfPdf', width: 189, type: ValueType.Attachment,},
   {value: 'applyCount', labelKey: 'applyCount', width: 189},
   {value: 'applyDate', labelKey: 'applyDate', width: 189},
-  {value: 'storePosition', labelKey: 'storePosition', width: 189},
+  {value: 'storePositionFormat', originValue: 'storePosition', labelKey: 'storePosition', width: 189},
   {value: 'checkAcceptUserFormat', originValue: 'checkAcceptUser', labelKey: 'checkAccept', width: 189},
   {value: 'descriptionOfOrder', labelKey: 'descriptionOfOrder', width: 189},
   {value: 'storeCount', labelKey: 'storeCount', width: 189},
   {value: 'storeDateDescription', labelKey: 'storeDateDescription', width: 189},
-  {value: 'storePictureList', labelKey: 'storePicture', width: 189},
+  {value: 'storePictureCount', labelKey: 'storePicture', width: 189,},
+  {value: 'storePictureList', labelKey: 'storePicture', width: 189, type: ValueType.Image,},
 ])
 const defaultFormData = {
   creator: user.userId,
@@ -455,9 +463,9 @@ const state = reactive({
     applyDate: [{required: dressManager, message: 'Please check', trigger: 'blur'}],
     storePosition: [{required: dressManager, message: 'Please check', trigger: 'blur'}],
     checkAcceptUser: [{required: dressManager, message: 'Please check', trigger: 'blur'}],
-    descriptionOfOrder: [{required: dressManager, message: 'Please check', trigger: 'blur'}],
+    descriptionOfOrder: [{required: dressManager, max: 200, message: 'Please check', trigger: 'blur'}],
     storeCount: [{required: storeDressManager, message: 'Please check', trigger: 'blur'}],
-    storeDateDescription: [{required: storeDressManager, message: 'Please check', trigger: 'blur'}],
+    storeDateDescription: [{required: storeDressManager,  max: 200, message: 'Please check', trigger: 'blur'}],
     storeCount: [{required: storeDressManager, message: 'Please check', trigger: 'blur'}],
     storePictureList: [{required: false, type: 'array', min: 0, max: 6}],
   },
@@ -478,10 +486,8 @@ const handleTableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (row.deviceCheckLedgerState === '999') {
-    return 'device-scrap'
-  } else if ('1' === row.deviceCheckLedgerState && row.dueDateWarning) {
-    return 'device-expire'
+  if (row.applyCount !== row.storeCount) {
+    return 'row-yellow'
   }
   return ''
 }
@@ -528,9 +534,9 @@ Promise.all([
     if (t.value === 'storePosition' && dressManager) {
       t.type = ValueType.SelectEdit
       t.optionList = state.config.storePositionList
-    } else if (t.value === 'descriptionOfOrder' && (dressManager || dressManager)) {
+    } else if (t.value === 'descriptionOfOrder' && (dressManager || storeDressManager)) {
       t.type = ValueType.TextEdit
-    } else if (t.value === 'storeCount' && (dressManager)) {
+    } else if (t.value === 'storeCount' && (storeDressManager)) {
       t.type = ValueType.NumberEdit
     } else if (t.value === 'storeDateDescription' && (dressManager)) {
       t.type = ValueType.TextEdit
@@ -553,7 +559,7 @@ const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
       if (state.formSave) {
-        httpPostJson('douson/admin/dress', state.formData).then(() => {
+        httpPutJson('douson/dress/merge', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handlePage()
@@ -565,7 +571,7 @@ const handleMerge = () => {
   })
 }
 const handleUpdate = (row: any) => {
-  return httpPutJson('douson/admin/dress', row).then(() => {
+  return httpPutJson('douson/dress/merge', row).then(() => {
     state.formVisible = false
     ElMessage.success('Edit success')
     handlePage()
