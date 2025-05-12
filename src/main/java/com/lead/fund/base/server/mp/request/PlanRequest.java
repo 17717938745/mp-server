@@ -8,6 +8,7 @@ import com.lead.fund.base.common.database.entity.AbstractAdmin;
 import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -97,15 +98,15 @@ public class PlanRequest implements Serializable {
     /**
      * 图片列表
      */
-    private List<PhotoImgModel> beforePhotoList;
+    private List<PhotoImgModel> beforePhotoList = new ArrayList<>();
     /**
      * 图片列表
      */
-    private List<PhotoImgModel> afterPhotoList;
+    private List<PhotoImgModel> afterPhotoList = new ArrayList<>();
     /**
      * 附件列表
      */
-    private List<FileModel> attachmentList;
+    private List<FileModel> attachmentList = new ArrayList<>();
     /**
      * 序号（单号）
      */

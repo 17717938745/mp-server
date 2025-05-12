@@ -1,5 +1,7 @@
 package com.lead.fund.base.server.mp.response;
 
+import java.math.BigDecimal;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -26,62 +28,21 @@ public class BoxSummaryResponse implements Serializable {
      */
     private Integer index;
     /**
-     * 采购订单编号
+     * 客户简称
      */
-    private String purchaseOrderNo;
+    private String customerShortName;
+    private String customerShortNameFormat;
     /**
-     * PO项目
+     * 每箱数量
      */
-    private String poProject;
+    private Integer sumEachBoxCount;
     /**
-     * 销售订单
+     * 箱号
      */
-    private String saleOrderNo;
+    private List<Integer> boxNumberList;
+    private Integer sumBoxNumber;
     /**
-     * 订单项目
+     * 每箱重量
      */
-    private String orderProject;
-    /**
-     * 物料号
-     */
-    private String materialNo;
-    /**
-     * 物料描述
-     */
-    private String materialDescription;
-    /**
-     * 图号
-     */
-    private String designNumber;
-    /**
-     * 承诺交期
-     */
-    private String deliveryDate;
-    private String deliveryDateFormat;
-    /**
-     * 完成数量
-     */
-    private Integer completedQty;
-    /**
-     * 注油完成数量
-     */
-    private Integer oilInjectionCompleteCount;
-    /**
-     * 注油完成日期
-     */
-    private String oilInjectionCompleteDate;
-    private String oilInjectionCompleteDateFormat;
-    /**
-     * 装配完成日期
-     */
-    private String assemblyCompleteDate;
-    private String assemblyCompleteDateFormat;
-    /**
-     * 装配完成数量
-     */
-    private Integer assemblyCompleteCount;
-    /**
-     * 订单数量，维度：采购订单编号、PO项目、销售订单、订单项目
-     */
-    private Integer orderCount;
+    private BigDecimal sumEachBoxWeight;
 }

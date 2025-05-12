@@ -28,6 +28,7 @@ import com.lead.fund.base.server.mp.response.BoxFlagSummaryResponse;
 import com.lead.fund.base.server.mp.response.BoxSummaryResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -108,6 +109,7 @@ public class DousonBoxController {
                         .collect(Collectors.toList())
         );
     }
+
     /**
      * 保存装箱标识（后管）
      *
@@ -115,7 +117,7 @@ public class DousonBoxController {
      * @param request  {@link BoxFlagRequest}
      * @return {@link Result}
      */
-    @PostMapping("box")
+    @PostMapping("")
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
     public Result boxFlagAdminSave(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
@@ -149,7 +151,7 @@ public class DousonBoxController {
      * @param request  {@link BoxFlagRequest}
      * @return {@link Result}
      */
-    @PutMapping("box")
+    @PutMapping("")
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
     public Result boxFlagAdminUpdate(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
@@ -194,7 +196,7 @@ public class DousonBoxController {
      * @param request  {@link BoxFlagRequest}
      * @return {@link Result}
      */
-    @DeleteMapping("box")
+    @DeleteMapping("")
     @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
     public Result boxFlagAdminDelete(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
@@ -302,7 +304,7 @@ public class DousonBoxController {
      * @param request  {@link BoxFlagPageRequest}
      * @return {@link PageDataResult}
      */
-    @GetMapping("box/page")
+    @GetMapping("page")
     public PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse> boxFlagAdminPage(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute BoxFlagPageRequest request
@@ -319,7 +321,7 @@ public class DousonBoxController {
      * @param deviceId 设备id
      * @return {@link DataResult<BoxFlagEntity>}
      */
-    @GetMapping("box/last")
+    @GetMapping("last")
     public DataResult<BoxFlagResponse> boxFlagAdminLast(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId
     ) {
@@ -366,49 +368,60 @@ public class DousonBoxController {
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<BoxFlagEntity> l = boxFlagList(request, lambda -> {
             lambda.select(
-                            BoxFlagEntity::getPurchaseOrderNo,
-                            BoxFlagEntity::getPoProject,
-                            BoxFlagEntity::getSaleOrderNo
-                    );
+                    BoxFlagEntity::getCustomerShortName,
+                    BoxFlagEntity::getEachBoxCount,
+                    BoxFlagEntity::getBoxNumber,
+                    BoxFlagEntity::getEachBoxWeight
+            );
         });
         final List<BoxSummaryResponse> rl = BOX_INSTANCE.boxSummaryList(l)
                 .stream().peek(t -> {
-                    t.setDeliveryDate(DateUtil.day(t.getDeliveryDate()));
-                    t.setAssemblyCompleteDate(DateUtil.day(t.getAssemblyCompleteDate()));
-                    t.setAssemblyCompleteDateFormat(DateUtil.day(t.getAssemblyCompleteDate()));
+                    t.setSumBoxNumber(t.getBoxNumberList().size());
                 })
-                .sorted(Comparator.comparing(BoxSummaryResponse::getAssemblyCompleteDate))
-                .collect(Collectors.toList());
-        rl.add(
-                rl.stream().reduce(
-                        new BoxSummaryResponse()
-                                .setPurchaseOrderNo("")
-                                .setPoProject("")
-                                .setSaleOrderNo("")
-                                .setOrderProject("")
-                                .setMaterialNo("")
-                                .setMaterialDescription("")
-                                .setDesignNumber("")
-                                .setDeliveryDate("--")
-                                .setAssemblyCompleteDate("合计")
-                                .setAssemblyCompleteCount(0)
-                                .setCompletedQty(0)
-                                .setOilInjectionCompleteCount(0)
-                                .setOrderCount(0)
-                        ,
+                .sorted(Comparator.comparing(BoxSummaryResponse::getCustomerShortName))
+                .toList();
+        final List<BoxSummaryResponse> list = rl.stream().collect(Collectors.groupingBy(
+                BoxSummaryResponse::getCustomerShortName,
+                Collectors.reducing(
                         (t, t1) -> {
-                            t
-                                    .setAssemblyCompleteCount(t.getAssemblyCompleteCount() + t1.getAssemblyCompleteCount())
-                                    .setOilInjectionCompleteCount(t.getOilInjectionCompleteCount() + t1.getOilInjectionCompleteCount())
-                                    .setCompletedQty(t.getCompletedQty() + t1.getCompletedQty())
-                                    .setOrderCount(t.getOrderCount() + t1.getOrderCount())
-                            ;
-                            return t;
+                            final List<Integer> boxNumberList = new ArrayList<>();
+                            boxNumberList.addAll(t.getBoxNumberList());
+                            boxNumberList.addAll(t1.getBoxNumberList());
+                            return new BoxSummaryResponse()
+                                    .setCustomerShortName(t.getCustomerShortName())
+                                    .setSumEachBoxCount(t.getSumEachBoxCount() + t1.getSumEachBoxCount())
+                                    .setSumEachBoxWeight(BigDecimal.ZERO.add(t.getSumEachBoxWeight()).add(t1.getSumEachBoxWeight()))
+                                    .setBoxNumberList(boxNumberList)
+                                    ;
                         }
                 )
+        )).values().stream().map(t -> t.orElse(new BoxSummaryResponse())).peek(t -> {
+            t.setSumBoxNumber(t.getBoxNumberList().size());
+        }).collect(Collectors.toList());
+        MultitaskUtil.supplementList(
+                list,
+                BoxSummaryResponse::getCustomerShortName,
+                ll -> paramDao.listByCategoryId("customerShortName"),
+                (t, r) -> t.getCustomerShortName().equals(r.getValue()),
+                (t, r) -> t.setCustomerShortNameFormat(r.getLabel())
         );
+        if (CollUtil.isNotEmpty(list)) {
+            final BoxSummaryResponse summaryData = list.stream().reduce(
+                    (t, t1) -> new BoxSummaryResponse()
+                            .setSumEachBoxCount(t.getSumEachBoxCount() + t1.getSumEachBoxCount())
+                            .setSumEachBoxWeight(BigDecimal.ZERO.add(t.getSumEachBoxWeight()).add(t1.getSumEachBoxWeight()))
+                            .setSumBoxNumber(t.getSumBoxNumber() + t1.getSumBoxNumber())
+                            .setBoxNumberList(null)
+            ).orElse(new BoxSummaryResponse());
+            list.add(new BoxSummaryResponse().setCustomerShortNameFormat("(blank)"));
+            list.add(BOX_INSTANCE.copyBoxSummary(summaryData)
+                    .setCustomerShortName("")
+                    .setCustomerShortNameFormat("Grand Total")
+                    .setBoxNumberList(null)
+            );
+        }
         return new ListResult<>(
-                rl.stream()
+                list.stream()
                         .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
         );
     }

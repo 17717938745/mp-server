@@ -31,7 +31,7 @@ const componentList = ref([
     component: shallowRef(Index),
   },
   {
-    label: `1${store.state.label.boxFlagCard} Summary`,
+    label: `${store.state.label.boxFlagCard} Summary`,
     component: shallowRef(Summary),
   },
 ]);

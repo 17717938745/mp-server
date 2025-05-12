@@ -55,9 +55,12 @@ public interface BoxConverter extends Serializable {
     @Mapping(target = "fullPhotoUrl", expression = "java(e.getPhotoUrl().startsWith(\"http:\") || e.getPhotoUrl().startsWith(\"https:\") ? e.getPhotoUrl() : (urlPrefix + e.getPhotoUrl()))")
     PhotoImgModel photo(BoxFlagPhotoEntity e, String urlPrefix);
 
-//    @Mapping(target = "assemblyCompleteCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getAssemblyCompleteCount()))")
-//    @Mapping(target = "deliveryDateFormat", expression = "java(com.lead.fund.base.common.util.DateUtil.day(t.getDeliveryDate()))")
+    @Mapping(target = "sumEachBoxCount", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultInteger(t.getEachBoxCount()))")
+    @Mapping(target = "boxNumberList", expression = "java(com.lead.fund.base.common.util.StrUtil.isNotBlank(t.getBoxNumber()) ? cn.hutool.core.collection.CollUtil.toList(t.getBoxNumber()) : new java.util.ArrayList<>())")
+    @Mapping(target = "sumEachBoxWeight", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(t.getEachBoxWeight()))")
     BoxSummaryResponse boxSummary(BoxFlagEntity t);
+
+    BoxSummaryResponse copyBoxSummary(BoxSummaryResponse t);
 
     List<BoxSummaryResponse> boxSummaryList(List<BoxFlagEntity> list);
 }
