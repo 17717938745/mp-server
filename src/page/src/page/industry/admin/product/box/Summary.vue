@@ -125,7 +125,7 @@ const state = reactive({
       customerShortName: '',
       purchaseOrderNo: '',
       materialNo: '',
-      alreadySend: null,
+      alreadySend: false,
       startDate: '',
       endDate: '',
     },
