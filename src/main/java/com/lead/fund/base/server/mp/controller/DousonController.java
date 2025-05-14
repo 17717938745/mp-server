@@ -3282,7 +3282,7 @@ public class DousonController {
             @ModelAttribute EquipmentPageRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "equipmentView".equals(t))) {
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "equipmentView".equals(t) || "equipmentManager".equals(t))) {
             request.getData().setQueryUserId(u.getUserId());
         }
         PageResult<EquipmentEntity> page = DatabaseUtil.page(request, this::equipmentList);
