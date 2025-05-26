@@ -123,38 +123,42 @@ create index IND_MSIH_SIT_0
 
 create table dmmp.MP_USER
 (
-    USERNAME             varchar(32)             null comment '用户名',
-    NAME                 varchar(32)             null comment '姓名',
-    NICKNAME             varchar(128)            null comment '昵称',
-    PASSWORD_ENCRYPT     varchar(128)            null comment '密码密文',
-    SALT                 varchar(32)             null comment '密码密钥',
-    MOBILE               varchar(64) default '1' null comment '手机',
-    MAIL                 varchar(256)            null comment '邮箱',
-    PASSWORD_EXPIRE_TIME datetime                null comment '密码过期时间',
-    SIGN_IN_LOCK         int         default 0   null comment '登录是否锁定',
-    SIGN_IN_FAIL_COUNT   int         default 0   null comment '登录错误次数',
-    SIGN_IN_LOCK_TIME    datetime                null comment '登录锁定时间',
-    CREATOR              varchar(64)             null comment '创建人用户id',
-    MODIFIER             varchar(64)             null comment '修改人用户id',
-    STATE                int         default 0   null comment '状态，0-正常 1-删除',
-    CREATE_TIME          datetime                null comment '创建时间',
-    MODIFY_TIME          datetime                null comment '修改时间',
-    ID                   varchar(64)             not null comment '唯一标志'
+    USERNAME                    varchar(32)             null comment '用户名',
+    NAME                        varchar(32)             null comment '姓名',
+    NICKNAME                    varchar(128)            null comment '昵称',
+    PASSWORD_ENCRYPT            varchar(128)            null comment '密码密文',
+    SALT                        varchar(32)             null comment '密码密钥',
+    MOBILE                      varchar(64) default '1' null comment '手机',
+    MAIL                        varchar(256)            null comment '邮箱',
+    PASSWORD_EXPIRE_TIME        datetime                null comment '密码过期时间',
+    SIGN_IN_LOCK                int         default 0   null comment '登录是否锁定',
+    SIGN_IN_FAIL_COUNT          int         default 0   null comment '登录错误次数',
+    SIGN_IN_LOCK_TIME           datetime                null comment '登录锁定时间',
+    CREATOR                     varchar(64)             null comment '创建人用户id',
+    MODIFIER                    varchar(64)             null comment '修改人用户id',
+    STATE                       int         default 0   null comment '状态，0-正常 1-删除',
+    CREATE_TIME                 datetime                null comment '创建时间',
+    MODIFY_TIME                 datetime                null comment '修改时间',
+    ID                          varchar(64)             not null comment '唯一标志'
         primary key,
-    DEPARTMENT           varchar(256)            null,
-    PROFESSION           varchar(256)            null,
-    INTERVIEW_RESUME     mediumtext              null,
-    SCHEDULE             varchar(256)            null comment '班次',
-    USER_PROPERTY        varchar(256)            null comment '人员属性',
-    LEADER_USER_ID       varchar(64)             null
+    DEPARTMENT                  varchar(256)            null,
+    PROFESSION                  varchar(256)            null,
+    INTERVIEW_RESUME            mediumtext              null,
+    SCHEDULE                    varchar(256)            null comment '班次',
+    USER_PROPERTY               varchar(256)            null comment '人员属性',
+    LEADER_USER_ID              varchar(64)             null,
+    `LAST_INCREASE_SALARY_DATE` varchar(32),
+    `PLAN_INCREASE_SALARY_DATE` varchar(32),
+    `EMPLOYEE_ID`               varchar(64) default '' default null comment '员工工号'
 )
     comment '用户表';
 
 create index UNQ_15110_MpUser_1
     on dmmp.MP_USER (USERNAME);
-
 create index UNQ_15110_MpUser_2
     on dmmp.MP_USER (MOBILE);
+create unique index UNQ_15110_MpUser_3
+    on dmmp.MP_USER (`EMPLOYEE_ID`);
 
 
 

@@ -467,6 +467,15 @@ const handleSubmit = (retry: boolean = true) => {
                         "white": false,
                         "showFlag": true,
                       },
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "score",
+                        "component": "score",
+                        "nameKey": "scoreReport",
+                        "white": false,
+                        "showFlag": true,
+                      },
                     ]
                   },
                   {
