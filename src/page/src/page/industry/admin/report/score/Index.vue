@@ -38,7 +38,7 @@
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
     </div>
-    <div class="douson-flex-item" style="align-items: center; ">
+    <div class="douson-flex-item" style="align-items: center;  gap: 16px;">
       <el-button v-if="roleManager" :icon="UploadFilled" @click="handleDownloadTemplate" type="primary">Download template</el-button>
       <el-upload
           v-if="roleManager"
