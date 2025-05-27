@@ -199,13 +199,13 @@ export function getQuarterStartMonth() {
 export function getQuarterStartMonthString() {
   let month = new Date().getMonth()
   if (month < 3) {
-    return '01'
+    return 'Q1'
   } else if (month < 6) {
-    return '04'
+    return 'Q2'
   } else if (month < 9) {
-    return '07'
+    return 'Q3'
   } else {
-    return '10'
+    return 'Q4'
   }
 }
 

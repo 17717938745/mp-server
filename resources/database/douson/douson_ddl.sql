@@ -1210,6 +1210,7 @@ CREATE TABLE douson.MP_DRESS_ATTACHMENT
 )
     COMMENT '工装管理附件';
 
+# DROP TABLE douson.MP_SCORE;
 CREATE TABLE douson.MP_SCORE
 (
     USER_ID             VARCHAR(64)     NULL COMMENT '用户ID',
@@ -1226,30 +1227,28 @@ CREATE TABLE douson.MP_SCORE
     QUARTERLY_BONUS     DECIMAL(38, 10) NULL COMMENT '季度奖金',
     DESCRIPTION         VARCHAR(512)    NULL COMMENT '备注',
     LEADER_USER_ID      VARCHAR(64)     NULL COMMENT '当班主管',
-    CREATOR             VARCHAR(64)     NULL COMMENT '创建人用户ID',
-    MODIFIER            VARCHAR(64)     NULL COMMENT '修改人用户ID',
-    STATE               INT DEFAULT 0   NULL COMMENT '状态，0-正常 1-删除',
-    CREATE_TIME         DATETIME        NULL COMMENT '创建时间',
-    MODIFY_TIME         DATETIME        NULL COMMENT '修改时间',
+    SORTER              int default 0   null comment '排序',
+    CREATOR             varchar(64)     null comment '创建人用户id',
+    MODIFIER            varchar(64)     null comment '修改人用户id',
+    REMARK              varchar(512)    null comment '备注',
+    CREATED_TIME        datetime        not null comment '创建时间',
+    LAST_MODIFIED_TIME  datetime        not null comment '修改时间',
+    DELETED_FLAG        int             null comment '删除标志',
     ID                  VARCHAR(64)     NOT NULL COMMENT '唯一标志',
     PRIMARY KEY (ID)
 ) COMMENT '季度评比报告';
 
+# DROP TABLE douson.MP_SCORE_ATTACHMENT;
 CREATE TABLE douson.MP_SCORE_ATTACHMENT
 (
-    SCORE_ID            VARCHAR(64)   NOT NULL COMMENT '季度评比报告ID',
-    ATTACHMENT_CATEGORY VARCHAR(64)   NULL COMMENT '附件分类，photo-阀体照片',
-    ATTACHMENT_TYPE     VARCHAR(4)    NULL COMMENT '附件类型，0：照片；1-视频',
-    URL                 VARCHAR(256)  NULL COMMENT '链接',
-    FILE_ID             VARCHAR(64)   NULL COMMENT '文件ID',
-    FILENAME            VARCHAR(255)  NULL COMMENT '文件名',
-    COMPRESS_URL        TEXT          NULL COMMENT '压缩链接',
-    CREATOR             VARCHAR(64)   NULL COMMENT '创建人用户ID',
-    MODIFIER            VARCHAR(64)   NULL COMMENT '修改人用户ID',
-    STATE               INT DEFAULT 0 NULL COMMENT '状态，0-正常 1-删除',
-    CREATE_TIME         DATETIME      NULL COMMENT '创建时间',
-    MODIFY_TIME         DATETIME      NULL COMMENT '修改时间',
-    ID                  VARCHAR(64)   NOT NULL COMMENT '唯一标志',
+    SCORE_ID            VARCHAR(64)  NOT NULL COMMENT '季度评比报告ID',
+    ATTACHMENT_CATEGORY VARCHAR(64)  NULL COMMENT '附件分类，photo-阀体照片',
+    ATTACHMENT_TYPE     VARCHAR(4)   NULL COMMENT '附件类型，0：照片；1-视频',
+    URL                 VARCHAR(256) NULL COMMENT '链接',
+    FILE_ID             VARCHAR(64)  NULL COMMENT '文件ID',
+    FILENAME            VARCHAR(255) NULL COMMENT '文件名',
+    COMPRESS_URL        TEXT         NULL COMMENT '压缩链接',
+    ID                  VARCHAR(64)  NOT NULL COMMENT '唯一标志',
     PRIMARY KEY (ID)
 ) COMMENT '季度评比报告附件';
 create unique index UNQ_15110_SA_0

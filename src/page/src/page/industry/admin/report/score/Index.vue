@@ -7,6 +7,7 @@
           type="year"
           placeholder="Select Year"
           @change="handleYearChange"
+          :clearable="false"
       />
       <el-select ref="quarterSelect" v-model="selectedQuarter" placeholder="Select Quarter" @change="handleQuarterChange">
         <el-option
@@ -16,74 +17,33 @@
             :value="quarter.value"
         />
       </el-select>
-      <el-input v-model="query.data.saleOrderNo"
-                @change="handleList"
-                :placeholder="store.state.label.saleOrderNo"
-                class="search-item"/>
-      <el-input v-model="query.data.orderProject"
-                @change="handleList"
-                :placeholder="store.state.label.orderProject"
-                class="search-item"/>
-      <el-input v-model="query.data.materialNo"
-                @change="handleList"
-                :placeholder="store.state.label.materialNo"
-                class="search-item"/>
-      <el-select v-model="query.data.customerShortName"
+      <el-select v-model="query.data.userId"
                  @change="handleList"
                  filterable
                  allow-create
                  clearable
-                 :placeholder="store.state.label.customerShortName"
+                 :placeholder="store.state.label.chineseName"
                  class="search-item">
         <el-option
-            v-for="item in config.customerShortNameList"
+            v-for="item in userOptionList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
         />
       </el-select>
-      <el-input v-model="query.data.purchaseOrderNo"
-                @change="handleList"
-                :placeholder="store.state.label.purchaseOrderNo"
-                class="search-item"/>
-      <el-input v-model="query.data.poProject"
-                @change="handleList"
-                :placeholder="store.state.label.poProject"
-                class="search-item"/>
-      <el-select
-          v-model="query.data.alreadySend"
-          @change="handleList"
-          clearable
-          placeholder="Already send">
-        <el-option
-            label="Yes"
-            :value="true"
-        />
-        <el-option
-            label="No"
-            :value="false"
-        />
-      </el-select>
+      <el-input v-model="query.data.evaluationResult" @change="handleList" :placeholder="store.state.label.evaluationResult"/>
+      <el-input v-model="query.data.description" @change="handleList" :placeholder="store.state.label.description"/>
+      <el-input v-model="query.data.leaderUserId" @change="handleList" :placeholder="store.state.label.leaderUserId"/>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
-        <el-button
-            :icon="Plus"
-            v-if="includes(roleCodeList, 'admin') || includes(roleCodeList, 'score')"
-            @click="handleSaveModal"
-            type="success"
-        >Add
-        </el-button>
-        <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>
-    <div>
-      <span style="font-size: 26px; font-weight: bold;">{{ store.state.label.eachBoxCount }}（sum）:</span>
-      <span style="font-weight: bold;">{{ summaryData.sumEachBoxCount }}</span>
-    </div>
-    <div class="douson-flex-item" style="align-items: center;">
-      <el-button :icon="UploadFilled" @click="handleDownloadTemplate" type="primary">Download template</el-button>
+    <div class="douson-flex-item" style="align-items: center; ">
+      <el-button v-if="roleManager" :icon="UploadFilled" @click="handleDownloadTemplate" type="primary">Download template</el-button>
       <el-upload
+          v-if="roleManager"
           action="#"
+          :disabled="!selectedYear || !selectedQuarter"
           :show-file-list="false"
           :on-change="handleFileChange"
           :before-upload="handleBeforeUpload"
@@ -93,33 +53,40 @@
           :drag="true"
       >
         <div>
-          <el-button v-if="true" :icon="UploadFilled" @click="handleList" type="danger">Upload</el-button>
+          <el-button v-if="roleManager" :icon="UploadFilled" @click="handleList" type="danger">Upload</el-button>
         </div>
       </el-upload>
+      <el-button v-if="roleManager" round :icon="EditPen" @click="editRuleVisible = true">
+        Edit rule
+      </el-button>
+      <el-link v-if="tableData.length > 0"
+               type="danger"
+               class="link"
+               @click="handleShowRule">
+        Show rule
+      </el-link>
+    </div>
+    <el-dialog :title="rule.title" v-model="ruleVisible" width="80%" :close-on-click-modal="false">
+      <div v-if="rule" v-html="rule.content" class="douson-h5"></div>
+    </el-dialog>
+    <div>
+      <el-alert v-if="afterUpload"
+                :title="`上传总记录数：${uploadData.totalCount}, 失败数：${uploadData.errorCount}；未匹配：${uploadData.notMatchUserCount}：${uploadData.notMatchUserList.join('、')}, 更新：${uploadData.updateUserCount}, 新增：${uploadData.insertUserCount}`"
+                :type="uploadData.errorCount > 0 ? 'error' : 'success'"/>
     </div>
     <view-list
-        idKey="scoreFlagId"
+        idKey="scoreId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
-        :handleEditShow="handleEditShow"
-        :handleDelete="includes(roleCodeList, 'admin') ? handleDelete : null"
+        :handleEditShow="(row) => roleManager&& row.scoreId"
+        :handleDelete=" handleDelete"
+        :handleDeleteShow="(row) => roleManager&& row.scoreId"
         :page="query.page"
-        :total="total"
-        :handleListChange="handleListChange"
-        :handleLimitChange="handleLimitChange"
         :handleTableRowClassName="handleTableRowClassName"
     >
       <template #operator="row">
-        <el-link
-            :icon="Printer"
-            @click="handleShowPrintDetail(row)"
-            class="mr10"
-            type="info"
-        >
-          <el-tag size="small">Print</el-tag>
-        </el-link>
       </template>
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
@@ -130,314 +97,66 @@
           label-width="auto"
           label-position="top"
       >
-        <el-form-item prop="operator">
-          <div style="display: flex; flex-direction: row-reverse !important; width: 100%;">
-            <el-button :icon="Refresh"
-                       @click="formData = Object.assign({}, defaultFormData, {creator: formData.creator, orderNo: formData.orderNo, scoreNumber: formData.scoreNumber, creatorFormat: formData.creatorFormat, scoreFlagId: formData.scoreFlagId, })"
-                       type="warning">Reset
-            </el-button>
-          </div>
+        <el-form-item prop="deviceNumber" :label="store.state.label.deviceNumber">
+          <el-input v-model="formData.deviceNumber"/>
         </el-form-item>
-        <el-form-item prop="scoreFlagId" :label="store.state.label.scoreFlagId">
-          <el-input v-model="formData.scoreFlagId" :disabled="true"/>
+        <el-form-item prop="qualityScore" :label="store.state.label.qualityScore">
+          <el-input-number v-model="formData.qualityScore" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="creatorFormat" :label="store.state.label.username">
-          <el-input v-model="formData.creatorFormat" :disabled="true"/>
+        <el-form-item prop="attendanceScore" :label="store.state.label.attendanceScore">
+          <el-input-number v-model="formData.attendanceScore" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="date" :label="store.state.label.date">
-          <el-date-picker
-              type="date"
-              v-model="formData.date"
-              format="YYYY-MM-DD"
-              @change="formData.date = formatDate(formData.date, 'yyyy-MM-dd')"
-              :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          >
-          </el-date-picker>
+        <el-form-item prop="safetyScore" :label="store.state.label.safetyScore">
+          <el-input-number v-model="formData.safetyScore" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="customerShortName" :label="store.state.label.customerShortName">
-          <el-select v-model="formData.customerShortName"
-                     filterable
-                     allow-create
-                     clearable
-                     :placeholder="store.state.label.customerShortName"
-                     :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          >
-            <el-option
-                v-for="item in config.customerShortNameList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+        <el-form-item prop="monthlyPerformance" :label="store.state.label.monthlyPerformance">
+          <el-input-number v-model="formData.monthlyPerformance" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="purchaseOrderNo" :label="store.state.label.purchaseOrderNo">
-          <el-input v-model="formData.purchaseOrderNo"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
+        <el-form-item prop="totalWorkDays" :label="store.state.label.totalWorkDays">
+          <el-input-number v-model="formData.totalWorkDays" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="poProject" :label="store.state.label.poProject">
-          <el-input v-model="formData.poProject"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
+        <el-form-item prop="evaluationMonths" :label="store.state.label.evaluationMonths">
+          <el-input-number v-model="formData.evaluationMonths" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="saleOrderNo" :label="store.state.label.saleOrderNo">
-          <el-input v-model="formData.saleOrderNo"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
+        <el-form-item prop="evaluationResult" :label="store.state.label.evaluationResult">
+          <el-input v-model="formData.evaluationResult"/>
         </el-form-item>
-        <el-form-item prop="orderProject" :label="store.state.label.orderProject">
-          <el-input v-model="formData.orderProject"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
+        <el-form-item prop="quarterlyBonus" :label="store.state.label.quarterlyBonus">
+          <el-input-number v-model="formData.quarterlyBonus" style="width: 160px;" :controls="false" :min="0"/>
         </el-form-item>
-        <el-form-item prop="materialNo" :label="store.state.label.materialNo">
-          <el-input v-model="formData.materialNo"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
+        <el-form-item prop="description" :label="store.state.label.description">
+          <el-input type="textarea" :rows=4 v-model="formData.description"/>
         </el-form-item>
-        <el-form-item prop="eachBoxCount" :label="store.state.label.eachBoxCount">
-          <el-input-number :min="0" v-model="formData.eachBoxCount"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-        </el-form-item>
-        <el-form-item prop="scoreNumber" :label="store.state.label.scoreNumber">
-          <el-input v-model="formData.scoreNumber" :disabled="true">
-            <template #prepend>T</template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="serialNo" :label="store.state.label.serialNo">
-          <el-input type="textarea" :rows=4 v-model="formData.serialNo"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"/>
-        </el-form-item>
-        <el-form-item prop="volume" :label="store.state.label.volume">
-          <el-input-number :min="0" v-model="formData.length"
-                           @change="formData.volume = formData.length * formData.width * formData.height"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-          *
-          <el-input-number :min="0" v-model="formData.width"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-          *
-          <el-input-number :min="0" v-model="formData.height"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-        </el-form-item>
-        <el-form-item prop="unitWeight" :label="store.state.label.unitWeight">
-          <el-input-number :min="0" v-model="formData.unitWeight"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-        </el-form-item>
-        <el-form-item prop="eachBoxWeight" :label="store.state.label.eachBoxWeight">
-          <el-input-number :min="0" v-model="formData.eachBoxWeight"
-                           :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-        </el-form-item>
-        <el-form-item prop="orderNo" :label="store.state.label.orderNo">
-          <el-input v-model="formData.orderNo" :disabled="true"/>
-        </el-form-item>
-        <el-form-item prop="remark" :label="store.state.label.description">
-          <el-input v-model="formData.remark"
-                    :disabled="!includes(roleCodeList, 'admin') && store.state.user.userId !== formData.creator"
-          />
-        </el-form-item>
-        <el-form-item prop="sendCount" :label="store.state.label.sendCount">
-          <el-input-number :min="0" v-model="formData.sendCount"
-                           :disabled="!includes(roleCodeList, 'scoreManager')"
-                           @change="handleSendCountChange"
-          />
-        </el-form-item>
-        <el-form-item prop="sendDate" :label="store.state.label.sendDate">
-          <el-date-picker
-              type="date"
-              v-model="formData.sendDate"
-              format="YYYY-MM-DD"
-              @change="formData.sendDate = formatDate(formData.sendDate, 'yyyy-MM-dd')"
-              :disabled="!includes(roleCodeList, 'scoreManager')"
-          >
-          </el-date-picker>
+        <el-form-item prop="leaderUserId" :label="store.state.label.leaderUserId">
+          <el-input v-model="formData.leaderUserId"/>
         </el-form-item>
         <el-form-item prop="photoList" :label="`${store.state.label.photo}(${(formRuleList['photoList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
           <image-upload :photoList="formData.photoList" :maxSize="Number(`${(formRuleList['photoList'] || []).reduce((p:any, t:any) => t.max, 999)}`)"></image-upload>
         </el-form-item>
       </el-form>
       <template #footer>
+        <el-affix position="bottom" :offset="20">
         <span class="dialog-footer">
           <el-button @click="formVisible = false">Cancel</el-button>
           <el-button type="primary" @click="handleMerge">Confirm</el-button>
         </span>
+        </el-affix>
       </template>
     </el-dialog>
     <el-drawer
-        v-model="showPrint"
-        :with-header="true"
-        size="100%"
+        v-model="editRuleVisible"
+        size="90%"
         :append-to-body="true"
         :lock-scroll="false"
         modal-class="print-drawer"
-        :z-index="99999"
+        :z-index="1"
     >
-      <div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 10px;">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 585px;">
-          <h1 style="text-align: center; height: 50px;">
-            <span style="font-size: 32px;">PACKING STAMP</span>
-            <br>
-            <span style="font-size: 22px;">TEM ĐÓNG THÙNG</span>
-          </h1>
-          <div style="display: flex; justify-content: flex-end; width: 100%; height: 50px;">
-            <h5>{{ store.state.label.orderNo }}：{{ printData['orderNo'] }}</h5>
-          </div>
-          <el-descriptions
-              :column="1"
-              style="width: 100%;"
-              border
-          >`
-            <el-descriptions-item
-                :label="store.state.label.customerShortName"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Customer
-                <br>
-                Tên khách hàng
-              </template>
-              {{ printData['customerShortNameFormat'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.purchaseOrderNo"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                PO NO.
-                <br>
-                mã đơn đặt hàng của khách hàng
-              </template>
-              {{ `${printData['purchaseOrderNo']}-${printData['poProject']}` }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.saleOrderNo"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Sales Order
-                <br>
-                đơn đặt hàng
-              </template>
-              {{ `${printData['saleOrderNo']}-${printData['orderProject']}` }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.materialNo"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Part NO
-                <br>
-                mã vật liệu
-              </template>
-              {{ `${printData['materialNo']}` }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.eachBoxCount"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Amount Per Box
-                <br>
-                Số lượng mỗi thùng
-              </template>
-              {{ printData['eachBoxCount'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.scoreNumber"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Package NO.
-                <br>
-                Mã thùng
-              </template>
-              {{ printData['scoreNumberFormat'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.serialNo"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Serial NO.
-                <br>
-                Số seri
-              </template>
-              {{ printData['serialNo'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.username"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Operator
-                <br>
-                Nhân viên
-              </template>
-              {{ printData['creatorFormat'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.date"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Date
-                <br>
-                Ngày tháng
-              </template>
-              {{ printData['date'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.date"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Unit Weight
-                <br>
-                Trọng lượng mỗi con KG
-              </template>
-              {{ printData['unitWeight'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="store.state.label.date"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Gross Weight
-                <br>
-                Trọng lượng mỗi thùng
-              </template>
-              {{ printData['eachBoxWeight'] }}
-            </el-descriptions-item>
-            <el-descriptions-item
-                :label="'Country of Origin  Xuất xứ'"
-                align="center"
-                label-class-name="score-print-label"
-            >
-              <template #label>
-                Country of Origin Xuất xứ
-              </template>
-              MADE IN VIETNAM
-            </el-descriptions-item>
-          </el-descriptions>
-        </div>
-      </div>
+      <tinymce :forum-id="'score'" :category="'score'" :after-success="() => {editRuleVisible = false; }"></tinymce>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editRuleVisible = false">Cancel</el-button>
+        </span>
+      </template>
     </el-drawer>
   </div>
 </template>
@@ -447,23 +166,37 @@ import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Printer, Refresh, Search, UploadFilled,} from '@element-plus/icons-vue'
+import {EditPen, Printer, Refresh, Search, UploadFilled,} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpDownloadFile, httpGet, httpPostJson, httpPutJson, httpUpload} from '@/util/HttpUtil'
-import {DataResult, PageResult} from '@/typing/ma/System'
+import {DataResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate, getQuarterStartMonthString} from '@/util/DateUtil'
 import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
 import ImageUpload from '../../../component/ImageUpload.vue'
+import Tinymce from "../../../component/Tinymce.vue";
 
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
-const showPrint = ref<boolean>(false)
-const printData = ref<any>(null)
+const roleManager = includes(roleCodeList, 'scoreManager')
+const editRuleVisible = ref(false)
+const ruleVisible = ref(false)
+const rule = ref({})
+const handleShowRule = () => {
+  httpGet(`forum`, {
+    forumId: 'score'
+  }).then(
+      (res: DataResult<any>) => {
+        rule.value = res.data
+        ruleVisible.value = true
+        ElMessage.success("Query success")
+      }
+  )
+}
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
@@ -471,32 +204,35 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'userName', labelKey: 'userName', width: 189},
   {value: 'quarter', labelKey: 'quarter', width: 189},
   {value: 'deviceNumber', labelKey: 'deviceNumber', width: 189},
-  {value: 'qualityScore', labelKey: 'qualityScore', width: 189},
-  {value: 'attendanceScore', labelKey: 'attendanceScore', width: 189},
-  {value: 'safetyScore', labelKey: 'safetyScore', width: 189},
-  {value: 'monthlyPerformance', labelKey: 'monthlyPerformance', width: 189},
+  {value: 'qualityScoreFormat', labelKey: 'qualityScore', width: 189},
+  {value: 'attendanceScoreFormat', labelKey: 'attendanceScore', width: 189},
+  {value: 'safetyScoreFormat', labelKey: 'safetyScore', width: 189},
+  {value: 'monthlyPerformanceFormat', labelKey: 'monthlyPerformance', width: 189},
   {value: 'totalWorkDays', labelKey: 'totalWorkDays', width: 189},
-  {value: 'total', labelKey: 'total', width: 189},
+  {value: 'totalFormat', labelKey: 'total', width: 189},
   {value: 'evaluationMonths', labelKey: 'evaluationMonths', width: 189},
   {value: 'evaluationResult', labelKey: 'evaluationResult', width: 189},
-  {value: 'quarterlyBonus', labelKey: 'quarterlyBonus', width: 189},
+  {value: 'quarterlyBonusFormat', labelKey: 'quarterlyBonus', width: 189},
   {value: 'description', labelKey: 'description', width: 189},
   {value: 'leaderUserId', labelKey: 'leaderUserId', width: 189},
-  {value: 'photos', labelKey: 'photos', width: 189},
+  {value: 'photoCount', labelKey: 'photos', width: 189},
+  {value: 'photoList', labelKey: 'photos', width: 128, type: ValueType.Image,},
 ])
 const yearPicker = ref(null)
 const quarterSelect = ref(null)
 const selectedQuarter = ref(getQuarterStartMonthString())
 const selectedYear = ref(formatDate(new Date(), 'yyyy'))
 const quarters = [
-  {label: "Q1 (Jan - Mar)", value: "01"},
-  {label: "Q2 (Apr - Jun)", value: "04"},
-  {label: "Q3 (Jul - Sep)", value: "07"},
-  {label: "Q4 (Oct - Dec)", value: "10"},
+  {label: "Q1 (Jan - Mar)", value: "Q1"},
+  {label: "Q2 (Apr - Jun)", value: "Q2"},
+  {label: "Q3 (Jul - Sep)", value: "Q3"},
+  {label: "Q4 (Oct - Dec)", value: "Q4"},
 ]
 const handleQuarterChange = (value) => {
+  handleList()
 }
 const handleYearChange = (value) => {
+  handleList()
 }
 const handleDownloadTemplate = () => {
   httpDownloadFile("douson/score/template", state.query.data);
@@ -513,7 +249,7 @@ const getYearQuarter = () => {
     quarterSelect.value?.focus()
     return ''
   }
-  return selectedYear.value + selectedQuarter.value
+  return formatDate(selectedYear.value, 'yyyy') + selectedQuarter.value
 }
 const uploadData = ref({})
 const afterUpload = ref(false)
@@ -535,45 +271,42 @@ const handleRequest = (d: any) => {
       delete fileMap[k]
     })
   } else if (keys.length > 0) {
-    Promise.all(keys.map((k: any) => {
-      const t = fileMap[k]
-      const formData = new FormData()
-      formData.set("filename", t.name)
-      formData.set("file", t)
-      return httpUpload(`douson/score/upload`, formData)
-    }))
-    .then((l: any[]) => {
-      afterUpload.value = true
-      uploadData.value = (l[0] || {}).data || {}
-      handleList()
-      keys.forEach((k: any) => {
-        delete fileMap[k]
+    const quarter = getYearQuarter()
+    if (quarter) {
+      Promise.all(keys.map((k: any) => {
+        const t = fileMap[k]
+        const formData = new FormData()
+        formData.set("filename", t.name)
+        formData.set("file", t)
+        formData.set("quarter", quarter)
+        return httpUpload(`douson/score/upload`, formData)
+      }))
+      .then((l: any[]) => {
+        afterUpload.value = true
+        uploadData.value = (l[0] || {}).data || {}
+        handleList()
+        keys.forEach((k: any) => {
+          delete fileMap[k]
+        })
+        return Promise.resolve()
       })
-      return Promise.resolve()
-    })
-    .catch((err) => {
-      ElMessage.error(`Upload failed`)
-      keys.forEach((k: any) => {
-        delete fileMap[k]
+      .catch((err) => {
+        ElMessage.error(`Upload failed`)
+        keys.forEach((k: any) => {
+          delete fileMap[k]
+        })
+        return Promise.reject()
       })
-      return Promise.reject()
-    })
+    }
   }
 }
-if (!includes(roleCodeList, 'scoreManager')) {
-  columnConfigList.value = columnConfigList.value.map((t: any) => {
-    if (t.value === 'sendCount') {
-      t.type = ValueType.Text
-    } else if (t.value === 'sendDate') {
-      t.type = ValueType.Text
-      t.width = 108
-    }
-    return t
-  })
+const handleEditable = (row) => {
+  return row.scoreId
 }
 
 const defaultFormData = {
   employeeId: '',
+  userId: '',
   userName: '',
   quarter: '',
   deviceNumber: '',
@@ -596,6 +329,7 @@ const state = reactive({
     data: {
       employeeId: '',
       userName: '',
+      userId: '',
       quarter: '',
       deviceNumber: '',
       monthlyPerformance: '',
@@ -623,29 +357,18 @@ const state = reactive({
   },
   formVisible: false,
   formRuleList: {
-    creator: [{required: true, message: 'Please check', trigger: 'blur'}],
-    date: [{required: true, message: 'Please check', trigger: 'blur'}],
-    customerShortName: [{required: true, message: 'Please check', trigger: 'blur'}],
-    purchaseOrderNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    poProject: [{required: true, message: 'Please check', trigger: 'blur'}],
-    materialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    saleOrderNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    orderProject: [{required: true, message: 'Please check', trigger: 'blur'}],
-    eachBoxCount: [{required: true, message: 'Please check', trigger: 'blur'}],
-    scoreNumber: [{required: true, message: 'Please check', trigger: 'blur'}],
-    serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    volume: [{required: true, message: 'Please check', trigger: 'blur'}],
-    orderNo: [{required: true, message: 'Please check', trigger: 'blur'}],
-    photoList: [{required: false, type: 'array', min: 0, max: 4}],
+    deviceNumber: [{required: true, message: 'Please check', trigger: 'blur'}],
+    qualityScore: [{required: true, message: 'Please check', trigger: 'blur'}],
+    attendanceScore: [{required: true, message: 'Please check', trigger: 'blur'}],
+    safetyScore: [{required: true, message: 'Please check', trigger: 'blur'}],
+    monthlyPerformance: [{required: true, message: 'Please check', trigger: 'blur'}],
+    totalWorkDays: [{required: true, message: 'Please check', trigger: 'blur'}],
+    evaluationMonths: [{required: true, message: 'Please check', trigger: 'blur'}],
+    evaluationResult: [{required: true, message: 'Please check', trigger: 'blur'}],
+    quarterlyBonus: [{required: true, message: 'Please check', trigger: 'blur'}],
+    description: [{required: true, message: 'Please check', trigger: 'blur'}],
+    photoList: [{required: false, type: 'array', min: 0, max: 50}],
   },
-})
-
-const handleShowPrintDetail = (d: any) => {
-  printData.value = Object.assign({}, d.param || {})
-  showPrint.value = true
-}
-httpGet('douson/config').then(r => {
-  state.config = r.data
 })
 const summaryData = ref({})
 const handleList = () => {
@@ -662,46 +385,61 @@ const handleList = () => {
     )
   }
 }
-const handleListChange = (val: number) => {
-  state.query.page.page = val
-  handleList()
-}
-const handleLimitChange = (val: number) => {
-  state.query.page.limit = val
-  handleList()
-}
-handleList()
-const handleSaveModal = () => {
-  httpGet(`douson/score/last`, {}).then(
-      (res: DataResult<any>) => {
-        state.formData = Object.assign({}, res.data)
-        state.formVisible = true
-        state.formSave = true
+const userOptionList = ref([])
+Promise.all([
+  () => {
+    return {
+      data: {}
+    }
+  },
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
+  if (roleManager) {
+    columnConfigList.value = columnConfigList.value.map((t: any) => {
+      if (t.value === 'description') {
+        t.type = ValueType.Link
+        t.editable = handleEditable
+        t.openLink = (d: any) => {
+          handleEdit(d)
+          setTimeout(() => {
+            // formRef.value.$el
+            formRef.value.scrollToField('description')
+          }, 100)
+        }
+      } else if (t.value === 'photoCount') {
+        t.type = ValueType.Link
+        t.editable = handleEditable
+        t.openLink = (d: any) => {
+          handleEdit(d)
+          setTimeout(() => {
+            // formRef.value.$el
+            formRef.value.scrollToField('photoList')
+          }, 100)
+        }
       }
-  )
-}
+      return t
+    })
+  }
+  handleList()
+})
 const handleEdit = (row: any) => {
   state.formVisible = true
   state.formSave = false
   state.formData = Object.assign({}, row)
 }
-const handleEditShow = (row: any) => {
-  if (includes(roleCodeList, 'admin') || includes(roleCodeList, 'inspector')) {
-    return true
-  } else {
-    return row.creator === store.state.user.userId
-  }
-}
 
 const handleMerge = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
-      if (!formData.value.length || !formData.value.width || !formData.value.height) {
-        ElMessage.error(store.state.label.volume)
-        return
-      }
       if (state.formSave) {
-        httpPostJson('douson/score', state.formData).then(() => {
+        httpPutJson('douson/score/merge', state.formData).then(() => {
           state.formVisible = false
           ElMessage.success('Add success')
           handleList()
@@ -713,7 +451,7 @@ const handleMerge = () => {
   })
 }
 const handleUpdate = (row: any) => {
-  return httpPutJson('douson/score', row).then(() => {
+  return httpPutJson('douson/score/merge', row).then(() => {
     state.formVisible = false
     ElMessage.success('Update success')
     handleList()
@@ -744,29 +482,13 @@ const handleDelete = (row: any) => {
     type: 'warning',
   }).then(() => {
     httpDelete('douson/score', {
-      scoreFlagId: row.scoreFlagId,
+      scoreId: row.scoreId,
     })
     .then(() => {
       ElMessage.success('Delete success')
       handleList()
     })
   })
-}
-const handleDateTimeChange = () => {
-  if (state.dateTimeList && state.dateTimeList.length > 1) {
-    state.query.data.startDate = formatDate(
-        state.dateTimeList[0],
-        "yyyy-MM-dd hh:mm:ss"
-    );
-    state.query.data.endDate = formatDate(
-        state.dateTimeList[1],
-        "yyyy-MM-dd hh:mm:ss"
-    );
-  } else {
-    state.query.data.startDate = ''
-    state.query.data.endDate = ''
-  }
-  handleList()
 }
 const {
   expandRowKeys,

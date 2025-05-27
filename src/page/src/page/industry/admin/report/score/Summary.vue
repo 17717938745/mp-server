@@ -1,78 +1,24 @@
 <template>
   <div>
     <div class="query-container">
-      <el-input v-model="query.data.orderNo"
-                @change="handleList"
-                :placeholder="store.state.label.orderNo"
-                class="search-item"/>
-      <el-date-picker
-          v-model="dateTimeList"
-          @change="handleDateTimeChange"
-          type="daterange"
-          format="YYYY-MM-DD"
-          range-separator="-"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          style="width: 180px; margin-right: 20px;"
-      >
-      </el-date-picker>
-      <el-input v-model="query.data.saleOrderNo"
-                @change="handleList"
-                :placeholder="store.state.label.saleOrderNo"
-                class="search-item"/>
-      <el-input v-model="query.data.orderProject"
-                @change="handleList"
-                :placeholder="store.state.label.orderProject"
-                class="search-item"/>
-      <el-input v-model="query.data.materialNo"
-                @change="handleList"
-                :placeholder="store.state.label.materialNo"
-                class="search-item"/>
-      <el-select v-model="query.data.customerShortName"
-                 @change="handleList"
-                 filterable
-                 allow-create
-                 clearable
-                 :placeholder="store.state.label.customerShortName"
-                 class="search-item">
-        <el-option
-            v-for="item in config.customerShortNameList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+        <el-date-picker
+            ref="yearPicker"
+            v-model="selectedYear"
+            type="year"
+            placeholder="Select Year"
+            @change="handleYearChange"
+            :clearable="false"
         />
-      </el-select>
-      <el-input v-model="query.data.purchaseOrderNo"
-                @change="handleList"
-                :placeholder="store.state.label.purchaseOrderNo"
-                class="search-item"/>
-      <el-input v-model="query.data.poProject"
-                @change="handleList"
-                :placeholder="store.state.label.poProject"
-                class="search-item"/>
-      <el-select
-          v-model="query.data.alreadySend"
-          @change="handleList"
-          clearable
-          placeholder="Already send">
-        <el-option
-            label="Yes"
-            :value="true"
-        />
-        <el-option
-            label="No"
-            :value="false"
-        />
-      </el-select>
+        <el-select ref="quarterSelect" v-model="selectedQuarter" placeholder="Select Quarter" @change="handleQuarterChange">
+          <el-option
+              v-for="(quarter, index) in quarters"
+              :key="index"
+              :label="quarter.label"
+              :value="quarter.value"
+          />
+        </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
-        <el-button
-            :icon="Plus"
-            v-if="includes(roleCodeList, 'admin') || includes(roleCodeList, 'box')"
-            @click="handleSaveModal"
-            type="success"
-        >Add
-        </el-button>
       </div>
     </div>
     <view-list
@@ -98,7 +44,7 @@ import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../../component/ViewList.vue'
 import {ListResult, PageResult} from '../../../../../typing/ma/System'
-import {formatDate, getMonthStart, getMonthEnd} from '@/util/DateUtil'
+import {formatDate, getMonthStart, getMonthEnd, getQuarterStartMonthString} from '@/util/DateUtil'
 import {includes} from "@/util/ArrayUtil";
 
 const router = useRouter()
@@ -108,10 +54,9 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const columnConfigList = ref<ViewConfig[]>([
-  {value: 'customerShortNameFormat', label: '客户简称 Tên khách hàng', width: 213},
-  {value: 'sumEachBoxCount', label: 'Sum of 每箱数量 Số lượng mỗi thùng', width: 167},
-  {value: 'sumBoxNumber', label: 'Count of 箱号 Mã thùng', width: 108},
-  {value: 'sumEachBoxWeight', label: 'Sum of 每箱重量 Trọng lượng mỗi thùng', width: 213},
+  {value: 'evaluationResult', label: '评比 XẾP LOẠI', width: 213},
+  {value: 'count', label: '数量 SỐ LƯỢNG', width: 167},
+  {value: 'percentFormat', label: '占总数的百分比 CHIẾM % TỔNG SỐ', width: 345},
 ])
 const state = reactive({
   dateTimeList: [getMonthStart(), getMonthEnd()],
@@ -154,12 +99,28 @@ const handleDateTimeChange = () => {
   handleList()
 }
 const handleList = () => {
-  httpGet(`douson/box/summary-list`, state.query.data).then(
+  httpGet(`douson/score/summary-list`, state.query.data).then(
       (res: ListResult<typeof state.tableData>) => {
         state.tableData = res.list
         ElMessage.success("Query success")
       }
   )
+}
+const yearPicker = ref(null)
+const quarterSelect = ref(null)
+const selectedQuarter = ref(getQuarterStartMonthString())
+const selectedYear = ref(formatDate(new Date(), 'yyyy'))
+const quarters = [
+  {label: "Q1 (Jan - Mar)", value: "Q1"},
+  {label: "Q2 (Apr - Jun)", value: "Q2"},
+  {label: "Q3 (Jul - Sep)", value: "Q3"},
+  {label: "Q4 (Oct - Dec)", value: "Q4"},
+]
+const handleQuarterChange = (value) => {
+  handleList()
+}
+const handleYearChange = (value) => {
+  handleList()
 }
 handleList()
 const {

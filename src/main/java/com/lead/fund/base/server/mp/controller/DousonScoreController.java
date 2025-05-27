@@ -2,9 +2,13 @@ package com.lead.fund.base.server.mp.controller;
 
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
+import static com.lead.fund.base.common.util.NumberUtil.defaultDecimal;
+import static com.lead.fund.base.common.util.NumberUtil.defaultInt;
+import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_UPLOAD_EXCEL_ERROR;
 import static com.lead.fund.base.server.mp.converter.ScoreConverter.SCORE_INSTANCE;
+import static com.lead.fund.base.server.mp.util.ExcelUtil.getCellValue;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
@@ -49,8 +53,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,7 +92,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @version 1.0
  * @date 2024-04-30 16:11
  */
-@SuppressWarnings({"SqlResolve", "UnusedReturnValue", "unused"})
+@SuppressWarnings({"SqlResolve", "UnusedReturnValue"})
 @RestController
 @RequestMapping("/douson/score")
 @Slf4j
@@ -149,64 +151,75 @@ public class DousonScoreController {
     @PostMapping("upload")
     public DataResult<ScoreUploadResponse> upload(
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @RequestParam(value = "file", required = false) MultipartFile file
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "quarter") String quarter
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        boolean score = u.getRoleList().stream().noneMatch(t -> "score".equals(t.getRoleCode()));
+        if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreRecord".equals(t.getRoleCode()))) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
         final ScoreUploadResponse res = new ScoreUploadResponse();
-        final String today = DateUtil.day(new Date());
         try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
             final List<ScoreRequest> el = new ArrayList<>();
             final XSSFSheet sheet = workbook.getSheetAt(0);
-            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+            for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
                 final Row row = sheet.getRow(i);
                 if (null != row) {
                     int ci = 0;
                     final ScoreRequest r = new ScoreRequest()
-//                            .setPurchaseOrderNo(getCellValue(row.getCell(ci++)))
-//                            .setPoProject(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
-//                            .setSaleOrderNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
-//                            .setOrderProject(getCellValue(row.getCell(ci++)))
-//                            .setMaterialNo(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
-//                            .setMaterialDescription(getCellValue(row.getCell(ci++)))
-//                            .setDesignNumber(defaultIfBlank(getCellValue(row.getCell(ci++))).toUpperCase())
-//                            .setOrderCount(defaultDecimal(getCellValue(row.getCell(ci++))).setScale(0, RoundingMode.HALF_UP).intValue())
-//                            .setDeliveryDate(DateUtil.day(defaultIfBlank(getCellValue(row.getCell(ci++)), today)))
-//                            .setCompletedQty(0)
-//                            .setScoreCompleteCount(0)
-//                            .setOilInjectionCompleteCount(0)
-//                            .setScoreIndex(scoreDao.scoreIndex(new ScoreEntity()))
-//                            .setDescription(defaultIfBlank(getCellValue(row.getCell(ci++))))
-//                            .setValveBody(getCellValue(row.getCell(ci++)))
-//                            .setValveCover(getCellValue(row.getCell(ci++)))
-//                            .setGate(getCellValue(row.getCell(ci++)))
-//                            .setValveSeat(getCellValue(row.getCell(ci++)))
-//                            .setValveStem(getCellValue(row.getCell(ci++)));
-                            ;
+                            .setEmployeeId(getCellValue(row.getCell(ci++)))
+                            .setUserName(getCellValue(row.getCell(ci++)))
+                            .setQuarter(quarter)
+                            .setDeviceNumber(getCellValue(row.getCell(ci++)))
+                            .setQualityScore(defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setAttendanceScore(defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setSafetyScore(defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setMonthlyPerformance(defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setTotalWorkDays(defaultInt(getCellValue(row.getCell(ci++))))
+                            .setEvaluationMonths(defaultInt(getCellValue(row.getCell(ci++))))
+                            .setEvaluationResult(getCellValue(row.getCell(ci++)))
+                            .setQuarterlyBonus(defaultDecimal(getCellValue(row.getCell(ci++))))
+                            .setDescription(getCellValue(row.getCell(ci++)))
+                            .setLeaderUserId(getCellValue(row.getCell(ci++)));
                     el.add(r);
                 }
             }
-            final List<ScoreEntity> il = new ArrayList<>();
-            final Map<List<String>, String> orderNoMap = new HashMap<>(8);
-            final Map<List<String>, String> indexMap = new HashMap<>(8);
-            for (ScoreRequest t : el) {
-                final ScoreEntity e = (ScoreEntity) SCORE_INSTANCE.score(t)
-//                        .setSerialIndex(0)
-//                        .setMaxSerialIndex(0)
-//                        .setMaxSerialOrderIndex(0)
-//                        .setCompletedQty(0)
-//                        .setScoreCompleteCount(0)
-//                        .setSerialNumber(t.getPurchaseOrderNo() + t.getPoProject() + StrUtil.padPre("0", 3, "0"))
-                        .setCreator(u.getUserId())
-                        .setModifier(u.getUserId());
-                il.add(e);
+            final Map<List<String>, String> userIdMap = new HashMap<>(8);
+            for (int i = 0; i < el.size(); i++) {
+                final ScoreRequest t = el.get(i);
+                t.setTotal(
+                        BigDecimal.ZERO.add(t.getQualityScore().add(t.getSafetyScore()).add(t.getAttendanceScore()).add(t.getMonthlyPerformance()))
+                );
+                final String userId = userIdMap.computeIfAbsent(CollUtil.toList(t.getEmployeeId(), t.getUserName()), k -> BeanUtil.wrapperIfNotNull(userMapper.selectOne(new LambdaQueryWrapper<MpUserEntity>()
+                        .eq(MpUserEntity::getEmployeeId, k.get(0))
+                        .eq(MpUserEntity::getName, k.get(1))
+                ), MpUserEntity::getId, ""));
+                if (isBlank(userId)) {
+                    res.getNotMatchUserList().add("%s（%s）".formatted(t.getUserName(), t.getEmployeeId()));
+                } else {
+                    final ScoreEntity e = (ScoreEntity) SCORE_INSTANCE.score(t)
+                            .setSorter(i)
+                            .setUserId(userId)
+                            .setCreator(u.getUserId())
+                            .setModifier(u.getUserId());
+                    if (!scoreDao.update(e,
+                            new LambdaUpdateWrapper<ScoreEntity>()
+                                    .eq(ScoreEntity::getQuarter, quarter)
+                                    .eq(ScoreEntity::getUserId, e.getUserId())
+                    )) {
+                        scoreDao.save(e);
+                        res.getInsertUserList().add("%s（%s）".formatted(t.getUserName(), t.getEmployeeId()));
+                    } else {
+                        res.getUpdateUserList().add("%s（%s）".formatted(t.getUserName(), t.getEmployeeId()));
+                    }
+                }
             }
-            scoreDao.saveBatch(
-                    Stream.of(
-                                    il
-                            ).flatMap(Collection::stream)
-                            .toList()
-            );
+            res
+                    .setTotalCount(el.size())
+                    .setErrorCount(res.getNotMatchUserList().size())
+                    .setInsertUserCount(res.getInsertUserList().size())
+                    .setUpdateUserCount(res.getUpdateUserList().size())
+            ;
         } catch (Exception e) {
             throw new BusinessException(MP_UPLOAD_EXCEL_ERROR).setOriginException(e);
         }
@@ -226,14 +239,15 @@ public class DousonScoreController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @RequestBody ScoreRequest request
     ) {
-        final Date now = new Date();
-        final String today = DateUtil.day(now);
         final MpUserResponse u = accountHelper.getUser(deviceId);
         final ScoreEntity e = (ScoreEntity) SCORE_INSTANCE.score(request)
                 .setModifier(u.getUserId());
+        e.setTotal(
+                BigDecimal.ZERO.add(e.getQualityScore().add(e.getSafetyScore()).add(e.getAttendanceScore()).add(e.getMonthlyPerformance()))
+        );
         // update
         if (isNotBlank(e.getId())) {
-            if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreRecord".equals(t.getRoleCode()) || "scoreTesterRecord".equals(t.getRoleCode()))) {
+            if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()))) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             if (scoreMapper.update(
@@ -256,6 +270,10 @@ public class DousonScoreController {
                     .setCreator(u.getUserId())
             );
         }
+        scoreAttachmentDao.remove(new LambdaUpdateWrapper<ScoreAttachmentEntity>().eq(ScoreAttachmentEntity::getScoreId, e.getId()));
+        scoreAttachmentDao.saveBatch(
+                request.getPhotoList().stream().map(t -> SCORE_INSTANCE.attachment(e.getId(), "photo", t)).collect(Collectors.toList())
+        );
         return new DataResult<>(e);
     }
 
@@ -300,7 +318,19 @@ public class DousonScoreController {
         if (isNotBlank(d.getQuarter())) {
             lambda.eq(ScoreEntity::getQuarter, d.getQuarter());
         }
-        lambda.orderByDesc(ScoreEntity::getQuarter).orderByAsc(ScoreEntity::getLastModifiedTime);
+        if (isNotBlank(d.getUserId())) {
+            lambda.eq(ScoreEntity::getUserId, d.getUserId());
+        }
+        if (isNotBlank(d.getEvaluationResult())) {
+            lambda.eq(ScoreEntity::getEvaluationResult, d.getEvaluationResult());
+        }
+        if (isNotBlank(d.getDescription())) {
+            lambda.like(ScoreEntity::getDescription, d.getDescription());
+        }
+        if (isNotBlank(d.getLeaderUserId())) {
+            lambda.like(ScoreEntity::getLeaderUserId, d.getLeaderUserId());
+        }
+        lambda.orderByDesc(ScoreEntity::getQuarter).orderByAsc(ScoreEntity::getSorter);
         if (null != consumer) {
             consumer.accept(lambda);
         }
@@ -317,7 +347,7 @@ public class DousonScoreController {
                 .distinct()
                 .collect(Collectors.toList());
         final Map<String, MpUserEntity> um = CollUtil.isEmpty(userIdList) ? new HashMap<>(8) : userMapper.selectList(
-                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getUsername, MpUserEntity::getName),
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getId, MpUserEntity::getEmployeeId, MpUserEntity::getName),
                         userIdList,
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, t -> t, (t, t1) -> t1));
@@ -340,15 +370,11 @@ public class DousonScoreController {
             final MpUserEntity u = um.get(t.getUserId());
             t
                     .setPhotoCount(t.getPhotoList().size())
-                    .setEmployeeId(BeanUtil.wrapperIfNotNull(u, MpUserEntity::getName, t.getUserId()))
+                    .setEmployeeId(BeanUtil.wrapperIfNotNull(u, MpUserEntity::getEmployeeId, t.getUserId()))
                     .setUserName(BeanUtil.wrapperIfNotNull(u, MpUserEntity::getName, t.getUserId()))
             ;
         }
         return rl;
-    }
-
-    private static String tail(BigDecimal v) {
-        return null == v || v.compareTo(BigDecimal.ZERO) <= 0 ? "" : ("-" + v.setScale(0, RoundingMode.HALF_UP));
     }
 
     /**
@@ -364,11 +390,43 @@ public class DousonScoreController {
             @ModelAttribute ScoreRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreRecord".equals(t.getRoleCode()) || "scoreTesterRecord".equals(t.getRoleCode()) || "scoreRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        if (!"admin".equals(u.getUsername()) && u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreView".equals(t.getRoleCode()))) {
+            u.setUserId(u.getUserId());
         }
         final AtomicInteger atomicInteger = new AtomicInteger(0);
-        return new ListResult<>(formatScoreList(scoreList(request))
+        final List<ScoreResponse> rl = formatScoreList(scoreList(request));
+        if (CollUtil.isNotEmpty(rl)) {
+            rl.add(rl.stream().reduce(new ScoreResponse().setUserName("总计")
+                            .setQualityScore(BigDecimal.ZERO)
+                            .setAttendanceScore(BigDecimal.ZERO)
+                            .setSafetyScore(BigDecimal.ZERO)
+                            .setMonthlyPerformance(BigDecimal.ZERO)
+                            .setTotalWorkDays(0)
+                            .setTotal(BigDecimal.ZERO)
+                            .setEvaluationMonths(0)
+                            .setQuarterlyBonus(BigDecimal.ZERO)
+                            .setEvaluationResult("--")
+                    , (t, t1) -> {
+                        t
+                                .setQualityScore(t.getQualityScore().add(t1.getQualityScore()))
+                                .setQualityScoreFormat(NumberUtil.format(t.getQualityScore()))
+                                .setAttendanceScore(t.getAttendanceScore().add(t1.getAttendanceScore()))
+                                .setAttendanceScoreFormat(NumberUtil.format(t.getAttendanceScore()))
+                                .setSafetyScore(t.getSafetyScore().add(t1.getSafetyScore()))
+                                .setSafetyScoreFormat(NumberUtil.format(t.getSafetyScore()))
+                                .setMonthlyPerformance(t.getMonthlyPerformance().add(t1.getMonthlyPerformance()))
+                                .setMonthlyPerformanceFormat(NumberUtil.format(t.getMonthlyPerformance()))
+                                .setTotalWorkDays(t.getTotalWorkDays() + t1.getTotalWorkDays())
+                                .setTotal(t.getTotal().add(t1.getTotal()))
+                                .setTotalFormat(NumberUtil.format(t.getTotal()))
+                                .setEvaluationMonths(t.getEvaluationMonths() + t1.getEvaluationMonths())
+                                .setQuarterlyBonus(t.getQuarterlyBonus().add(t1.getQuarterlyBonus()))
+                                .setQuarterlyBonusFormat(NumberUtil.formatDecimal0(t.getQuarterlyBonus()))
+                        ;
+                        return t;
+                    }));
+        }
+        return new ListResult<>(rl
                 .stream().peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
         );
     }

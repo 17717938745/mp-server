@@ -3,6 +3,7 @@ package com.lead.fund.base.server.mp.request;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,10 @@ public class ScoreRequest implements Serializable {
      */
     private String employeeId;
     /**
+     * 用户ID
+     */
+    private String userId;
+    /**
      * 姓名
      */
     private String userName;
@@ -54,31 +59,31 @@ public class ScoreRequest implements Serializable {
     /**
      * 质量 50分
      */
-    private String qualityScore;
+    private BigDecimal qualityScore;
     /**
      * 全勤/团结  10分
      */
-    private String attendanceScore;
+    private BigDecimal attendanceScore;
     /**
      * 环境安全和工艺 20分
      */
-    private String safetyScore;
+    private BigDecimal safetyScore;
     /**
      * 月度绩效 (20分)
      */
-    private String monthlyPerformance;
+    private BigDecimal monthlyPerformance;
     /**
      * 总上班日数
      */
-    private String totalWorkDays;
+    private Integer totalWorkDays;
     /**
      * 总计
      */
-    private String total;
+    private BigDecimal total;
     /**
      * 评估月数
      */
-    private String evaluationMonths;
+    private Integer evaluationMonths;
     /**
      * 评比结果
      */
@@ -86,7 +91,7 @@ public class ScoreRequest implements Serializable {
     /**
      * 季度奖金
      */
-    private String quarterlyBonus;
+    private BigDecimal quarterlyBonus;
     /**
      * 备注
      */

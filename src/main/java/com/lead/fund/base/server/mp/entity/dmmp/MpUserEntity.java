@@ -143,7 +143,7 @@ public class MpUserEntity extends AbstractAdmin {
     /**
      * 工号
      */
-    @FieldRemark(value = "国籍")
-    @Size(max = 64, message = "密码密文长度最大为128")
+    @FieldRemark(value = "工号")
+    @Size(max = 64, message = "工号长度不合法")
     private String employeeId;
 }

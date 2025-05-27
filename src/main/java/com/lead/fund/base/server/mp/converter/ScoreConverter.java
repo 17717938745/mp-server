@@ -30,6 +30,12 @@ public interface ScoreConverter extends Serializable {
 
     @Mapping(target = "scoreId", source = "id")
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.dateTime(t.getLastModifiedTime(), com.lead.fund.base.common.basic.cons.util.date.DateFormat.DOT_MILLIS.getCode(), \"--\"))")
+    @Mapping(target = "qualityScoreFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getQualityScore()))")
+    @Mapping(target = "attendanceScoreFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getAttendanceScore()))")
+    @Mapping(target = "safetyScoreFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getSafetyScore()))")
+    @Mapping(target = "monthlyPerformanceFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getMonthlyPerformance()))")
+    @Mapping(target = "totalFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.format(t.getTotal()))")
+    @Mapping(target = "quarterlyBonusFormat", expression = "java(com.lead.fund.base.common.util.NumberUtil.formatDecimal0(t.getQuarterlyBonus()))")
     ScoreResponse score(ScoreEntity t);
 
     List<ScoreResponse> scoreList(List<ScoreEntity> list);

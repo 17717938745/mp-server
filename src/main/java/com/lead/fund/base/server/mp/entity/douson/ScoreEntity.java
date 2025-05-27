@@ -106,4 +106,10 @@ public class ScoreEntity extends AbstractAdministrator {
     @FieldRemark(value = "当班主管")
     @Size(max = 64, message = "当班主管长度不合法")
     private String leaderUserId;
+    /**
+     * 排序
+     */
+    @FieldRemark(value = "排序", defaultValue = "0")
+    @Size(max = 8, message = "排序长度最大为8")
+    private Integer sorter;
 }

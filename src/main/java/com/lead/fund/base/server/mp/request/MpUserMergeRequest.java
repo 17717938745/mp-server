@@ -96,4 +96,8 @@ public class MpUserMergeRequest implements Serializable {
      * 国际
      */
     private String nationality;
+    /**
+     * 工号
+     */
+    private String employeeId;
 }

@@ -142,4 +142,8 @@ public class MpUserResponse extends AbstractAdministratorModel {
      */
     private String nationality;
     private String nationalityFormat;
+    /**
+     * 工号
+     */
+    private String employeeId;
 }

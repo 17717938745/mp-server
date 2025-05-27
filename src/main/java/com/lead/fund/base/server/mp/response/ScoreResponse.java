@@ -63,31 +63,36 @@ public class ScoreResponse extends AbstractAdministratorModel {
     /**
      * 质量 50分
      */
-    private String qualityScore;
+    private BigDecimal qualityScore;
+    private String qualityScoreFormat;
     /**
      * 全勤/团结  10分
      */
-    private String attendanceScore;
+    private BigDecimal attendanceScore;
+    private String attendanceScoreFormat;
     /**
      * 环境安全和工艺 20分
      */
-    private String safetyScore;
+    private BigDecimal safetyScore;
+    private String safetyScoreFormat;
     /**
      * 月度绩效 (20分)
      */
-    private String monthlyPerformance;
+    private BigDecimal monthlyPerformance;
+    private String monthlyPerformanceFormat;
     /**
      * 总上班日数
      */
-    private String totalWorkDays;
+    private Integer totalWorkDays;
     /**
      * 总计
      */
-    private String total;
+    private BigDecimal total;
+    private String totalFormat;
     /**
      * 评估月数
      */
-    private String evaluationMonths;
+    private Integer evaluationMonths;
     /**
      * 评比结果
      */
@@ -95,7 +100,8 @@ public class ScoreResponse extends AbstractAdministratorModel {
     /**
      * 季度奖金
      */
-    private String quarterlyBonus;
+    private BigDecimal quarterlyBonus;
+    private String quarterlyBonusFormat;
     /**
      * 备注
      */
@@ -107,6 +113,6 @@ public class ScoreResponse extends AbstractAdministratorModel {
     /**
      * 照片(最多50)
      */
-    private int photoCount;
+    private Integer photoCount;
     private List<PhotoImgModel> photoList = new ArrayList<>();
 }
