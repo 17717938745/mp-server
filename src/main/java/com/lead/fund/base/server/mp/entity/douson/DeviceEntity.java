@@ -65,4 +65,9 @@ public class DeviceEntity extends AbstractPrimaryKey {
     @FieldRemark(value = "排序", defaultValue = "0")
     @Size(max = 8, message = "排序长度最大为8")
     private Integer sorter;
+    /**
+     * 管理人
+     */
+    @FieldRemark(value = "管理人")
+    private String manager;
 }

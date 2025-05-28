@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.cons.frame.AdminRole;
 import com.lead.fund.base.common.basic.cons.frame.AdminState;
 import com.lead.fund.base.common.basic.cons.frame.AdminUser;
+import com.lead.fund.base.common.basic.cons.frame.ExceptionType;
 import com.lead.fund.base.common.basic.exec.BusinessException;
 import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.request.Page;
@@ -193,6 +194,7 @@ import com.lead.fund.base.server.mp.response.DeviceResponse;
 import com.lead.fund.base.server.mp.response.DisqualificationOrderResponse;
 import com.lead.fund.base.server.mp.response.EquipmentResponse;
 import com.lead.fund.base.server.mp.response.EventResponse;
+import com.lead.fund.base.server.mp.response.ForumResponse;
 import com.lead.fund.base.server.mp.response.ImproveResponse;
 import com.lead.fund.base.server.mp.response.MaintainResponse;
 import com.lead.fund.base.server.mp.response.MaintainSummaryResponse;
@@ -319,12 +321,6 @@ public class DousonController {
     private AccidentAttachmentMapper accidentAttachmentMapper;
     @Resource
     private AccidentAttachmentDao accidentAttachmentDao;
-    @Resource
-    private BoxFlagDao boxFlagDao;
-    @Resource
-    private BoxFlagSerialNoDao boxFlagSerialNoDao;
-    @Resource
-    private BoxFlagPhotoDao boxFlagPhotoDao;
     @Resource
     private DisqualificationOrderDao disqualificationOrderDao;
     @Resource
@@ -479,6 +475,8 @@ public class DousonController {
                 case "responsibleTeam" -> builder.responsibleTeamList(paramDao.listByCategoryId(categoryId));
                 case "apiDevice" -> builder.apiDeviceList(paramDao.listByCategoryId(categoryId));
                 case "nationality" -> builder.nationalityList(paramDao.listByCategoryId(categoryId));
+                case "workDressType" -> builder.workDressTypeList(paramDao.listByCategoryId(categoryId));
+                case "storePosition" -> builder.storePositionList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }
@@ -1237,7 +1235,16 @@ public class DousonController {
             @ModelAttribute DeviceQueryRequest request
     ) {
         log.info("user: {}", accountHelper.getUser(deviceId));
-        return new ListResult<>(INDUSTRY_INSTANCE.deviceList(deviceList(request)));
+        final List<DeviceResponse> rl = INDUSTRY_INSTANCE.deviceList(deviceList(request));
+        MultitaskUtil.supplementList(
+                rl,
+                DeviceResponse::getManager,
+                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
+                (t, r) -> defaultIfBlank(t.getManager()).equals(r.getId()),
+                (t, r) -> t
+                        .setManagerFormat(defaultIfBlank(defaultIfBlank(r.getNickname(), r.getName()), r.getId()))
+        );
+        return new ListResult<>(rl);
     }
 
     /**
@@ -3275,7 +3282,7 @@ public class DousonController {
             @ModelAttribute EquipmentPageRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "equipmentView".equals(t))) {
+        if (u.getRoleCodeList().stream().noneMatch(t -> "admin".equals(t) || "equipmentView".equals(t) || "equipmentManager".equals(t))) {
             request.getData().setQueryUserId(u.getUserId());
         }
         PageResult<EquipmentEntity> page = DatabaseUtil.page(request, this::equipmentList);
@@ -3946,253 +3953,6 @@ public class DousonController {
         );
     }
 
-    private void mergeRelevance(BoxFlagRequest request, BoxFlagEntity e) {
-        boxFlagPhotoDao.remove(new LambdaUpdateWrapper<BoxFlagPhotoEntity>()
-                .eq(BoxFlagPhotoEntity::getBoxFlagId, e.getId()));
-        boxFlagPhotoDao.saveBatch(
-                CollUtil.defaultIfEmpty(request.getPhotoList(), new ArrayList<>())
-                        .stream().map(t -> new BoxFlagPhotoEntity()
-                                .setBoxFlagId(e.getId())
-                                .setPhotoUrl(t.getPhotoUrl())
-                                .setPhotoCompressUrl(t.getPhotoCompressUrl())
-                        )
-                        .collect(Collectors.toList())
-        );
-    }
-
-    /**
-     * 保存装箱标识（后管）
-     *
-     * @param deviceId 设备id
-     * @param request  {@link BoxFlagRequest}
-     * @return {@link Result}
-     */
-    @PostMapping("admin/box-flag")
-    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
-    public Result boxFlagAdminSave(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @RequestBody BoxFlagRequest request
-    ) {
-        final MpUserResponse u = accountHelper.getUser(deviceId);
-        final List<String> matchRoleCodeList = CollUtil.toList(
-                AdminRole.ADMIN.getCode(),
-                "box",
-                "boxManager"
-        );
-        if (u.getRoleCodeList().stream().noneMatch(matchRoleCodeList::contains)) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
-
-        BoxFlagEntity e = (BoxFlagEntity) INDUSTRY_INSTANCE.boxFlag(request)
-                .setOrderNo(boxFlagDao.nextOrderNo())
-                .setBoxNumber(boxFlagDao.nextBoxNumber(request.getSaleOrderNo(), request.getOrderProject()))
-                .setSendDate(defaultDecimal(request.getSendCount()).compareTo(BigDecimal.ZERO) > 0 ? defaultIfBlank(request.getSendDate(), DateUtil.day(new Date())) : "")
-                .setCreator(u.getUserId())
-                .setModifier(u.getUserId());
-        boxFlagDao.save(e);
-        mergeRelevance(request, e);
-        return new DataResult<>(e);
-    }
-
-    /**
-     * 修改装箱标识（后管）
-     *
-     * @param deviceId 设备id
-     * @param request  {@link BoxFlagRequest}
-     * @return {@link Result}
-     */
-    @PutMapping("admin/box-flag")
-    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
-    public Result boxFlagAdminUpdate(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @RequestBody BoxFlagRequest request
-    ) {
-        final MpUserResponse u = accountHelper.getUser(deviceId);
-        final List<String> masterRoleCodeList = CollUtil.toList(
-                AdminRole.ADMIN.getCode(),
-                "inspector",
-                "boxManager"
-        );
-        final List<String> matchRoleCodeList = CollUtil.toList(
-                "box",
-                "boxManager"
-        );
-        CollUtil.addAll(matchRoleCodeList, masterRoleCodeList);
-        if (u.getRoleCodeList().stream().noneMatch(matchRoleCodeList::contains)) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
-        BoxFlagEntity e = (BoxFlagEntity) INDUSTRY_INSTANCE.boxFlag(request)
-                .setSendDate(defaultDecimal(request.getSendCount()).compareTo(BigDecimal.ZERO) > 0 ? defaultIfBlank(request.getSendDate(), DateUtil.day(new Date())) : "")
-                .setModifier(u.getUserId());
-        LambdaUpdateWrapper<BoxFlagEntity> lambda = new LambdaUpdateWrapper<BoxFlagEntity>()
-                .eq(BoxFlagEntity::getId, request.getBoxFlagId());
-        if (u.getRoleCodeList().stream().noneMatch(masterRoleCodeList::contains)) {
-            lambda.eq(BoxFlagEntity::getCreator, u.getUserId());
-        }
-        if (!boxFlagDao.update(
-                e,
-                lambda
-        )) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
-        mergeRelevance(request, e);
-        return new DataResult<>(e);
-    }
-
-    /**
-     * 删除装箱标识（后管）
-     *
-     * @param deviceId 设备id
-     * @param request  {@link BoxFlagRequest}
-     * @return {@link Result}
-     */
-    @DeleteMapping("admin/box-flag")
-    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
-    public Result boxFlagAdminDelete(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @ModelAttribute BoxFlagRequest request
-    ) {
-        MpUserResponse u = accountHelper.getUser(deviceId);
-        if (!"admin".equals(u.getUsername())) {
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
-        }
-        if (isNotBlank(request.getBoxFlagId())) {
-            boxFlagDao.removeById(request.getBoxFlagId());
-            boxFlagPhotoDao.removeById(request.getBoxFlagId());
-            boxFlagSerialNoDao.removeById(request.getBoxFlagId());
-        }
-        return new Result();
-    }
-
-    private List<BoxFlagEntity> boxFlagList(BoxFlagRequest request) {
-        LambdaQueryWrapper<BoxFlagEntity> lambda = new LambdaQueryWrapper<>();
-        if (isNotBlank(request.getCreator())) {
-            lambda.eq(BoxFlagEntity::getCreator, request.getCreator());
-        }
-        if (isNotBlank(request.getOrderNo())) {
-            lambda.like(BoxFlagEntity::getOrderNo, request.getOrderNo());
-        }
-        if (isNotBlank(request.getSaleOrderNo())) {
-            lambda.like(BoxFlagEntity::getSaleOrderNo, request.getSaleOrderNo());
-        }
-        if (isNotBlank(request.getOrderProject())) {
-            lambda.like(BoxFlagEntity::getOrderProject, request.getOrderProject());
-        }
-        if (isNotBlank(request.getCustomerShortName())) {
-            lambda.eq(BoxFlagEntity::getCustomerShortName, request.getCustomerShortName());
-        }
-        if (isNotBlank(request.getPurchaseOrderNo())) {
-            lambda.like(BoxFlagEntity::getPurchaseOrderNo, request.getPurchaseOrderNo());
-        }
-        if (isNotBlank(request.getMaterialNo())) {
-            lambda.like(BoxFlagEntity::getMaterialNo, request.getMaterialNo());
-        }
-        if (isNotBlank(request.getPoProject())) {
-            lambda.like(BoxFlagEntity::getPoProject, request.getPoProject());
-        }
-        if (null != request.getStartDate()) {
-            lambda.ge(BoxFlagEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.beginOfDay(request.getStartDate())));
-        }
-        if (null != request.getEndDate()) {
-            lambda.le(BoxFlagEntity::getDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(request.getEndDate())));
-        }
-        if (null != request.getAlreadySend()) {
-            if (request.getAlreadySend()) {
-                lambda.gt(BoxFlagEntity::getSendCount, 0);
-            } else {
-                lambda.and(
-                        lam -> lam.isNull(BoxFlagEntity::getSendCount)
-                                .or()
-                                .le(BoxFlagEntity::getSendCount, 0)
-                );
-            }
-        }
-        return boxFlagDao.list(lambda.orderByDesc(BoxFlagEntity::getCreateTime));
-    }
-
-    private List<BoxFlagResponse> formatBoxFlagList(List<BoxFlagEntity> list) {
-        List<BoxFlagResponse> rl = INDUSTRY_INSTANCE.boxFlagList(list);
-        MultitaskUtil.supplementList(
-                rl,
-                BoxFlagResponse::getBoxFlagId,
-                l -> boxFlagPhotoDao.list(new LambdaQueryWrapper<BoxFlagPhotoEntity>().in(BoxFlagPhotoEntity::getBoxFlagId, l)),
-                (t, r) -> t.getBoxFlagId().equals(r.getBoxFlagId()),
-                (t, r) -> t.getPhotoList().add(INDUSTRY_INSTANCE.photo(r, urlHelper.getUrlPrefix()))
-        );
-        MultitaskUtil.supplementList(
-                rl,
-                BoxFlagResponse::getCreator,
-                l -> userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().in(MpUserEntity::getId, l)),
-                (t, r) -> t.getCreator().equals(r.getId()),
-                (t, r) -> t.setCreatorFormat(r.getUsername())
-        );
-        MultitaskUtil.supplementList(
-                rl,
-                BoxFlagResponse::getCustomerShortName,
-                l -> paramDao.listByCategoryId("customerShortName"),
-                (t, r) -> t.getCustomerShortName().equals(r.getValue()),
-                (t, r) -> t.setCustomerShortNameFormat(r.getLabel())
-        );
-        for (BoxFlagResponse t : rl) {
-            t.setPhotoCount(t.getPhotoList().size());
-        }
-        return rl;
-    }
-
-    /**
-     * 装箱标识分页（后管）
-     *
-     * @param deviceId 设备id
-     * @param request  {@link BoxFlagPageRequest}
-     * @return {@link PageDataResult}
-     */
-    @GetMapping("admin/box-flag/page")
-    public PageDataResult<BoxFlagResponse, BoxFlagSummaryResponse> boxFlagAdminPage(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
-            @ModelAttribute BoxFlagPageRequest request
-    ) {
-        accountHelper.getUser(deviceId);
-        final PageResult<BoxFlagEntity> pr = DatabaseUtil.page(request, this::boxFlagList);
-        final List<BoxFlagResponse> rl = formatBoxFlagList(pr.getList());
-        return new PageDataResult<>(pr.getTotal(), rl, new BoxFlagSummaryResponse().setSumEachBoxCount(rl.stream().map(BoxFlagResponse::getEachBoxCount).reduce(0, Integer::sum)));
-    }
-
-    /**
-     * 装箱标识上一条（用户新增默认数据填充）
-     *
-     * @param deviceId 设备id
-     * @return {@link DataResult<BoxFlagEntity>}
-     */
-    @GetMapping("admin/box-flag/last")
-    public DataResult<BoxFlagResponse> boxFlagAdminLast(
-            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId
-    ) {
-        final MpUserResponse u = accountHelper.getUser(deviceId);
-        BoxFlagResponse r = defaultIfNull(
-                CollUtil.getFirst(
-                        formatBoxFlagList(
-                                DatabaseUtil.page(
-                                        new Page(1, 1),
-                                        () -> boxFlagList(new BoxFlagRequest().setCreator(u.getUserId()))
-                                ).getList()
-                        )
-                ),
-                new BoxFlagResponse());
-        return new DataResult<>(
-                (BoxFlagResponse) r
-                        .setBoxFlagId("")
-                        .setCreatorFormat(u.getUsername())
-                        .setPhotoList(CollUtil.defaultIfEmpty(r.getPhotoList(), new ArrayList<>()))
-                        .setSerialNoList(CollUtil.defaultIfEmpty(r.getSerialNoList(), new ArrayList<>()))
-                        .setSerialNoFormat(String.join("、", CollUtil.defaultIfEmpty(r.getSerialNoList(), new ArrayList<>())))
-                        .setOrderNo(boxFlagDao.viewNextOrderNo())
-                        .setBoxNumber(-1)
-                        .setDate(DateUtil.day(new Date()))
-                        .setPhotoList(new ArrayList<>())
-                        .setCreator(u.getUserId())
-        );
-    }
-
     private DisqualificationOrderEntity mergeRelevance(DisqualificationOrderRequest request, DisqualificationOrderEntity e) {
         disqualificationOrderPhotoDao.remove(new LambdaUpdateWrapper<DisqualificationOrderPhotoEntity>().eq(DisqualificationOrderPhotoEntity::getDisqualificationOrderId, e.getId()));
         disqualificationOrderPhotoDao.saveBatch(request.getPhotoList().stream().map(t -> new DisqualificationOrderPhotoEntity().setDisqualificationOrderId(e.getId()).setPhotoUrl(t.getPhotoUrl()).setPhotoCompressUrl(t.getPhotoCompressUrl())).collect(Collectors.toList()));
@@ -4323,10 +4083,12 @@ public class DousonController {
             });
         }
         if (CollUtil.isNotEmpty(d.getDutyPersonList())) {
-            DatabaseUtil.singleOr(lambda, d.getDutyPersonList(), (lam, l) -> {
-                lam.and(true, lam1 -> {
-                    lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + l + ",");
-                });
+            lambda.and(true, lam -> {
+                for (String t : d.getDutyPersonList()) {
+                    lam.or(true, lam1 -> {
+                        lam1.like(DisqualificationOrderEntity::getDutyPerson, "," + t + ",");
+                    });
+                }
             });
         }
         if (isNotBlank(d.getDefectType())) {
@@ -4368,7 +4130,8 @@ public class DousonController {
                         (lam, pl) -> lam.in(MpUserEntity::getId, pl))
         );
         final Map<String, String> upm = paramDao.listByCategoryId("userProperty").stream().collect(Collectors.toMap(t -> defaultIfBlank(t.getValue()), t -> t.getLabel()));
-        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> "%s（%s）".formatted(t.getName(), upm.getOrDefault(t.getUserProperty(), t.getUserProperty())), (t, t1) -> t1, HashMap::new));
+        //（%s） , upm.getOrDefault(t.getUserProperty(), t.getUserProperty())
+        final Map<String, String> userMap = userList.stream().collect(Collectors.toMap(MpUserEntity::getId, t -> "%s".formatted(t.getName()), (t, t1) -> t1, HashMap::new));
         MultitaskUtil.supplementList(
                 rl,
                 DisqualificationOrderResponse::getDisqualificationOrderId,
@@ -5224,7 +4987,7 @@ public class DousonController {
             @ModelAttribute ComputerPageRequest request
     ) {
         MpUserResponse user = accountHelper.getUser(deviceId);
-        if (user.getRoleCodeList().stream().noneMatch(t -> AdminRole.ADMIN.getCode().equals(t) || "itManager".equals(t) || "itView".equals(t))) {
+        if (user.getRoleCodeList().stream().noneMatch(t -> "itManager".equals(t) || "itView".equals(t)) && !"admin".equals(user.getUsername())) {
             request.getData().setUserId(user.getUserId());
         }
         if (isNotBlank(request.getData().getUsername())) {
@@ -5357,6 +5120,9 @@ public class DousonController {
         if (isNotBlank(request.getTemplateId())) {
             lambda.eq(TemplateEntity::getId, request.getTemplateId());
         }
+        if (isNotBlank(request.getCreator())) {
+            lambda.eq(TemplateEntity::getCreator, request.getCreator());
+        }
         if (isNotBlank(request.getTemplateOrderNo())) {
             lambda.like(TemplateEntity::getTemplateOrderNo, request.getTemplateOrderNo());
         }
@@ -5447,8 +5213,12 @@ public class DousonController {
             @ModelAttribute TemplatePageRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t))) {
+        if (!"admin".equals(u.getUsername()) && u.getRoleCodeList().stream().noneMatch(t -> "templateManager".equals(t) || "templateView".equals(t)) && !"3".equals(u.getUserProperty())) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        // 供应商只能看自己
+        if ("3".equals(u.getUserProperty())) {
+            request.getData().setBorrowTemplatePerson(u.getUserId());
         }
         PageResult<TemplateEntity> pr = DatabaseUtil.page(request, this::templateList);
         return new PageResult<>(pr.getTotal(), formatTemplateList(pr.getList())

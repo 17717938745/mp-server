@@ -344,17 +344,17 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'operator',
     labelKey: 'viewAndEdit',
-    width: 219,
+    width: 126,
     type: ValueType.Operator,
   },
   {
     value: 'productInfo', labelKey: 'productInfo', children: [
-      {value: 'disqualificationOrderNoFormat', labelKey: 'disqualificationOrderNo', width: 125},
+      {value: 'disqualificationOrderNoFormat', labelKey: 'disqualificationOrderNo', width: 102},
       {value: 'creatorFormat', labelKey: 'inspector', width: 96},
       {value: 'orderNo', labelKey: 'orderNo', width: 80},
       {value: 'projectSequence', labelKey: 'projectSequence', width: 50},
-      {value: 'materialNo', labelKey: 'materialNo', width: 163, align: 'left',},
-      {value: 'designNumber', labelKey: 'designNumber', width: 153, align: 'left',},
+      {value: 'materialNo', labelKey: 'materialNo', width: 139, align: 'left',},
+      {value: 'designNumber', labelKey: 'designNumber', width: 139, align: 'left',},
       {value: 'processFormat', labelKey: 'process', width: 106},
       {value: 'checkPointFormat', labelKey: 'checkPoint', width: 106},
       {value: 'stoveNo', labelKey: 'stoveNo', width: 109},
@@ -470,7 +470,7 @@ const state = reactive({
     dutyPersonList: [{required: true, type: 'array', min: 1, max: 99999}],
     serialNo: [{required: true, message: 'Please check', trigger: 'blur'}],
     defectType: [{required: true, message: 'Please check', trigger: 'blur'}],
-    photoList: [{required: false, type: 'array', min: 1, max: 4}],
+    photoList: [{required: true, type: 'array', min: 1, max: 4}],
   },
 })
 

@@ -40,6 +40,7 @@
             :value="item.value"
         />
       </el-select>
+      <el-input v-model="query.data.employeeId" @keyup.enter="handleList" :placeholder="store.state.label.employeeId"/>
       <el-input v-model="query.data.username" @keyup.enter="handleList" :placeholder="store.state.label.username"/>
       <el-input v-model="query.data.name" @keyup.enter="handleList" :placeholder="store.state.label.chineseName"/>
       <el-select
@@ -146,6 +147,9 @@
       <el-form :rules="formRuleList" :model="formData" ref="formRef" label-width="128px">
         <el-form-item prop="userId" label="User id">
           <el-input v-model="formData.userId" :disabled="!formSave" placeholder="User ID, if empty, auto create"/>
+        </el-form-item>
+        <el-form-item prop="employeeId" :label="store.state.label.employeeId">
+          <el-input v-model="formData.employeeId"/>
         </el-form-item>
         <el-form-item prop="username" :label="store.state.label.username">
           <el-input v-model="formData.username"/>
@@ -355,6 +359,7 @@ const columnConfigList = ref<ViewConfig[]>([
     type: ValueType.Operator,
   },
   {value: 'createTime', labelKey: 'createTime', width: 91,},
+  {value: 'employeeId', labelKey: 'employeeId', width: 87,},
   {value: 'username', labelKey: 'username', width: 138,},
   {value: 'departmentFormat', labelKey: 'department', width: 121,},
   {value: 'name', labelKey: 'chineseName', width: 112,},
@@ -375,6 +380,7 @@ const defaultFormData = {
   photoList: [],
   roleIdList: ['user'],
   username: '',
+  employeeId: '',
   profession: '',
   leaderUserId: '',
   mobile: '',
@@ -396,6 +402,7 @@ const state = reactive({
       department: '',
       profession: '',
       username: '',
+      employeeId: '',
       roleId: '',
       name: '',
       userProperty: '',
@@ -419,6 +426,16 @@ const state = reactive({
   formData: Object.assign({}, defaultFormData),
   formRuleList: {
     roleIdList: [{required: true, message: 'Please check', trigger: 'blur'}],
+    employeeId: [{
+      required: true, validator: (rule, value, callback) => {
+        const regex = /^[0-9-]+$/;
+        if (!regex.test(value)) {
+          callback(new Error('Employee ID can only contain numbers and "-"'))
+        } else {
+          callback()
+        }
+      }, message: 'Please check', trigger: 'blur'
+    }],
     username: [{required: true, message: 'Please check', trigger: 'blur'}],
     mail: [{required: true, message: 'Please check', trigger: 'blur'}],
     mobile: [{required: true, message: 'Please check', trigger: 'blur'}],
@@ -535,7 +552,7 @@ Promise.all([
   if (!includes(roleCodeList, 'userManager')) {
     columnConfigList.value = columnConfigList.value.filter((t: any) => t.value !== 'interviewResume')
   }
-  if(userEdit) {
+  if (userEdit) {
     columnConfigList.value.push(...[
       {value: 'lastIncreaseSalaryDate', labelKey: 'lastIncreaseSalaryDate', width: 101, type: ValueType.DateEdit,},
       {value: 'planIncreaseSalaryDate', labelKey: 'planIncreaseSalaryDate', width: 101, type: ValueType.DateEdit,},

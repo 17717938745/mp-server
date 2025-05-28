@@ -406,6 +406,19 @@ const paramCategoryGroupList = [
       },
     ],
   },
+  {
+    labelKey: 'workDressManage',
+    paramCategoryIdOptionList: [
+      {
+        value: 'workDressType',
+        label: store.state.label.workDressType,
+      },
+      {
+        value: 'storePosition',
+        label: store.state.label.storePosition,
+      },
+    ],
+  },
 ]
 
 const handleFormatValue = (val: any) => {

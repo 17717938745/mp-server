@@ -28,6 +28,72 @@ export interface Label {
 
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
+        { "value": "scoreReport", "label": "季度评比报告" },
+        { "value": "perspectiveAnalysis", "label": "透视分析" },
+        { "value": "employeeId", "label": "工号" },
+        { "value": "userName", "label": "姓名" },
+        { "value": "quarter", "label": "季度" },
+        { "value": "qualityScore", "label": "质量（50分）" },
+        { "value": "attendanceScore", "label": "全勤/团结（10分）" },
+        { "value": "safetyScore", "label": "环境安全和工艺（20分）" },
+        { "value": "monthlyPerformance", "label": "月度绩效 (20分)" },
+        { "value": "totalWorkDays", "label": "总上班日数" },
+        { "value": "evaluationMonths", "label": "评估月数" },
+        { "value": "evaluationResult", "label": "评比结果" },
+        { "value": "quarterlyBonus", "label": "季度奖金" },
+        { "value": "photos", "label": "照片(最多50)" },
+        {
+          "value": "workDressType",
+          "label": "工装类型"
+        },
+        {
+          "value": "remark",
+          "label": "描述"
+        },
+        {
+          "value": "designNumberOfPdf",
+          "label": "图号（挂PDF）"
+        },
+        {
+          "value": "applyCount",
+          "label": "申请数量"
+        },
+        {
+          "value": "applyDate",
+          "label": "申请日期"
+        },
+        {
+          "value": "storePosition",
+          "label": "库存位置"
+        },
+        {
+          "value": "checkAccept",
+          "label": "验收"
+        },
+        {
+          "value": "descriptionOfOrder",
+          "label": "备注（注明为哪个订单服务）"
+        },
+        {
+          "value": "storeCount",
+          "label": "入库数量"
+        },
+        {
+          "value": "storeDateDescription",
+          "label": "入库日期备注"
+        },
+        {
+          "value": "storePicture",
+          "label": "入库图片"
+        },
+        {
+          "value": "workDressManage",
+          "label": "工装管理"
+        },
+        {
+          "value": "managerUser",
+          "label": "管理者"
+        },
         {
           "value": "isCirculatedDocument",
           "label": "是否流转单据"
@@ -501,10 +567,6 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         }, {
           "value": "processWorkingHour",
           "label": "工序工时/件"
-        },
-        {
-          "value": "designNumber",
-          "label": "图号"
         },
         {
           "value": "process",
@@ -1735,6 +1797,72 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        { "value": "scoreReport", "label": "Báo cáo đánh giá hàng quý" },
+        { "value": "perspectiveAnalysis", "label": "Phân tích góc nhìn" },
+        { "value": "employeeId", "label": "Mã NV" },
+        { "value": "userName", "label": "Họ và Tên" },
+        { "value": "quarter", "label": "Qúy" },
+        { "value": "qualityScore", "label": "chất lượng (50 điểm)" },
+        { "value": "attendanceScore", "label": "Chuyên cần/Tính đoàn kết (10 điểm)" },
+        { "value": "safetyScore", "label": "EHS / công nghệ ( 20 điểm )" },
+        { "value": "monthlyPerformance", "label": "Hiệu suất tháng（20 điểm )" },
+        { "value": "totalWorkDays", "label": "Tổng số ngày đi làm" },
+        { "value": "evaluationMonths", "label": "Số tháng Đánh giá" },
+        { "value": "evaluationResult", "label": "Xếp loại" },
+        { "value": "quarterlyBonus", "label": "Thưởng KPI" },
+        { "value": "photos", "label": "ảnh MAX50" },
+        {
+          "value": "workDressType",
+          "label": "Loại đồ gá"
+        },
+        {
+          "value": "remark",
+          "label": "Mô tả"
+        },
+        {
+          "value": "designNumberOfPdf",
+          "label": "Mã bản vẽ (theo PDF)"
+        },
+        {
+          "value": "applyCount",
+          "label": "Số lượng yêu cầu"
+        },
+        {
+          "value": "applyDate",
+          "label": "Thời gian yêu cầu"
+        },
+        {
+          "value": "storePosition",
+          "label": "Vị trí lưu trữ"
+        },
+        {
+          "value": "checkAccept",
+          "label": "Người kiểm duyệt"
+        },
+        {
+          "value": "descriptionOfOrder",
+          "label": "Ghi chú (nêu rõ dụng cụ này dành cho đơn hàng nào)"
+        },
+        {
+          "value": "storeCount",
+          "label": "Số lượng nhập kho"
+        },
+        {
+          "value": "storeDateDescription",
+          "label": "Thời gian nhập kho"
+        },
+        {
+          "value": "storePicture",
+          "label": "Hình ảnh nhập kho"
+        },
+        {
+          "value": "workDressManage",
+          "label": "Quản lí đồ gá"
+        },
+        {
+          "value": "managerUser",
+          "label": "Người quản lý"
+        },
         {
           "value": "isCirculatedDocument",
           "label": "Đơn hàng đã được ban hành"
@@ -1953,7 +2081,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "designNumber",
-          "label": "Bản vẽ"
+          "label": "Mã bản vẽ"
         },
         {
           "value": "orderCount",
@@ -2576,7 +2704,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "total",
-          "label": "total"
+          "label": "TOTAL"
         },
         {
           "value": "scheduleNull",
@@ -3545,6 +3673,9 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
       )
       formRuleString += (key + ': [{required: true, message: \'Please check\', trigger: \'blur\'}],\n')
     } else {
+      if(arr.length > 0) {
+        console.log(`Found CHS key, but not found match:${JSON.stringify(arr)}`)
+      }
       data['CHS'].push({
         value: `${i}`,
         label: chs,
@@ -3562,8 +3693,9 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
   console.log(formString)
   console.log(formRuleString)
 }
-// printMultipleText('设备编号\t白班\t中班\t夜班\t白班12H\t夜班12H\t白班技术组\t夜班技术组\n' +
-//     'Mã máy\tCa ngày\tCa hai\tCa đêm\tCa ngày 12H\tCa đêm 12H\tNhóm kỹ thuật ca ngày\tNhóm kỹ thuật ca đêm')
+
+// printMultipleText('工号\t姓名\t季度\t设备编号\t质量 50分\t全勤/团结  10分\t环境安全和工艺 20分\t月度绩效 (20分)\t总上班日数\t总计\t评估月数\t评比结果\t季度奖金\t备注\t当班主管\t照片(最多50)\n' +
+//     'Mã NV\tHọ và Tên\tQúy\tMã máy\tchất lượng (50 điểm)\tChuyên cần/Tính đoàn kết (10 điểm)\tEHS / công nghệ ( 20 điểm )\tHiệu suất tháng（20 điểm )\tTổng số ngày đi làm\tTOTAL\tSố tháng Đánh giá\tXếp loại \tThưởng KPI\tGhi chú\tchủ quản ca đó\tảnh MAX50')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
 // printMultipleText('"报检单号\n' +
 //     'Số phiếu nhập kho"\t"报检单合计数量\n' +

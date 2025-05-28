@@ -13,8 +13,12 @@
   --el-text-color-regular: #222222;
   --el-text-color-secondary: #333333;
   --el-text-color-placeholder: #888888;
-}
+  --el-font-family: 'Times New Roman', serif;
 
+}
+pre {
+  font-family: 'Times New Roman', serif;
+}
 html,
 body {
   margin: 0;

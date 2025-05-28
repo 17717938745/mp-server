@@ -1,3 +1,5 @@
+create database if not exists douson;
+use douson;
 create table douson.MP_ASSEMBLY
 (
     SERIAL_NUMBER                varchar(256)    null comment '整机序列号',
@@ -1086,4 +1088,169 @@ create table douson.MP_TEMPLATE_PHOTO
         unique (TEMPLATE_ID, PHOTO_URL)
 )
     comment '副本供应商刀具图片';
+ALTER TABLE douson.`MP_INVENTORY`
+    ADD COLUMN `PLAN_QUANTITY`        DECIMAL(16, 2) COMMENT '计划数量',
+    ADD COLUMN `REMAINING_QUANTITY`   DECIMAL(16, 2) COMMENT '剩余数量',
+    ADD COLUMN `OUT_OF_PLAN_ORDER_NO` VARCHAR(64) COMMENT '计划外单号';
+ALTER TABLE douson.`MP_MATERIAL`
+    ADD `GENERATE_EXAMINE` INT(1) DEFAULT 0 COMMENT '是否生成检验单，0-否 1-是';
+CREATE TABLE douson.MP_EXAMINE
+(
+    `CHECK_ORDER_NO`                 VARCHAR(512) COMMENT '报检单号',
+    `ORDER_TOTAL_QUANTITY`           DECIMAL(38, 10) COMMENT '报检单合计数量',
+    `IDENTIFICATION_HARDNESS_REMARK` VARCHAR(512) COMMENT '标识/硬度备注',
+    `NDE_DIMENSION_REMARK`           VARCHAR(512) COMMENT 'NDE/尺寸备注',
+    `INSPECTION_COMPLETED_QUANTITY`  DECIMAL(38, 10) COMMENT '检验完成数量',
+    `CUSTOMER_SHORT_NAME`            VARCHAR(64) COMMENT '客户简称',
+    `SALE_ORDER_NO`                  VARCHAR(64) COMMENT '销售订单',
+    `ORDER_PROJECT_NO`               VARCHAR(64) COMMENT '订单项目号',
+    `MATERIAL_NO`                    VARCHAR(64) COMMENT '物料号',
+    `IMPROVE_MATERIAL_DESCRIBE`      VARCHAR(512) COMMENT '加工物料描述',
+    `DESIGN_NUMBER`                  VARCHAR(64) COMMENT '图号',
+    `ORDER_QUANTITY`                 DECIMAL(38, 10) COMMENT '订单数量',
+    `PROMISE_DONE_DATE`              VARCHAR(32) COMMENT '承诺完成日期',
+    `DESCRIPTION`                    VARCHAR(512) COMMENT '备注',
+    `IDENTIFICATION_PERSON`          VARCHAR(64) COMMENT '标识人员',
+    `IDENTIFICATION_DATE`            VARCHAR(32) COMMENT '标识日期',
+    `INSPECTION_PERSON`              VARCHAR(64) COMMENT '检验人员',
+    `INSPECTION_COMPLETED_DATE`      VARCHAR(32) COMMENT '检验完成日期',
+    `CREATOR`                        VARCHAR(64) COMMENT '创建人用户id',
+    `MODIFIER`                       VARCHAR(64) COMMENT '修改人用户id',
+    `STATE`                          INT(2) DEFAULT 0 COMMENT '状态，0-正常 1-删除',
+    `CREATE_TIME`                    DATETIME COMMENT '创建时间',
+    `MODIFY_TIME`                    DATETIME COMMENT '修改时间',
+    `ID`                             VARCHAR(64) COMMENT '唯一标志',
+    CONSTRAINT PK_15110_Examine_0 PRIMARY KEY (ID)
+);
+ALTER TABLE douson.MP_EXAMINE
+    COMMENT '订单检验记录';
+CREATE INDEX UNQ_15110_Examine_1 ON MP_EXAMINE (SALE_ORDER_NO, ORDER_PROJECT_NO);
+CREATE TABLE douson.MP_EXAMINE_ATTACHMENT
+(
+    `EXAMINE_ID`          VARCHAR(64) COMMENT '检验记录id',
+    `ATTACHMENT_CATEGORY` VARCHAR(64) COMMENT '附件分类',
+    `ATTACHMENT_TYPE`     VARCHAR(32) COMMENT '附件类型',
+    `URL`                 VARCHAR(256) COMMENT '链接',
+    `FILE_ID`             VARCHAR(256) COMMENT '文件ID',
+    `FILENAME`            VARCHAR(256) COMMENT '文件名',
+    `COMPRESS_URL`        VARCHAR(256) COMMENT '压缩链接',
+    `CREATOR`             VARCHAR(64) COMMENT '创建人用户id',
+    `MODIFIER`            VARCHAR(64) COMMENT '修改人用户id',
+    `STATE`               INT(2) DEFAULT 0 COMMENT '状态，0-正常 1-删除',
+    `CREATE_TIME`         DATETIME COMMENT '创建时间',
+    `MODIFY_TIME`         DATETIME COMMENT '修改时间',
+    `ID`                  VARCHAR(64) COMMENT '唯一标志',
+    CONSTRAINT PK_15110_ExamineAttachment_0 PRIMARY KEY (ID)
+);
+ALTER TABLE douson.MP_EXAMINE_ATTACHMENT
+    COMMENT '订单检验记录附件';
+CREATE UNIQUE INDEX UNQ_15110_ExamineAttachment_0 ON MP_EXAMINE_ATTACHMENT (EXAMINE_ID, ATTACHMENT_CATEGORY, ATTACHMENT_TYPE, URL, FILE_ID);
+ALTER TABLE douson.MP_EXAMINE
+    ADD COLUMN `NDE` VARCHAR(256);
+ALTER TABLE douson.MP_EXAMINE
+    ADD COLUMN `ASSEMBLE` VARCHAR(256);
+ALTER TABLE douson.MP_EXAMINE
+    ADD COLUMN `TEST_PRESS` VARCHAR(256);
+ALTER TABLE douson.MP_EXAMINE
+    ADD COLUMN `SURFACE_TREATMENT` VARCHAR(256);
+ALTER TABLE douson.MP_FORUM
+    ADD COLUMN `CATEGORY`             VARCHAR(32),
+    ADD COLUMN `COMMENTARY_SHOW_TYPE` INT;
+CREATE INDEX IND_MP_FORUM_CATEGORY ON douson.MP_FORUM (CATEGORY);
+ALTER TABLE douson.MP_INDUSTRY_EQUIPMENT
+    ADD COLUMN `API_DEVICE` VARCHAR(64);
+ALTER TABLE dmmp.MP_USER
+    ADD COLUMN `NATIONALITY` VARCHAR(255);
+ALTER TABLE douson.MP_MATERIAL
+    ADD COLUMN `CIRCULATED_DOCUMENT` INT(2) DEFAULT 0 NOT NULL COMMENT '是否流转文档 0:否 1:是';
+ALTER TABLE douson.MP_INDUSTRY_DEVICE
+    ADD COLUMN MANAGER VARCHAR(255);
+ALTER TABLE douson.MP_PLAN
+    MODIFY COLUMN `SOLVE_SCHEME` VARCHAR(4096);
+CREATE TABLE douson.MP_DRESS
+(
+    WORK_DRESS_TYPE        VARCHAR(64) COMMENT '工装类型',
+    MATERIAL_NO            VARCHAR(64) COMMENT '物料号',
+    REMARK                 VARCHAR(512) COMMENT '描述',
+    DESIGN_NUMBER          VARCHAR(128) COMMENT '图号',
+    APPLY_COUNT            DECIMAL(19, 2) COMMENT '申请数量',
+    APPLY_DATE             VARCHAR(32) COMMENT '申请日期',
+    STORE_POSITION         VARCHAR(128) COMMENT '库存位置',
+    CHECK_ACCEPT_USER      VARCHAR(128) COMMENT '验收',
+    DESCRIPTION_OF_ORDER   VARCHAR(512) COMMENT '备注（注明为哪个订单服务）',
+    STORE_COUNT            DECIMAL(19, 2) COMMENT '入库数量',
+    STORE_DATE_DESCRIPTION VARCHAR(512) COMMENT '入库日期备注',
+    CREATOR                VARCHAR(64)   NULL COMMENT '创建人用户ID',
+    MODIFIER               VARCHAR(64)   NULL COMMENT '修改人用户ID',
+    STATE                  INT DEFAULT 0 NULL COMMENT '状态，0-正常 1-删除',
+    CREATE_TIME            DATETIME      NULL COMMENT '创建时间',
+    MODIFY_TIME            DATETIME      NULL COMMENT '修改时间',
+    ID                     VARCHAR(64)   NOT NULL COMMENT '唯一标志',
+    PRIMARY KEY (ID)
+) COMMENT = '工装管理';
+
+CREATE TABLE douson.MP_DRESS_ATTACHMENT
+(
+    DRESS_ID            VARCHAR(64)   NULL COMMENT '工装管理ID',
+    ATTACHMENT_CATEGORY VARCHAR(64)   NULL COMMENT '附件分类',
+    ATTACHMENT_TYPE     VARCHAR(32)   NULL COMMENT '附件类型',
+    URL                 VARCHAR(256)  NULL COMMENT '链接',
+    FILE_ID             VARCHAR(256)  NULL COMMENT '文件ID',
+    FILENAME            VARCHAR(256)  NULL COMMENT '文件名',
+    COMPRESS_URL        VARCHAR(256)  NULL COMMENT '压缩链接',
+    CREATOR             VARCHAR(64)   NULL COMMENT '创建人用户ID',
+    MODIFIER            VARCHAR(64)   NULL COMMENT '修改人用户ID',
+    STATE               INT DEFAULT 0 NULL COMMENT '状态，0-正常 1-删除',
+    CREATE_TIME         DATETIME      NULL COMMENT '创建时间',
+    MODIFY_TIME         DATETIME      NULL COMMENT '修改时间',
+    ID                  VARCHAR(64)   NOT NULL COMMENT '唯一标志'
+        PRIMARY KEY,
+    CONSTRAINT UNQ_15110_IMPROVEATTACHMENT_0
+        UNIQUE (DRESS_ID, ATTACHMENT_CATEGORY, ATTACHMENT_TYPE, URL, FILE_ID)
+)
+    COMMENT '工装管理附件';
+
+# DROP TABLE douson.MP_SCORE;
+CREATE TABLE douson.MP_SCORE
+(
+    USER_ID             VARCHAR(64)     NULL COMMENT '用户ID',
+    QUARTER             VARCHAR(16)     NULL COMMENT '季度',
+    DEVICE_NUMBER       VARCHAR(64)     NULL COMMENT '设备编号',
+    QUALITY_SCORE       DECIMAL(38, 10) NULL COMMENT '质量 50分',
+    ATTENDANCE_SCORE    DECIMAL(38, 10) NULL COMMENT '全勤/团结  10分',
+    SAFETY_SCORE        DECIMAL(38, 10) NULL COMMENT '环境安全和工艺 20分',
+    MONTHLY_PERFORMANCE DECIMAL(38, 10) NULL COMMENT '月度绩效 (20分)',
+    TOTAL_WORK_DAYS     INT             NULL COMMENT '总上班日数',
+    TOTAL               DECIMAL(38, 10) NULL COMMENT '总计',
+    EVALUATION_MONTHS   INT             NULL COMMENT '评估月数',
+    EVALUATION_RESULT   VARCHAR(255)    NULL COMMENT '评比结果',
+    QUARTERLY_BONUS     DECIMAL(38, 10) NULL COMMENT '季度奖金',
+    DESCRIPTION         VARCHAR(512)    NULL COMMENT '备注',
+    LEADER_USER_ID      VARCHAR(64)     NULL COMMENT '当班主管',
+    SORTER              int default 0   null comment '排序',
+    CREATOR             varchar(64)     null comment '创建人用户id',
+    MODIFIER            varchar(64)     null comment '修改人用户id',
+    REMARK              varchar(512)    null comment '备注',
+    CREATED_TIME        datetime        not null comment '创建时间',
+    LAST_MODIFIED_TIME  datetime        not null comment '修改时间',
+    DELETED_FLAG        int             null comment '删除标志',
+    ID                  VARCHAR(64)     NOT NULL COMMENT '唯一标志',
+    PRIMARY KEY (ID)
+) COMMENT '季度评比报告';
+
+# DROP TABLE douson.MP_SCORE_ATTACHMENT;
+CREATE TABLE douson.MP_SCORE_ATTACHMENT
+(
+    SCORE_ID            VARCHAR(64)  NOT NULL COMMENT '季度评比报告ID',
+    ATTACHMENT_CATEGORY VARCHAR(64)  NULL COMMENT '附件分类，photo-阀体照片',
+    ATTACHMENT_TYPE     VARCHAR(4)   NULL COMMENT '附件类型，0：照片；1-视频',
+    URL                 VARCHAR(256) NULL COMMENT '链接',
+    FILE_ID             VARCHAR(64)  NULL COMMENT '文件ID',
+    FILENAME            VARCHAR(255) NULL COMMENT '文件名',
+    COMPRESS_URL        TEXT         NULL COMMENT '压缩链接',
+    ID                  VARCHAR(64)  NOT NULL COMMENT '唯一标志',
+    PRIMARY KEY (ID)
+) COMMENT '季度评比报告附件';
+create unique index UNQ_15110_SA_0
+    on douson.MP_SCORE_ATTACHMENT (SCORE_ID, ATTACHMENT_CATEGORY, ATTACHMENT_TYPE, URL, FILE_ID);
 

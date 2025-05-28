@@ -189,29 +189,6 @@ public interface IndustryConverter extends Serializable {
     @Mapping(target = "fullVideoUrl", expression = "java(e.getUrl().startsWith(\"http:\") || e.getUrl().startsWith(\"https:\") ? e.getUrl() : (urlPrefix + e.getUrl()))")
     VideoModel accidentVideo(AccidentAttachmentEntity e, String urlPrefix);
 
-    @Mapping(target = "id", source = "boxFlagId")
-    BoxFlagEntity boxFlag(BoxFlagRequest request);
-
-    @Mapping(target = "boxFlagId", source = "id")
-    @Mapping(target = "stateFormat", expression = "java(com.lead.fund.base.common.basic.cons.frame.AdminState.label(d.getState()))")
-    @Mapping(target = "boxNumberFormat", expression = "java(\"T\" + d.getBoxNumber())")
-    @Mapping(target = "createTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getCreateTime()))")
-    @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getModifyTime()))")
-    @Mapping(target = "length", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(d.getLength()))")
-    @Mapping(target = "width", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(d.getWidth()))")
-    @Mapping(target = "height", expression = "java(com.lead.fund.base.common.util.NumberUtil.defaultDecimal(d.getHeight()))")
-    @Mapping(target = "volume", expression = "java(d.getLength().multiply(d.getWidth()).multiply(d.getHeight()))")
-    @Mapping(target = "volumeFormat", expression = "java(d.getLength().intValue() + \"*\" + d.getWidth().intValue()+ \"*\" + d.getHeight().intValue())")
-    BoxFlagResponse boxFlag(BoxFlagEntity d);
-
-    List<BoxFlagResponse> boxFlagList(List<BoxFlagEntity> list);
-
-    @Mapping(target = "photoCompressUrl", expression = "java(e.getPhotoCompressUrl())")
-    @Mapping(target = "fullPhotoCompressUrl", expression = "java(e.getPhotoCompressUrl().startsWith(\"http:\") || e.getPhotoCompressUrl().startsWith(\"https:\") ? e.getPhotoCompressUrl() : (urlPrefix + e.getPhotoCompressUrl()))")
-    @Mapping(target = "photoUrl", expression = "java(e.getPhotoUrl())")
-    @Mapping(target = "fullPhotoUrl", expression = "java(e.getPhotoUrl().startsWith(\"http:\") || e.getPhotoUrl().startsWith(\"https:\") ? e.getPhotoUrl() : (urlPrefix + e.getPhotoUrl()))")
-    PhotoImgModel photo(BoxFlagPhotoEntity e, String urlPrefix);
-
     @Mapping(target = "id", source = "disqualificationOrderId")
     DisqualificationOrderEntity disqualificationOrder(DisqualificationOrderRequest request);
 

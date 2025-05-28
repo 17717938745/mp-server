@@ -130,6 +130,13 @@ export const getQuarter = (diff: number = 0): Date => {
   return new Date(dateString)
 }
 
+export const getQuarterString = (): String => {
+  const date = new Date()
+  let quarter = Math.ceil((new Date().getMonth() + 1) / 3) + diff;
+  quarter += 1;
+  return '0' + quarter
+}
+
 
 export const getMonthStart = () => {
   const now = new Date()
@@ -186,6 +193,20 @@ export function getQuarterStartMonth() {
     quarterStartMonth = 4;
   }
   return quarterStartMonth;
+}
+
+//获得本季度的开始月份
+export function getQuarterStartMonthString() {
+  let month = new Date().getMonth()
+  if (month < 3) {
+    return 'Q1'
+  } else if (month < 6) {
+    return 'Q2'
+  } else if (month < 9) {
+    return 'Q3'
+  } else {
+    return 'Q4'
+  }
 }
 
 //获得某季度的开始日期　　

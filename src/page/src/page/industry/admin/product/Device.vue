@@ -36,7 +36,7 @@
       <el-table-column
           prop="deviceTime"
           label="运行时间"
-          width="256"
+          width="138"
           align="center"
       >
         <template #default="scope">
@@ -46,13 +46,19 @@
       <el-table-column
           prop="unitPrice"
           label="单价"
-          width="256"
+          width="127"
+          align="center"
+      ></el-table-column>
+      <el-table-column
+          prop="managerFormat"
+          label="管理人"
+          width="101"
           align="center"
       ></el-table-column>
       <el-table-column
           prop="supplierFormat"
           label="是否供应商"
-          width="256"
+          width="101"
           align="center"
       ></el-table-column>
       <el-table-column
@@ -114,6 +120,21 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item prop="manager" :label="store.state.label.managerUser">
+          <el-select
+              v-model="formData.manager"
+              filterable
+              allow-create
+              clearable
+              :placeholder="store.state.label.managerUser">
+            <el-option
+                v-for="item in userOptionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item prop="sorter" label="排序">
           <el-input v-model="formData.sorter"/>
         </el-form-item>
@@ -145,6 +166,24 @@ const roleCodeList = store.state.roleCodeList
 const router = useRouter()
 const route = useRoute()
 const formRef: Ref = ref(null)
+const config = ref([])
+const userOptionList = ref([])
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'equipmentNo',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  config.value = l[0].data
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
+})
 const state = reactive({
   query: {
     data: {
@@ -164,6 +203,7 @@ const state = reactive({
     runningHour: 0,
     runningMinute: 0,
     supplier: false,
+    manager: '',
     sorter: 0,
   },
   formSave: false,

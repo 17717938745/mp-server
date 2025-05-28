@@ -126,7 +126,83 @@ const handleSubmit = (retry: boolean = true) => {
                 "nameKey": "admin",
                 "white": true,
                 "showFlag": true,
-                "children": [
+                "children": '3' === user.userProperty ? [
+                  {
+                    "id": "-1",
+                    "path": "report",
+                    "component": "",
+                    "nameKey": "reportManage",
+                    "white": false,
+                    "showFlag": true,
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [],
+                            "id": "-1",
+                            "path": "quality",
+                            "component": "quality",
+                            "nameKey": "accidentQuality",
+                            "white": false,
+                            "showFlag": true,
+                          },
+                        ],
+                        "id": "-1",
+                        "path": "accident",
+                        "component": "",
+                        "nameKey": "accidentReport",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "disqualification",
+                        "component": "disqualification",
+                        "nameKey": "disqualificationOrder",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                    ]
+                  },
+                  {
+                    "id": "-1",
+                    "path": "design",
+                    "component": "",
+                    "nameKey": "designManage",
+                    "white": false,
+                    "showFlag": true,
+                    "children": [
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "task",
+                        "component": "task",
+                        "nameKey": "taskManage",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                    ]
+                  }, {
+                    "id": "-1",
+                    "path": "asset",
+                    "component": "",
+                    "nameKey": "assetManage",
+                    "white": false,
+                    "showFlag": true,
+                    "children": [
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "template",
+                        "component": "template",
+                        "nameKey": "templateManage",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                    ]
+                  },
+                ] : [
                   {
                     "children": [],
                     "id": "-1",
@@ -391,6 +467,15 @@ const handleSubmit = (retry: boolean = true) => {
                         "white": false,
                         "showFlag": true,
                       },
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "score",
+                        "component": "score",
+                        "nameKey": "scoreReport",
+                        "white": false,
+                        "showFlag": true,
+                      },
                     ]
                   },
                   {
@@ -444,6 +529,15 @@ const handleSubmit = (retry: boolean = true) => {
                         "path": "device",
                         "component": "device",
                         "nameKey": "deviceCheckLedger",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "dress",
+                        "component": "dress",
+                        "nameKey": "workDressManage",
                         "white": false,
                         "showFlag": true,
                       },

@@ -181,4 +181,12 @@ public class ParamResponse implements Serializable {
      * 国籍
      */
     private List<ParamConfigResponse> nationalityList;
+    /**
+     * 工装类型
+     */
+    private List<ParamConfigResponse> workDressTypeList;
+    /**
+     * 库存位置
+     */
+    private List<ParamConfigResponse> storePositionList;
 }

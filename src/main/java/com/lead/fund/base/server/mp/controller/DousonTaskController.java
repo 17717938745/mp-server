@@ -157,6 +157,9 @@ public class DousonTaskController {
         if (isNotBlank(d.getTaskId())) {
             lambda.eq(TaskEntity::getId, d.getTaskId());
         }
+        if (isNotBlank(d.getCreator())) {
+            lambda.eq(TaskEntity::getCreator, d.getCreator());
+        }
         if (isNotBlank(d.getDeviceId())) {
             lambda.eq(TaskEntity::getDeviceId, d.getDeviceId());
         }
@@ -316,10 +319,14 @@ public class DousonTaskController {
             @ModelAttribute TaskPageRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+        if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "taskManager".equals(t.getRoleCode()) || "taskView".equals(t.getRoleCode()) || "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername()) && !"3".equals(u.getUserProperty())) {
             return new PageResult<>(0, new ArrayList<>());
         }
-        if (u.getRoleList().stream().anyMatch(t -> !"admin".equals(t.getRoleCode()) && !"taskManager".equals(t.getRoleCode()) && !"taskView".equals(t.getRoleCode()) && "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
+        // 供应商只能看自己
+        if ("3".equals(u.getUserProperty())) {
+            request.getData().setDeviceId(deviceMapper.selectList(new LambdaQueryWrapper<DeviceEntity>().eq(DeviceEntity::getManager, u.getUserId()))
+                    .stream().map(AbstractPrimaryKey::getId).findFirst().orElse("null"));
+        } else if (u.getRoleList().stream().anyMatch(t -> !"admin".equals(t.getRoleCode()) && !"taskManager".equals(t.getRoleCode()) && !"taskView".equals(t.getRoleCode()) && "supplierManager".equals(t.getRoleCode())) && !"admin".equals(u.getUsername())) {
             request.getData().setSupplier(true);
         }
         final PageResult<TaskEntity> pr = DatabaseUtil.page(request, this::taskList);

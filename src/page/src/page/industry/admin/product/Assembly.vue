@@ -16,6 +16,7 @@
 <script lang="tsx" setup>
 import {ref, shallowRef} from 'vue'
 import {Store, useStore} from 'vuex'
+import {StoreType} from '@/store/Industry'
 import {useRoute} from 'vue-router'
 import {TabsPaneContext} from 'element-plus'
 import Index from './assembly/Index.vue'

@@ -58,7 +58,7 @@ public class PlanEntity extends AbstractAdmin {
      * 解决方案
      */
     @FieldRemark(value = "解决方案")
-    @Size(max = 256, message = "解决方案")
+    @Size(max = 2048, message = "解决方案")
     private String solveScheme;
     /**
      * 负责人
