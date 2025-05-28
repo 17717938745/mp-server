@@ -29,6 +29,7 @@ import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.SecurityUtil;
 import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.common.web.util.HttpUtil;
+import com.lead.fund.base.server.mp.cons.MpExceptionType;
 import com.lead.fund.base.server.mp.dao.MpDeviceDao;
 import com.lead.fund.base.server.mp.dao.MpUserRoleDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
@@ -341,6 +342,9 @@ public class SystemController {
             if (isNotBlank(request.getState())) {
                 lambda.eq(MpUserEntity::getState, request.getState());
             }
+            if (isNotBlank(request.getEmployeeId())) {
+                lambda.eq(MpUserEntity::getEmployeeId, request.getEmployeeId());
+            }
             if (isNotBlank(request.getLeaderUserId())) {
                 lambda.eq(MpUserEntity::getLeaderUserId, request.getLeaderUserId());
             }
@@ -506,6 +510,11 @@ public class SystemController {
         if (u.getRoleCodeList().stream().noneMatch("userManager"::equals)) {
             user.setInterviewResume(null);
         }
+        if (userMapper.selectCount(new LambdaQueryWrapper<MpUserEntity>()
+                .eq(MpUserEntity::getEmployeeId, request.getEmployeeId())
+        ) > 0) {
+            throw new BusinessException(MpExceptionType.MP_USER_EMPLOYEE_ID_REPEAT);
+        }
         user.setSalt(SecurityUtil.randomSalt())
                 .setPasswordEncrypt(SecurityUtil.sign(request.getPassword(), user.getSalt()))
                 .setCreator(u.getUserId())
@@ -527,6 +536,11 @@ public class SystemController {
     public Result userUpdate(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId, @RequestBody MpUserMergeRequest request) {
         final MpUserResponse u = accountHelper.checkUserAdmin(deviceId);
         final MpUserEntity user = MP_SYSTEM_INSTANCE.entity(request);
+        if (userMapper.selectCount(new LambdaQueryWrapper<MpUserEntity>()
+                .eq(MpUserEntity::getEmployeeId, request.getEmployeeId())
+        ) > 0) {
+            throw new BusinessException(MpExceptionType.MP_USER_EMPLOYEE_ID_REPEAT);
+        }
         if (u.getRoleCodeList().stream().noneMatch("userManager"::equals)) {
             user.setInterviewResume(null);
         }

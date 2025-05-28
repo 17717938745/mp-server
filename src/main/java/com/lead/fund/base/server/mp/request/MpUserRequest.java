@@ -1,6 +1,7 @@
 package com.lead.fund.base.server.mp.request;
 
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -86,4 +87,8 @@ public class MpUserRequest implements Serializable {
      * 国际
      */
     private String nationality;
+    /**
+     * 工号
+     */
+    private String employeeId;
 }
