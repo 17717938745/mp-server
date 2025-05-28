@@ -343,7 +343,7 @@ public class SystemController {
                 lambda.eq(MpUserEntity::getState, request.getState());
             }
             if (isNotBlank(request.getEmployeeId())) {
-                lambda.eq(MpUserEntity::getEmployeeId, request.getEmployeeId());
+                lambda.like(MpUserEntity::getEmployeeId, request.getEmployeeId());
             }
             if (isNotBlank(request.getLeaderUserId())) {
                 lambda.eq(MpUserEntity::getLeaderUserId, request.getLeaderUserId());
