@@ -217,6 +217,7 @@ public class DousonScoreController {
             res
                     .setTotalCount(el.size())
                     .setErrorCount(res.getNotMatchUserList().size())
+                    .setNotMatchUserCount(res.getNotMatchUserList().size())
                     .setInsertUserCount(res.getInsertUserList().size())
                     .setUpdateUserCount(res.getUpdateUserList().size())
             ;
