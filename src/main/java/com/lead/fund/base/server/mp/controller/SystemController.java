@@ -538,6 +538,7 @@ public class SystemController {
         final MpUserEntity user = MP_SYSTEM_INSTANCE.entity(request);
         if (userMapper.selectCount(new LambdaQueryWrapper<MpUserEntity>()
                 .eq(MpUserEntity::getEmployeeId, request.getEmployeeId())
+                .ne(MpUserEntity::getId, request.getUserId())
         ) > 0) {
             throw new BusinessException(MpExceptionType.MP_USER_EMPLOYEE_ID_REPEAT);
         }
