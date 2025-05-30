@@ -190,9 +190,8 @@ public class DousonScoreController {
                 t.setTotal(
                         BigDecimal.ZERO.add(t.getQualityScore().add(t.getSafetyScore()).add(t.getAttendanceScore()).add(t.getMonthlyPerformance()))
                 );
-                final String userId = userIdMap.computeIfAbsent(CollUtil.toList(t.getEmployeeId(), t.getUserName()), k -> BeanUtil.wrapperIfNotNull(userMapper.selectOne(new LambdaQueryWrapper<MpUserEntity>()
+                final String userId = userIdMap.computeIfAbsent(CollUtil.toList(t.getEmployeeId()), k -> BeanUtil.wrapperIfNotNull(userMapper.selectOne(new LambdaQueryWrapper<MpUserEntity>()
                         .eq(MpUserEntity::getEmployeeId, k.get(0))
-                        .eq(MpUserEntity::getName, k.get(1))
                 ), MpUserEntity::getId, ""));
                 if (isBlank(userId)) {
                     res.getNotMatchUserList().add("%s（%s）".formatted(t.getUserName(), t.getEmployeeId()));
