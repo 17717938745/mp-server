@@ -53,6 +53,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -391,7 +392,7 @@ public class DousonScoreController {
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         if (!"admin".equals(u.getUsername()) && u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreView".equals(t.getRoleCode()))) {
-            u.setUserId(u.getUserId());
+            request.setUserId(u.getUserId());
         }
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         final List<ScoreResponse> rl = formatScoreList(scoreList(request));
@@ -463,10 +464,10 @@ public class DousonScoreController {
             @ModelAttribute ScoreRequest request
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
-        if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreRecord".equals(t.getRoleCode()) || "scoreTesterRecord".equals(t.getRoleCode()) || "scoreRecordView".equals(t.getRoleCode()) || "admin".equals(t.getRoleCode()))) {
+        /*if (u.getRoleList().stream().noneMatch(t -> "scoreManager".equals(t.getRoleCode()) || "scoreView".equals(t.getRoleCode()))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
-        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final AtomicInteger atomicInteger = new AtomicInteger(0);*/
         final List<ScoreEntity> l = scoreList(request, lambda -> {
             lambda
                     .select(
@@ -493,7 +494,7 @@ public class DousonScoreController {
                                     .setScale(4, RoundingMode.HALF_UP)
                             );
                     return r.setPercentFormat(NumberUtil.formatPercent(r.getPercent()));
-                }).collect(Collectors.toList());
+                }).sorted((o1, o2) -> o1.getEvaluationResult().compareTo(o2.getEvaluationResult())).collect(Collectors.toList());
         rl.add(new ScoreSummaryResponse()
                 .setEvaluationResult("总计")
                 .setCount(total)

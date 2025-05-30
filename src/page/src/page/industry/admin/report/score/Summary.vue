@@ -1,22 +1,22 @@
 <template>
   <div>
     <div class="query-container">
-        <el-date-picker
-            ref="yearPicker"
-            v-model="selectedYear"
-            type="year"
-            placeholder="Select Year"
-            @change="handleYearChange"
-            :clearable="false"
+      <el-date-picker
+          ref="yearPicker"
+          v-model="selectedYear"
+          type="year"
+          placeholder="Select Year"
+          @change="handleYearChange"
+          :clearable="false"
+      />
+      <el-select ref="quarterSelect" v-model="selectedQuarter" placeholder="Select Quarter" @change="handleQuarterChange">
+        <el-option
+            v-for="(quarter, index) in quarters"
+            :key="index"
+            :label="quarter.label"
+            :value="quarter.value"
         />
-        <el-select ref="quarterSelect" v-model="selectedQuarter" placeholder="Select Quarter" @change="handleQuarterChange">
-          <el-option
-              v-for="(quarter, index) in quarters"
-              :key="index"
-              :label="quarter.label"
-              :value="quarter.value"
-          />
-        </el-select>
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
       </div>
@@ -98,13 +98,30 @@ const handleDateTimeChange = () => {
   }
   handleList()
 }
+const getYearQuarter = () => {
+  if (!selectedYear.value) {
+    ElMessage.warning('Please select a year')
+    yearPicker.value?.focus()
+    return ''
+  }
+  if (!selectedQuarter.value) {
+    ElMessage.warning('Please select a quarter')
+    quarterSelect.value?.focus()
+    return ''
+  }
+  return formatDate(selectedYear.value, 'yyyy') + selectedQuarter.value
+}
 const handleList = () => {
-  httpGet(`douson/score/summary-list`, state.query.data).then(
-      (res: ListResult<typeof state.tableData>) => {
-        state.tableData = res.list
-        ElMessage.success("Query success")
-      }
-  )
+  const quarter = getYearQuarter()
+  if (quarter) {
+    state.query.data.quarter = quarter
+    httpGet(`douson/score/summary-list`, state.query.data).then(
+        (res: ListResult<typeof state.tableData>) => {
+          state.tableData = res.list
+          ElMessage.success("Query success")
+        }
+    )
+  }
 }
 const yearPicker = ref(null)
 const quarterSelect = ref(null)

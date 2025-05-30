@@ -199,23 +199,23 @@ const handleShowRule = () => {
 }
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
-  {value: 'operator', labelKey: 'viewAndEdit', width: 312, type: ValueType.Operator,},
-  {value: 'employeeId', labelKey: 'employeeId', width: 189},
-  {value: 'userName', labelKey: 'userName', width: 189},
-  {value: 'quarter', labelKey: 'quarter', width: 189},
-  {value: 'deviceNumber', labelKey: 'deviceNumber', width: 189},
-  {value: 'qualityScoreFormat', labelKey: 'qualityScore', width: 189},
-  {value: 'attendanceScoreFormat', labelKey: 'attendanceScore', width: 189},
-  {value: 'safetyScoreFormat', labelKey: 'safetyScore', width: 189},
-  {value: 'monthlyPerformanceFormat', labelKey: 'monthlyPerformance', width: 189},
-  {value: 'totalWorkDays', labelKey: 'totalWorkDays', width: 189},
-  {value: 'totalFormat', labelKey: 'total', width: 189},
-  {value: 'evaluationMonths', labelKey: 'evaluationMonths', width: 189},
-  {value: 'evaluationResult', labelKey: 'evaluationResult', width: 189},
-  {value: 'quarterlyBonusFormat', labelKey: 'quarterlyBonus', width: 189},
-  {value: 'description', labelKey: 'description', width: 189},
-  {value: 'leaderUserId', labelKey: 'leaderUserId', width: 189},
-  {value: 'photoCount', labelKey: 'photos', width: 189},
+  {value: 'operator', labelKey: 'viewAndEdit', width: 147, type: ValueType.Operator,},
+  {value: 'employeeId', labelKey: 'employeeId', width: 98},
+  {value: 'userName', labelKey: 'userName', width: 156},
+  {value: 'quarter', labelKey: 'quarter', width: 81},
+  {value: 'deviceNumber', labelKey: 'deviceNumber', width: 76},
+  {value: 'qualityScoreFormat', labelKey: 'qualityScore', width: 87},
+  {value: 'attendanceScoreFormat', labelKey: 'attendanceScore', width: 87},
+  {value: 'safetyScoreFormat', labelKey: 'safetyScore', width: 87,},
+  {value: 'monthlyPerformanceFormat', labelKey: 'monthlyPerformance', width: 87},
+  {value: 'totalWorkDays', labelKey: 'totalWorkDays', width: 89},
+  {value: 'totalFormat', labelKey: 'total', width: 89},
+  {value: 'evaluationMonths', labelKey: 'evaluationMonths', width: 87},
+  {value: 'evaluationResult', labelKey: 'evaluationResult', width: 87},
+  {value: 'quarterlyBonusFormat', labelKey: 'quarterlyBonus', width: 87},
+  {value: 'description', labelKey: 'description', width: 181},
+  {value: 'leaderUserId', labelKey: 'leaderUserId', width: 91},
+  {value: 'photoCount', labelKey: 'photos', width: 89},
   {value: 'photoList', labelKey: 'photos', width: 128, type: ValueType.Image,},
 ])
 const yearPicker = ref(null)
@@ -238,7 +238,6 @@ const handleDownloadTemplate = () => {
   httpDownloadFile("douson/score/template", state.query.data);
 }
 const getYearQuarter = () => {
-  console.log(`selectedYear.value: ${selectedYear.value}`)
   if (!selectedYear.value) {
     ElMessage.warning('Please select a year')
     yearPicker.value?.focus()
