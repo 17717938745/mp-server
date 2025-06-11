@@ -25,6 +25,7 @@ import com.lead.fund.base.server.mp.request.BoxFlagPageRequest;
 import com.lead.fund.base.server.mp.request.BoxFlagRequest;
 import com.lead.fund.base.server.mp.response.BoxFlagResponse;
 import com.lead.fund.base.server.mp.response.BoxFlagSummaryResponse;
+import com.lead.fund.base.server.mp.response.BoxSummaryDescribeResponse;
 import com.lead.fund.base.server.mp.response.BoxSummaryResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
@@ -421,6 +422,82 @@ public class DousonBoxController {
             );
         }
         return new ListResult<>(
+                list.stream()
+                        .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * 汇总列表1
+     *
+     * @param deviceId 设备id
+     * @param request  {@link AssemblyRequest}
+     * @return {@link ListResult <AssemblySummaryResponse>}
+     */
+    @GetMapping("summary-list1")
+    public DataListResult<BoxSummaryDescribeResponse, BoxSummaryResponse> summaryList1(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @ModelAttribute BoxFlagRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        request.setEndDate(cn.hutool.core.date.DateUtil.offsetDay(new Date(), -14));
+        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final List<BoxFlagEntity> l = boxFlagList(request, lambda -> {
+            lambda.select(
+                    BoxFlagEntity::getCustomerShortName,
+                    BoxFlagEntity::getEachBoxCount,
+                    BoxFlagEntity::getBoxNumber,
+                    BoxFlagEntity::getEachBoxWeight
+            );
+        });
+        final List<BoxSummaryResponse> rl = BOX_INSTANCE.boxSummaryList(l)
+                .stream().peek(t -> {
+                    t.setSumBoxNumber(t.getBoxNumberList().size());
+                })
+                .sorted(Comparator.comparing(BoxSummaryResponse::getCustomerShortName))
+                .toList();
+        final List<BoxSummaryResponse> list = rl.stream().collect(Collectors.groupingBy(
+                BoxSummaryResponse::getCustomerShortName,
+                Collectors.reducing(
+                        (t, t1) -> {
+                            final List<Integer> boxNumberList = new ArrayList<>();
+                            boxNumberList.addAll(t.getBoxNumberList());
+                            boxNumberList.addAll(t1.getBoxNumberList());
+                            return new BoxSummaryResponse()
+                                    .setCustomerShortName(t.getCustomerShortName())
+                                    .setSumEachBoxCount(t.getSumEachBoxCount() + t1.getSumEachBoxCount())
+                                    .setSumEachBoxWeight(BigDecimal.ZERO.add(t.getSumEachBoxWeight()).add(t1.getSumEachBoxWeight()))
+                                    .setBoxNumberList(boxNumberList)
+                                    ;
+                        }
+                )
+        )).values().stream().map(t -> t.orElse(new BoxSummaryResponse())).peek(t -> {
+            t.setSumBoxNumber(t.getBoxNumberList().size());
+        }).collect(Collectors.toList());
+        MultitaskUtil.supplementList(
+                list,
+                BoxSummaryResponse::getCustomerShortName,
+                ll -> paramDao.listByCategoryId("customerShortName"),
+                (t, r) -> t.getCustomerShortName().equals(r.getValue()),
+                (t, r) -> t.setCustomerShortNameFormat(r.getLabel())
+        );
+        if (CollUtil.isNotEmpty(list)) {
+            final BoxSummaryResponse summaryData = list.stream().reduce(
+                    (t, t1) -> new BoxSummaryResponse()
+                            .setSumEachBoxCount(t.getSumEachBoxCount() + t1.getSumEachBoxCount())
+                            .setSumEachBoxWeight(BigDecimal.ZERO.add(t.getSumEachBoxWeight()).add(t1.getSumEachBoxWeight()))
+                            .setSumBoxNumber(t.getSumBoxNumber() + t1.getSumBoxNumber())
+                            .setBoxNumberList(null)
+            ).orElse(new BoxSummaryResponse());
+            list.add(new BoxSummaryResponse().setCustomerShortNameFormat("(blank)"));
+            list.add(BOX_INSTANCE.copyBoxSummary(summaryData)
+                    .setCustomerShortName("")
+                    .setCustomerShortNameFormat("Grand Total")
+                    .setBoxNumberList(null)
+            );
+        }
+        return new DataListResult<>(
+                new BoxSummaryDescribeResponse().setTitle("统计<=%s的未发送数据".formatted(DateUtil.day(request.getEndDate()))),
                 list.stream()
                         .peek(t -> t.setIndex(atomicInteger.addAndGet(1))).collect(Collectors.toList())
         );
