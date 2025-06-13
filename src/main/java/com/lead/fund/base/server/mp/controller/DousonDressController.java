@@ -7,7 +7,6 @@ import static com.lead.fund.base.common.util.StrUtil.isBlank;
 import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
 import static com.lead.fund.base.server.mp.converter.DressConverter.DRESS_INSTANCE;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -39,7 +38,6 @@ import com.lead.fund.base.server.mp.request.DressRequest;
 import com.lead.fund.base.server.mp.response.DressResponse;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import jakarta.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +70,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/douson/dress")
 @Slf4j
 @Validated
-public class DousonAssetController {
+public class DousonDressController {
 
     @Resource
     private AccountHelper accountHelper;

@@ -59,13 +59,13 @@
       </div>
     </div>
     <view-list
-        idKey="deviceCheckLedgerId"
+        idKey="dressId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
-        :handleDelete="user.userId === 'admin' ? handleDelete : null"
+        :handleDelete="dressManager ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
@@ -370,7 +370,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'workDressTypeFormat', originValue: 'workDressType', labelKey: 'workDressType', width: 156},
   {value: 'materialNo', labelKey: 'materialNo', width: 98},
   {value: 'remark', labelKey: 'remark', width: 168},
-  {value: 'designNumber', originValue: 'designNumber', labelKey: 'designNumber', width: 189},
+  {value: 'designNumber', originValue: 'designNumber', labelKey: 'designNumber', width: 189, showOverflow: true,},
   {value: 'designNumberCount', labelKey: 'designNumberOfPdf', width: 87},
   {value: 'designNumberList', labelKey: 'designNumberOfPdf', width: 76, type: ValueType.Attachment,},
   {value: 'applyCount', labelKey: 'applyCount', width: 76},
@@ -466,11 +466,9 @@ const state = reactive({
     descriptionOfOrder: [{required: dressManager, max: 200, message: 'Please check', trigger: 'blur'}],
     storeCount: [{required: storeDressManager, message: 'Please check', trigger: 'blur'}],
     storeDateDescription: [{required: storeDressManager,  max: 200, message: 'Please check', trigger: 'blur'}],
-    storeCount: [{required: storeDressManager, message: 'Please check', trigger: 'blur'}],
     storePictureList: [{required: false, type: 'array', min: 0, max: 6}],
   },
 })
-
 const handlePageChange = (val: number) => {
   state.query.page.page = val
   handlePage()
@@ -540,6 +538,15 @@ Promise.all([
       t.type = ValueType.NumberEdit
     } else if (t.value === 'storeDateDescription' && (dressManager)) {
       t.type = ValueType.TextEdit
+    } else if ('storePictureCount' === t.value && (dressManager || storeDressManager)) {
+        t.type = ValueType.Link
+        t.openLink = (d: any) => {
+          handleEdit(d)
+          setTimeout(() => {
+            // formRef.value.$el
+            formRef.value.scrollToField('storePictureList')
+          }, 100)
+        }
     }
     return t
   })
