@@ -155,16 +155,16 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="descriptionOfOrder" :label="store.state.label.descriptionOfOrder">
-          <el-input v-model="formData.descriptionOfOrder" :disabled="!(dressManager || storeDressManager)"/>
+          <el-input v-model="formData.descriptionOfOrder" :disabled="!(dressManager)"/>
         </el-form-item>
         <el-form-item prop="storeCount" :label="store.state.label.storeCount">
-          <el-input-number v-model="formData.storeCount" style="width: 60px;" :controls="false" :min="0" :disabled="!dressManager"/>
+          <el-input-number v-model="formData.storeCount" style="width: 60px;" :controls="false" :min="0" :disabled="!storeDressManager"/>
         </el-form-item>
         <el-form-item prop="storeDateDescription" :label="store.state.label.storeDateDescription">
-          <el-input v-model="formData.storeDateDescription" :disabled="!dressManager"/>
+          <el-input v-model="formData.storeDateDescription" :disabled="!(storeDressManager)"/>
         </el-form-item>
         <el-form-item prop="storePictureList" :label="`${store.state.label.storePicture}(${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.storePictureList" :maxSize="Number(`${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!dressManager"></image-upload>
+          <image-upload :photoList="formData.storePictureList" :maxSize="Number(`${(formRuleList['storePictureList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!storeDressManager"></image-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -532,13 +532,13 @@ Promise.all([
     if (t.value === 'storePosition' && dressManager) {
       t.type = ValueType.SelectEdit
       t.optionList = state.config.storePositionList
-    } else if (t.value === 'descriptionOfOrder' && (dressManager || storeDressManager)) {
+    } else if (t.value === 'descriptionOfOrder' && (dressManager)) {
       t.type = ValueType.TextEdit
     } else if (t.value === 'storeCount' && (storeDressManager)) {
       t.type = ValueType.NumberEdit
-    } else if (t.value === 'storeDateDescription' && (dressManager)) {
+    } else if (t.value === 'storeDateDescription' && (storeDressManager)) {
       t.type = ValueType.TextEdit
-    } else if ('storePictureCount' === t.value && (dressManager || storeDressManager)) {
+    } else if ('storePictureCount' === t.value && (storeDressManager)) {
         t.type = ValueType.Link
         t.openLink = (d: any) => {
           handleEdit(d)
