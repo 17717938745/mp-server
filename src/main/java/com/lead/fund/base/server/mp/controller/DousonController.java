@@ -3655,7 +3655,7 @@ public class DousonController {
             @ModelAttribute VocationRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (!"admin".equals(u.getUsername()) || u.getRoleList().stream().noneMatch(t -> "vocationManager".equals(t.getRoleCode()))) {
+        if (!"admin".equals(u.getUsername()) && u.getRoleList().stream().noneMatch(t -> "vocationManager".equals(t.getRoleCode()))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         LambdaUpdateWrapper<VocationEntity> lambda = new LambdaUpdateWrapper<VocationEntity>().eq(VocationEntity::getId, request.getVocationId());
