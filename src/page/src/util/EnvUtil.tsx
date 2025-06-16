@@ -56,7 +56,7 @@ export function getDefaultUrlPrefix(newPrefix: string = 'api'): string {
   const urlPrefix = (!newPrefix.startsWith('/') && !newPrefix.startsWith('http:/') && !newPrefix.startsWith('https:/') && !newPrefix.startsWith('ws:/') ? '/' : '') + newPrefix + (!newPrefix.endsWith('/') ? '/' : '')
   switch (getEnv()) {
     case 'douson':
-      return 'https://douson.natapp4.cc/'
+      return 'http://14.241.40.75:8888/'
     case 'pch':
       return 'https://pch.mynatapp.cc/'
     case 'java':
@@ -92,7 +92,7 @@ export function getUrlPrefixList(): OptionItem<string>[] {
   return [
     {
       label: '生产地址',
-      value: 'https://douson.natapp4.cc/',
+      value: 'http://14.241.40.75:8888/',
     },
     {
       label: '默认',
@@ -123,7 +123,7 @@ export function fullUrl(uri: string, urlPrefix: string = 'api'): string {
 }
 
 export function dousonFullUrl(uri: string): string {
-  const prefix = 'https://douson.natapp4.cc/'
+  const prefix = `${window.location.origin}/`
   if (prefix.endsWith('/') && uri.startsWith('/')) {
     return prefix.substring(0, prefix.length - 1) + uri
   } else if (!prefix.endsWith('') && !uri.startsWith('/')) {

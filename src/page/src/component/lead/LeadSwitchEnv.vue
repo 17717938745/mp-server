@@ -75,7 +75,7 @@ const handleClearAll = () => {
 }
 const handleSwitchPrd = () => {
   clearAllCache()
-  setUrlPrefix('https://douson.natapp4.cc/')
+  setUrlPrefix('http://14.241.40.75:8888/')
   handleInitValue()
 }
 const handleInitValue = () => {
