@@ -107,6 +107,7 @@ init_connect='SET NAMES utf8mb4'
 character-set-server=utf8mb4
 collation-server=utf8mb4_unicode_ci
 lower_case_table_names=1
+default_authentication_plugin=mysql_native_password
 #skip-grant-tables
 
 [client]

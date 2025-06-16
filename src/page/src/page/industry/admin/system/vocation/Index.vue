@@ -97,7 +97,7 @@
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
-        :handleDelete="includes(roleCodeList, 'admin') ? handleDelete : null"
+        :handleDelete="includes(roleCodeList, 'admin') || includes(roleCodeList, 'vocationManager') ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handlePageChange="handlePageChange"
@@ -252,10 +252,10 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 51},
   {value: 'vocationTypeFormat', labelKey: 'vocationType', width: 178},
   {value: 'date', labelKey: 'vocationDate', width: 102},
-  {value: 'userFormat', labelKey: 'vocationUser', width: 189},
+  {value: 'userFormat', originValue: 'user', labelKey: 'vocationUser', width: 189},
   {value: 'chargeUserFormat', labelKey: 'vocationChargeUser', width: 189},
   {value: 'departmentFormat', labelKey: 'department', width: 168},
-  {value: 'professionFormat', labelKey: 'profession', width: 189},
+  {value: 'professionFormat', labelKey: 'profession', width: 232},
   {value: 'startDate', labelKey: 'vocationStartDate', width: 102},
   {value: 'endDate', labelKey: 'vocationEndDate', width: 102},
   {value: 'reason', labelKey: 'vocationReason', width: 254, showOverflow: true},

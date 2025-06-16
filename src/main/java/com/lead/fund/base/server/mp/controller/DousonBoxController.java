@@ -204,7 +204,7 @@ public class DousonBoxController {
             @ModelAttribute BoxFlagRequest request
     ) {
         MpUserResponse u = accountHelper.getUser(deviceId);
-        if (!"admin".equals(u.getUsername())) {
+        if (!"admin".equals(u.getUsername()) || u.getRoleList().stream().noneMatch(t -> "boxManager".equals(t.getRoleCode()))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
         if (isNotBlank(request.getBoxFlagId())) {
