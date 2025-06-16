@@ -62,7 +62,7 @@ export function getDefaultUrlPrefix(newPrefix: string = 'api'): string {
     case 'java':
       return '/'
     case 'local':
-      return 'http://localhost/'
+      return 'http://localhost:8888/'
     default:
       return urlPrefix
   }

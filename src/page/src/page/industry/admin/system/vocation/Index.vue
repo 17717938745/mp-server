@@ -97,7 +97,7 @@
         :list="tableData"
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
-        :handleDelete="includes(roleCodeList, 'admin') || includes(roleCodeList, 'vocationManager') ? handleDelete : null"
+        :handleDelete="(includes(roleCodeList, 'admin') || includes(roleCodeList, 'vocationManager')) ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handlePageChange="handlePageChange"

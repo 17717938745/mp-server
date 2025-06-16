@@ -118,7 +118,7 @@
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
-        :handleDelete="includes(roleCodeList, 'admin') || includes(roleCodeList, 'boxManager') ? handleDelete : null"
+        :handleDelete="(includes(roleCodeList, 'admin') || includes(roleCodeList, 'boxManager')) ? handleDelete : null"
         :page="query.page"
         :total="total"
         :handlePageChange="handlePageChange"
