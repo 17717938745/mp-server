@@ -191,7 +191,7 @@
         Edit
       </el-link>
       <el-link
-          v-if="(!handleDeleteShow || handleDeleteShow(row)) && handleDelete && !row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))"
+          v-if="handleDelete && (handleDeleteShow ? handleDeleteShow(row) : (!row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))))"
           :icon="Delete"
           @click="handleDelete(row)"
           type="danger">

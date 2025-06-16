@@ -94,23 +94,6 @@
       <span style="font-size: 26px; font-weight: bold;">{{ store.state.label.eachBoxCount }}（sum）:</span>
       <span style="font-weight: bold;">{{ summaryData.sumEachBoxCount }}</span>
     </div>
-    <div class="douson-flex-item" style="align-items: center;">
-      <el-button :icon="UploadFilled" @click="handleDownloadTemplate" type="primary">Download template</el-button>
-      <el-upload
-          action="#"
-          :show-file-list="false"
-          :on-change="handleFileChange"
-          :before-upload="handleBeforeUpload"
-          :http-request="handleRequest"
-          accept=".xlsx,.xls"
-          multiple
-          :drag="true"
-      >
-        <div>
-          <el-button v-if="editAll" :icon="UploadFilled" @click="handlePage" type="danger">Upload</el-button>
-        </div>
-      </el-upload>
-    </div>
     <view-list
         idKey="boxFlagId"
         :columnConfigList="columnConfigList"
@@ -118,7 +101,8 @@
         :handleEdit="handleEdit"
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
-        :handleDelete="(includes(roleCodeList, 'admin') || includes(roleCodeList, 'boxManager')) ? handleDelete : null"
+        :handleDelete="handleDelete"
+        :handleDeleteShow="() => includes(roleCodeList, 'admin') || includes(roleCodeList, 'boxManager')"
         :page="query.page"
         :total="total"
         :handlePageChange="handlePageChange"
