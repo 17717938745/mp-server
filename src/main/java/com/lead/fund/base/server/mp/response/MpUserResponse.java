@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * UserResponse
@@ -20,6 +21,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
+@Accessors(chain = true)
 public class MpUserResponse extends AbstractAdministratorModel {
 
     private static final long serialVersionUID = 6886198438973390778L;
@@ -146,4 +148,9 @@ public class MpUserResponse extends AbstractAdministratorModel {
      * 工号
      */
     private String employeeId;
+    /**
+     * 是否可以外网登录
+     */
+    private Boolean externalSign;
+    private String externalSignFormat;
 }

@@ -4,6 +4,7 @@ import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY
 import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_USER_AGENT;
 import static com.lead.fund.base.common.basic.cons.BasicConst.STRING_ADMIN_DEVICE_ID;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_ERROR;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
 import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_SIGN_LOCKED;
 import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
 import static com.lead.fund.base.common.util.StrUtil.isBlank;
@@ -14,6 +15,7 @@ import static com.lead.fund.base.server.mp.converter.MpSystemConverter.MP_SYSTEM
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.cons.frame.AdminState;
@@ -431,6 +433,8 @@ public class SystemController {
         return new ListResult<>(
                 list.stream()
                         .peek(t -> {
+                            t.setExternalSign(Boolean.TRUE.equals(t.getExternalSign()));
+                            t.setExternalSignFormat(Boolean.TRUE.equals(t.getExternalSign()) ? "Yes" : "No");
                             t.setProfessionIndex(0);
                             if (isNotBlank(t.getProfession())) {
                                 for (int i = 0; i < professionList.size(); i++) {
@@ -510,6 +514,9 @@ public class SystemController {
         if (u.getRoleCodeList().stream().noneMatch("userManager"::equals)) {
             user.setInterviewResume(null);
         }
+        if (!"admin".equals(u.getUsername())) {
+            user.setExternalSign(null);
+        }
         if (userMapper.selectCount(new LambdaQueryWrapper<MpUserEntity>()
                 .eq(MpUserEntity::getEmployeeId, request.getEmployeeId())
         ) > 0) {
@@ -544,6 +551,9 @@ public class SystemController {
         }
         if (u.getRoleCodeList().stream().noneMatch("userManager"::equals)) {
             user.setInterviewResume(null);
+        }
+        if (!"admin".equals(u.getUsername())) {
+            user.setExternalSign(null);
         }
         user.setSalt(isBlank(request.getPassword()) ? null : defaultIfBlank(user.getSalt(), SecurityUtil.randomSalt()))
                 .setPasswordEncrypt(isBlank(request.getPassword()) ? null : SecurityUtil.sign(request.getPassword(), user.getSalt()))
@@ -630,8 +640,15 @@ public class SystemController {
      */
     @PutMapping("sign-in")
     public DataResult<SignInResponse> signIn(@RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId, HttpServletRequest req, @RequestBody SignInRequest request) {
-        MpDeviceEntity device = deviceDao.defaultDevice(deviceId, null, HttpUtil.ip(req));
-        MpUserEntity e = CollUtil.getFirst(userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().eq(MpUserEntity::getUsername, request.getUsername()).or(true, l -> l.eq(MpUserEntity::getMobile, request.getUsername()))));
+        final String ip = HttpUtil.ip(req);
+        final MpDeviceEntity device = deviceDao.defaultDevice(deviceId, null, ip);
+        final MpUserEntity e = CollUtil.getFirst(userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().eq(MpUserEntity::getUsername, request.getUsername()).or(true, l -> l.eq(MpUserEntity::getMobile, request.getUsername()))));
+        if (!Boolean.TRUE.equals(e.getExternalSign()) && paramDao.listByCategoryId("innerNetSection").stream()
+                .filter(StrUtil::isNotBlank)
+                .noneMatch(t -> ip.startsWith(String.valueOf(t.getValue())))) {
+            log.error("User not allow sign in, ip: {}, request: {}", ip, JSONUtil.toJsonStr(request));
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
         DateTime now = DateTime.now();
         String inputPasswordEncrypt;
         String inputPassword;
@@ -640,7 +657,7 @@ public class SystemController {
                 .setUsername(request.getUsername())
                 .setUserId(null != e ? e.getId() : null)
                 .setSignInTime(DateUtil.dateTime(now))
-                .setClientIp(HttpUtil.ip(req))
+                .setClientIp(ip)
                 .setUserAgent(StrUtil.sub(req.getHeader(REQUEST_METHOD_KEY_USER_AGENT), 0, 1024 / 2));
         try {
             if (null == e) {

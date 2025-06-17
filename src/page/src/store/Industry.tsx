@@ -28,6 +28,8 @@ export interface Label {
 
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
+        { value: "externalSign", label: "外网登录" },
+        { value: "innerNetSection", label: "内网网段" },
         { "value": "scoreReport", "label": "季度评比报告" },
         { "value": "perspectiveAnalysis", "label": "透视分析" },
         { "value": "employeeId", "label": "工号" },
@@ -1797,6 +1799,8 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
+        { value: "externalSign", label: "Đăng nhập mạng bên ngoài" },
+        { value: "innerNetSection", label: "Phân đoạn mạng nội bộ" },
         { "value": "scoreReport", "label": "Báo cáo đánh giá hàng quý" },
         { "value": "perspectiveAnalysis", "label": "Phân tích góc nhìn" },
         { "value": "employeeId", "label": "Mã NV" },

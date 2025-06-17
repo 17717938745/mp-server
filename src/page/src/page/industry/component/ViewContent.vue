@@ -378,6 +378,19 @@
     </el-link>
     <el-switch v-else v-model="formData[viewConfig.value]" active-text="Yes" inactive-text="No" @change="handleUpdateSubmit"/>
   </template>
+  <template v-else-if="viewConfig.type === ValueType.SwitchEdit">
+    <span v-if="!props.handleUpdate">
+        {{ row[viewConfig.value] || '--' }}
+    </span>
+    <el-link
+        v-else-if="!editSwitch"
+        automatic-dropdown="true"
+        @click="() => handleEditSwitchShow(row)"
+        type="warning">
+      {{ row[viewConfig.value] || '--' }}
+    </el-link>
+    <el-switch v-else v-model="formData[viewConfig.originValue || viewConfig.value]" active-text="Yes" inactive-text="No" @change="handleUpdateSubmit"/>
+  </template>
   <template v-else-if="viewConfig.type === ValueType.Link">
     <el-link
         v-if="viewConfig.openLink && (!viewConfig.editable || viewConfig.editable(row))"
@@ -436,6 +449,7 @@ const editNumber = ref(false)
 const editText = ref(false)
 const editDate = ref(false)
 const editValid = ref(false)
+const editSwitch = ref(false)
 const formData: Ref<any> = ref({})
 const handleEditSelectShow = (row: any) => {
   editSelect.value = true
@@ -457,6 +471,10 @@ const handleEditValidShow = (row: any) => {
   editValid.value = true
   formData.value = Object.assign({}, row)
 }
+const handleEditSwitchShow = (row: any) => {
+  editSwitch.value = true
+  formData.value = Object.assign({}, row)
+}
 const handleDateUpdateSubmit = (v: any) => {
   const key: string = viewConfig.value.originValue || viewConfig.value.value
   formData.value[key] = formData.value[key] ? formatDate(formData.value[key], 'yyyy-MM-dd') : ''
@@ -472,6 +490,7 @@ const handleUpdateSubmit = (v: any) => {
         editText.value = false
         editDate.value = false
         editValid.value = false
+        editSwitch.value = false
       })
     }
   } else {

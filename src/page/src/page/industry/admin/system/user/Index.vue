@@ -372,6 +372,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
   {value: 'stateFormat', labelKey: 'state', width: 72,},
+  {value: 'externalSignFormat', originValue: 'externalSign', labelKey: 'externalSign', width: 72,type: 'admin' === user.username ? ValueType.SwitchEdit : ValueType.Text,},
 ])
 const defaultFormData = {
   userId: '',

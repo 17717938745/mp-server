@@ -146,4 +146,8 @@ public class MpUserEntity extends AbstractAdmin {
     @FieldRemark(value = "工号")
     @Size(max = 64, message = "工号长度不合法")
     private String employeeId;
+    /**
+     * 是否可以外网登录
+     */
+    private Boolean externalSign;
 }

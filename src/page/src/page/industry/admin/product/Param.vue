@@ -241,6 +241,10 @@ const paramCategoryGroupList = [
         value: 'nationality',
         label: store.state.label.nationality,
       },
+      {
+        value: 'innerNetSection',
+        label: store.state.label.innerNetSection,
+      },
     ],
   },
   {

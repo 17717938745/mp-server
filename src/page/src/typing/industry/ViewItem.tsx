@@ -59,4 +59,5 @@ export enum ValueType {
   Selection,
   TextArea,
   PictureText,
+  SwitchEdit,
 }

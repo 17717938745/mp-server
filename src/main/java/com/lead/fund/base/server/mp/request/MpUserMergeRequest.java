@@ -100,4 +100,8 @@ public class MpUserMergeRequest implements Serializable {
      * 工号
      */
     private String employeeId;
+    /**
+     * 是否可以外网登录
+     */
+    private Boolean externalSign;
 }
