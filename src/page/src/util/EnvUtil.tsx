@@ -123,7 +123,8 @@ export function fullUrl(uri: string, urlPrefix: string = 'api'): string {
 }
 
 export function dousonFullUrl(uri: string): string {
-  const prefix = `${window.location.origin}/`
+  // const prefix = `${window.location.origin}/`
+  const prefix = `http://14.241.40.75:8888/`
   if (prefix.endsWith('/') && uri.startsWith('/')) {
     return prefix.substring(0, prefix.length - 1) + uri
   } else if (!prefix.endsWith('') && !uri.startsWith('/')) {

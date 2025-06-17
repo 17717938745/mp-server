@@ -1,21 +1,7 @@
 <template>
   <div>
     <div class="query-container">
-      <el-input v-model="query.data.username" @keyup.enter="handlePage" :placeholder="store.state.label.username"/>
-      <el-select
-          v-model="query.data.publicIp"
-          @change="handlePage"
-          clearable
-          placeholder="Public IP">
-        <el-option
-            label="Yes"
-            :value="true"
-        />
-        <el-option
-            label="No"
-            :value="false"
-        />
-      </el-select>
+      <el-input v-model="query.data.username" @keyup.enter="handlePage" :placeholder="store.state.label.username"/>1
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
       </div>

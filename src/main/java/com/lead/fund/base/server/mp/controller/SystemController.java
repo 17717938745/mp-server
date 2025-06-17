@@ -350,6 +350,9 @@ public class SystemController {
             if (isNotBlank(request.getLeaderUserId())) {
                 lambda.eq(MpUserEntity::getLeaderUserId, request.getLeaderUserId());
             }
+            if (null != request.getExternalSign()) {
+                lambda.eq(MpUserEntity::getExternalSign, request.getExternalSign());
+            }
             if (null != request.getStartCreateTime()) {
                 lambda.ge(MpUserEntity::getCreateTime, DateUtil.dateTime(cn.hutool.core.date.DateUtil.beginOfDay(request.getStartCreateTime())));
             }

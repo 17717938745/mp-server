@@ -124,6 +124,20 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
+      <el-select
+          v-model="query.data.externalSign"
+          @change="handleList"
+          clearable
+          :placeholder="store.state.label.externalSign">
+        <el-option
+            label="Yes"
+            :value="true"
+        />
+        <el-option
+            label="No"
+            :value="false"
+        />
+      </el-select>
       <div class="query-btn">
         <el-button :icon="Search" @click="handleList" type="primary">Search</el-button>
         <el-button v-if="includes(roleCodeList, 'admin')"
@@ -411,6 +425,7 @@ const state = reactive({
       nationality: '',
       leaderUserId: '',
       state: 0,
+      externalSign: null,
     },
   },
   config: {
