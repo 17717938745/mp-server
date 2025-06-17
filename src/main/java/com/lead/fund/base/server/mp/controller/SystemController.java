@@ -647,7 +647,7 @@ public class SystemController {
                 .filter(StrUtil::isNotBlank)
                 .noneMatch(t -> ip.startsWith(String.valueOf(t.getValue())))) {
             log.error("User not allow sign in, ip: {}, request: {}", ip, JSONUtil.toJsonStr(request));
-            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "该ip地址禁止登录（This ip not allow sign in）：" + ip);
         }
         DateTime now = DateTime.now();
         String inputPasswordEncrypt;
