@@ -247,7 +247,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'operator',
     labelKey: 'viewAndEdit',
-    width: 231,
+    width: 137,
     type: ValueType.Operator,
   },
   {value: 'index', labelKey: 'index', width: 51},
