@@ -933,7 +933,7 @@ const handleAllowDrop = (t, t1, type) => {
 const handleSort = (d) => {
   httpGet(`douson/task/page`, {
     page: {
-      page: state.query.page.page,
+      page: 1,
       limit: 999999,
     },
     data: Object.assign({}, /*state.query.data, */{
