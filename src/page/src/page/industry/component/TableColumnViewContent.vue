@@ -5,7 +5,7 @@
       :key="viewConfig.value"
       :prop="viewConfig.value"
       :label="viewConfig.labelKey ? store.state.label[viewConfig.labelKey] : viewConfig.label"
-      :width="viewConfig.width <= 0 ? '' : (viewConfig.width || 128)"
+      :width="viewConfig.width <= 0 ? '' : (viewConfig.width)"
       :align="viewConfig.align || 'center'"
       :show-overflow-tooltip="viewConfig.showOverflow"
   >
@@ -109,7 +109,7 @@ const router = useRouter()
 const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
-const viewConfig = props.viewConfig
+const viewConfig = ref(props.viewConfig)
 const viewConfigList = props.viewConfigList
 const scale = ref(props.scale)
 
@@ -132,6 +132,15 @@ watch(
     () => props.scale,
     (t: number) => {
       scale.value = t
+    },
+    {
+      immediate: true,
+    }
+)
+watch(
+    () => props.viewConfig,
+    (t: any) => {
+      viewConfig.value = t
     },
     {
       immediate: true,

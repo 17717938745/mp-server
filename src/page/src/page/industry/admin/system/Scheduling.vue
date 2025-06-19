@@ -59,41 +59,93 @@
         </el-link>
       </template>
     </view-list>
-    <el-dialog :title="'Scheduling'" v-model="showDetail" width="90%" :close-on-click-modal="false">
-      <div class="douson-flex" style="text-align: center; justify-content: center; align-items: center;">
-        <h1>{{ tableDetailSummaryData.schedulingTitle }}</h1>
-      </div>
-      <div class="query-container">
-        <el-select v-model="query.data.deviceNumber"
-                   @change="handleShowDetail"
-                   filterable
-                   allow-create
-                   clearable
-                   :placeholder="store.state.label.testDevice"
-                   class="search-item">
-          <el-option
-              v-for="item in config.testDeviceList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-          />
-        </el-select>
-        <div class="query-btn">
-          <el-button :icon="Search" @click="handleShowDetail" type="primary">Search</el-button>
+    <el-drawer
+        v-model="showDetail"
+        size="100%"
+        :append-to-body="true"
+        :lock-scroll="false"
+        modal-class="print-drawer"
+        :z-index="100"
+    >
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-bottom: 20px; position: absolute; width: 100%; top: 20px;" id="printContainer">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 653px;">
+          <div style="position: fixed; left: 20px; top: 22px;">
+            <el-icon v-show="showBtn" @click="handleHideBtn"><Hide /></el-icon>
+            <el-icon v-show="!showBtn" @click="handleShowBtn"><View /></el-icon>
+          </div>
+          <h1 style="font-size: 23px;" class="douson-flex douson-flex-item-center">
+            {{ tableDetailSummaryData.schedulingTitle }}
+          </h1>
+          <div class="query-container" v-show="showBtn">
+            <el-select v-model="query.data.deviceNumber"
+                       @change="handleShowDetail"
+                       filterable
+                       allow-create
+                       clearable
+                       :placeholder="store.state.label.testDevice"
+                       class="search-item">
+              <el-option
+                  v-for="item in config.testDeviceList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+            <el-select v-model="query.data.userId"
+                       @change="handleShowDetail"
+                       filterable
+                       allow-create
+                       clearable
+                       :placeholder="store.state.label.chineseName"
+                       class="search-item">
+              <el-option
+                  v-for="item in userOptionList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+            <div class="query-btn">
+              <el-button :icon="Search" @click="handleShowDetail" type="primary">Search</el-button>
+              <el-button :icon="Sort" @click="handleSort" type="warning">Sort table header</el-button>
+            </div>
+          </div>
+          <div style="width: 100%;">
+            <view-list
+                idKey="schedulingDetailId"
+                :columnConfigList="columnDetailConfigList"
+                :list="tableDetailData"
+                :handleUpdate="handleUpdateDetail"
+                :detail-link="false"
+                :handleTableCellClassName="handleTableCellClassName"
+                :showControl="showBtn"
+                :headerFontSize="12"
+                :cellFontSize="9"
+            >
+              <template #operator="row">
+              </template>
+            </view-list>
+          </div>
         </div>
       </div>
-      <view-list
-          idKey="schedulingDetailId"
-          :columnConfigList="columnDetailConfigList"
-          :list="tableDetailData"
-          :handleUpdate="handleUpdateDetail"
-          :detail-link="false"
-          :handleTableCellClassName="handleTableCellClassName"
-      >
-        <template #operator="row">
+      <el-dialog :title="'Sort'" v-model="sortVisible" width="60%" :close-on-click-modal="false">
+        <el-tree
+            v-show="sortVisible"
+            style="max-width: 600px"
+            :data="sortList"
+            :allow-drop="handleAllowDrop"
+            draggable
+            default-expand-all
+            node-key="taskId"
+        />
+        <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="sortVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="handleSortSave">Confirm</el-button>
+        </span>
         </template>
-      </view-list>
-    </el-dialog>
+      </el-dialog>
+    </el-drawer>
     <el-dialog :title="formState === 0 ? 'Save' : formState === 1 ? 'Update' : 'Copy'" v-model="formVisible" width="60%" :close-on-click-modal="false">
       <el-form
           :rules="formRuleList"
@@ -150,7 +202,7 @@ import {onMounted, reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox, UploadFile, UploadFiles} from 'element-plus'
-import {Plus, Search, More, UploadFilled, List, CopyDocument,} from '@element-plus/icons-vue'
+import {Plus, Search, More, UploadFilled, List, CopyDocument, Sort, Hide, View} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson, httpUpload, httpDownloadFile,} from '@/util/HttpUtil'
 import {ListResult, PageResult} from '@/typing/ma/System'
@@ -169,6 +221,7 @@ const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
 const userOptionList = ref(new Array<any>())
 const editAll = includes(roleCodeList, 'schedulingManager')
+const showBtn = ref(true)
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 203, type: ValueType.Operator,},
@@ -184,16 +237,17 @@ const columnConfigList = ref<ViewConfig[]>([
 const handleValueHighLight = (row, t) => {
   return includes(highLightUserIdList.value || [], t)
 }
-const columnDetailConfigList = ref<ViewConfig[]>([
-  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 126},
-  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 129, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
-])
+const defaultColumnDetailConfigList = [
+  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', },
+  {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleDayTime12Format', originValue: 'scheduleDayTime12List', labelKey: 'scheduleDayTime12', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEvening12Format', originValue: 'scheduleEvening12List', labelKey: 'scheduleEvening12', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+  {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
+]
+const columnDetailConfigList = ref<ViewConfig[]>(defaultColumnDetailConfigList.map(t=> Object.assign({}, t)))
 const defaultFormData = {
   dateMonth: '',
   scheduleDayTimeLabel: '',
@@ -214,6 +268,7 @@ const state = reactive({
   expandRowKeys: new Array<string>(),
   query: {
     data: {
+      userId: '',
       schedulingId: '',
       dateMonth: '',
       startDateMonth: '',
@@ -246,16 +301,14 @@ const state = reactive({
   },
 })
 let startKeyIndex = 1
-const columnIndexKey = {
-
-}
-columnIndexKey[startKeyIndex++ ] = 'scheduleDayTimeProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleMiddleProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleEveningProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleDayTime12ProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleEvening12ProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleDayTimeTechnologyGroupProfessionFormat'
-columnIndexKey[startKeyIndex++ ] = 'scheduleEveningTechnologyGroupProfessionFormat'
+const columnIndexKey = {}
+columnIndexKey[startKeyIndex++] = 'scheduleDayTimeProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleMiddleProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleEveningProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleDayTime12ProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleEvening12ProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleDayTimeTechnologyGroupProfessionFormat'
+columnIndexKey[startKeyIndex++] = 'scheduleEveningTechnologyGroupProfessionFormat'
 const handleTableCellClassName = ({
                                     row,
                                     column,
@@ -311,28 +364,18 @@ const handleLimitChange = (val: number) => {
   state.query.page.limit = val
   handlePage()
 }
-
-Promise.all([
-  httpGet('douson/config', {
-    categoryIdList: [
-      'device',
-    ]
-  }),
-  httpGet(`system/user/config/list`, {}),
-]).then((l: any) => {
-  state.config = l[0].data
-  userOptionList.value = (l[1].list || []).map((t: any) => {
-    return {
-      value: t.userId,
-      label: t.name,
-    }
-  })
-  columnConfigList.value = columnConfigList.value.map(t => {
-    if (editAll) {
-
-    }
-    return t
-  })
+const handleHideBtn = () => {
+  showBtn.value = false
+  detailShowModel()
+}
+const handleShowBtn = () => {
+  showBtn.value = true
+  detailEditModel()
+}
+const detailShowModel = () => {
+  columnDetailConfigList.value = defaultColumnDetailConfigList.map(t=>Object.assign({}, t))
+}
+const detailEditModel = () => {
   columnDetailConfigList.value = columnDetailConfigList.value.map(t => {
     if (editAll) {
       if (t.value === 'scheduleDayTimeFormat') {
@@ -360,6 +403,29 @@ Promise.all([
     }
     return t
   })
+}
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'device',
+    ]
+  }),
+  httpGet(`system/user/config/list`, {}),
+]).then((l: any) => {
+  state.config = l[0].data
+  userOptionList.value = (l[1].list || []).map((t: any) => {
+    return {
+      value: t.userId,
+      label: t.name,
+    }
+  })
+  columnConfigList.value = columnConfigList.value.map(t => {
+    if (editAll) {
+
+    }
+    return t
+  })
+  detailEditModel()
   handlePage()
 })
 const handleSaveModal = () => {
@@ -435,6 +501,13 @@ const handleShowDetail = () => {
           return t
         })
         ElMessage.success("Query success")
+        setTimeout(() => {
+          const heightPx = (document.getElementById('printDescription')?.offsetHeight || 1024) + 450 + 'px'
+          const printContainer = document.getElementById('printContainer')
+          if (printContainer) {
+            printContainer.style.height = heightPx
+          }
+        }, 1000)
       }
   )
 }
@@ -451,6 +524,43 @@ const handleDelete = (row: any) => {
       handlePage()
     })
   })
+}
+const sortVisible = ref(false)
+const sortList = ref([])
+const handleSort = () => {
+  sortList.value = ['scheduleDayTimeLabel', 'scheduleMiddleLabel', 'scheduleEveningLabel', 'scheduleDayTime12Label', 'scheduleEvening12Label', 'scheduleDayTimeTechnologyGroupLabel', 'scheduleEveningTechnologyGroupLabel'].map((k, i) => {
+    return {
+      id: i,
+      label: tableDetailSummaryData.value[k],
+      children: [],
+    }
+  })
+  sortVisible.value = true
+}
+const handleAllowDrop = (t, t1, type) => {
+  if (t.level === t1.level) {
+    if (t.parent.taskId === t1.parent.taskId) {
+      return type === 'prev' || type === 'next'
+    }
+  } else {
+    if (t.level !== 1) {
+      return type === 'inner'
+    } else {
+      return false
+    }
+  }
+}
+const handleSortSave = () => {
+  httpPutJson(`douson/scheduling/sort`, {
+    schedulingId: tableDetailSummaryData.value.schedulingId,
+    dateMonth: tableDetailSummaryData.value.dateMonth,
+    labelList: sortList.value.map(t => t.label),
+  }).then(
+      (res: any) => {
+        sortVisible.value = false
+        handleShowDetail()
+      }
+  )
 }
 const {
   expandRowKeys,

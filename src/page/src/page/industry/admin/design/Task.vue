@@ -936,7 +936,10 @@ const handleSort = (d) => {
       page: state.query.page.page,
       limit: 999999,
     },
-    data: Object.assign({}, /*state.query.data, */{deviceId: d.deviceId,}),
+    data: Object.assign({}, /*state.query.data, */{
+      deviceId: d.deviceId,
+      receiptCountType: state.query.data.receiptCountType,
+    }),
   }).then(
       (res: PageResult<typeof state.tableData>) => {
         sortList.value = (res.list || []).filter(t => !(t.taskId.indexOf('auto-') >= 0)).map(t => {

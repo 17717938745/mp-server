@@ -75,4 +75,8 @@ public class SchedulingDetailRequest implements Serializable {
      */
     private String scheduleEveningTechnologyGroupFormat;
     private List<String> scheduleEveningTechnologyGroupList;
+    /**
+     * 用户ID
+     */
+    private String userId;
 }

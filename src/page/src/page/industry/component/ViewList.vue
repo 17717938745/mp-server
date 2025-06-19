@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="props.showControl">
     <el-space wrap>
       <el-switch v-model="pcModel" active-text="PC model" inactive-text="Mobile model"/>
       <el-input-number v-if="pcModel" v-model="scale" :min="0.2" :max="1" :step="0.05" step-strictly style="margin-left: 20px;" @change="handleScaleChange"/>
@@ -55,10 +55,13 @@
         background: ' rgba(250, 251, 252, 1)',
         color: 'rgba(102, 102, 102, 1)',
         height: '54px',
-        fontSize: '14px',
+        fontSize: `${props.headerFontSize || 14}px`,
         padding: 0,
         boxShadow:
           'inset 0px -1px 0px  rgba(238, 238, 238, 1),inset 0px 1px 0px  rgba(238, 238, 238, 1)',
+      }"
+      :cell-style="{
+        fontSize: `${props.cellFontSize || 14}px`,
       }"
       :border="true"
       :data="list"
@@ -76,6 +79,7 @@
           marginLeft: `${100 * (1 / scale - 1) / -2}%`,
           marginTop: `${tableHeight * (1 - scale)  / -2}px`,
           display: scale === 1 ? '' : 'block',
+          fontSize: `${props.cellFontSize || 14}px`,
         }"
       @selection-change="props.handleSelectionChange"
   >
@@ -184,7 +188,10 @@ import ViewContent from './ViewContent.vue'
 
 const props = withDefaults(defineProps<PropType>(), {
   total: -1,
+  headerFontSize: 14,
+  cellFontSize: 14,
   detailLink: true,
+  showControl: true,
 })
 const router = useRouter()
 const route = useRoute()
@@ -234,6 +241,9 @@ interface PropType {
   handleTableCellClassName?: (row: any) => {};
   handleSelectionChange?: (row: any) => {};
   detailLink?: boolean;
+  showControl?: boolean;
+  headerFontSize?: number;
+  cellFontSize?: number;
 }
 
 interface SpanMethodProps {

@@ -37,6 +37,7 @@ import com.lead.fund.base.server.mp.mapper.douson.SchedulingMapper;
 import com.lead.fund.base.server.mp.request.SchedulingDetailRequest;
 import com.lead.fund.base.server.mp.request.SchedulingPageRequest;
 import com.lead.fund.base.server.mp.request.SchedulingRequest;
+import com.lead.fund.base.server.mp.request.SchedulingSortRequest;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailResponse;
 import com.lead.fund.base.server.mp.response.SchedulingDetailWrapperResponse;
@@ -207,6 +208,49 @@ public class DousonSchedulingController {
         }
         if (isNotBlank(d.getDeviceNumber())) {
             lambda.eq(SchedulingDetailEntity::getDeviceNumber, d.getDeviceNumber());
+        }
+        if (isNotBlank(d.getUserId())) {
+            lambda.and(true, lam -> {
+                lam.like(SchedulingDetailEntity::getScheduleDayTime, "," + d.getUserId() + ",")
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleMiddle, "," + d.getUserId() + ",");
+                                }
+                        )
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleEvening, "," + d.getUserId() + ",");
+                                }
+                        )
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleDayTime12, "," + d.getUserId() + ",");
+                                }
+                        )
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleEvening12, "," + d.getUserId() + ",");
+                                }
+                        )
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleDayTimeTechnologyGroup, "," + d.getUserId() + ",");
+                                }
+                        )
+                        .or(
+                                true,
+                                lam1 -> {
+                                    lam1.like(SchedulingDetailEntity::getScheduleEveningTechnologyGroup, "," + d.getUserId() + ",");
+                                }
+                        )
+                ;
+            })
+            ;
         }
         lambda.orderByAsc(SchedulingDetailEntity::getDeviceNumber);
         return schedulingDetailDao.list(lambda);
@@ -388,6 +432,44 @@ public class DousonSchedulingController {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             if (!schedulingDetailDao.updateById(e)) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            // insert
+        }
+        return new DataResult<>(e);
+    }
+
+    /**
+     * 更新排班明细
+     *
+     * @param deviceId 设备id
+     * @param request  {@link SchedulingDetailRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("sort")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result sort(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody SchedulingSortRequest request
+    ) {
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        int count = 0;
+        final SchedulingEntity e =
+                (SchedulingEntity) new SchedulingEntity()
+                        .setScheduleDayTimeLabel(request.getLabelList().get(count++))
+                        .setScheduleMiddleLabel(request.getLabelList().get(count++))
+                        .setScheduleEveningLabel(request.getLabelList().get(count++))
+                        .setScheduleDayTime12Label(request.getLabelList().get(count++))
+                        .setScheduleEvening12Label(request.getLabelList().get(count++))
+                        .setScheduleDayTimeTechnologyGroupLabel(request.getLabelList().get(count++))
+                        .setScheduleEveningTechnologyGroupLabel(request.getLabelList().get(count++))
+                        .setId(request.getSchedulingId());
+        // update
+        if (isNotBlank(e.getId())) {
+            if (u.getRoleList().stream().noneMatch(t -> "admin".equals(t.getRoleCode()) || "schedulingManager".equals(t.getRoleCode()))) {
+                throw new BusinessException(AUTHORITY_AUTH_FAIL);
+            }
+            if (!schedulingDao.updateById(e)) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             // insert
