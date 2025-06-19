@@ -45,7 +45,6 @@
       <el-select v-model="query.data.customerShortName"
                  @change="handlePage"
                  filterable
-                 allow-create
                  clearable
                  :placeholder="store.state.label.customerShortName"
                  class="search-item">
