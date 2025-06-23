@@ -60,4 +60,5 @@ export enum ValueType {
   TextArea,
   PictureText,
   SwitchEdit,
+  BoldText,
 }

@@ -206,6 +206,12 @@
     }">{{ row[viewConfig.value] }}
     </div>
   </template>
+  <template v-else-if="viewConfig.type === ValueType.BoldText">
+    <div :style="{
+      fontWeight: 900,
+    }">{{ row[viewConfig.value] }}
+    </div>
+  </template>
   <template v-else-if="viewConfig.type === ValueType.Attachment">
     <el-space wrap style="justify-content: center;">
       <a

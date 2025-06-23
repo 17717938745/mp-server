@@ -316,8 +316,8 @@ import {reactive, Ref, ref, toRefs} from 'vue'
 import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {Plus, Refresh, Search, Printer,} from '@element-plus/icons-vue'
-import {useRouter, useRoute,} from 'vue-router'
+import {Plus, Printer, Refresh, Search,} from '@element-plus/icons-vue'
+import {useRoute, useRouter,} from 'vue-router'
 import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
 import {DataResult, ListResult, PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
@@ -355,10 +355,6 @@ const columnConfigList = ref<ViewConfig[]>([
       {value: 'projectSequence', labelKey: 'projectSequence', width: 50},
       {value: 'materialNo', labelKey: 'materialNo', width: 139, align: 'left',},
       {value: 'designNumber', labelKey: 'designNumber', width: 139, align: 'left',},
-      {value: 'processFormat', labelKey: 'process', width: 106},
-      {value: 'checkPointFormat', labelKey: 'checkPoint', width: 106},
-      {value: 'stoveNo', labelKey: 'stoveNo', width: 109},
-      {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 109},
     ]
   },
   {
@@ -374,10 +370,10 @@ const columnConfigList = ref<ViewConfig[]>([
   {
     value: 'dealOpinion', labelKey: 'dealOpinion', children: [
       {
-        value: 'qualityDealOpinionFormat', originValue: 'qualityDealOpinion', labelKey: 'qualityDealOpinion', width: 86,
+        value: 'qualityDealOpinionFormat', originValue: 'qualityDealOpinion', labelKey: 'qualityDealOpinion', width: 86, type:  ValueType.BoldText,
       },
       {
-        value: 'skillDealOpinionFormat', originValue: 'skillDealOpinion', labelKey: 'skillDealOpinion', width: 86,
+        value: 'skillDealOpinionFormat', originValue: 'skillDealOpinion', labelKey: 'skillDealOpinion', width: 86, type:  ValueType.BoldText,
       },
       {
         value: 'fineAmountFormat', originValue: 'fineAmount', labelKey: 'fineAmount', width: 87,
@@ -385,6 +381,14 @@ const columnConfigList = ref<ViewConfig[]>([
       {
         value: 'remark', labelKey: 'description', width: 256,
       },
+    ]
+  },
+  {
+    value: 'productInfo1', labelKey: 'productInfo', children: [
+      {value: 'processFormat', labelKey: 'process', width: 106},
+      {value: 'checkPointFormat', labelKey: 'checkPoint', width: 106},
+      {value: 'stoveNo', labelKey: 'stoveNo', width: 109},
+      {value: 'hotBatchNo', labelKey: 'hotBatchNo', width: 109},
     ]
   },
 ])

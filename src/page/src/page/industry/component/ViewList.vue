@@ -68,7 +68,7 @@
       size="small"
       :row-key="props.idKey"
       :expand-row-keys="expandRowKeys"
-      :height="tableHeight"
+      :height="showControl ? tableHeight : '100%'"
       :row-class-name="props.handleTableRowClassName || handleTableRowClassName"
       :cell-class-name="props.handleTableCellClassName"
       :span-method="handleGetSpan"
@@ -205,6 +205,7 @@ const column: Ref = ref(Math.max(2, 1 + Number((window.innerWidth / 256).toFixed
 const pcModel: Ref = ref(window.innerWidth >= 512)
 const tableHeight = ref(defaultTableHeight / scale.value)
 const showDetail = ref(false)
+const showControl = ref(props.showControl)
 const detailInfo = ref({})
 const handleScaleChange = () => {
   tableHeight.value = defaultTableHeight / scale.value
@@ -380,6 +381,15 @@ watch(
     (l) => {
       columnConfigList.value = l
       handleSpanArray()
+    },
+    {
+      immediate: true,
+    }
+)
+watch(
+    () => props.showControl,
+    (t) => {
+      showControl.value = t
     },
     {
       immediate: true,

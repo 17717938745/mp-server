@@ -68,7 +68,14 @@
         :z-index="100"
     >
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-bottom: 20px; position: absolute; width: 100%; top: 20px;" id="printContainer">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 653px;">
+        <div style="; "
+        :style="{
+          display: 'flex',
+          flexDirection: 'column',
+           alignItems: 'center',
+           justifyContent: 'center',
+            width: showBtn ? '90%' : '653px',
+        }">
           <div style="position: fixed; left: 20px; top: 22px;">
             <el-icon v-show="showBtn" @click="handleHideBtn"><Hide /></el-icon>
             <el-icon v-show="!showBtn" @click="handleShowBtn"><View /></el-icon>
@@ -119,8 +126,8 @@
                 :detail-link="false"
                 :handleTableCellClassName="handleTableCellClassName"
                 :showControl="showBtn"
-                :headerFontSize="12"
-                :cellFontSize="9"
+                :headerFontSize="showBtn ? null : 12"
+                :cellFontSize="showBtn ? null : 9"
             >
               <template #operator="row">
               </template>
@@ -238,7 +245,7 @@ const handleValueHighLight = (row, t) => {
   return includes(highLightUserIdList.value || [], t)
 }
 const defaultColumnDetailConfigList = [
-  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', },
+  {value: 'deviceNumberFormat', labelKey: 'deviceNumber', width: 120, },
   {value: 'scheduleDayTimeFormat', originValue: 'scheduleDayTimeList', labelKey: 'scheduleDayTime', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
   {value: 'scheduleMiddleFormat', originValue: 'scheduleMiddleList', labelKey: 'scheduleMiddle', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
   {value: 'scheduleEveningFormat', originValue: 'scheduleEveningList', labelKey: 'scheduleEvening', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
@@ -247,7 +254,7 @@ const defaultColumnDetailConfigList = [
   {value: 'scheduleDayTimeTechnologyGroupFormat', originValue: 'scheduleDayTimeTechnologyGroupList', labelKey: 'scheduleDayTimeTechnologyGroup', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
   {value: 'scheduleEveningTechnologyGroupFormat', originValue: 'scheduleEveningTechnologyGroupList', labelKey: 'scheduleEveningTechnologyGroup', width: 80, listShowType: 1, valueHighLight: handleValueHighLight, staticIdList: '-1',},
 ]
-const columnDetailConfigList = ref<ViewConfig[]>(defaultColumnDetailConfigList.map(t=> Object.assign({}, t)))
+const columnDetailConfigList = ref<ViewConfig[]>()
 const defaultFormData = {
   dateMonth: '',
   scheduleDayTimeLabel: '',
@@ -373,35 +380,49 @@ const handleShowBtn = () => {
   detailEditModel()
 }
 const detailShowModel = () => {
-  columnDetailConfigList.value = defaultColumnDetailConfigList.map(t=>Object.assign({}, t))
+  columnDetailConfigList.value = defaultColumnDetailConfigList.map(t=> {
+    const  r = Object.assign({}, t)
+    if(r.value === 'deviceNumberFormat') {
+      r.width = null
+    } else {
+      r.width = 80
+    }
+    return r
+  })
 }
 const detailEditModel = () => {
-  columnDetailConfigList.value = columnDetailConfigList.value.map(t => {
+  columnDetailConfigList.value = defaultColumnDetailConfigList.map(tt => {
+    const  r = Object.assign({}, tt)
+    if(r.value === 'deviceNumberFormat') {
+      r.width = 138
+    } else {
+      r.width = 120
+    }
     if (editAll) {
-      if (t.value === 'scheduleDayTimeFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleMiddleFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleEveningFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleDayTime12Format') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleEvening12Format') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleDayTimeTechnologyGroupFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      } else if (t.value === 'scheduleEveningTechnologyGroupFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
+      if (r.value === 'scheduleDayTimeFormat') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleMiddleFormat') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleEveningFormat') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleDayTime12Format') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleEvening12Format') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleDayTimeTechnologyGroupFormat') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
+      } else if (r.value === 'scheduleEveningTechnologyGroupFormat') {
+        r.type = ValueType.SelectEdit
+        r.optionList = userOptionList.value
       }
     }
-    return t
+    return r
   })
 }
 Promise.all([
