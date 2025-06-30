@@ -6,10 +6,10 @@ import {createRouter, createWebHistory, Router} from 'vue-router'
 const router: Router = createRouter({
   history: createWebHistory(''),
   routes: [],
-});
+})
 router.onError((e, to, from) => {
-  console.log(`router push error, ${e}, ${from.path} > ${to.path}`);
-  return Promise.resolve(to);
+  console.log(`router push error, ${e}, ${from.path} > ${to.path}`)
+  return Promise.resolve(to)
 })
 Promise.all([
   // 0
@@ -22,17 +22,16 @@ Promise.all([
   // @ts-ignore 4
   import('element-plus/dist/index.css'),
 ]).then((list: any[]) => {
-  const initialRouter = list[0].default;
-  initialRouter(router);
+  const initialRouter = list[0].default
+  initialRouter(router)
   const app = createApp(Index)
-      // router
-      .use(router)
-      // store
-      .use(store)
-      // element-plus
-      .use(list[2].default, {locale: list[3].default})
-      // element-plus css
-      .use(list[4].default)
-      .mount('#app')
-  ;
-});
+  // router
+  .use(router)
+  // store
+  .use(store)
+  // element-plus
+  .use(list[2].default, {locale: list[3].default})
+  // element-plus css
+  .use(list[4].default)
+  .mount('#app')
+})

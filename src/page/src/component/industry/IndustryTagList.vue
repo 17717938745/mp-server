@@ -45,8 +45,8 @@ const router = useRouter();
 const tagList = computed(() => storeState.tagList);
 
 const handleClose = (index: number) => {
-      const delItem = tagList.value[index];
-      store.commit("deleteTag", {index});
+      const delItem = tagList.value[index]
+      store.commit("deleteTag", {index})
       const item = tagList.value[index]
           ? tagList.value[index]
           : tagList.value[index - 1];
@@ -75,7 +75,7 @@ const handleClose = (index: number) => {
           title: route.meta.title,
           nameKey: route.meta.nameKey,
           path: route.fullPath,
-        });
+        })
       }
     },
     handleCloseAll = () => {

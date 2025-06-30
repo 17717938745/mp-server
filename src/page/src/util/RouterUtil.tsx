@@ -201,18 +201,24 @@ export const menuTreeListToRouterTreeList = (
       const path: string = pathPrefix + new Array<string>().concat(pathList).concat(temp.path).join('/')
       const absolutePathArr: string[] = new Array<string>().concat(absolutePathList).concat(temp.component)
       const absolutePathString: string = `/${absolutePathArr.join('/')}`
+      const name: string = `/${absolutePathArr.join('/')}`
       const route: RouteRecordRaw = {
         path: path,
-        name: absolutePathString,
+        name: name,
         meta: {
+          keepAlive: true,
           // 页面标题
           title: setTitle ? temp.name || temp.path : '',
           nameKey: temp.nameKey,
+          path: absolutePathString,
+          name: name,
+          componentName: name,
         },
         component: getComponent(
             moduleMap,
             bashPathList,
-            absolutePathArr
+            absolutePathArr,
+            name
         ),
       };
       parentRouteList.push(route);
@@ -269,7 +275,8 @@ const getComponent = (
           [key: string]: any;
         }>>,
     bashPathList: string[],
-    componentPath: string[]
+    componentPath: string[],
+    name: string
 ): any => {
   const path: string = getComponentPath(moduleMap, bashPathList, componentPath);
   if (!moduleMap[path]) {
@@ -277,8 +284,16 @@ const getComponent = (
   }
   // console.log(`path: ${path}`)
   // return defineAsyncComponent(() => import(path))
-  return moduleMap[path];
-};
+  const component = moduleMap[path]
+  if (component) {
+    component().then(c => {
+      if (c.default && !c.default.name && name) {
+        c.default.name = name
+      }
+    })
+  }
+  return component
+}
 
 const containsComponent = (
     moduleMap: Record<string,

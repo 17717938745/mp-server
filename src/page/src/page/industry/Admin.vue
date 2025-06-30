@@ -6,16 +6,17 @@
         <Industry-header/>
         <Industry-tag-list></Industry-tag-list>
         <!-- <Industry-bread-crumb/>-->
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component, route }">
           <transition name="move" mode="out-in">
-            <keep-alive :include="tagList">
-              <div class="box-border">
+            <div class="box-border">
+              <keep-alive :include="storeState.tagList.map(t => t.name)">
                 <component
                     class="my_container p-x-24 p-y-16 box-border"
                     :is="Component"
+                    :key="route.name"
                 />
-              </div>
-            </keep-alive>
+              </keep-alive>
+            </div>
           </transition>
         </router-view>
       </div>
@@ -32,6 +33,7 @@ import IndustryTagList from "../../component/industry/IndustryTagList.vue";
 import IndustryBreadCrumb from "../../component/industry/IndustryBreadCrumb.vue";
 import {menuTreeListToSidebarTreeList} from "@/util/RouterUtil";
 import {StoreType} from '@/store/Index';
+
 
 const middleDeviceWidth: number = 1792;
 let previousBodyWidth: number = window.innerWidth;
@@ -53,6 +55,8 @@ export default {
       contentWidth: 0,
       sidebarTreeList: menuTreeListToSidebarTreeList(storeState.menuTreeList, [], 2),
       tagList: storeState.tagList.map((item: any) => item.name),
+      storeState: storeState,
+      router: router,
     });
     const collapse = computed(() => storeState.collapse);
 

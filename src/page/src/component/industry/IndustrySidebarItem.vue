@@ -20,7 +20,7 @@
       </span>
     </template>
     <template v-for="child in sidebarTree.children">
-      <Industry-sidebar-item :sidebar-tree="child"/>
+      <industry-sidebar-item :sidebar-tree="child"/>
     </template>
   </el-sub-menu>
   <!-- 如果有children或者children展示的个数==1，显示第一个showFlag children菜单 -->
@@ -33,6 +33,7 @@
     "
       :index="'/' + `${sidebarTree.children[0].pathList.join('/')}`"
       :key="sidebarTree.id"
+      @click="handleClickMenu"
   >
     <template #title>
       <span class="m-l-10">
@@ -44,6 +45,7 @@
       v-else-if="sidebarTree.showFlag"
       :index="'/' + sidebarTree.pathList.join('/')"
       :key="sidebarTree.id"
+      @click="handleClickMenu"
   >
     <template #title><span class="m-l-10">
         {{ sidebarTree.nameKey ? store.state.label[sidebarTree.nameKey] : sidebarTree.name }}
@@ -72,6 +74,8 @@ const sidebarTree = props.sidebarTree
 const childrenShow = (list: any[]) => {
   const showList = list.filter((i) => i.showFlag)
   return !showList ? 0 : showList.length
+}
+const handleClickMenu = (e) => {
 }
 </script>
 

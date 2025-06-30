@@ -16,7 +16,7 @@ for (let indexModuleMapKey in indexModuleMap) {
 }
 export const basePathList: string[] = ['..', 'page']
 
-export const refreshRouter = (router: Router, menuTreeList: MenuTree[] = []): RouteRecordRaw[] => {
+export const refreshRouter = (router: Router, menuTreeList: MenuTree[] = [], initialRouterList: any[] = []): RouteRecordRaw[] => {
   menuTreeList = menuTreeList.length === 0 ? getMenuTreeList() : menuTreeList
   // console.log(`============================================================================================================`)
   // console.log(`menuTreeList: ${JSON.stringify(menuTreeList, null, 2)}`)
@@ -31,6 +31,7 @@ export const refreshRouter = (router: Router, menuTreeList: MenuTree[] = []): Ro
       '/',
       true
   )
+  routerList.push(...initialRouterList)
   // console.log(`============================================================================================================`)
   // console.log(`routerList: ${JSON.stringify(routerList, null, 2)}`)
   // console.log(`============================================================================================================`)
@@ -44,179 +45,179 @@ export const refreshRouter = (router: Router, menuTreeList: MenuTree[] = []): Ro
   }
   return routerList
 }
+
 const initialRouter = (router: Router) => {
   console.log(`industry initialRouter...`)
-  router.addRoute(
-      {
-        path: '/local',
-        name: '/local',
-        meta: {
-          title: 'Local',
+  refreshRouter(
+      router,
+      getMenuTreeList(),
+      [
+        {
+          path: '/local',
+          name: '/local',
+          meta: {
+            title: 'Local',
+          },
+          component: () => import ('../page/Local.vue'),
         },
-        component: () => import ('../page/Local.vue'),
-      },
-  )
-  router.addRoute(
-      {
-        path: '/industry',
-        name: '/industry/index',
-        meta: {
-          title: 'Sign in',
+        {
+          path: '/industry',
+          name: '/industry/index',
+          meta: {
+            title: 'Sign in',
+          },
+          component: () => import ('../page/Industry.vue'),
+          children: [
+            {
+              path: '',
+              name: '/industry/',
+              meta: {
+                title: 'Index page',
+              },
+              component: () => import ('../page/industry/Sign.vue'),
+            },
+            {
+              path: 'sign',
+              name: '/industry/sign',
+              meta: {
+                title: 'Sign in',
+              },
+              component: () => import ('../page/industry/Sign.vue'),
+            },
+            {
+              path: 'product',
+              name: '/industry/product',
+              meta: {
+                title: 'Product',
+              },
+              component: () => import ('../page/industry/admin/product/Index.vue'),
+            },
+            {
+              path: 'public/disqualification',
+              name: '/industry/public/disqualification',
+              meta: {
+                title: 'Disqualification order',
+              },
+              component: () => import ('../page/industry/admin/public/Disqualification.vue'),
+            },
+            {
+              path: 'public/accident',
+              name: '/industry/public/accident',
+              meta: {
+                title: 'Accident report',
+              },
+              component: () => import ('../page/industry/admin/public/Accident.vue'),
+            },
+            {
+              path: 'public/event',
+              name: '/industry/public/event',
+              meta: {
+                title: 'Accident report',
+              },
+              component: () => import ('../page/industry/admin/public/Event.vue'),
+            },
+            {
+              path: 'public/quality',
+              name: '/industry/public/quality',
+              meta: {
+                title: 'Accident quality',
+              },
+              component: () => import ('../page/industry/admin/public/Quality.vue'),
+            },
+            {
+              path: 'public/crash',
+              name: '/industry/public/crash',
+              meta: {
+                title: 'Accident crash',
+              },
+              component: () => import ('../page/industry/admin/public/Crash.vue'),
+            },
+            {
+              path: 'public/trouble',
+              name: '/industry/public/trouble',
+              meta: {
+                title: 'Accident trouble',
+              },
+              component: () => import ('../page/industry/admin/public/Trouble.vue'),
+            },
+            {
+              path: 'public/improve',
+              name: '/industry/public/improve',
+              meta: {
+                title: 'Accident improve',
+              },
+              component: () => import ('../page/industry/admin/public/Improve.vue'),
+            },
+            {
+              path: 'public/equipment',
+              name: '/industry/public/equipment',
+              meta: {
+                title: 'Machining equipment',
+              },
+              component: () => import ('../page/industry/admin/public/Equipment.vue'),
+            },
+            {
+              path: 'public/maintain',
+              name: '/industry/public/maintain',
+              meta: {
+                title: 'Machining equipment repair',
+              },
+              component: () => import ('../page/industry/admin/public/Maintain.vue'),
+            },
+            {
+              path: 'public/plan',
+              name: '/industry/public/plan',
+              meta: {
+                title: 'Plan',
+              },
+              component: () => import ('../page/industry/admin/public/Plan.vue'),
+            },
+            {
+              path: 'public/assembly',
+              name: '/industry/public/assembly',
+              meta: {
+                title: 'Assembly',
+              },
+              component: () => import ('../page/industry/admin/public/Assembly.vue'),
+            },
+            {
+              path: 'public/template',
+              name: '/industry/public/template',
+              meta: {
+                title: '物品借出单',
+              },
+              component: () => import ('../page/industry/admin/public/Template.vue'),
+            },
+            {
+              path: 'public/material/index',
+              name: '/industry/public/material/index',
+              meta: {
+                title: '领料表单',
+              },
+              component: () => import ('../page/industry/admin/public/material/Index.vue'),
+            },
+            {
+              path: 'public/material/check',
+              name: '/industry/public/material/check',
+              meta: {
+                title: '报检表单',
+              },
+              component: () => import ('../page/industry/admin/public/material/Check.vue'),
+            },
+          ],
         },
-        component: () => import ('../page/Industry.vue'),
-        children: [
-          {
-            path: '',
-            name: '/industry/',
-            meta: {
-              title: 'Index page',
-            },
-            component: () => import ('../page/industry/Sign.vue'),
+        {
+          path: '/:pathMatch(industry/.*)',
+          name: '/industry/404',
+          meta: {
+            title: 'Sign in',
           },
-          {
-            path: 'sign',
-            name: '/industry/sign',
-            meta: {
-              title: 'Sign in',
-            },
-            component: () => import ('../page/industry/Sign.vue'),
-          },
-          {
-            path: 'product',
-            name: '/industry/product',
-            meta: {
-              title: 'Product',
-            },
-            component: () => import ('../page/industry/admin/product/Index.vue'),
-          },
-          {
-            path: 'public/disqualification',
-            name: '/industry/public/disqualification',
-            meta: {
-              title: 'Disqualification order',
-            },
-            component: () => import ('../page/industry/admin/public/Disqualification.vue'),
-          },
-          {
-            path: 'public/accident',
-            name: '/industry/public/accident',
-            meta: {
-              title: 'Accident report',
-            },
-            component: () => import ('../page/industry/admin/public/Accident.vue'),
-          },
-          {
-            path: 'public/event',
-            name: '/industry/public/event',
-            meta: {
-              title: 'Accident report',
-            },
-            component: () => import ('../page/industry/admin/public/Event.vue'),
-          },
-          {
-            path: 'public/quality',
-            name: '/industry/public/quality',
-            meta: {
-              title: 'Accident quality',
-            },
-            component: () => import ('../page/industry/admin/public/Quality.vue'),
-          },
-          {
-            path: 'public/crash',
-            name: '/industry/public/crash',
-            meta: {
-              title: 'Accident crash',
-            },
-            component: () => import ('../page/industry/admin/public/Crash.vue'),
-          },
-          {
-            path: 'public/trouble',
-            name: '/industry/public/trouble',
-            meta: {
-              title: 'Accident trouble',
-            },
-            component: () => import ('../page/industry/admin/public/Trouble.vue'),
-          },
-          {
-            path: 'public/improve',
-            name: '/industry/public/improve',
-            meta: {
-              title: 'Accident improve',
-            },
-            component: () => import ('../page/industry/admin/public/Improve.vue'),
-          },
-          {
-            path: 'public/equipment',
-            name: '/industry/public/equipment',
-            meta: {
-              title: 'Machining equipment',
-            },
-            component: () => import ('../page/industry/admin/public/Equipment.vue'),
-          },
-          {
-            path: 'public/maintain',
-            name: '/industry/public/maintain',
-            meta: {
-              title: 'Machining equipment repair',
-            },
-            component: () => import ('../page/industry/admin/public/Maintain.vue'),
-          },
-          {
-            path: 'public/plan',
-            name: '/industry/public/plan',
-            meta: {
-              title: 'Plan',
-            },
-            component: () => import ('../page/industry/admin/public/Plan.vue'),
-          },
-          {
-            path: 'public/assembly',
-            name: '/industry/public/assembly',
-            meta: {
-              title: 'Assembly',
-            },
-            component: () => import ('../page/industry/admin/public/Assembly.vue'),
-          },
-          {
-            path: 'public/template',
-            name: '/industry/public/template',
-            meta: {
-              title: '物品借出单',
-            },
-            component: () => import ('../page/industry/admin/public/Template.vue'),
-          },
-          {
-            path: 'public/material/index',
-            name: '/industry/public/material/index',
-            meta: {
-              title: '领料表单',
-            },
-            component: () => import ('../page/industry/admin/public/material/Index.vue'),
-          },
-          {
-            path: 'public/material/check',
-            name: '/industry/public/material/check',
-            meta: {
-              title: '报检表单',
-            },
-            component: () => import ('../page/industry/admin/public/material/Check.vue'),
-          },
-        ],
-      }
-  )
-  router.addRoute(
-      {
-        path: '/:pathMatch(industry/.*)',
-        name: '/industry/404',
-        meta: {
-          title: 'Sign in',
+          redirect: to => {
+            return `${getFullSignUri()}`
+          }
         },
-        redirect: to => {
-          return `${getFullSignUri()}`
-        }
-      }
+      ]
   )
-  refreshRouter(router)
   router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title}`
     next()

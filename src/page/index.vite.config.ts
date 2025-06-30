@@ -23,13 +23,22 @@ export const GLOBAL_LEAD_GIT_INFO = {
   // 最后提交 message
   GIT_LAST_COMMIT_MESSAGE: execSync('git show -s --format=%s').toString().trim()
 }
-
+const commonVuePlugin = VuePlugin(
+    {
+      include: [/\.vue$/],
+      // 自动根据文件路径设置组件名
+      transformAssetUrls: {
+        base: null,
+        includeAbsolute: false,
+      },
+    }
+)
 const commonConfig = {
       define: {
         GLOBAL_LEAD_GIT_INFO: JSON.stringify(GLOBAL_LEAD_GIT_INFO),
       },
       plugins: [
-        VuePlugin(),
+        commonVuePlugin,
       ],
       base: './',
       resolve: {
@@ -91,14 +100,14 @@ const commonConfig = {
       },
     }
 // const urlPrefix = 'https://douson.natapp4.cc'
-const urlPrefix = 'http://localhost'
+const urlPrefix = 'http://localhost:8888'
 // @ts-ignore
 export default ({mode}) => {
   // @ts-ignore
   const env: string = loadEnv(mode, process.cwd()).VITE_ENV
   // @ts-ignore
   const module: string = loadEnv(mode, process.cwd()).VITE_MODULE
-  console.log(`env: ${env}, module: ${module}`)
+  console.log(`Project stat, env: ${env}, module: ${module}`)
   switch (env) {
     case 'local':
       const devConfig = Object.assign(
@@ -140,7 +149,7 @@ export default ({mode}) => {
           commonConfig,
           {
             plugins: [
-              VuePlugin(),
+              commonVuePlugin,
               InjectExternals({
                 injectTo: '<!-- Custom placeholder for vite plugin inject externals -->',
                 modules: [vueModule, vueRouterModule, vuexModule, axiosModule, reportPlusCssModule]
@@ -169,7 +178,7 @@ export default ({mode}) => {
                 },
               }, {
                 plugins: [
-                  VuePlugin(),
+                  commonVuePlugin,
                   InjectExternals({
                     injectTo: '<!-- Custom placeholder for vite plugin inject externals -->',
                     // @ts-ignore
