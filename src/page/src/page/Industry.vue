@@ -1,9 +1,19 @@
 <template>
-  <router-view class="douson"/>
+  <router-view class="douson" v-slot="{ Component, route }">
+    <component
+        v-if="Component"
+        class="my_container p-x-24 p-y-16 box-border"
+        :is="Component"
+        :key="route.name"
+    />
+    <div v-else>
+      Welcome to douson, click to <button @click="router.push('/industry/sign')">sign in</button>
+    </div>
+  </router-view>
 </template>
-
 <script lang="tsx" setup>
-
+import {useRouter} from 'vue-router'
+const router = useRouter()
 </script>
 
 <style lang="scss">
