@@ -28,22 +28,91 @@ export interface Label {
 
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
-        { value: "externalSign", label: "外网登录" },
-        { value: "innerNetSection", label: "内网网段" },
-        { "value": "scoreReport", "label": "季度评比报告" },
-        { "value": "perspectiveAnalysis", "label": "透视分析" },
-        { "value": "employeeId", "label": "工号" },
-        { "value": "userName", "label": "姓名" },
-        { "value": "quarter", "label": "季度" },
-        { "value": "qualityScore", "label": "质量（50分）" },
-        { "value": "attendanceScore", "label": "全勤/团结（10分）" },
-        { "value": "safetyScore", "label": "环境安全和工艺（20分）" },
-        { "value": "monthlyPerformance", "label": "月度绩效 (20分)" },
-        { "value": "totalWorkDays", "label": "总上班日数" },
-        { "value": "evaluationMonths", "label": "评估月数" },
-        { "value": "evaluationResult", "label": "评比结果" },
-        { "value": "quarterlyBonus", "label": "季度奖金" },
-        { "value": "photos", "label": "照片(最多50)" },
+        {
+          "value": "applicant",
+          "label": "申请人"
+        },
+        {
+          "value": "visitorName",
+          "label": "访客姓名"
+        },
+        {
+          "value": "phoneNumber",
+          "label": "手机号"
+        },
+        {
+          "value": "companyName",
+          "label": "公司名称"
+        },
+        {
+          "value": "visitContent",
+          "label": "来访内容"
+        },
+        {
+          "value": "expectedVisitTime",
+          "label": "预计来访时间"
+        },
+        {
+          "value": "expectedEndTime",
+          "label": "预计访问结束时间"
+        },
+        {
+          "value": "contactPerson",
+          "label": "联系人"
+        },
+        {
+          "value": "visitDepartment",
+          "label": "来访部门"
+        },
+        {
+          "value": "approver",
+          "label": "批准人"
+        },
+        {
+          "value": "approve",
+          "label": "批准人"
+        },
+        {
+          "value": "idAndPhotos",
+          "label": "证件及本人照片（5张）"
+        },
+        {
+          "value": "remarks",
+          "label": "备注"
+        },
+        {
+          "value": "factoryRecords",
+          "label": "出厂记录（5张）"
+        },
+        {
+          "value": "visitorFactoryDate",
+          "label": "访客出厂日期"
+        },
+        {
+          "value": "printNumber",
+          "label": "打印单号"
+        },
+        {
+          "value": "approval",
+          "label": "被访人签字"
+        },
+        {value: "visitorManage", label: "访客管理"},
+        {value: "externalSign", label: "外网登录"},
+        {value: "innerNetSection", label: "内网网段"},
+        {"value": "scoreReport", "label": "季度评比报告"},
+        {"value": "perspectiveAnalysis", "label": "透视分析"},
+        {"value": "employeeId", "label": "工号"},
+        {"value": "userName", "label": "姓名"},
+        {"value": "quarter", "label": "季度"},
+        {"value": "qualityScore", "label": "质量（50分）"},
+        {"value": "attendanceScore", "label": "全勤/团结（10分）"},
+        {"value": "safetyScore", "label": "环境安全和工艺（20分）"},
+        {"value": "monthlyPerformance", "label": "月度绩效 (20分)"},
+        {"value": "totalWorkDays", "label": "总上班日数"},
+        {"value": "evaluationMonths", "label": "评估月数"},
+        {"value": "evaluationResult", "label": "评比结果"},
+        {"value": "quarterlyBonus", "label": "季度奖金"},
+        {"value": "photos", "label": "照片(最多50)"},
         {
           "value": "workDressType",
           "label": "工装类型"
@@ -1643,7 +1712,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "vocationDate",
-          "label": "申请日期"
+          "label": "请假请日期"
         },
         {
           "value": "vocationUser",
@@ -1799,22 +1868,91 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
       ],
       'THA': [
-        { value: "externalSign", label: "Đăng nhập mạng bên ngoài" },
-        { value: "innerNetSection", label: "Phân đoạn mạng nội bộ" },
-        { "value": "scoreReport", "label": "Báo cáo đánh giá hàng quý" },
-        { "value": "perspectiveAnalysis", "label": "Phân tích góc nhìn" },
-        { "value": "employeeId", "label": "Mã NV" },
-        { "value": "userName", "label": "Họ và Tên" },
-        { "value": "quarter", "label": "Qúy" },
-        { "value": "qualityScore", "label": "chất lượng (50 điểm)" },
-        { "value": "attendanceScore", "label": "Chuyên cần/Tính đoàn kết (10 điểm)" },
-        { "value": "safetyScore", "label": "EHS / công nghệ ( 20 điểm )" },
-        { "value": "monthlyPerformance", "label": "Hiệu suất tháng（20 điểm )" },
-        { "value": "totalWorkDays", "label": "Tổng số ngày đi làm" },
-        { "value": "evaluationMonths", "label": "Số tháng Đánh giá" },
-        { "value": "evaluationResult", "label": "Xếp loại" },
-        { "value": "quarterlyBonus", "label": "Thưởng KPI" },
-        { "value": "photos", "label": "ảnh MAX50" },
+        {
+          "value": "applicant",
+          "label": "Người đăng ký"
+        },
+        {
+          "value": "visitorName",
+          "label": "Người đăng ký"
+        },
+        {
+          "value": "phoneNumber",
+          "label": "SDT"
+        },
+        {
+          "value": "companyName",
+          "label": "Đơn vị/ Tổ chức"
+        },
+        {
+          "value": "visitContent",
+          "label": "Mục đích ra vào"
+        },
+        {
+          "value": "expectedVisitTime",
+          "label": "Dự kiến thời gian đến"
+        },
+        {
+          "value": "expectedEndTime",
+          "label": "Dự kiến thời gian kết thúc"
+        },
+        {
+          "value": "contactPerson",
+          "label": "Người liên hệ"
+        },
+        {
+          "value": "visitDepartment",
+          "label": "Bộ phận tiếp đón"
+        },
+        {
+          "value": "approver",
+          "label": "Lãnh đạo phê duyệt"
+        },
+        {
+          "value": "approve",
+          "label": "Phê duyệt"
+        },
+        {
+          "value": "idAndPhotos",
+          "label": "Hình ảnh vào"
+        },
+        {
+          "value": "remarks",
+          "label": "Ghi chú"
+        },
+        {
+          "value": "factoryRecords",
+          "label": "Hình ảnh ra"
+        },
+        {
+          "value": "visitorFactoryDate",
+          "label": "Thời gian ra ngoài"
+        },
+        {
+          "value": "printNumber",
+          "label": "Mã phiếu"
+        },
+        {
+          "value": "approval",
+          "label": "Chữ ký của người được phỏng vấn"
+        },
+        {value: "visitorManage", label: "Quản lý khách"},
+        {value: "externalSign", label: "Đăng nhập mạng bên ngoài"},
+        {value: "innerNetSection", label: "Phân đoạn mạng nội bộ"},
+        {"value": "scoreReport", "label": "Báo cáo đánh giá hàng quý"},
+        {"value": "perspectiveAnalysis", "label": "Phân tích góc nhìn"},
+        {"value": "employeeId", "label": "Mã NV"},
+        {"value": "userName", "label": "Họ và Tên"},
+        {"value": "quarter", "label": "Qúy"},
+        {"value": "qualityScore", "label": "chất lượng (50 điểm)"},
+        {"value": "attendanceScore", "label": "Chuyên cần/Tính đoàn kết (10 điểm)"},
+        {"value": "safetyScore", "label": "EHS / công nghệ ( 20 điểm )"},
+        {"value": "monthlyPerformance", "label": "Hiệu suất tháng（20 điểm )"},
+        {"value": "totalWorkDays", "label": "Tổng số ngày đi làm"},
+        {"value": "evaluationMonths", "label": "Số tháng Đánh giá"},
+        {"value": "evaluationResult", "label": "Xếp loại"},
+        {"value": "quarterlyBonus", "label": "Thưởng KPI"},
+        {"value": "photos", "label": "ảnh MAX50"},
         {
           "value": "workDressType",
           "label": "Loại đồ gá"
@@ -3625,7 +3763,7 @@ MULTIPLE_TEXT_LIST['CHS|THA'] = (MULTIPLE_TEXT_LIST['CHS'] || []).map((t: Text) 
 })
 
 
-export const printMultipleText = (str: string, split: stirng = ''): string => {
+export const printMultipleText = (str: string, split: stirng = '', reverse: boolean = false): string => {
   let entityString = ''
   let defaultFormData = ''
   let columnConfigString = '{value: \'expand\', label: \'\', width: 48, type: ValueType.Expand,},\n' +
@@ -3636,31 +3774,34 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
     'CHS': [],
     'THA': [],
   }
-  let chsArr = []
-  let thaArr = []
+  let array1 = []
+  let array2 = []
   if (split) {
     const arr = str.split('\t')
     for (let i = 0; i < arr.length; i++) {
       const a = arr[i] || ''
       const index = a.indexOf(split)
       if (index > -1) {
-        chsArr[i] = a.substring(0, index).replace("\"", "")
-        thaArr[i] = a.substring(index + 1).replace("\"", "")
+        array1[i] = a.substring(0, index).replace("\"", "")
+        array2[i] = a.substring(index + 1).replace("\"", "")
       } else {
-        chsArr[i] = a
-        thaArr[i] = ''
+        array1[i] = a
+        array2[i] = ''
       }
     }
   } else {
     const arr = str.split('\n')
-    chsArr = arr[0].split('\t')
-    thaArr = arr[1].split('\t')
+    array1 = arr[0].split('\t')
+    array2 = arr[1].split('\t')
   }
-  for (let i = 0; i < chsArr.length; i++) {
-    const chs = (chsArr[i] || '').trim()
-    const tha = (thaArr[i] || '').trim()
+  for (let i = 0; i < array1.length; i++) {
+    const str1 = (array1[i] || '').trim().replace(/^"|"$/g, '').trim()
+    const str2 = (array2[i] || '').trim().replace(/^"|"$/g, '').trim()
+    const chs = reverse ? str2 : str1
+    const tha = reverse ? str1 : str2
     const arr = MULTIPLE_TEXT_LIST['CHS'].filter(t => chs === t.label)
     const arr1 = MULTIPLE_TEXT_LIST['THA'].filter(t => tha === t.label)
+    // console.log(`${chs} <> ${tha}, ${JSON.stringify(arr)} <> ${JSON.stringify(arr1)}`)
     const key = arr.length > 0 && arr1.length > 0 && arr1.filter(k => k.value === arr[0].value).length > 0 ? arr[0].value : ''
     if (key) {
       columnConfigString += ('{value: \'' + key + '\', labelKey: \'' + key + '\', width: 189},\n')
@@ -3677,8 +3818,8 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
       )
       formRuleString += (key + ': [{required: true, message: \'Please check\', trigger: \'blur\'}],\n')
     } else {
-      if(arr.length > 0) {
-        console.log(`Found CHS key, but not found match:${JSON.stringify(arr)}`)
+      if (arr.length > 0 || arr1.length > 0) {
+        console.log(`Found CHS OR THA key, but not found match, CHS: ${JSON.stringify(arr)}, THA: ${JSON.stringify(arr1)}, chs: ${chs}, tha: ${tha}`)
       }
       data['CHS'].push({
         value: `${i}`,
@@ -3701,29 +3842,27 @@ export const printMultipleText = (str: string, split: stirng = ''): string => {
 // printMultipleText('工号\t姓名\t季度\t设备编号\t质量 50分\t全勤/团结  10分\t环境安全和工艺 20分\t月度绩效 (20分)\t总上班日数\t总计\t评估月数\t评比结果\t季度奖金\t备注\t当班主管\t照片(最多50)\n' +
 //     'Mã NV\tHọ và Tên\tQúy\tMã máy\tchất lượng (50 điểm)\tChuyên cần/Tính đoàn kết (10 điểm)\tEHS / công nghệ ( 20 điểm )\tHiệu suất tháng（20 điểm )\tTổng số ngày đi làm\tTOTAL\tSố tháng Đánh giá\tXếp loại \tThưởng KPI\tGhi chú\tchủ quản ca đó\tảnh MAX50')
 // printMultipleText('序号|STT\t物料号|Mã vật liệu\t物料描述|miêu tả vật liệu\t图号|Số bản vẽ\t库存数量|số lượng\t库存日期|Ngày hàng về\t类型|Phân loại hàng\t备注|Ghi chú\t领料数量|Số lượng lĩnh liệu\t领料日期|Ngày lĩnh liệu\t照片数量|Số lượng hình ảnh\t图片描述|Hình ảnh\t附件|Đính kèm', '|')
-// printMultipleText('"报检单号\n' +
-//     'Số phiếu nhập kho"\t"报检单合计数量\n' +
-//     'Số lượng  dự kiến nhập kho"\t"标识\n' +
-//     'Khắc dấu"\t"硬度\n' +
-//     'Độ cứng"\t"标识/硬度备注\n' +
-//     'Khắc dấu/Độ cứng ghi chú"\t"NDE\n' +
-//     ' NDE"\t"尺寸\n' +
-//     'Kích thước"\t"NDE/尺寸备注\n' +
-//     'NDE/Kích thước ghi chú"\t"检验完成数量\n' +
-//     'Số lượng hoàn thành kiểm tra"\t"客户简称\n' +
-//     'Tên khách hàng"\t"销售订单\n' +
-//     'Đơn đặt hàng"\t"订单项目号\n' +
-//     'Số hạng mục đơn hàng"\t"物料号\n' +
-//     'Mã vật liệu"\t"加工物料描述\n' +
-//     'Mô tả vật liệu"\t"图号\n' +
-//     'Số bản vẽ"\t"订单数量\n' +
-//     'SL đơn hàng"\t"承诺完成日期\n' +
-//     'Ngày sản xuất chịu trách nhiệm nhập kho"\t"备注\n' +
-//     'Ghi chú"\t"标识人员\n' +
-//     'Nhân viên khắc dấu"\t"标识日期\n' +
-//     'Ngày khắc dấu"\t"检验人员\n' +
-//     'Nhân viên kiểm tra "\t"检验完成日期\n' +
-//     'Ngày hoàn thành kiểm tra"', '\n')
+// printMultipleText(
+//     '"Thời gian yêu cầu\n' +
+//     '申请日期\tNgười đăng ký\n' +
+//     '申请人"\t"Người đăng ký\n' +
+//     '访客姓名"\t"SDT\n' +
+//     '手机号"\t"Đơn vị/ Tổ chức\n' +
+//     '公司名称"\t"Mục đích ra vào\n' +
+//     '来访内容"\t"Dự kiến thời gian đến\n' +
+//     '预计来访时间"\t"Dự kiến thời gian kết thúc\n' +
+//     '预计访问结束时间"\t"Người liên hệ\n' +
+//     '联系人"\t"Bộ phận tiếp đón\n' +
+//     '来访部门"\t"Lãnh đạo phê duyệt\n' +
+//     '批准人"\t"Hình ảnh vào\n' +
+//     '证件及本人照片（5张）"\t"Ghi chú\n' +
+//     '备注 "\t"Hình ảnh ra\n' +
+//     '出厂记录（5张）"\t"Thời gian ra ngoài\n' +
+//     '访客出厂日期"\t"Mã phiếu\n' +
+//     '打印单号"',
+//     '\n',
+//     true
+// )
 const initText = (textKey: string = 'CHS|THA'): TextObject => {
   const r: TextObject = {};
   (MULTIPLE_TEXT_LIST[textKey] || []).forEach((t: Text) => {

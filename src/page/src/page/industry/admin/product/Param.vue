@@ -72,6 +72,12 @@
           align="left"
       ></el-table-column>
       <el-table-column
+          prop="expandFirst"
+          label="扩展内容1"
+          width="256"
+          align="left"
+      ></el-table-column>
+      <el-table-column
           prop="sorter"
           label="排序"
           width="64"
@@ -127,6 +133,9 @@
         <el-form-item prop="paramName" label="参数名称">
           <el-input v-model="formData.paramName"/>
         </el-form-item>
+        <el-form-item prop="expandFirst" label="扩展字段1">
+          <el-input v-model="formData.expandFirst"/>
+        </el-form-item>
         <el-form-item prop="sorter" label="排序">
           <el-input v-model="formData.sorter"/>
         </el-form-item>
@@ -171,6 +180,7 @@ const state = reactive({
     paramCode: '',
     paramName: '',
     paramValue: null,
+    expandFirst: null,
     sorter: 0,
   },
   formSave: false,
@@ -194,6 +204,15 @@ const paramCategoryGroupList = [
       {
         value: 'vocationType',
         label: store.state.label.vocationType,
+      },
+    ],
+  },
+  {
+    labelKey: 'visitorManage',
+    paramCategoryIdOptionList: [
+      {
+        value: 'visitContent',
+        label: store.state.label.visitContent,
       },
     ],
   },

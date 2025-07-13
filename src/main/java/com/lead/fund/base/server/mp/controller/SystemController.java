@@ -25,6 +25,7 @@ import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.ListResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
+import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
@@ -158,9 +159,20 @@ public class SystemController {
     public ListResult<MpUserDepartmentSummaryResponse> departmentSummary() {
         List<MpUserDepartmentSummaryResponse> l = mpUserMapper.userDepartmentSummary();
         final List<ParamConfigResponse> pl = paramDao.listByCategoryId("department");
+        final List<String> dml = pl.stream().map(ParamConfigResponse::getExpandFirst).filter(StrUtil::isNotBlank).collect(Collectors.toList());
+        final Map<String, String> um = CollUtil.isEmpty(dml) ? new HashMap<>(8) : userMapper.selectList(
+                DatabaseUtil.or(new LambdaQueryWrapper<MpUserEntity>().select(MpUserEntity::getDepartment, MpUserEntity::getId, MpUserEntity::getName),
+                        dml,
+                        (t, ll) -> t.in(MpUserEntity::getId, ll)
+                )
+        ).stream().collect(Collectors.toMap(AbstractPrimaryKey::getId, MpUserEntity::getName));
         final Map<Object, String> m = pl
                 .stream().collect(Collectors.toMap(
                         ParamConfigResponse::getValue, ParamConfigResponse::getLabel, (t, t1) -> t1
+                ));
+        final Map<Object, String> mm = pl
+                .stream().collect(Collectors.toMap(
+                        ParamConfigResponse::getValue, t -> defaultIfBlank(t.getExpandFirst()), (t, t1) -> t1
                 ));
         final AtomicInteger ps = new AtomicInteger(0);
         final Map<Object, Integer> m1 = pl
@@ -184,6 +196,8 @@ public class SystemController {
         l = l.stream().peek(t -> {
                     t.setIndex(index.addAndGet(1))
                             .setDepartmentFormat(m.getOrDefault(t.getDepartment(), t.getDepartment()))
+                            .setManager(mm.getOrDefault(t.getDepartment(), t.getDepartment()))
+                            .setManagerFormat(um.getOrDefault(t.getManager(), t.getManager()))
                     ;
                     bl[0] = bl[0].add(t.getWorkShop());
                     bl[1] = bl[1].add(t.getOffice());

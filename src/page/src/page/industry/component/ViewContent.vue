@@ -248,7 +248,7 @@
     <slot name="template" :param="row" :viewConfig="viewConfig"/>
   </template>
   <template v-else-if="viewConfig.type === ValueType.SelectEdit">
-    <span v-if="!row[props.idKey] || (viewConfig.staticIdList && viewConfig.staticIdList.indexOf(row[props.idKey]) >= 0)">
+    <span v-if="!row[props.idKey] || (viewConfig.staticIdList && viewConfig.staticIdList.indexOf(row[props.idKey]) >= 0) || ((viewConfig.editable && !viewConfig.editable(row)))">
         {{ row[viewConfig.value] }}
     </span>
     <span v-else-if="!props.handleUpdate">

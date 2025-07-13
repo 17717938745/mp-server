@@ -53,6 +53,13 @@ public class ParamEntity implements Serializable {
     @NotNull
     private String paramName;
     /**
+     * 扩展内容1
+     */
+    @FieldRemark(value = "扩展内容1")
+    @Size(max = 256, message = "扩展内容1长度最大为256")
+    @NotNull
+    private String expandFirst;
+    /**
      * 排序
      */
     @FieldRemark(value = "排序", defaultValue = "0")

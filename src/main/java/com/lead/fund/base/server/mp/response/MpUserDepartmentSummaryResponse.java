@@ -35,4 +35,6 @@ public class MpUserDepartmentSummaryResponse extends AbstractAdministratorModel 
     private BigDecimal scheduleMiddle;
     private BigDecimal vietnamCount;
     private BigDecimal chinaCount;
+    private String manager;
+    private String managerFormat;
 }

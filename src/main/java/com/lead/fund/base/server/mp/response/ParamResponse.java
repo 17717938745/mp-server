@@ -189,4 +189,8 @@ public class ParamResponse implements Serializable {
      * 库存位置
      */
     private List<ParamConfigResponse> storePositionList;
+    /**
+     * 来访内容
+     */
+    private List<ParamConfigResponse> visitContentList;
 }

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- * ExamineRequest
+ * @EqualsAndHashCode(callSuper = true)
  *
  * @author panchaohui
  * @version 1.0

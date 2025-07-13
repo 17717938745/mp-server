@@ -31,6 +31,7 @@ public interface IndustryConverter extends Serializable {
 
     @Mapping(target = "value", source = "paramCode")
     @Mapping(target = "label", source = "paramName")
+    @Mapping(target = "expandFirst", source = "expandFirst")
     ParamConfigResponse param(ParamEntity e);
 
     @Mapping(target = "id", source = "productId")

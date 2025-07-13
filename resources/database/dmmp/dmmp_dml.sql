@@ -48,7 +48,16 @@ VALUES ('accidentView', '事故报告查看员 NV kiểm tra báo cáo sự cố
        ('userManager', '用户管理 Nhân viên quản lý', '用户管理', '用户管理 Nhân viên quản lý', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'userManager'),
        ('vocationManager', '请假管理管理员 Người quản lý Ghi chú xin nghỉ', '请假管理管理员', '请假记录 Ghi chú xin nghỉ', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'vocationManager'),
        ('vocationView', '请假记录查看 kiểm tra Ghi chú xin nghỉ', '请假记录查看', '请假记录 Ghi chú xin nghỉ', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'vocationView');
-
+INSERT INTO dmmp.mp_role (ROLE_CODE, ROLE_NAME, ROLE_REMARK, TAG, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID)
+VALUES ('visitorView', 'Nhân viên xác minh thông tin 访客查看员', '', 'Quản lý khách 访客管理', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'visitorView');
+INSERT INTO dmmp.mp_role (ROLE_CODE, ROLE_NAME, ROLE_REMARK, TAG, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID)
+VALUES ('visitorManager', 'Nhân viên quản lý khách 访客管理员', '', 'Quản lý khách 访客管理', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'visitorManager');
+INSERT INTO dmmp.mp_role (ROLE_CODE, ROLE_NAME, ROLE_REMARK, TAG, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID)
+VALUES ('visitorSecurity', 'Nhân viên bảo vệ 保安员', '', 'Quản lý khách 访客管理', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'visitorSecurity');
+INSERT INTO dmmp.mp_role (ROLE_CODE, ROLE_NAME, ROLE_REMARK, TAG, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID)
+VALUES ('quotationView', '报价查看员 Nhân viên kiểm tra báo giá', '', '加工报价管理 Quản lý báo giá gia công', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'quotationView');
+INSERT INTO dmmp.mp_role (ROLE_CODE, ROLE_NAME, ROLE_REMARK, TAG, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID)
+VALUES ('quotationManager', '报价管理员  Quản lý báo giá', '', '加工报价管理 Quản lý báo giá gia công', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'quotationManager');
 INSERT INTO dmmp.MP_USER (USERNAME, NAME, NICKNAME, PASSWORD_ENCRYPT, SALT, MOBILE, MAIL, PASSWORD_EXPIRE_TIME, SIGN_IN_LOCK, SIGN_IN_FAIL_COUNT, SIGN_IN_LOCK_TIME, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID, DEPARTMENT, PROFESSION, INTERVIEW_RESUME, SCHEDULE, USER_PROPERTY, LEADER_USER_ID)
 VALUES ('lei.ye', '叶磊', 'yelei', '54051eb890c2e071d29ca0bf30d5d59b08cd534765092b4901afa11fa3a33515', '6CgZwSuX4eNvPX8a', '17700000001', 'lei.ye@qq.com', null, b'00', 0, '1970-01-01 08:00:00', 'system', 'admin', 0, '2024-06-07 09:42:24', '2025-03-04 10:03:15', '1799014033401327617', '5', '1', null, '1', '2', '1799014033401327617');
 INSERT INTO dmmp.MP_USER (USERNAME, NAME, NICKNAME, PASSWORD_ENCRYPT, SALT, MOBILE, MAIL, PASSWORD_EXPIRE_TIME, SIGN_IN_LOCK, SIGN_IN_FAIL_COUNT, SIGN_IN_LOCK_TIME, CREATOR, MODIFIER, STATE, CREATE_TIME, MODIFY_TIME, ID, DEPARTMENT, PROFESSION, INTERVIEW_RESUME, SCHEDULE, USER_PROPERTY, LEADER_USER_ID)

@@ -26,7 +26,6 @@ public class MpTest {
     @Test
     @DisplayName("test database...")
     void database() throws Exception {
-        System.out.println(new DdlEntry("15110").generateDdl(ExamineEntity.class, DatabaseType.MYSQL));
-        System.out.println(new DdlEntry("15110").generateDdl(ExamineAttachmentEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(VisitorEntity.class, DatabaseType.MYSQL));
     }
 }
