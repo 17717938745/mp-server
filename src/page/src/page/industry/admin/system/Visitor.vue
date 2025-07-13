@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="query-container">
+      <el-input v-model="query.data.visitorId"
+                @change="handlePage"
+                :placeholder="store.state.label.visitor"
+                class="search-item"/>
       <el-date-picker
           v-model="dateTimeList"
           @change="() => {handleDateTimeChange(dateTimeList, query.data, 'applyDate')}"
@@ -345,7 +349,7 @@ import {Store, useStore} from 'vuex'
 import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Printer, Search,} from '@element-plus/icons-vue'
-import {useRouter} from 'vue-router'
+import {useRouter, useRoute} from 'vue-router'
 import {httpDelete, httpGet, httpPutJson} from '@/util/HttpUtil'
 import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
@@ -358,6 +362,7 @@ import FileUpload from "../../component/FileUpload.vue";
 import {fullUrl} from "@/util/EnvUtil";
 
 const router = useRouter()
+const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
@@ -450,6 +455,7 @@ const state = reactive({
   expandRowKeys: new Array<string>(),
   query: {
     data: {
+      visitorId: route.query.visitorId || '',
       applyDate: '',
       startApplyDate: '',
       endApplyDate: '',

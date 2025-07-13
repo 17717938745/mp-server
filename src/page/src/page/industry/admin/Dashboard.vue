@@ -75,6 +75,8 @@ const handleJump = (t: any) => {
     handleJumpToCrash(t)
   } else if (6 === t.type) {
     handleJumpToTrouble(t)
+  } else if (7 === t.type) {
+    handleJumpToVisitor(t)
   } else {
     ElMessage.warning("Not support todo: " + JSON.stringify(t))
   }
@@ -116,6 +118,14 @@ const handleJumpToTrouble = (t: any) => {
     path: '/industry/admin/report/accident/trouble',
     query: {
       troubleId: t.id,
+    }
+  })
+}
+const handleJumpToVisitor = (t: any) => {
+  router.push({
+    path: '/industry/admin/system/visitor',
+    query: {
+      visitorId: t.id,
     }
   })
 }

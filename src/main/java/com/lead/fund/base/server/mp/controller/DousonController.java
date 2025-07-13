@@ -70,6 +70,7 @@ import com.lead.fund.base.server.mp.dao.TemplateDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.dao.TroubleAttachmentDao;
 import com.lead.fund.base.server.mp.dao.TroubleDao;
+import com.lead.fund.base.server.mp.dao.VisitorDao;
 import com.lead.fund.base.server.mp.entity.dmmp.MpAccountEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
@@ -108,6 +109,7 @@ import com.lead.fund.base.server.mp.entity.douson.TemplateEntity;
 import com.lead.fund.base.server.mp.entity.douson.TemplatePhotoEntity;
 import com.lead.fund.base.server.mp.entity.douson.TroubleAttachmentEntity;
 import com.lead.fund.base.server.mp.entity.douson.TroubleEntity;
+import com.lead.fund.base.server.mp.entity.douson.VisitorEntity;
 import com.lead.fund.base.server.mp.entity.douson.VocationEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
@@ -323,6 +325,8 @@ public class DousonController {
     private AccidentAttachmentDao accidentAttachmentDao;
     @Resource
     private DisqualificationOrderDao disqualificationOrderDao;
+    @Resource
+    private VisitorDao visitorDao;
     @Resource
     private DisqualificationOrderPhotoDao disqualificationOrderPhotoDao;
     @Resource
@@ -574,7 +578,13 @@ public class DousonController {
                         .select(MaintainEntity::getId)
                 ).stream().map(MaintainEntity::getId)
                 .collect(Collectors.toList());
-        final List<String> idList = Stream.of(disqualificationIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList, qualityIdList, crashIdList, troubleIdList)
+        final List<String> visitorIdList = u.getRoleCodeList().stream().noneMatch("visitorManager"::equals) ? new ArrayList<>() : visitorDao.list(new LambdaQueryWrapper<VisitorEntity>()
+                        .eq(VisitorEntity::getValid, false)
+                        .eq(VisitorEntity::getApprover, u.getUserId())
+                        .select(VisitorEntity::getId)
+                ).stream().map(VisitorEntity::getId)
+                .collect(Collectors.toList());
+        final List<String> idList = Stream.of(disqualificationIdList, technologyIdList, managerIdList, eventIdList, improveIdList, maintainIdList, qualityIdList, crashIdList, troubleIdList, visitorIdList)
                 .flatMap(Collection::stream)
                 .distinct().toList();
         AtomicInteger index = new AtomicInteger(0);
@@ -628,6 +638,11 @@ public class DousonController {
                         sceneList.add("trouble");
                         labelTail = "Trouble";
                         type = 6;
+                    }
+                    if (visitorIdList.contains(t)) {
+                        sceneList.add("visitor");
+                        labelTail = "Visitor";
+                        type = 7;
                     }
                     return new TodoData()
                             .setId(t)
