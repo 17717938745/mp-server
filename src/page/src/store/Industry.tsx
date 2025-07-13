@@ -29,8 +29,44 @@ export interface Label {
 const MULTIPLE_TEXT_LIST: MultipleText = {
       'CHS': [
         {
+          "value": "successAcceptOrder",
+          "label": "是否成功接单"
+        },
+        {
+          "value": "bidder",
+          "label": "报价人"
+        },
+        {
+          "value": "summaryPrice",
+          "label": "汇总价格/元"
+        },
+        {
+          "value": "processTime",
+          "label": "加工时间"
+        },
+        {
+          "value": "processUnitPrice",
+          "label": "加工单价"
+        },
+        {
+          "value": "processDevice",
+          "label": "加工设备"
+        },
+        {
+          "value": "quotationDate",
+          "label": "报价日期"
+        },
+        {
           "value": "applicant",
           "label": "申请人"
+        },
+        {
+          "value": "materialQuality",
+          "label": "材质"
+        },
+        {
+          "value": "customer",
+          "label": "客户"
         },
         {
           "value": "visitorName",
@@ -1869,8 +1905,44 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
       ],
       'THA': [
         {
+          "value": "successAcceptOrder",
+          "label": "Đơn hàng đã nhận thành công hay chưa"
+        },
+        {
+          "value": "bidder",
+          "label": "Người báo giá"
+        },
+        {
+          "value": "summaryPrice",
+          "label": "Tổng giá/nhân dân tệ"
+        },
+        {
+          "value": "processTime",
+          "label": "Thời gian gia công"
+        },
+        {
+          "value": "processUnitPrice",
+          "label": "Giá gia công"
+        },
+        {
+          "value": "processDevice",
+          "label": "Thiết bị gia công"
+        },
+        {
+          "value": "quotationDate",
+          "label": "Ngày báo giá"
+        },
+        {
           "value": "applicant",
           "label": "Người đăng ký"
+        },
+        {
+          "value": "materialQuality",
+          "label": "Vật liệu"
+        },
+        {
+          "value": "customer",
+          "label": "Khách hàng"
         },
         {
           "value": "visitorName",
