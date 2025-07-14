@@ -54,8 +54,7 @@ public class QuotationItemEntity extends AbstractAdmin {
      * 加工时间
      */
     @FieldRemark(value = "加工时间")
-    @Size(max = 32, message = "加工时间长度不合法")
-    private String processTime;
+    private BigDecimal processTime;
     /**
      * 汇总价格/元
      */

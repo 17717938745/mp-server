@@ -79,6 +79,7 @@
         :handleUpdate="handleUpdate"
         :handleEditShow="handleEditShow"
         :handleDelete="quotationManager ? handleDelete : null"
+        :handleDeleteShow="handleDeleteShow"
         :page="query.page"
         :total="total"
         :handleTableRowClassName="handleTableRowClassName"
@@ -137,7 +138,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="processProcedure" :label="store.state.label.processProcedure">
+        <el-form-item v-if="!formSave" prop="processProcedure" :label="store.state.label.processProcedure">
           <el-select v-model="formData.processProcedure"
                      filterable
                      clearable
@@ -152,7 +153,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="processDevice" :label="store.state.label.processDevice">
+        <el-form-item v-if="!formSave" prop="processDevice" :label="store.state.label.processDevice">
           <el-select v-model="formData.processDevice"
                      filterable
                      clearable
@@ -167,12 +168,21 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="remarks" :label="store.state.label.remarks">
+        <el-form-item prop="processTime" :label="store.state.label.processTime">
+          <el-input-number
+              v-model="formData.processTime"
+              :precision="2"
+              :controls="false"
+              :min="0"
+              style="width: 100%"
+          />
+        </el-form-item>
+        <el-form-item v-if="!formSave" prop="remarks" :label="store.state.label.remarks">
           <el-input v-model="formData.remarks" :disabled="!quotationManager"/>
         </el-form-item>
         <el-form-item prop="acceptOrder" :label="store.state.label.acceptOrder">
           <el-checkbox v-model="formData.acceptOrder" name="valid" :disabled="!quotationManager">
-            {{store.state.label.successAcceptOrder}}
+            {{ store.state.label.successAcceptOrder }}
           </el-checkbox>
         </el-form-item>
       </el-form>
@@ -223,23 +233,22 @@ const handleEditable = (row, key) => {
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
   {value: 'operator', labelKey: 'viewAndEdit', width: 145, type: ValueType.Operator,},
-  {value: 'index', labelKey: 'index', width: 56},
-  {value: 'customer', originValue: 'customer', labelKey: 'customer', width: 98},
-  {value: 'designNumber', labelKey: 'designNumber', width: 189,},
+  {value: 'index', labelKey: 'index', width: 56, mergeKey: ['quotationId'],},
+  {value: 'customer', originValue: 'customer', labelKey: 'customer', width: 98, mergeKey: ['quotationId'],},
+  {value: 'designNumber', labelKey: 'designNumber', width: 189, mergeKey: ['quotationId'],},
   {value: 'designNumberList', labelKey: 'designNumber', width: 189, type: ValueType.Image,},
-  {value: 'name', labelKey: 'name', width: 189,},
-  {value: 'materialQuality', labelKey: 'materialQuality', width: 189,},
-  {value: 'count', labelKey: 'count', width: 189,},
-  {value: 'quotationDate', labelKey: 'quotationDate', width: 189,},
-
-  {value: 'processProcedure', labelKey: 'processProcedure', width: 189,},
-  {value: 'processDevice', labelKey: 'processDevice', width: 189,},
+  {value: 'name', labelKey: 'name', width: 189, mergeKey: ['quotationId'],},
+  {value: 'materialQuality', labelKey: 'materialQuality', width: 189, mergeKey: ['quotationId'],},
+  {value: 'count', labelKey: 'count', width: 189, mergeKey: ['quotationId'],},
+  {value: 'quotationDate', labelKey: 'quotationDate', width: 189, mergeKey: ['quotationId'],},
+  {value: 'processProcedureFormat', originValue: 'processProcedure', labelKey: 'processProcedure', width: 189,},
+  {value: 'processDeviceFormat', originValue: 'processDevice', labelKey: 'processDevice', width: 189,},
   {value: 'processUnitPrice', labelKey: 'processUnitPrice', width: 189,},
   {value: 'processTime', labelKey: 'processTime', width: 189,},
   {value: 'summaryPrice', labelKey: 'summaryPrice', width: 189,},
   {value: 'remarks', labelKey: 'remarks', width: 189,},
-  {value: 'bidder', labelKey: 'bidder', width: 189,},
-  {value: 'acceptOrder', labelKey: 'successAcceptOrder', width: 189,},
+  {value: 'bidderFormat', originValue: 'bidder', labelKey: 'bidder', width: 189, mergeKey: ['quotationId'],},
+  {value: 'acceptOrderFormat', originValue: 'acceptOrder', labelKey: 'successAcceptOrder', width: 189, mergeKey: ['quotationId'],},
 ])
 const defaultFormData = {
   creator: user.userId,
@@ -396,39 +405,32 @@ Promise.all([
     }
   })
   columnConfigList.value = columnConfigList.value.map(t => {
-    if (t.value === 'remarks' && securityEdit) {
-      t.type = ValueType.TextEdit
-    } else if ('idAndPhotos' === t.value && securityEdit) {
-      t.type = ValueType.Link
-      t.openLink = (d: any) => {
-        handleEdit(d)
-        setTimeout(() => {
-          // formRef.value.$el
-          formRef.value.scrollToField('idAndPhotosList')
-        }, 100)
-      }
-    } else if ('factoryRecords' === t.value && securityEdit) {
-      t.type = ValueType.Link
-      t.openLink = (d: any) => {
-        handleEdit(d)
-        setTimeout(() => {
-          // formRef.value.$el
-          formRef.value.scrollToField('factoryRecordsList')
-        }, 100)
+    if (quotationManager) {
+      if (t.value === 'customer') {
+        t.type = ValueType.TextEdit
+      } else if ('designNumber' === t.value) {
+        t.type = ValueType.Link
+        t.openLink = (d: any) => {
+          handleEdit(d)
+          setTimeout(() => {
+            // formRef.value.$el
+            formRef.value.scrollToField('designNumberList')
+          }, 100)
+        }
+      } else if ('name' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('materialQuality' === t.value) {
+        t.type = ValueType.TextEdit
+      } else if ('count' === t.value) {
+        t.type = ValueType.NumberEdit
+      } else if ('processTime' === t.value) {
+        t.type = ValueType.NumberEdit
+      } else if ('remarks' === t.value) {
+        t.type = ValueType.TextEdit
       }
     }
     return t
   })
-  handlePage()
-  if (includes(roleCodeList, 'gauger')) {
-    columnConfigList.value = columnConfigList.value.map((t: any) => {
-      if (t.value === 'borrowerFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      }
-      return t
-    })
-  }
   handlePage()
 })
 const handleMerge = () => {
@@ -453,12 +455,16 @@ const handleUpdate = (row: any) => {
     handlePage()
   })
 }
+const handleDeleteShow = (row: any) => {
+  return true
+
+}
 const handleDelete = (row: any) => {
-  ElMessageBox.confirm('Confirm Delete?', 'Tips', {
+  ElMessageBox.confirm(row.quotationItemId ? 'Confirm Delete?' : 'Will delete all, Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/admin/quotation', {
-      disqualificationOrderId: row.disqualificationOrderId,
+    httpDelete('douson/quotation', {
+      quotationId: row.quotationId,
     })
     .then(() => {
       ElMessage.success('Delete success')

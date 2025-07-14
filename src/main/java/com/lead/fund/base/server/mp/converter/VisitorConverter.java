@@ -32,6 +32,7 @@ public interface VisitorConverter extends Serializable {
     @Mapping(target = "expectedEndTime", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getExpectedEndTime(), com.lead.fund.base.common.util.DateUtil::tradeDateTime))")
     @Mapping(target = "visitorFactoryDate", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getVisitorFactoryDate(), com.lead.fund.base.common.util.DateUtil::tradeDateTime))")
     @Mapping(target = "visitContentFormat", source = "visitContent")
+    @Mapping(target = "validFormat", expression = "java(Boolean.TRUE.equals(d.getValid()) ? \"Yes\" : \"No\")")
     VisitorResponse visitor(VisitorEntity d);
 
     List<VisitorResponse> visitorList(List<VisitorEntity> list);

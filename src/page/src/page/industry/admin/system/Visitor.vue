@@ -234,8 +234,8 @@
             Approve
           </el-checkbox>
         </el-form-item>
-        <el-form-item prop="idAndPhotosList" :label="`${store.state.label.idAndPhotos}(${(formRuleList['factoryRecordsList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.idAndPhotosList" :maxSize="Number(`${(formRuleList['factoryRecordsList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!handleEditable(formData, 'factoryRecordsList')"></image-upload>
+        <el-form-item prop="idAndPhotosList" :label="`${store.state.label.idAndPhotos}(${(formRuleList['idAndPhotosList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
+          <image-upload :photoList="formData.idAndPhotosList" :maxSize="Number(`${(formRuleList['idAndPhotosList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!handleEditable(formData, 'idAndPhotosList')"></image-upload>
         </el-form-item>
         <el-form-item prop="remarks" :label="store.state.label.remarks">
           <el-input v-model="formData.remarks" :disabled="!handleEditable(formData, 'remarks')"/>
@@ -375,7 +375,7 @@ const printData = ref<any>(null)
 const showPrint = ref<boolean>(false)
 const userOptionList = ref(new Array<any>())
 const handleEditable = (row, key)  => {
-  return visitorManager || (!row.valid && (includes(['idAndPhotos', 'remarks', 'factoryRecords'], key) ? visitorSecurity : user.userId === row.applicant))
+  return visitorManager || (!row.valid && (includes(['idAndPhotosList', 'remarks', 'factoryRecordsList'], key) ? visitorSecurity : user.userId === row.applicant))
 }
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
@@ -392,7 +392,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'contactPersonFormat', originValue: 'contactPerson', labelKey: 'contactPerson', width: 87},
   {value: 'visitDepartmentFormat', originValue: 'visitDepartment', labelKey: 'visitDepartment', width: 131},
   {value: 'approverFormat', labelKey: 'approver', width: 98},
-  {value: 'valid', labelKey: 'valid', width: 87},
+  {value: 'validFormat', originValue: 'valid', labelKey: 'valid', width: 87},
   {value: 'idAndPhotos', labelKey: 'idAndPhotos', width: 103, },
   {value: 'idAndPhotosList', labelKey: 'idAndPhotos', width: 189, type: ValueType.Image,},
   {value: 'remarks', labelKey: 'remarks', width: 189,},
@@ -597,19 +597,11 @@ Promise.all([
             formRef.value.scrollToField('factoryRecordsList')
           }, 100)
         }
+    } else if ('validFormat' === t.value && visitorManager) {
+        t.type = ValueType.SwitchEdit
     }
     return t
   })
-  handlePage()
-  if (includes(roleCodeList, 'gauger')) {
-    columnConfigList.value = columnConfigList.value.map((t: any) => {
-      if (t.value === 'borrowerFormat') {
-        t.type = ValueType.SelectEdit
-        t.optionList = userOptionList.value
-      }
-      return t
-    })
-  }
   handlePage()
 })
 const handleMerge = () => {
@@ -638,8 +630,8 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm('Confirm Delete?', 'Tips', {
     type: 'warning',
   }).then(() => {
-    httpDelete('douson/admin/visitor', {
-      disqualificationOrderId: row.disqualificationOrderId,
+    httpDelete('douson/visitor', {
+      visitorId: row.visitorId,
     })
     .then(() => {
       ElMessage.success('Delete success')

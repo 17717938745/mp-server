@@ -138,7 +138,7 @@ public class DousonVisitorController {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
             visitorDao.updateById(e
-                    .setPrintNumber(defaultIfBlank(db.getPrintNumber(), () -> CollUtil.isEmpty(request.getIdAndPhotosList()) ? "" : DateUtil.dateTimeSimple().substring(0, 10)))
+                    .setPrintNumber(defaultIfBlank(db.getPrintNumber(), () -> CollUtil.isEmpty(request.getIdAndPhotosList()) ? "" : DateUtil.dateTimeSimple().substring(2, 12)))
                     .setVisitorFactoryDate(defaultIfBlank(db.getVisitorFactoryDate(), () -> CollUtil.isEmpty(request.getFactoryRecordsList()) ? "" : DateUtil.dateTime()))
             );
         }

@@ -42,6 +42,7 @@ import com.lead.fund.base.server.mp.response.MpUserResponse;
 import com.lead.fund.base.server.mp.response.QuotationResponse;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -125,13 +126,14 @@ public class DousonQuotationController {
         final QuotationEntity e = QUOTATION_INSTANCE.quotation(request);
         e
                 .setDesignNumberCount(new BigDecimal(request.getDesignNumberList().size()))
+                .setBidder(u.getUserId())
         ;
         if (isBlank(e.getId())) {
             quotationDao.save(e
                     .setQuotationDate(DateUtil.dateTime(now))
             );
             quotationItemDao.saveBatch(
-                    IntStream.range(0, 2).mapToObj(i -> new QuotationItemEntity().setQuotationId(e.getId())).collect(Collectors.toList())
+                    IntStream.range(0, 2).mapToObj(i -> QUOTATION_INSTANCE.blankQuotationItem(e, request, u.getUserId())).collect(Collectors.toList())
             );
         } else if (null == db) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
@@ -139,6 +141,21 @@ public class DousonQuotationController {
             quotationDao.updateById(e);
             quotationItemDao.updateById(QUOTATION_INSTANCE.quotationItem(request));
         }
+        final QuotationEntity quotationEntity = quotationDao.getById(e.getId());
+        final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, e.getId()));
+        for (QuotationItemEntity t : list) {
+            t
+                    .setProcessUnitPrice(defaultDecimal(t.getProcessUnitPrice()))
+                    .setProcessTime(defaultDecimal(t.getProcessTime()))
+                    .setSummaryPrice(
+                            t.getProcessUnitPrice().multiply(t.getProcessTime())
+                                    .divide(new BigDecimal("60"), 8, RoundingMode.HALF_UP)
+                    )
+            ;
+            quotationItemDao.updateById(t);
+        }
+        quotationEntity.setSummaryPrice(list.stream().map(QuotationItemEntity::getSummaryPrice).reduce(BigDecimal.ZERO, BigDecimal::add).multiply(quotationEntity.getProcessTime()));
+        quotationDao.updateById(quotationEntity);
         quotationAttachmentDao.remove(new LambdaUpdateWrapper<QuotationAttachmentEntity>().eq(QuotationAttachmentEntity::getQuotationId, e.getId()));
         quotationAttachmentDao.saveBatch(
                 Stream.of(
@@ -175,7 +192,8 @@ public class DousonQuotationController {
         final QuotationEntity db = quotationDao.getById(request.getQuotationId());
         if (null != db) {
             quotationItemDao.removeById(request.getQuotationItemId());
-            if (quotationItemDao.count(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, request.getQuotationId())) <= 0) {
+            if (isBlank(request.getQuotationItemId())) {
+                quotationItemDao.removeById(request.getQuotationItemId());
                 quotationDao.removeById(request.getQuotationId());
                 quotationAttachmentDao.remove(new LambdaUpdateWrapper<QuotationAttachmentEntity>()
                         .eq(QuotationAttachmentEntity::getQuotationId, db.getId())
@@ -227,36 +245,6 @@ public class DousonQuotationController {
         if (CollUtil.isEmpty(rl)) {
             return new ArrayList<>();
         }
-        MultitaskUtil.supplementList(
-                rl.stream().filter(t -> isNotBlank(t.getBidder())).collect(Collectors.toList()),
-                QuotationResponse::getBidder,
-                l1 -> userMapper.selectList(
-                        new LambdaQueryWrapper<MpUserEntity>()
-                                .in(MpUserEntity::getId, l1)
-                                .select(
-                                        MpUserEntity::getId,
-                                        MpUserEntity::getUsername,
-                                        MpUserEntity::getName
-                                )
-                ),
-                (t, r) -> t.getBidder().equals(r.getId()),
-                (t, r) -> t.setBidderFormat(r.getName())
-        );
-        MultitaskUtil.supplementList(
-                rl.stream().filter(t -> isNotBlank(t.getProcessProcedure())).collect(Collectors.toList()),
-                QuotationResponse::getProcessProcedure,
-                l1 -> paramDao.listByCategoryId("quotationProcessProcedure"),
-                (t, r) -> t.getProcessProcedure().equals(r.getValue()),
-                (t, r) -> t.setProcessProcedure(r.getLabel())
-        );
-        MultitaskUtil.supplementList(
-                rl.stream().filter(t -> isNotBlank(t.getProcessDevice())).collect(Collectors.toList()),
-                QuotationResponse::getProcessDevice,
-                l1 -> paramDao.listByCategoryId("quotationProcessDevice"),
-                (t, r) -> t.getProcessDevice().equals(r.getValue()),
-                (t, r) -> t.setProcessDeviceFormat(r.getLabel())
-                        .setProcessUnitPrice(defaultDecimal(r.getExpandFirst()))
-        );
         final Map<String, List<QuotationAttachmentEntity>> am = quotationAttachmentDao.list(
                         DatabaseUtil.or(new LambdaQueryWrapper<>(), rl.stream().map(QuotationResponse::getQuotationId).collect(Collectors.toList()), (lam, l) -> lam.in(QuotationAttachmentEntity::getQuotationId, l))
                 ).stream()
@@ -271,7 +259,7 @@ public class DousonQuotationController {
                 )
         ).stream().collect(Collectors.groupingBy(QuotationItemEntity::getQuotationId));
         final AtomicInteger index = new AtomicInteger(null == startIndex ? 0 : startIndex.get());
-        return rl.stream().map(t -> {
+        final List<QuotationResponse> resultList = rl.stream().map(t -> {
             t
                     .setIndex(index.addAndGet(1))
                     .setDesignNumberList(am.getOrDefault(t.getQuotationId(), new ArrayList<>())
@@ -290,12 +278,41 @@ public class DousonQuotationController {
                             QUOTATION_INSTANCE.quotation(t, tt)
                     ).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(itemList)) {
-                itemList.add(
-                        itemList.stream().reduce(QUOTATION_INSTANCE::summary).orElse(new QuotationResponse())
-                );
+                itemList.add(t);
             }
             return itemList;
         }).flatMap(Collection::stream).collect(Collectors.toList());
+        MultitaskUtil.supplementList(
+                resultList.stream().filter(t -> isNotBlank(t.getBidder())).collect(Collectors.toList()),
+                QuotationResponse::getBidder,
+                l1 -> userMapper.selectList(
+                        new LambdaQueryWrapper<MpUserEntity>()
+                                .in(MpUserEntity::getId, l1)
+                                .select(
+                                        MpUserEntity::getId,
+                                        MpUserEntity::getUsername,
+                                        MpUserEntity::getName
+                                )
+                ),
+                (t, r) -> t.getBidder().equals(r.getId()),
+                (t, r) -> t.setBidderFormat(r.getName())
+        );
+        MultitaskUtil.supplementList(
+                resultList.stream().filter(t -> isNotBlank(t.getProcessProcedure())).collect(Collectors.toList()),
+                QuotationResponse::getProcessProcedure,
+                l1 -> paramDao.listByCategoryId("quotationProcessProcedure"),
+                (t, r) -> t.getProcessProcedure().equals(r.getValue()),
+                (t, r) -> t.setProcessProcedureFormat(r.getLabel())
+        );
+        MultitaskUtil.supplementList(
+                resultList.stream().filter(t -> isNotBlank(t.getProcessDevice())).collect(Collectors.toList()),
+                QuotationResponse::getProcessDevice,
+                l1 -> paramDao.listByCategoryId("quotationProcessDevice"),
+                (t, r) -> t.getProcessDevice().equals(r.getValue()),
+                (t, r) -> t.setProcessDeviceFormat(r.getLabel())
+                        .setProcessUnitPrice(defaultDecimal(r.getExpandFirst()))
+        );
+        return resultList;
     }
 
     /**
