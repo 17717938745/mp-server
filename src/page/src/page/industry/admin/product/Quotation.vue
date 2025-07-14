@@ -86,16 +86,17 @@
         :handlePageChange="handlePageChange"
         :handleLimitChange="handleLimitChange"
     >
-      <!-- <template #operator="row">
+      <template #operator="row">
         <el-link
-            :icon="Printer"
-            @click="handleShowPrintDetail(row)"
+            v-if="!row.param.quotationItemId"
+            :icon="Plus"
+            @click="handleAddItem(row.param)"
             class="mr10"
             type="info"
         >
-          <el-tag size="small">Print</el-tag>
+          <el-tag size="small">Add</el-tag>
         </el-link>
-      </template>-->
+      </template>
     </view-list>
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
       <el-form
@@ -203,7 +204,7 @@ import {StoreType} from '@/store/Index'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Printer, Search,} from '@element-plus/icons-vue'
 import {useRouter, useRoute} from 'vue-router'
-import {httpDelete, httpGet, httpPutJson} from '@/util/HttpUtil'
+import {httpDelete, httpGet, httpPostJson, httpPutJson} from '@/util/HttpUtil'
 import {PageResult} from '@/typing/ma/System'
 import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {formatDate} from '@/util/DateUtil'
@@ -452,6 +453,13 @@ const handleUpdate = (row: any) => {
   return httpPutJson('douson/quotation/merge', row).then(() => {
     state.formVisible = false
     ElMessage.success('Edit success')
+    handlePage()
+  })
+}
+const handleAddItem = (row: any) => {
+  httpPostJson('douson/quotation/item', row).then(() => {
+    state.formVisible = false
+    ElMessage.success('Add success')
     handlePage()
   })
 }

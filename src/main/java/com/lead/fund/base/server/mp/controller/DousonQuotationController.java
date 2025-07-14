@@ -59,6 +59,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -103,6 +104,31 @@ public class DousonQuotationController {
     private ParamDao paramDao;
     @Resource
     private LockHelper lockHelper;
+
+    /**
+     * 保存、更新访客
+     *
+     * @param deviceId 设备id
+     * @param request  {@link QuotationRequest}
+     * @return {@link Result}
+     */
+    @PostMapping("item")
+    @Transactional(value = "dousonDataSourceTransactionManager", propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public Result addItem(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody QuotationRequest request
+    ) {
+
+        final MpUserResponse u = accountHelper.getUser(deviceId);
+        if (u.getRoleCodeList().stream().noneMatch("quotationManager"::equals)) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
+        final QuotationEntity e = QUOTATION_INSTANCE.quotation(request);
+        quotationItemDao.saveBatch(
+                IntStream.range(0, 1).mapToObj(i -> QUOTATION_INSTANCE.blankQuotationItem(e, request, u.getUserId())).collect(Collectors.toList())
+        );
+        return new Result();
+    }
 
     /**
      * 保存、更新访客
