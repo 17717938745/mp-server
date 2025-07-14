@@ -43,6 +43,7 @@ public class QuotationEntity extends AbstractAdmin {
     @FieldRemark(value = "图号")
     @Size(max = 64, message = "图号长度不合法")
     private String designNumber;
+    private BigDecimal designNumberCount;
     /**
      * 名称
      */
@@ -99,7 +100,7 @@ public class QuotationEntity extends AbstractAdmin {
      */
     @FieldRemark(value = "备注")
     @Size(max = 512, message = "备注长度不合法")
-    private BigDecimal remarks;
+    private String remarks;
     /**
      * 报价人
      */

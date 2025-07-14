@@ -23,14 +23,15 @@ public interface VisitorConverter extends Serializable {
     VisitorConverter VISITOR_INSTANCE = Mappers.getMapper(VisitorConverter.class);
 
     @Mapping(target = "id", source = "visitorId")
-    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(request.getApplyDate()))")
+    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(request.getApplyDate(), com.lead.fund.base.common.util.DateUtil::day))")
     VisitorEntity visitor(VisitorRequest request);
 
     @Mapping(target = "visitorId", source = "id")
-    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.DateUtil.day(d.getApplyDate()))")
-    @Mapping(target = "expectedVisitTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getExpectedVisitTime()))")
-    @Mapping(target = "expectedEndTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getExpectedEndTime()))")
-    @Mapping(target = "visitorFactoryDate", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getVisitorFactoryDate()))")
+    @Mapping(target = "applyDate", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getApplyDate(), com.lead.fund.base.common.util.DateUtil::day))")
+    @Mapping(target = "expectedVisitTime", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getExpectedVisitTime(), com.lead.fund.base.common.util.DateUtil::tradeDateTime))")
+    @Mapping(target = "expectedEndTime", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getExpectedEndTime(), com.lead.fund.base.common.util.DateUtil::tradeDateTime))")
+    @Mapping(target = "visitorFactoryDate", expression = "java(com.lead.fund.base.common.util.StrUtil.wrapperIfNotBlank(d.getVisitorFactoryDate(), com.lead.fund.base.common.util.DateUtil::tradeDateTime))")
+    @Mapping(target = "visitContentFormat", source = "visitContent")
     VisitorResponse visitor(VisitorEntity d);
 
     List<VisitorResponse> visitorList(List<VisitorEntity> list);

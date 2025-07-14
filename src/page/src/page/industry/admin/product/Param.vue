@@ -276,6 +276,19 @@ const paramCategoryGroupList = [
     ],
   },
   {
+    labelKey: 'quotationManage',
+    paramCategoryIdOptionList: [
+      {
+        value: 'quotationProcessProcedure',
+        label: store.state.label.processProcedure,
+      },
+      {
+        value: 'quotationProcessDevice',
+        label: store.state.label.processDevice,
+      },
+    ],
+  },
+  {
     labelKey: 'userRunReport',
     paramCategoryIdOptionList: [
       {

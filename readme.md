@@ -62,7 +62,7 @@ cp -rf ./resources/lib/ ~/.m2/repository/com/lead/fund/base/
 <span style="color: #888888;">Copy必须依赖的包至项目</span>
 
 ```shell
-PROJECT_VERSION=202501.1-SNAPSHOT
+PROJECT_VERSION=202507.1-SNAPSHOT
 MANAGE_DIR="./resources/lib/manage/${PROJECT_VERSION}/"
 rm -rf ${MANAGE_DIR}
 mkdir -p ${MANAGE_DIR}

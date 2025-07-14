@@ -223,6 +223,15 @@ const handleSubmit = (retry: boolean = true) => {
               {
                 "children": [],
                 "id": "-1",
+                "path": "quotation",
+                "component": "quotation",
+                "nameKey": "quotationManage",
+                "white": false,
+                "showFlag": true,
+              },
+              {
+                "children": [],
+                "id": "-1",
                 "path": "index",
                 "component": "index",
                 "nameKey": "productQuotaManage",

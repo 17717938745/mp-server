@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.lead.fund.base.common</groupId>
+  <artifactId>common-util</artifactId>
+  <version>202507.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20250711.081649</timestamp>
+      <buildNumber>36</buildNumber>
+    </snapshot>
+    <lastUpdated>20250711081649</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>202507.1-20250711.081649-36</value>
+        <updated>20250711081649</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>202507.1-20250711.081649-36</value>
+        <updated>20250711081649</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

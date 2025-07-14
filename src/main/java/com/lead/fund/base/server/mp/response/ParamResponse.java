@@ -193,4 +193,12 @@ public class ParamResponse implements Serializable {
      * 来访内容
      */
     private List<ParamConfigResponse> visitContentList;
+    /**
+     * 加工报价的加工工序
+     */
+    private List<ParamConfigResponse> quotationProcessProcedureList;
+    /**
+     * 加工报价的加工设备
+     */
+    private List<ParamConfigResponse> quotationProcessDeviceList;
 }

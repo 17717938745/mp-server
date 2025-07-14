@@ -2,6 +2,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import com.lead.fund.base.common.basic.cons.ds.DatabaseType;
 import com.lead.fund.base.common.database.helper.DdlEntry;
+import com.lead.fund.base.common.util.BeanUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
@@ -26,6 +27,11 @@ public class MpTest {
     @Test
     @DisplayName("test database...")
     void database() throws Exception {
-        System.out.println(new DdlEntry("15110").generateDdl(VisitorEntity.class, DatabaseType.MYSQL));
+String a = "";
+        final String r = StrUtil.wrapperIfNotBlank(a, DateUtil::tradeDateTime);
+        System.out.println(r);
+        System.out.println(new DdlEntry("15110").generateDdl(QuotationEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(QuotationAttachmentEntity.class, DatabaseType.MYSQL));
+        System.out.println(new DdlEntry("15110").generateDdl(QuotationItemEntity.class, DatabaseType.MYSQL));
     }
 }

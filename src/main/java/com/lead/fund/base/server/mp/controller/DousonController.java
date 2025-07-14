@@ -482,6 +482,8 @@ public class DousonController {
                 case "workDressType" -> builder.workDressTypeList(paramDao.listByCategoryId(categoryId));
                 case "storePosition" -> builder.storePositionList(paramDao.listByCategoryId(categoryId));
                 case "visitContent" -> builder.visitContentList(paramDao.listByCategoryId(categoryId));
+                case "quotationProcessProcedure" -> builder.quotationProcessProcedureList(paramDao.listByCategoryId(categoryId));
+                case "quotationProcessDevice" -> builder.quotationProcessDeviceList(paramDao.listByCategoryId(categoryId));
                 default -> {
                 }
             }

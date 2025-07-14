@@ -20,6 +20,7 @@ import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
 import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
+import com.lead.fund.base.common.util.StrUtil;
 import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.TemplatePhotoDao;
 import com.lead.fund.base.server.mp.dao.VisitorAttachmentDao;
@@ -117,7 +118,9 @@ public class DousonVisitorController {
         final DateTime now = DateTime.now();
         final VisitorEntity db = isBlank(request.getVisitorId()) ? null : visitorDao.getById(request.getVisitorId());
         final VisitorEntity e = VISITOR_INSTANCE.visitor(request);
-        e.setApprover(userMapper.selectById(e.getContactPerson()).getLeaderUserId())
+        final Map<Object, String> dm = paramDao.listByCategoryId("department")
+                .stream().collect(Collectors.toMap(ParamConfigResponse::getValue, ParamConfigResponse::getExpandFirst));
+        e.setApprover(dm.getOrDefault(userMapper.selectById(e.getContactPerson()).getDepartment(), ""))
                 .setIdAndPhotos(new BigDecimal(request.getIdAndPhotosList().size()))
                 .setFactoryRecords(new BigDecimal(request.getFactoryRecordsList().size()))
         ;
@@ -131,10 +134,9 @@ public class DousonVisitorController {
         } else if (null == db) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         } else {
-            if (u.getRoleCodeList().stream().noneMatch(t -> "visitorManager".equals(t) || "visitorSecurity".equals(t)) || !u.getUserId().equals(db.getApplicant())) {
+            if (u.getRoleCodeList().stream().noneMatch(t -> "visitorManager".equals(t) || "visitorSecurity".equals(t)) && !u.getUserId().equals(db.getApplicant())) {
                 throw new BusinessException(AUTHORITY_AUTH_FAIL);
             }
-
             visitorDao.updateById(e
                     .setPrintNumber(defaultIfBlank(db.getPrintNumber(), () -> CollUtil.isEmpty(request.getIdAndPhotosList()) ? "" : DateUtil.dateTimeSimple().substring(0, 10)))
                     .setVisitorFactoryDate(defaultIfBlank(db.getVisitorFactoryDate(), () -> CollUtil.isEmpty(request.getFactoryRecordsList()) ? "" : DateUtil.dateTime()))
@@ -242,7 +244,7 @@ public class DousonVisitorController {
 
     private List<VisitorResponse> formatVisitorList(List<VisitorEntity> list) {
         final List<VisitorResponse> rl = VISITOR_INSTANCE.visitorList(list);
-        final List<String> contactPersonList = rl.stream().filter(t -> isNotBlank(t.getContactPerson())).map(VisitorResponse::getContactPerson).collect(Collectors.toList());
+        final List<String> contactPersonList = rl.stream().map(VisitorResponse::getContactPerson).filter(StrUtil::isNotBlank).collect(Collectors.toList());
         final Map<String, String> userDepartMap = CollUtil.isEmpty(contactPersonList) ? new HashMap<>(8) : userMapper.selectList(
                 DatabaseUtil.or(
                         new LambdaQueryWrapper<MpUserEntity>()
@@ -284,6 +286,13 @@ public class DousonVisitorController {
                 ),
                 (t, r) -> t.getApprover().equals(r.getId()),
                 (t, r) -> t.setApproverFormat(r.getName())
+        );
+        MultitaskUtil.supplementList(
+                rl.stream().filter(t -> isNotBlank(t.getVisitContent())).collect(Collectors.toList()),
+                VisitorResponse::getVisitContent,
+                l1 -> paramDao.listByCategoryId("visitContent"),
+                (t, r) -> t.getVisitContent().equals(r.getValue()),
+                (t, r) -> t.setVisitContentFormat(r.getLabel())
         );
         MultitaskUtil.supplementList(
                 rl.stream().filter(t -> isNotBlank(t.getContactPerson())).collect(Collectors.toList()),

@@ -71,6 +71,7 @@ public class VisitorResponse implements Serializable {
     @FieldRemark(value = "来访内容")
     @Size(max = 512, message = "来访内容长度不合法")
     private String visitContent;
+    private String visitContentFormat;
     /**
      * 预计来访时间
      */

@@ -804,6 +804,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "产品定额管理"
         },
         {
+          "value": "quotationManage",
+          "label": "加工报价管理"
+        },
+        {
           "value": "orderManage",
           "label": "订单管理"
         },
@@ -2735,6 +2739,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "productQuotaManage",
           "label": "Quản lý định mức sản phẩm"
+        },
+        {
+          "value": "quotationManage",
+          "label": "Quản lý báo giá gia công"
         },
         {
           "value": "orderManage",
