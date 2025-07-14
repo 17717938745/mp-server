@@ -119,7 +119,7 @@ public class DousonVisitorController {
         final VisitorEntity db = isBlank(request.getVisitorId()) ? null : visitorDao.getById(request.getVisitorId());
         final VisitorEntity e = VISITOR_INSTANCE.visitor(request);
         final Map<Object, String> dm = paramDao.listByCategoryId("department")
-                .stream().collect(Collectors.toMap(ParamConfigResponse::getValue, ParamConfigResponse::getExpandFirst));
+                .stream().collect(Collectors.toMap(ParamConfigResponse::getValue, t -> defaultIfBlank(t.getExpandFirst())));
         e.setApprover(dm.getOrDefault(userMapper.selectById(e.getContactPerson()).getDepartment(), ""))
                 .setIdAndPhotos(new BigDecimal(request.getIdAndPhotosList().size()))
                 .setFactoryRecords(new BigDecimal(request.getFactoryRecordsList().size()))
