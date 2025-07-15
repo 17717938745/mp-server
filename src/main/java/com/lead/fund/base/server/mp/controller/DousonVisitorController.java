@@ -354,7 +354,7 @@ public class DousonVisitorController {
     ) {
         final MpUserResponse u = accountHelper.getUser(deviceId);
         if (u.getRoleList().stream().noneMatch(
-                t -> "admin".equals(t.getRoleCode()) || "visitorManager".equals(t.getRoleCode()) || "visitorView".equals(t.getRoleCode()) || "visitorSecurity".equals(t.getRoleCode()))) {
+                t -> "visitorManager".equals(t.getRoleCode()) || "visitorView".equals(t.getRoleCode()) || "visitorSecurity".equals(t.getRoleCode()))) {
             request.getData().setApplicant(u.getUserId());
         }
         if (isNotBlank(request.getData().getVisitDepartment())) {

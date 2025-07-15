@@ -269,7 +269,7 @@ public class SystemController {
                 BigDecimal.ZERO
         };
         l = l.stream().peek(t -> {
-                    t.setIndex(index.addAndGet(1))
+                    t
                             .setDepartmentFormat(dm.getOrDefault(t.getDepartment(), t.getDepartment()))
                             .setProfessionFormat(pm.getOrDefault(t.getProfession(), t.getProfession()))
                     ;
@@ -286,6 +286,10 @@ public class SystemController {
                     } else {
                         return i1;
                     }
+                })
+                .peek(t -> {
+                    t
+                            .setIndex(index.addAndGet(1));
                 })
                 .collect(Collectors.toList());
         l.add(

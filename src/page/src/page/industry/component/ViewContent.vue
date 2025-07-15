@@ -288,6 +288,7 @@
         v-model="formData[viewConfig.originValue || viewConfig.value]"
         @change="handleUpdateSubmit"
         filterable
+        :allow-create="viewConfig.allowCreate || false"
         :multiple="'[object Array]' === Object.prototype.toString.call(formData[viewConfig.originValue || viewConfig.value])"
         clearable
         :placeholder="store.state.label[viewConfig.originValue || viewConfig.value]">

@@ -263,7 +263,7 @@
           <div>
             <h1 class="douson-flex-item-center">DOUSON访客单</h1>
           </div>
-          <div class="douson-flex" style="justify-content: flex-end;">{{ store.state.label.printNumber }}：{{printData.printNumber}}</div>
+          <div class="douson-flex" style="justify-content: flex-end;">{{ store.state.label.printNumber }}：{{ printData.printNumber }}</div>
           <div class="douson-container" style="font-size: 14px; margin-top: 10px;">
             <div class="douson-flex douson-row">
               <div class="douson-flex-item-column-center douson-column" style="width: 33%">
@@ -329,13 +329,13 @@
               </div>
               <div class="douson-flex-item douson-column" style="width: 70%;">
                 <div class="douson-flex-item-center">
-                  <div>{{ printData.visitContent }}</div>
+                  <div>{{ printData.visitContentFormat }}</div>
                 </div>
                 <div>
                 </div>
               </div>
             </div>
-            <div class="douson-flex" style="justify-content: flex-end; min-height: 80px;">{{ store.state.label.approval }}：<span style="width: 230px;"></span></div>
+            <div class="douson-flex" style="justify-content: flex-end; align-items: center; min-height: 80px;">{{ store.state.label.approval }}：<span style="width: 230px;"></span></div>
           </div>
         </div>
       </div>
@@ -374,7 +374,7 @@ const formRef: Ref = ref(null)
 const printData = ref<any>(null)
 const showPrint = ref<boolean>(false)
 const userOptionList = ref(new Array<any>())
-const handleEditable = (row, key)  => {
+const handleEditable = (row, key) => {
   return visitorManager || (!row.valid && (includes(['idAndPhotosList', 'remarks', 'factoryRecordsList'], key) ? visitorSecurity : user.userId === row.applicant))
 }
 const columnConfigList = ref<ViewConfig[]>([
@@ -386,25 +386,24 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'visitorName', labelKey: 'visitorName', width: 101},
   {value: 'phoneNumber', originValue: 'phoneNumber', labelKey: 'phoneNumber', width: 102, showOverflow: true,},
   {value: 'companyName', originValue: 'companyName', labelKey: 'companyName', width: 189, showOverflow: true,},
-  {value: 'visitContentFormat', originValue: 'visitContent', labelKey: 'visitContent', width: 87},
+  {value: 'visitContentFormat', originValue: 'visitContent', labelKey: 'visitContent', width: 123, showOverflow: true,},
   {value: 'expectedVisitTime', labelKey: 'expectedVisitTime', width: 87},
   {value: 'expectedEndTime', labelKey: 'expectedEndTime', width: 87},
   {value: 'contactPersonFormat', originValue: 'contactPerson', labelKey: 'contactPerson', width: 87},
   {value: 'visitDepartmentFormat', originValue: 'visitDepartment', labelKey: 'visitDepartment', width: 131},
   {value: 'approverFormat', labelKey: 'approver', width: 98},
   {value: 'validFormat', originValue: 'valid', labelKey: 'valid', width: 87},
-  {value: 'idAndPhotos', labelKey: 'idAndPhotos', width: 103, },
+  {value: 'idAndPhotos', labelKey: 'idAndPhotos', width: 103,},
   {value: 'idAndPhotosList', labelKey: 'idAndPhotos', width: 189, type: ValueType.Image,},
   {value: 'remarks', labelKey: 'remarks', width: 189,},
-  {value: 'factoryRecords', labelKey: 'factoryRecords', width: 93, },
+  {value: 'factoryRecords', labelKey: 'factoryRecords', width: 93,},
   {value: 'factoryRecordsList', labelKey: 'factoryRecords', width: 189, type: ValueType.Image,},
-  {value: 'visitorFactoryDate', labelKey: 'visitorFactoryDate', width: 121, },
-  {value: 'printNumber', labelKey: 'printNumber', width: 132, },
+  {value: 'visitorFactoryDate', labelKey: 'visitorFactoryDate', width: 121,},
+  {value: 'printNumber', labelKey: 'printNumber', width: 132,},
 ])
 const defaultFormData = {
   creator: user.userId,
   applyDate: '',
-  applicant: '',
   applicant: '',
   visitorName: '',
   phoneNumber: '',
@@ -580,25 +579,29 @@ Promise.all([
     if (t.value === 'remarks' && securityEdit) {
       t.type = ValueType.TextEdit
     } else if ('idAndPhotos' === t.value && securityEdit) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('idAndPhotosList')
-          }, 100)
-        }
+      t.type = ValueType.Link
+      t.openLink = (d: any) => {
+        handleEdit(d)
+        setTimeout(() => {
+          // formRef.value.$el
+          formRef.value.scrollToField('idAndPhotosList')
+        }, 100)
+      }
     } else if ('factoryRecords' === t.value && securityEdit) {
-        t.type = ValueType.Link
-        t.openLink = (d: any) => {
-          handleEdit(d)
-          setTimeout(() => {
-            // formRef.value.$el
-            formRef.value.scrollToField('factoryRecordsList')
-          }, 100)
-        }
+      t.type = ValueType.Link
+      t.openLink = (d: any) => {
+        handleEdit(d)
+        setTimeout(() => {
+          // formRef.value.$el
+          formRef.value.scrollToField('factoryRecordsList')
+        }, 100)
+      }
     } else if ('validFormat' === t.value && visitorManager) {
-        t.type = ValueType.SwitchEdit
+      t.type = ValueType.SwitchEdit
+    } else if ('visitContentFormat' === t.value && visitorManager) {
+      t.type = ValueType.SelectEdit
+      t.optionList = state.config.visitContentList
+      t.allowCreate = true
     }
     return t
   })

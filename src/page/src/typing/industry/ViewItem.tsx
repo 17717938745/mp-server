@@ -4,6 +4,7 @@ export interface ViewConfig {
   type?: ValueType,
   mergeKey?: string[],
   optionList?: OptionItem<any>[],
+  allowCreate: boolean,
   value: string,
   originValue?: string,
   className?: string,
