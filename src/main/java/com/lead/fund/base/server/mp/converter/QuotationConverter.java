@@ -33,6 +33,7 @@ public interface QuotationConverter extends Serializable {
     @Mapping(target = "quotationId", source = "id")
     @Mapping(target = "acceptOrderFormat", expression = "java(Boolean.TRUE.equals(d.getAcceptOrder()) ? \"Yes\" : \"No\")")
     @Mapping(target = "processProcedureFormat", source = "d.processProcedure")
+    @Mapping(target = "quotationDateFormat", expression = "java(com.lead.fund.base.common.util.DateUtil.day(d.getQuotationDate()))")
     QuotationResponse quotation(QuotationEntity d);
 
     List<QuotationResponse> quotationList(List<QuotationEntity> list);
@@ -49,7 +50,9 @@ public interface QuotationConverter extends Serializable {
     @Mapping(target = "modifier", source = "tt.modifier")
     @Mapping(target = "state", source = "tt.state")
     @Mapping(target = "processProcedure", source = "tt.processProcedure")
+    @Mapping(target = "processProcedureFormat", source = "tt.processProcedure")
     @Mapping(target = "processDevice", source = "tt.processDevice")
+    @Mapping(target = "processDeviceFormat", source = "tt.processDevice")
     @Mapping(target = "processUnitPrice", source = "tt.processUnitPrice")
     @Mapping(target = "processTime", source = "tt.processTime")
     @Mapping(target = "summaryPrice", source = "tt.summaryPrice")

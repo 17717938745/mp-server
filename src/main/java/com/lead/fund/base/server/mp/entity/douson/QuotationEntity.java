@@ -60,7 +60,7 @@ public class QuotationEntity extends AbstractAdmin {
      * 数量
      */
     @FieldRemark(value = "数量")
-    private BigDecimal count;
+    private String count;
     /**
      * 报价日期
      */

@@ -2,6 +2,7 @@ package com.lead.fund.base.server.mp.response;
 
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.common.database.entity.AbstractAdmin;
+import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -53,7 +54,7 @@ public class QuotationResponse extends AbstractAdmin {
     @Size(max = 64, message = "图号长度不合法")
     private String designNumber;
     private BigDecimal designNumberCount;
-    private List<PhotoImgModel> designNumberList = new ArrayList<>();
+    private List<FileModel> designNumberList = new ArrayList<>();
     /**
      * 名称
      */
@@ -70,13 +71,14 @@ public class QuotationResponse extends AbstractAdmin {
      * 数量
      */
     @FieldRemark(value = "数量")
-    private BigDecimal count;
+    private String count;
     /**
      * 报价日期
      */
     @FieldRemark(value = "报价日期")
     @Size(max = 32, message = "报价日期长度不合法")
     private String quotationDate;
+    private String quotationDateFormat;
     /**
      * 加工工序
      */
@@ -111,7 +113,7 @@ public class QuotationResponse extends AbstractAdmin {
      */
     @FieldRemark(value = "备注")
     @Size(max = 512, message = "备注长度不合法")
-    private BigDecimal remarks;
+    private String remarks;
     /**
      * 报价人
      */

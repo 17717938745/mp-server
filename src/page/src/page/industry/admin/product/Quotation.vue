@@ -113,7 +113,7 @@
           <el-input v-model="formData.designNumber" :disabled="!quotationManager"/>
         </el-form-item>
         <el-form-item prop="designNumberList" :label="`${store.state.label.designNumber}(${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => `Min: ${t.min}, Max: ${t.max}`, 'Unlimited')})`">
-          <image-upload :photoList="formData.designNumberList" :maxSize="Number(`${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!quotationManager"></image-upload>
+          <file-upload :fileList="formData.designNumberList" :maxSize="Number(`${(formRuleList['designNumberList'] || []).reduce((p:any, t:any) => t.max, 999)}`)" :disabled="!quotationManager"></file-upload>
         </el-form-item>
         <el-form-item prop="name" :label="store.state.label.name">
           <el-input v-model="formData.name" :disabled="!quotationManager"/>
@@ -122,13 +122,7 @@
           <el-input v-model="formData.materialQuality" :disabled="!quotationManager"/>
         </el-form-item>
         <el-form-item prop="count" :label="store.state.label.count">
-          <el-input-number
-              v-model="formData.count"
-              :precision="0"
-              :controls="false"
-              :min="0"
-              style="width: 100%"
-          />
+          <el-input v-model="formData.count" :disabled="!quotationManager"/>
         </el-form-item>
         <el-form-item prop="quotationDate" :label="store.state.label.quotationDate">
           <el-date-picker
@@ -212,7 +206,7 @@ import {ValueType, ViewConfig} from '@/typing/industry/ViewItem'
 import ViewList from '../../component/ViewList.vue'
 import {includes} from '@/util/ArrayUtil'
 import ImageUpload from '../../component/ImageUpload.vue'
-import FileUpload from "../../component/FileUpload.vue";
+import FileUpload from '../../component/FileUpload.vue'
 import {fullUrl} from "@/util/EnvUtil";
 
 const router = useRouter()
@@ -237,11 +231,10 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'index', labelKey: 'index', width: 56, mergeKey: ['quotationId'],},
   {value: 'customer', originValue: 'customer', labelKey: 'customer', width: 98, mergeKey: ['quotationId'],},
   {value: 'designNumber', labelKey: 'designNumber', width: 189, mergeKey: ['quotationId'],},
-  {value: 'designNumberList', labelKey: 'designNumber', width: 189, type: ValueType.Image,},
   {value: 'name', labelKey: 'name', width: 189, mergeKey: ['quotationId'],},
   {value: 'materialQuality', labelKey: 'materialQuality', width: 189, mergeKey: ['quotationId'],},
   {value: 'count', labelKey: 'count', width: 189, mergeKey: ['quotationId'],},
-  {value: 'quotationDate', labelKey: 'quotationDate', width: 189, mergeKey: ['quotationId'],},
+  {value: 'quotationDateFormat', originValue: 'quotationDate', labelKey: 'quotationDate', width: 189, mergeKey: ['quotationId'],},
   {value: 'processProcedureFormat', originValue: 'processProcedure', labelKey: 'processProcedure', width: 189,},
   {value: 'processDeviceFormat', originValue: 'processDevice', labelKey: 'processDevice', width: 189,},
   {value: 'processUnitPrice', labelKey: 'processUnitPrice', width: 189,},
@@ -250,6 +243,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'remarks', labelKey: 'remarks', width: 189,},
   {value: 'bidderFormat', originValue: 'bidder', labelKey: 'bidder', width: 189, mergeKey: ['quotationId'],},
   {value: 'acceptOrderFormat', originValue: 'acceptOrder', labelKey: 'successAcceptOrder', width: 189, mergeKey: ['quotationId'],},
+  {value: 'designNumberList', labelKey: 'designNumber', width: 189, type: ValueType.Attachment,},
 ])
 const defaultFormData = {
   creator: user.userId,
@@ -263,10 +257,9 @@ const defaultFormData = {
   startQuotationDate: '',
   endQuotationDate: '',
   processProcedure: '',
-  processProcedure: '',
   processDevice: '',
   processUnitPrice: null,
-  processTime: '',
+  processTime: 0,
   summaryPrice: null,
   remarks: '',
   bidder: '',
@@ -375,9 +368,7 @@ const handlePage = () => {
   )
 }
 const handleSaveModal = () => {
-  state.formData = Object.assign({}, defaultFormData, {
-    quotationDate: formatDate(new Date(), 'yyyy-MM-dd'),
-  })
+  state.formData = Object.assign({}, defaultFormData, {processTime: 1,})
   state.formVisible = true
   state.formSave = true
 }
@@ -423,11 +414,19 @@ Promise.all([
       } else if ('materialQuality' === t.value) {
         t.type = ValueType.TextEdit
       } else if ('count' === t.value) {
-        t.type = ValueType.NumberEdit
+        t.type = ValueType.TextEdit
       } else if ('processTime' === t.value) {
         t.type = ValueType.NumberEdit
       } else if ('remarks' === t.value) {
         t.type = ValueType.TextEdit
+      } else if ('processProcedureFormat' === t.value) {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.quotationProcessProcedureList
+      } else if ('processDeviceFormat' === t.value) {
+        t.type = ValueType.SelectEdit
+        t.optionList = state.config.quotationProcessDeviceList
+      } else if ('acceptOrderFormat' === t.value) {
+        t.type = ValueType.SwitchEdit
       }
     }
     return t
@@ -473,6 +472,7 @@ const handleDelete = (row: any) => {
   }).then(() => {
     httpDelete('douson/quotation', {
       quotationId: row.quotationId,
+      quotationItemId: row.quotationItemId,
     })
     .then(() => {
       ElMessage.success('Delete success')

@@ -296,7 +296,7 @@ const handleChangeStyle = (e: any, d: any = e, c: string, loop: boolean = true):
   return r
 }
 const handleTableColumnConfigList = () => {
-  return handleColumnConfigList(columnConfigList.value, [ValueType.Image, ValueType.Video], false, true, groupList.value, checkedGroupList.value)
+  return handleColumnConfigList(columnConfigList.value, [ValueType.Image, ValueType.Video, ValueType.Attachment], false, true, groupList.value, checkedGroupList.value)
 }
 
 const handleSpanArray = () => {

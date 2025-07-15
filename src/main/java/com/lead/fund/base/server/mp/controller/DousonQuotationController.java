@@ -13,6 +13,7 @@ import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lead.fund.base.common.basic.exec.BusinessException;
+import com.lead.fund.base.common.basic.model.OptionItem;
 import com.lead.fund.base.common.basic.response.DataResult;
 import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
@@ -35,7 +36,7 @@ import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.douson.DeviceMapper;
 import com.lead.fund.base.server.mp.mapper.douson.MaterialMapper;
 import com.lead.fund.base.server.mp.mapper.douson.QuotationMapper;
-import com.lead.fund.base.server.mp.model.PhotoImgModel;
+import com.lead.fund.base.server.mp.model.FileModel;
 import com.lead.fund.base.server.mp.request.QuotationPageRequest;
 import com.lead.fund.base.server.mp.request.QuotationRequest;
 import com.lead.fund.base.server.mp.response.MpUserResponse;
@@ -159,13 +160,15 @@ public class DousonQuotationController {
                     .setQuotationDate(DateUtil.dateTime(now))
             );
             quotationItemDao.saveBatch(
-                    IntStream.range(0, 2).mapToObj(i -> QUOTATION_INSTANCE.blankQuotationItem(e, request, u.getUserId())).collect(Collectors.toList())
+                    IntStream.range(0, 3).mapToObj(i -> QUOTATION_INSTANCE.blankQuotationItem(e, request, u.getUserId())).collect(Collectors.toList())
             );
         } else if (null == db) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         } else {
             quotationDao.updateById(e);
-            quotationItemDao.updateById(QUOTATION_INSTANCE.quotationItem(request));
+            quotationItemDao.updateById(QUOTATION_INSTANCE.quotationItem(request)
+                    .setProcessUnitPrice(paramDao.listByCategoryId("quotationProcessDevice").stream().collect(Collectors.toMap(OptionItem::getValue, t -> defaultDecimal(t.getExpandFirst()))).getOrDefault(request.getProcessDevice(), BigDecimal.ZERO))
+            );
         }
         final QuotationEntity quotationEntity = quotationDao.getById(e.getId());
         final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, e.getId()));
@@ -187,10 +190,12 @@ public class DousonQuotationController {
                 Stream.of(
                                 request.getDesignNumberList().stream().map(t -> new QuotationAttachmentEntity()
                                         .setQuotationId(e.getId())
-                                        .setAttachmentCategory("0")
+                                        .setAttachmentCategory("1")
                                         .setAttachmentType("designNumber")
-                                        .setUrl(t.getPhotoUrl())
-                                        .setCompressUrl(t.getPhotoCompressUrl())
+                                        .setUrl(t.getUrl())
+                                        .setFileId(t.getFileId())
+                                        .setFilename(t.getFilename())
+                                        .setCompressUrl(t.getUrl())
                                 )
                         ).flatMap(t -> t)
                         .collect(Collectors.toList())
@@ -215,16 +220,13 @@ public class DousonQuotationController {
         if (u.getRoleList().stream().noneMatch(t -> "quotationManager".equals(t.getRoleCode()))) {
             throw new BusinessException(AUTHORITY_AUTH_FAIL);
         }
-        final QuotationEntity db = quotationDao.getById(request.getQuotationId());
-        if (null != db) {
+        if (isBlank(request.getQuotationItemId())) {
+            quotationDao.removeById(request.getQuotationId());
+            quotationAttachmentDao.remove(new LambdaUpdateWrapper<QuotationAttachmentEntity>()
+                    .eq(QuotationAttachmentEntity::getQuotationId, request.getQuotationId())
+            );
+        } else {
             quotationItemDao.removeById(request.getQuotationItemId());
-            if (isBlank(request.getQuotationItemId())) {
-                quotationItemDao.removeById(request.getQuotationItemId());
-                quotationDao.removeById(request.getQuotationId());
-                quotationAttachmentDao.remove(new LambdaUpdateWrapper<QuotationAttachmentEntity>()
-                        .eq(QuotationAttachmentEntity::getQuotationId, db.getId())
-                );
-            }
         }
         return new Result();
     }
@@ -277,7 +279,7 @@ public class DousonQuotationController {
                 .collect(Collectors.groupingBy(QuotationAttachmentEntity::getQuotationId));
         final Map<String, List<QuotationItemEntity>> itemListMap = quotationItemDao.list(
                 DatabaseUtil.or(
-                        new LambdaQueryWrapper<QuotationItemEntity>().orderByDesc(QuotationItemEntity::getCreateTime),
+                        new LambdaQueryWrapper<QuotationItemEntity>().orderByAsc(QuotationItemEntity::getCreateTime),
                         rl.stream().map(QuotationResponse::getQuotationId).collect(Collectors.toList()),
                         (lam, l) -> {
                             lam.in(QuotationItemEntity::getQuotationId, l);
@@ -289,24 +291,23 @@ public class DousonQuotationController {
             t
                     .setIndex(index.addAndGet(1))
                     .setDesignNumberList(am.getOrDefault(t.getQuotationId(), new ArrayList<>())
-                            .stream().filter(tt -> "0".equals(tt.getAttachmentCategory()) && "designNumber".equals(tt.getAttachmentType()))
-                            .map(tt -> new PhotoImgModel()
-                                    .setPhotoUrl(tt.getUrl())
-                                    .setFullPhotoUrl(urlHelper.fullUrl(tt.getUrl()))
-                                    .setPhotoCompressUrl(tt.getCompressUrl())
-                                    .setFullPhotoCompressUrl(urlHelper.fullUrl(tt.getCompressUrl()))
+                            .stream().filter(tt -> "1".equals(tt.getAttachmentCategory()) && "designNumber".equals(tt.getAttachmentType()))
+                            .map(tt -> new FileModel()
+                                    .setUrl(tt.getUrl())
+                                    .setFullUrl(urlHelper.fullUrl(tt.getUrl()))
+                                    .setFileId(tt.getFileId())
+                                    .setFilename(tt.getFilename())
                             )
                             .collect(Collectors.toList()))
                     .setDesignNumberCount(new BigDecimal(t.getDesignNumberList().size()))
             ;
-            final List<QuotationResponse> itemList = itemListMap.getOrDefault(t.getQuotationId(), new ArrayList<>())
-                    .stream().map(tt ->
-                            QUOTATION_INSTANCE.quotation(t, tt)
-                    ).collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(itemList)) {
-                itemList.add(t);
-            }
-            return itemList;
+            return Stream.of(
+                    itemListMap.getOrDefault(t.getQuotationId(), new ArrayList<>())
+                            .stream().map(tt ->
+                                    QUOTATION_INSTANCE.quotation(t, tt)
+                            ),
+                    Stream.of(t)
+            ).flatMap(tt -> tt).collect(Collectors.toList());
         }).flatMap(Collection::stream).collect(Collectors.toList());
         MultitaskUtil.supplementList(
                 resultList.stream().filter(t -> isNotBlank(t.getBidder())).collect(Collectors.toList()),
@@ -336,7 +337,6 @@ public class DousonQuotationController {
                 l1 -> paramDao.listByCategoryId("quotationProcessDevice"),
                 (t, r) -> t.getProcessDevice().equals(r.getValue()),
                 (t, r) -> t.setProcessDeviceFormat(r.getLabel())
-                        .setProcessUnitPrice(defaultDecimal(r.getExpandFirst()))
         );
         return resultList;
     }
