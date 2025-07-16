@@ -216,7 +216,7 @@
               type="datetime"
               v-model="formData.expectedVisitTime"
               format="YYYY-MM-DD HH:mm"
-              @change="formData.applyDate = formatDate(formData.expectedVisitTime, 'yyyy-MM-dd HH:mm:ss')"
+              @change="formData.expectedVisitTime = formatDate(formData.expectedVisitTime, 'yyyy-MM-dd HH:mm:ss')"
               :disabled="!handleEditable(formData, 'expectedVisitTime')"
           >
           </el-date-picker>
@@ -226,7 +226,7 @@
               type="datetime"
               v-model="formData.expectedEndTime"
               format="YYYY-MM-DD HH:mm"
-              @change="formData.applyDate = formatDate(formData.expectedEndTime, 'yyyy-MM-dd HH:mm:ss')"
+              @change="formData.expectedEndTime = formatDate(formData.expectedEndTime, 'yyyy-MM-dd HH:mm:ss')"
               :disabled="!handleEditable(formData, 'expectedEndTime')"
           >
           </el-date-picker>

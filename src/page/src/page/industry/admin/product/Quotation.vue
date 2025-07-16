@@ -72,7 +72,7 @@
       </div>
     </div>
     <view-list
-        idKey="quotationItemId"
+        idKey="id"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -424,9 +424,15 @@ Promise.all([
         t.type = ValueType.SelectEdit
         t.allowCreate = true
         t.optionList = state.config.quotationProcessProcedureList
+        t.editable = (row) => {
+          return row.quotationItemId
+        }
       } else if ('processDeviceFormat' === t.value) {
         t.type = ValueType.SelectEdit
         t.optionList = state.config.quotationProcessDeviceList
+        t.editable = (row) => {
+          return row.quotationItemId
+        }
       } else if ('acceptOrderFormat' === t.value) {
         t.type = ValueType.SwitchEdit
       }

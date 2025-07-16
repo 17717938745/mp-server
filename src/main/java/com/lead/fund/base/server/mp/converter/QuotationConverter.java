@@ -28,6 +28,7 @@ public interface QuotationConverter extends Serializable {
     @Mapping(target = "processDevice", ignore = true)
     @Mapping(target = "processUnitPrice", ignore = true)
     @Mapping(target = "processTime", expression = "java(com.lead.fund.base.common.util.StrUtil.isBlank(request.getQuotationItemId()) ? com.lead.fund.base.common.util.NumberUtil.defaultDecimal(request.getProcessTime(), new java.math.BigDecimal(\"1\")) : null)")
+    @Mapping(target = "remarks", expression = "java(com.lead.fund.base.common.util.StrUtil.isBlank(request.getQuotationItemId()) ? request.getRemarks() : null)")
     QuotationEntity quotation(QuotationRequest request);
 
     @Mapping(target = "quotationId", source = "id")

@@ -153,11 +153,11 @@ public class DousonQuotationController {
         final QuotationEntity e = QUOTATION_INSTANCE.quotation(request);
         e
                 .setDesignNumberCount(new BigDecimal(request.getDesignNumberList().size()))
-                .setBidder(u.getUserId())
         ;
         if (isBlank(e.getId())) {
             quotationDao.save(e
                     .setQuotationDate(DateUtil.dateTime(now))
+                    .setBidder(u.getUserId())
             );
             quotationItemDao.saveBatch(
                     IntStream.range(0, 3).mapToObj(i -> QUOTATION_INSTANCE.blankQuotationItem(e, request, u.getUserId())).collect(Collectors.toList())
