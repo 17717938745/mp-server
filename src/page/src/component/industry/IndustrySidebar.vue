@@ -1,6 +1,6 @@
 <template>
   <div
-      style="background-color: #324157; height: 100vh; display: flex; flex-direction: column;"
+      style="background-color: #324157; height: 100vh; display: flex; flex-direction: column; padding-bottom: 120px;"
   >
     <el-menu
         ref="sidebarRef"
@@ -29,11 +29,12 @@
 
 <script lang="tsx">
 import {fullUrl} from '@/util/EnvUtil'
-import {computed, reactive, ref, toRefs} from "vue"
-import {Store, useStore} from "vuex"
-import {useRoute} from "vue-router"
-import IndustrySidebarItem from "./IndustrySidebarItem.vue"
+import {computed, reactive, ref, toRefs} from 'vue'
+import {Store, useStore} from 'vuex'
+import {useRoute} from 'vue-router'
+import IndustrySidebarItem from './IndustrySidebarItem.vue'
 import {StoreType} from '@/store/Industry'
+import {includes} from '@/util/ArrayUtil'
 
 const sidebarRef = ref(null)
 export default {
@@ -46,13 +47,46 @@ export default {
     const route = useRoute();
     const store: Store<StoreType> = useStore();
     const storeState: StoreType = store.state;
-    const sidebarTreeList = props.sidebarTreeList;
-    const collapse = computed(() => storeState.collapse);
+    const sidebarTreeList = props.sidebarTreeList
+    const collapse = computed(() => storeState.collapse)
     const collapseChange = () => {
-      store.commit("setCollapse", !collapse.value);
-    };
+      store.commit("setCollapse", !collapse.value)
+    }
+    const handleGetParentPath = (parentList: [] = [], list: [] = sidebarParentTreeList, path): any[] => {
+      if (list && list.length > 0) {
+        for (let i = 0; i < list.length; i++) {
+          const d = list[i]
+          const temp = `/${d.pathList.join('/')}`
+          if (temp === path) {
+            parentList.push(d)
+            return parentList
+          }
+          if (d.children && d.children.length > 0) {
+            const newList =[]
+            newList.push(...parentList)
+            newList.push(d)
+            const beforeLength = newList.length
+            const tempList = handleGetParentPath(newList, d.children, path)
+            if (beforeLength < tempList.length) {
+              return tempList
+            }
+          }
+        }
+      }
+      return parentList
+    }
     const handleRouter = computed(() => {
-          return route.path;
+          const path = route.path
+          const parentList = handleGetParentPath([], sidebarParentTreeList, path)
+          const parentPathList = parentList.map(parent => {
+             return `/${parent.pathList.join('/')}`
+          })
+          parentPathList.forEach(parentPath => {
+            if (!includes(state.defaultOpens, parentPath)) {
+              state.defaultOpens.push(parentPath)
+            }
+          })
+          return route.path
         }),
         handleGetWidth = () => {
           return sidebarRef && sidebarRef.value ? sidebarRef.value['offsetWidth'] : 0
@@ -63,7 +97,7 @@ export default {
 
     const sidebarParentTreeList = sidebarTreeList.filter(
         (t: any) => t.children && t.children.length > 0
-    );
+    )
     const state = reactive({
       defaultOpens:
           sidebarParentTreeList.length > 0
@@ -73,6 +107,7 @@ export default {
 
     return {
       ...toRefs(state),
+      storeState,
       collapse,
       sidebarTreeList,
       handleRouter,
@@ -87,6 +122,11 @@ export default {
 </script>
 
 <style scoped>
+.sidebar {
+  height: 100vh;
+  overflow-y: scroll;
+}
+
 .border-top-fff01 {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

@@ -38,7 +38,25 @@
                 @change="handlePage"
                 :placeholder="store.state.label.companyName"
                 class="search-item"/>
-      <el-input v-model="query.data.visitContent"
+      <el-switch v-model="query.data.visitContentSelect" active-text="Select model" inactive-text="Input model" style="padding-right: 10px;"/>
+      <el-select
+          v-if="query.data.visitContentSelect"
+          v-model="query.data.visitContent"
+                 @change="handlePage"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.visitContent"
+                 class="search-item">
+        <el-option
+            v-for="item in config.visitContentList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
+      <el-input v-else
+          v-model="query.data.visitContent"
                 @change="handlePage"
                 :placeholder="store.state.label.visitContent"
                 class="search-item"/>
@@ -64,7 +82,7 @@
           style="width: 180px; margin-right: 20px;"
       >
       </el-date-picker>
-      <el-select v-model="formData.contactPerson"
+      <el-select v-model="query.data.contactPerson"
                  filterable
                  @change="handlePage"
                  clearable
@@ -77,7 +95,7 @@
             :value="item.value"
         />
       </el-select>
-      <el-select v-model="formData.visitDepartment"
+      <el-select v-model="query.data.visitDepartment"
                  filterable
                  @change="handlePage"
                  clearable
@@ -198,7 +216,7 @@
               type="datetime"
               v-model="formData.expectedVisitTime"
               format="YYYY-MM-DD HH:mm"
-              @change="formData.applyDate = formatDate(formData.applyDate, 'yyyy-MM-dd HH:mm')"
+              @change="formData.applyDate = formatDate(formData.expectedVisitTime, 'yyyy-MM-dd HH:mm:ss')"
               :disabled="!handleEditable(formData, 'expectedVisitTime')"
           >
           </el-date-picker>
@@ -208,7 +226,7 @@
               type="datetime"
               v-model="formData.expectedEndTime"
               format="YYYY-MM-DD HH:mm"
-              @change="formData.applyDate = formatDate(formData.applyDate, 'yyyy-MM-dd HH:mm')"
+              @change="formData.applyDate = formatDate(formData.expectedEndTime, 'yyyy-MM-dd HH:mm:ss')"
               :disabled="!handleEditable(formData, 'expectedEndTime')"
           >
           </el-date-picker>
@@ -228,6 +246,16 @@
                 :value="item.value"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item prop="visitorFactoryDate" :label="store.state.label.visitorFactoryDate" :disabled="!handleEditable(formData, 'visitorFactoryDate')">
+          <el-date-picker
+              type="datetime"
+              v-model="formData.visitorFactoryDate"
+              format="YYYY-MM-DD HH:mm"
+              time-format="HH:mm"
+              @change="formData.visitorFactoryDate = formatDate(formData.visitorFactoryDate, 'yyyy-MM-dd HH:mm:ss')"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item v-if="!formSave" prop="valid" :label="store.state.label.approve">
           <el-checkbox v-model="formData.valid" name="valid" :disabled="!visitorManager">
@@ -375,7 +403,7 @@ const printData = ref<any>(null)
 const showPrint = ref<boolean>(false)
 const userOptionList = ref(new Array<any>())
 const handleEditable = (row, key) => {
-  return visitorManager || (!row.valid && (includes(['idAndPhotosList', 'remarks', 'factoryRecordsList'], key) ? visitorSecurity : user.userId === row.applicant))
+  return visitorManager || (includes(['idAndPhotosList', 'remarks', 'factoryRecordsList'], key) ? visitorSecurity : (!row.valid && user.userId === row.applicant))
 }
 const columnConfigList = ref<ViewConfig[]>([
   {value: 'expand', label: '', width: 48, type: ValueType.Expand,},
@@ -462,6 +490,8 @@ const state = reactive({
       visitorName: '',
       companyName: '',
       expectedVisitTime: '',
+      visitContentSelect: true,
+      visitContent: '',
       startExpectedVisitTime: '',
       endExpectedVisitTime: '',
       expectedEndTime: '',

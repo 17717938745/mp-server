@@ -170,7 +170,7 @@
           class="mr10"
           type="success"
       >
-        <el-tag size="small">Detail</el-tag>
+        View
       </el-link>
       <el-link
           v-if="props.idKey === 'productId' && (includes(roleCodeList, 'user') || includes(roleCodeList, 'admin'))"
@@ -188,14 +188,14 @@
           class="mr10"
           type="warning"
       >
-        Edit
+        Mod
       </el-link>
       <el-link
           v-if="handleDelete && (handleDeleteShow ? handleDeleteShow(row) : (!row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))))"
           :icon="Delete"
           @click="handleDelete(row)"
           type="danger">
-        Delete
+        Del
       </el-link>
     </el-space>
   </template>

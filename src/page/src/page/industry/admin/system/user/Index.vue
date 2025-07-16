@@ -246,6 +246,7 @@
           <el-select
               v-model="formData.roleIdList"
               :disabled="user.username !== 'admin'"
+              filterable
               multiple
               clearable
               :placeholder="store.state.label.role">

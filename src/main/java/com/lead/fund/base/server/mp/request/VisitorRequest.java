@@ -68,6 +68,7 @@ public class VisitorRequest implements Serializable {
     @FieldRemark(value = "来访内容")
     @Size(max = 512, message = "来访内容长度不合法")
     private String visitContent;
+    private Boolean visitContentSelect;
     /**
      * 预计来访时间
      */
@@ -129,6 +130,8 @@ public class VisitorRequest implements Serializable {
     @FieldRemark(value = "访客出厂日期")
     @Size(max = 32, message = "访客出厂日期长度不合法")
     private String visitorFactoryDate;
+    private String startVisitorFactoryDate;
+    private String endVisitorFactoryDate;
     /**
      * 打印单号
      */

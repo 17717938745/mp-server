@@ -86,8 +86,7 @@
             :icon="Printer"
             @click="handleShowPrintList"
             type="warning"
-        >Print
-        </el-button>
+        >Print</el-button>
         <!--<el-button :icon="Plus" @click="handleSaveModal" type="success">Add</el-button>-->
       </div>
     </div>

@@ -170,21 +170,6 @@ public class DousonQuotationController {
                     .setProcessUnitPrice(paramDao.listByCategoryId("quotationProcessDevice").stream().collect(Collectors.toMap(OptionItem::getValue, t -> defaultDecimal(t.getExpandFirst()))).getOrDefault(request.getProcessDevice(), BigDecimal.ZERO))
             );
         }
-        final QuotationEntity quotationEntity = quotationDao.getById(e.getId());
-        final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, e.getId()));
-        for (QuotationItemEntity t : list) {
-            t
-                    .setProcessUnitPrice(defaultDecimal(t.getProcessUnitPrice()))
-                    .setProcessTime(defaultDecimal(t.getProcessTime()))
-                    .setSummaryPrice(
-                            t.getProcessUnitPrice().multiply(t.getProcessTime())
-                                    .divide(new BigDecimal("60"), 8, RoundingMode.HALF_UP)
-                    )
-            ;
-            quotationItemDao.updateById(t);
-        }
-        quotationEntity.setSummaryPrice(list.stream().map(QuotationItemEntity::getSummaryPrice).reduce(BigDecimal.ZERO, BigDecimal::add).multiply(quotationEntity.getProcessTime()));
-        quotationDao.updateById(quotationEntity);
         quotationAttachmentDao.remove(new LambdaUpdateWrapper<QuotationAttachmentEntity>().eq(QuotationAttachmentEntity::getQuotationId, e.getId()));
         quotationAttachmentDao.saveBatch(
                 Stream.of(
@@ -200,6 +185,7 @@ public class DousonQuotationController {
                         ).flatMap(t -> t)
                         .collect(Collectors.toList())
         );
+        calc(e.getId());
         return new DataResult<>(e);
     }
 
@@ -228,6 +214,7 @@ public class DousonQuotationController {
         } else {
             quotationItemDao.removeById(request.getQuotationItemId());
         }
+        calc(request.getQuotationId());
         return new Result();
     }
 
@@ -364,5 +351,23 @@ public class DousonQuotationController {
                 pr.getTotal(),
                 formatQuotationList(index, pr.getList())
         );
+    }
+
+    public void calc(String quotationId) {
+        final QuotationEntity quotationEntity = quotationDao.getById(quotationId);
+        final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, quotationId));
+        for (QuotationItemEntity t : list) {
+            t
+                    .setProcessUnitPrice(defaultDecimal(t.getProcessUnitPrice()))
+                    .setProcessTime(defaultDecimal(t.getProcessTime()))
+                    .setSummaryPrice(
+                            t.getProcessUnitPrice().multiply(t.getProcessTime())
+                                    .divide(new BigDecimal("60"), 0, RoundingMode.HALF_UP)
+                    )
+            ;
+            quotationItemDao.updateById(t);
+        }
+        quotationEntity.setSummaryPrice(list.stream().map(QuotationItemEntity::getSummaryPrice).reduce(BigDecimal.ZERO, BigDecimal::add).multiply(quotationEntity.getProcessTime()));
+        quotationDao.updateById(quotationEntity);
     }
 }

@@ -7,12 +7,13 @@
         :key="route.name"
     />
     <div v-else>
-      Welcome to douson, click to <button @click="router.push('/industry/sign')">sign in</button>
+      <sign/>
     </div>
   </router-view>
 </template>
 <script lang="tsx" setup>
 import {useRouter} from 'vue-router'
+import Sign from './industry/Sign.vue'
 const router = useRouter()
 </script>
 

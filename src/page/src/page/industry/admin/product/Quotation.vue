@@ -72,7 +72,7 @@
       </div>
     </div>
     <view-list
-        idKey="quotationId"
+        idKey="quotationItemId"
         :columnConfigList="columnConfigList"
         :list="tableData"
         :handleEdit="handleEdit"
@@ -137,6 +137,7 @@
           <el-select v-model="formData.processProcedure"
                      filterable
                      clearable
+                     allow-create
                      :placeholder="store.state.label.processProcedure"
                      :disabled="!quotationManager"
           >
@@ -230,19 +231,19 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'operator', labelKey: 'viewAndEdit', width: 145, type: ValueType.Operator,},
   {value: 'index', labelKey: 'index', width: 56, mergeKey: ['quotationId'],},
   {value: 'customer', originValue: 'customer', labelKey: 'customer', width: 98, mergeKey: ['quotationId'],},
-  {value: 'designNumber', labelKey: 'designNumber', width: 189, mergeKey: ['quotationId'],},
-  {value: 'name', labelKey: 'name', width: 189, mergeKey: ['quotationId'],},
-  {value: 'materialQuality', labelKey: 'materialQuality', width: 189, mergeKey: ['quotationId'],},
-  {value: 'count', labelKey: 'count', width: 189, mergeKey: ['quotationId'],},
-  {value: 'quotationDateFormat', originValue: 'quotationDate', labelKey: 'quotationDate', width: 189, mergeKey: ['quotationId'],},
-  {value: 'processProcedureFormat', originValue: 'processProcedure', labelKey: 'processProcedure', width: 189,},
-  {value: 'processDeviceFormat', originValue: 'processDevice', labelKey: 'processDevice', width: 189,},
-  {value: 'processUnitPrice', labelKey: 'processUnitPrice', width: 189,},
-  {value: 'processTime', labelKey: 'processTime', width: 189,},
-  {value: 'summaryPrice', labelKey: 'summaryPrice', width: 189,},
+  {value: 'designNumber', labelKey: 'designNumber', width: 118, mergeKey: ['quotationId'],},
+  {value: 'name', labelKey: 'name', width: 181, mergeKey: ['quotationId'],},
+  {value: 'materialQuality', labelKey: 'materialQuality', width: 68, mergeKey: ['quotationId'],},
+  {value: 'count', labelKey: 'count', width: 68, mergeKey: ['quotationId'],},
+  {value: 'quotationDateFormat', originValue: 'quotationDate', labelKey: 'quotationDate', width: 95, mergeKey: ['quotationId'],},
+  {value: 'processProcedureFormat', originValue: 'processProcedure', labelKey: 'processProcedure', width: 127,},
+  {value: 'processDeviceFormat', originValue: 'processDevice', labelKey: 'processDevice', width: 126,},
+  {value: 'processUnitPrice', labelKey: 'processUnitPrice', width: 75,},
+  {value: 'processTime', labelKey: 'processTime', width: 127,},
+  {value: 'summaryPrice', labelKey: 'summaryPrice', width: 118,},
   {value: 'remarks', labelKey: 'remarks', width: 189,},
-  {value: 'bidderFormat', originValue: 'bidder', labelKey: 'bidder', width: 189, mergeKey: ['quotationId'],},
-  {value: 'acceptOrderFormat', originValue: 'acceptOrder', labelKey: 'successAcceptOrder', width: 189, mergeKey: ['quotationId'],},
+  {value: 'bidderFormat', originValue: 'bidder', labelKey: 'bidder', width: 136, mergeKey: ['quotationId'],},
+  {value: 'acceptOrderFormat', originValue: 'acceptOrder', labelKey: 'successAcceptOrder', width: 110, mergeKey: ['quotationId'],},
   {value: 'designNumberList', labelKey: 'designNumber', width: 189, type: ValueType.Attachment,},
 ])
 const defaultFormData = {
@@ -421,6 +422,7 @@ Promise.all([
         t.type = ValueType.TextEdit
       } else if ('processProcedureFormat' === t.value) {
         t.type = ValueType.SelectEdit
+        t.allowCreate = true
         t.optionList = state.config.quotationProcessProcedureList
       } else if ('processDeviceFormat' === t.value) {
         t.type = ValueType.SelectEdit

@@ -123,6 +123,7 @@ public class DousonVisitorController {
         e.setApprover(dm.getOrDefault(userMapper.selectById(e.getContactPerson()).getDepartment(), ""))
                 .setIdAndPhotos(new BigDecimal(request.getIdAndPhotosList().size()))
                 .setFactoryRecords(new BigDecimal(request.getFactoryRecordsList().size()))
+                .setVisitorFactoryDate(defaultIfBlank(request.getVisitorFactoryDate(), defaultIfBlank(null == db ? "" : db.getVisitorFactoryDate(), () -> CollUtil.isEmpty(request.getFactoryRecordsList()) ? "" : DateUtil.dateTime())))
         ;
         if (isBlank(e.getId())) {
             visitorDao.save(e
@@ -139,7 +140,6 @@ public class DousonVisitorController {
             }
             visitorDao.updateById(e
                     .setPrintNumber(defaultIfBlank(db.getPrintNumber(), () -> CollUtil.isEmpty(request.getIdAndPhotosList()) ? "" : DateUtil.dateTimeSimple().substring(2, 12)))
-                    .setVisitorFactoryDate(defaultIfBlank(db.getVisitorFactoryDate(), () -> CollUtil.isEmpty(request.getFactoryRecordsList()) ? "" : DateUtil.dateTime()))
             );
         }
         visitorAttachmentDao.remove(new LambdaUpdateWrapper<VisitorAttachmentEntity>().eq(VisitorAttachmentEntity::getVisitorId, e.getId()));
@@ -228,6 +228,12 @@ public class DousonVisitorController {
         }
         if (isNotBlank(d.getEndExpectedEndTime())) {
             lambda.le(VisitorEntity::getExpectedEndTime, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(parse(d.getEndExpectedEndTime()))));
+        }
+        if (isNotBlank(d.getStartVisitorFactoryDate())) {
+            lambda.le(VisitorEntity::getVisitorFactoryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(parse(d.getStartVisitorFactoryDate()))));
+        }
+        if (isNotBlank(d.getEndVisitorFactoryDate())) {
+            lambda.le(VisitorEntity::getVisitorFactoryDate, DateUtil.day(cn.hutool.core.date.DateUtil.endOfDay(parse(d.getEndVisitorFactoryDate()))));
         }
         if (isNotBlank(d.getContactPerson())) {
             lambda.eq(VisitorEntity::getContactPerson, d.getContactPerson());
