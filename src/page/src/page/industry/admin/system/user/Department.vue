@@ -46,7 +46,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'vietnamCount', labelKey: 'vietnamCount', width: 110},
   {value: 'chinaCount', labelKey: 'chinaCount', width: 110},
   {value: 'total', labelKey: 'total', width: 128},
-  {value: 'managerFormat', originValue: 'manager', labelKey: 'manager', width: 128,},
+  {value: 'managerFormat', originValue: 'manager', labelKey: 'manager', width: 238,},
   // {value: 'scheduleNull', labelKey: 'scheduleNull', width: 128},
   // {value: 'scheduleDayTime', labelKey: 'scheduleDayTime', width: 128},
   // {value: 'scheduleDayTime12', labelKey: 'scheduleDayTime12', width: 128},
@@ -77,7 +77,7 @@ Promise.all([
         t.type = ValueType.SelectEdit
         t.optionList = userOptionList.value
         t.editable = (row) => row.department !== '-1'
-        t.width = 95
+        t.width = 238
       }
       return t
     })

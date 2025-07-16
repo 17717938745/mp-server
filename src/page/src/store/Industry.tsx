@@ -1950,7 +1950,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "visitorName",
-          "label": "Người đăng ký"
+          "label": "Họ và Tên Khách"
         },
         {
           "value": "phoneNumber",
@@ -2010,7 +2010,7 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         },
         {
           "value": "approval",
-          "label": "Chữ ký của người được phỏng vấn"
+          "label": "Chữ ký của người bảo lãnh"
         },
         {value: "visitorManage", label: "Quản lý khách"},
         {value: "externalSign", label: "Đăng nhập mạng bên ngoài"},

@@ -188,7 +188,7 @@
           class="mr10"
           type="warning"
       >
-        Mod
+        Edit
       </el-link>
       <el-link
           v-if="handleDelete && (handleDeleteShow ? handleDeleteShow(row) : (!row.valid && (user.userId === row.userId || user.userId === row.creator || includes(roleCodeList, 'admin'))))"
