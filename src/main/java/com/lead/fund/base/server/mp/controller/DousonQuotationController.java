@@ -355,19 +355,21 @@ public class DousonQuotationController {
 
     public void calc(String quotationId) {
         final QuotationEntity quotationEntity = quotationDao.getById(quotationId);
-        final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, quotationId));
-        for (QuotationItemEntity t : list) {
-            t
-                    .setProcessUnitPrice(defaultDecimal(t.getProcessUnitPrice()))
-                    .setProcessTime(defaultDecimal(t.getProcessTime()))
-                    .setSummaryPrice(
-                            t.getProcessUnitPrice().multiply(t.getProcessTime())
-                                    .divide(new BigDecimal("60"), 0, RoundingMode.HALF_UP)
-                    )
-            ;
-            quotationItemDao.updateById(t);
+        if (null != quotationEntity) {
+            final List<QuotationItemEntity> list = quotationItemDao.list(new LambdaQueryWrapper<QuotationItemEntity>().eq(QuotationItemEntity::getQuotationId, quotationId));
+            for (QuotationItemEntity t : list) {
+                t
+                        .setProcessUnitPrice(defaultDecimal(t.getProcessUnitPrice()))
+                        .setProcessTime(defaultDecimal(t.getProcessTime()))
+                        .setSummaryPrice(
+                                t.getProcessUnitPrice().multiply(t.getProcessTime())
+                                        .divide(new BigDecimal("60"), 0, RoundingMode.HALF_UP)
+                        )
+                ;
+                quotationItemDao.updateById(t);
+            }
+            quotationEntity.setSummaryPrice(list.stream().map(QuotationItemEntity::getSummaryPrice).reduce(BigDecimal.ZERO, BigDecimal::add).multiply(quotationEntity.getProcessTime()));
+            quotationDao.updateById(quotationEntity);
         }
-        quotationEntity.setSummaryPrice(list.stream().map(QuotationItemEntity::getSummaryPrice).reduce(BigDecimal.ZERO, BigDecimal::add).multiply(quotationEntity.getProcessTime()));
-        quotationDao.updateById(quotationEntity);
     }
 }
