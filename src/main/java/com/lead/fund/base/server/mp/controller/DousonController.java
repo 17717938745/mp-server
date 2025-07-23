@@ -768,7 +768,6 @@ public class DousonController {
             @ModelAttribute ProductPageRequest request
     ) {
         final MpAccountEntity account = accountHelper.getAccount(deviceId);
-        request.getData().setOpenId(account.getOpenId());
         return productPage(request);
     }
 
