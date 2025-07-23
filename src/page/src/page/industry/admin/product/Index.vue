@@ -302,30 +302,12 @@ const state = reactive({
   },
 })
 
-const handleFormatValue = (key: string, val: any) => {
-  // @ts-ignore
-  const a = (state.config[key] || []).filter(t => t.value === val)
-  return a.length > 0 ? a[0].label : val
-}
-const handleJumpOrder = (t: any) => {
-  router.push(
-      {
-        path: '/industry/admin/product/order',
-        query: {
-          orderId: t.orderId,
-        },
-      })
-}
-const handleJumpDevice = (t: any) => {
-  router.push(
-      {
-        path: '/industry/admin/product/device',
-        query: {
-          deviceId: t.testDevice,
-        },
-      })
-}
-httpGet('douson/config').then(r => {
+httpGet('douson/config', {
+  categoryIdList: [
+    'processProcedure',
+    'testDevice',
+  ]
+}).then(r => {
   state.config = r.data
 })
 const handleDateTimeChange = () => {

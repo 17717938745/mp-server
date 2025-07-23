@@ -46,6 +46,7 @@
       <el-select
           v-model="query.data.roleId"
           @change="handleList"
+          filterable
           clearable
           :placeholder="store.state.label.role">
         <el-option-group

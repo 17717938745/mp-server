@@ -534,6 +534,25 @@ const handleSubmit = (retry: boolean = true) => {
                 "children": '3' === user.userProperty ? [
                   {
                     "id": "-1",
+                    "path": "system",
+                    "component": "",
+                    "nameKey": "systemManage",
+                    "white": false,
+                    "showFlag": true,
+                    "children": [
+                      {
+                        "children": [],
+                        "id": "-1",
+                        "path": "visitor",
+                        "component": "visitor",
+                        "nameKey": "visitorManage",
+                        "white": false,
+                        "showFlag": true,
+                      },
+                    ],
+                  },
+                  {
+                    "id": "-1",
                     "path": "report",
                     "component": "",
                     "nameKey": "reportManage",
