@@ -982,7 +982,7 @@ public class DousonController {
     }
 
     /**
-     * 产品分页（管理员）
+     * 产品分页（管理员），权限放开
      *
      * @param deviceId 设备id
      * @param request  {@link ProductPageRequest}
@@ -993,7 +993,6 @@ public class DousonController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
             @ModelAttribute ProductPageRequest request
     ) {
-        accountHelper.getUser(deviceId);
         if (isNotBlank(request.getData().getNickname())) {
             request.getData().setOpenIdList(accountMapper.selectList(new LambdaQueryWrapper<MpAccountEntity>().like(MpAccountEntity::getNickname, request.getData().getNickname()))
                     .stream().map(MpAccountEntity::getOpenId)
