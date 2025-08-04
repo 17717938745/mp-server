@@ -69,7 +69,7 @@ if [[ " check " =~ " ${deploy_type} " ]]; then
     fi
     check_and_start_service "mysqld" "systemctl start mysqld"
     check_and_start_service "${app_jar_name}" "${nohup_java_command}"
-    check_and_start_service "natapp -authtoken=3162aaa953f69209" "nohup ./natapp -authtoken=3162aaa953f69209 >/dev/null 2>&1 &"
+    check_and_start_service "natapp -authtoken=ad9867e9379e1139" "nohup ./natapp -authtoken=ad9867e9379e1139 >/dev/null 2>&1 &"
     check_and_start_service "natapp -authtoken=e31a7c7ff0de2c14" "nohup ./natapp -authtoken=e31a7c7ff0de2c14 >/dev/null 2>&1 &"
     echo "================ Check end ================"
 fi
