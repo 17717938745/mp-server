@@ -175,7 +175,7 @@ cd ~/program && ./ssl
 ### Douson远程服务器发布Java
 
 ```shell
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+ssh -p 33333 root@67566b8ce6980156.natapp.cc << EOF
 cd /opt/douson/mp-server/
 ./deploy java
 EOF
@@ -185,14 +185,14 @@ EOF
 
 ```shell
 ./deploy page
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc << EOF
+ssh -p 33333 root@67566b8ce6980156.natapp.cc << EOF
 cd /opt/douson/mp-server/static && rm -rf industry && unzip industry.zip && rm -rf industry.zip
 EOF
 ```
 # 登录Douson远程服务器
 
 ```shell
-ssh -p 33333 root@085a8d1e51b66c57.natapp.cc
+ssh -p 33333 root@67566b8ce6980156.natapp.cc
 ```
 
 # 查看定时任务

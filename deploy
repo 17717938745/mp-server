@@ -114,7 +114,7 @@ if [[ " page " =~ " ${deploy_type} " ]]; then
     yarn industry-java-build
     cd ../../static
     zip -r industry.zip industry
-    scp -P 33333 industry.zip root@085a8d1e51b66c57.natapp.cc:/opt/douson/mp-server/static/
+    scp -P 33333 industry.zip root@67566b8ce6980156.natapp.cc:/opt/douson/mp-server/static/
     ls -lh | grep industry
     rm -rf industry.zip
     ls -lh | grep industry
