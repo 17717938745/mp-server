@@ -63,6 +63,26 @@
             :value="item.value"
         />
       </el-select>
+      <el-date-picker
+        v-model="assemblyCompleteDateDateTimeList"
+        @change="() => {handleDateTimeChange(assemblyCompleteDateDateTimeList, query.data, 'assemblyCompleteDate')}"
+        type="daterange"
+        format="YYYY-MM-DD"
+        range-separator="-"
+        :start-placeholder="`Start ${store.state.label.assemblyCompleteDate}`"
+        :end-placeholder="`End ${store.state.label.assemblyCompleteDate}`"
+    >
+    </el-date-picker>
+      <el-date-picker
+        v-model="oilInjectionCompleteDateDateTimeList"
+        @change="() => {handleDateTimeChange(oilInjectionCompleteDateDateTimeList, query.data, 'oilInjectionCompleteDate')}"
+        type="daterange"
+        format="YYYY-MM-DD"
+        range-separator="-"
+        :start-placeholder="`Start ${store.state.label.oilInjectionCompleteDate}`"
+        :end-placeholder="`End ${store.state.label.oilInjectionCompleteDate}`"
+    >
+    </el-date-picker>
       <div class="query-btn">
         <el-button :icon="Search" @click="handlePage" type="primary">Search</el-button>
         <el-button
@@ -434,6 +454,8 @@ const defaultFormData = {
   attachmentList: [],
 }
 const deliveryDateTimeList = ref([])
+const assemblyCompleteDateDateTimeList = ref([])
+const oilInjectionCompleteDateDateTimeList = ref([])
 const state = reactive({
   photoVisible: false,
   photoList: new Array<any>(),
@@ -454,7 +476,10 @@ const state = reactive({
       valveBody: '',
       assemblyCompleteType: includes(roleCodeList, 'assemblyTesterRecord') ? 0 : null,
       oilInjectionCompleteType: includes(roleCodeList, 'assemblyRecord') ? 1 : includes(roleCodeList, 'assemblyTesterRecord') ? 1 : null,
-
+      startAssemblyCompleteDate: '',
+      endAssemblyCompleteDate: '',
+      startOilInjectionCompleteDate: '',
+      endOilInjectionCompleteDate: '',
       startCreateDate: '',
       endCreateDate: '',
       department: '',
