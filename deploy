@@ -8,6 +8,14 @@ check_and_start_service() {
         eval "$service_command"
     else
         echo "$service_name is running, pid: $service_pid"
+        if [[ "$file_name" == *.jar ]]; then
+            response=$(curl http://localhost:8888/actuator/health)
+            if [ "$response" = ‘{"status":"UP"}’ ]; then
+                echo "Request successful. HTTP status code: $response"
+            else
+                echo "Request failed. HTTP status code: $response"
+            fi
+        fi
     fi
 }
 
