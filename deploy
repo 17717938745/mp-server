@@ -10,10 +10,11 @@ check_and_start_service() {
         echo "$service_name is running, pid: $service_pid"
         if [[ "$service_name" == *.jar ]]; then
             response=$(curl http://localhost:8888/actuator/health)
-            if [ "$response" = ‘{"status":"UP"}’ ]; then
-                echo "Request successful. HTTP status code: $response"
+            if [[ "$response" == *"UP"* ]]; then
+                echo "Server run successful, service name: $$service_name"
             else
-                echo "Request failed. HTTP status code: $response"
+                echo "Server check failed(pid exists, but not response), service name: $$service_name"
+                eval "$service_command"
             fi
         fi
     fi
