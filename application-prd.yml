@@ -9,6 +9,8 @@ spring:
       config: ./ehcache.xml
 server:
   undertow:
+    no-request-timeout: 60000
+    request-timeout: 30000
     buffer-size: 1024
   port: 8888
   servlet:
