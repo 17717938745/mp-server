@@ -30,7 +30,7 @@ app_jar_name=$(ls -rt target/*.jar|grep jar|tail -1)
 app_jar_name=${app_jar_name:-"target/mp-server.jar"}
 java_pid=$(ps aux|grep ${app_jar_name}|grep -v grep|awk '{print $2}')
 java_param="-Dfile.encoding=utf-8"
-java_param="${java_param} -Xms256m -Xmx2048m -XX:NewSize=64m -XX:MaxNewSize=64m"
+java_param="${java_param} -Xms256m -Xmx3096m -XX:NewSize=64m -XX:MaxNewSize=64m"
 java_param="${java_param} -Ddubbo.application.logger=slf4j -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prd"
 java_tail="--spring.config.location=./application-prd.yml"
 java_command="java ${java_param} -jar ${app_jar_name} ${java_tail}"
