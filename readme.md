@@ -56,7 +56,7 @@ sdk default maven 3.8.3
 
 ```shell
 rm -rf ~/.m2/repository/com/lead/fund/base/
-cp -rf ./resources/lib/ ~/.m2/repository/com/lead/fund/base/
+cp -rf ./resources/lib/* ~/.m2/repository/com/lead/fund/base/
 ```
 
 <span style="color: #888888;">Copy必须依赖的包至项目</span>
@@ -91,10 +91,62 @@ $ npm -v
 
 <span style="color: #FF0000;">参考：[readme.md](src/page/readme.md)</span>
 
+## Centos
+
+```shell```
 
 ## Mysql
 
+### centos安装mysql5.7
+
+```shell
+wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+rpm -ivh mysql57-community-release-el7-11.noarch.rpm
+yum install mysql-community-server
+yum --disablerepo="*" --enablerepo="mysql57-community" install mysql-community-server
+vim /etc/my.cnf
+```
+
 <span style="color: #FF0000;">my.cnf配置</span>
+
+```text
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+symbolic-links=0
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+bind-address=0.0.0.0
+lower_case_table_names=1
+max_allowed_packet=104857600
+init_connect='SET NAMES utf8mb4'
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+#skip-grant-tables
+
+[client]
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
+```
+
+启动Mysql服务
+
+```shell
+systemctl start mysqld
+mysql_config_editor set --login-path=local --host=localhost --user=root --password
+mysql -uroot -p
+```
+
+修改Mysql密码
+
+```shell
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Yn.123456';
+FLUSH PRIVILEGES;
+```
+
+Mac<span style="color: #FF0000;">my.cnf配置</span>（mysql@8+）
 
 ```text
 [mysqld]
