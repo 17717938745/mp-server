@@ -14,6 +14,19 @@
             :value="item.value"
         />
       </el-select>
+      <el-select v-model="query.data.organizationalStructure"
+                 filterable
+                 allow-create
+                 clearable
+                 :placeholder="store.state.label.organizationalStructure"
+                 @change="handleList">
+        <el-option
+            v-for="item in config.departmentList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        />
+      </el-select>
       <el-select v-model="query.data.profession"
                  filterable
                  allow-create
@@ -184,6 +197,22 @@
                      filterable
                      allow-create
                      clearable
+                     :placeholder="store.state.label.department"
+                     :disabled="!includes(roleCodeList, 'admin')">
+            <el-option
+                v-for="item in config.departmentList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="organizationalStructureList" :label="store.state.label.organizationalStructure">
+          <el-select v-model="formData.organizationalStructureList"
+                     filterable
+                     allow-create
+                     clearable
+                     multiple
                      :placeholder="store.state.label.department"
                      :disabled="!includes(roleCodeList, 'admin')">
             <el-option
@@ -380,6 +409,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'employeeId', labelKey: 'employeeId', width: 87,},
   {value: 'username', labelKey: 'username', width: 138,},
   {value: 'departmentFormat', labelKey: 'department', width: 121,},
+  {value: 'organizationalStructureFormat', labelKey: 'organizationalStructure', width: 121,},
   {value: 'name', labelKey: 'chineseName', width: 112,},
   {value: 'userPropertyFormat', labelKey: 'userProperty', width: 158,},
   {value: 'professionFormat', labelKey: 'profession', width: 216,},
@@ -404,6 +434,8 @@ const defaultFormData = {
   leaderUserId: '',
   mobile: '',
   department: '',
+  organizationalStructure: '',
+  organizationalStructureList: [],
   name: '',
   interviewResume: '',
   password: '123456',
@@ -419,6 +451,7 @@ const state = reactive({
       startCreateTime: '',
       endCreateTime: '',
       department: route.query.department || '',
+      organizationalStructure: route.query.organizationalStructure || '',
       profession: '',
       username: '',
       employeeId: '',

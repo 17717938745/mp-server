@@ -6,6 +6,8 @@ import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -99,6 +101,12 @@ public class MpUserResponse extends AbstractAdministratorModel {
      */
     private String department;
     private String departmentFormat;
+    /**
+     * 组织架构
+     */
+    private String organizationalStructure;
+    private List<String> organizationalStructureList;
+    private String organizationalStructureFormat;
     /**
      * 职位
      */

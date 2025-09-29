@@ -39,6 +39,7 @@ public interface MpSystemConverter extends Serializable {
     @Mapping(target = "modifyTime", expression = "java(com.lead.fund.base.common.util.DateUtil.tradeDateTime(d.getModifyTime()))")
     @Mapping(target = "passwordExpire", expression = "java(null != d.getPasswordExpireTime() && cn.hutool.core.date.DateTime.now().compareTo(d.getPasswordExpireTime()) >= 0)")
     @Mapping(target = "planIncreaseSalaryDateCount", expression = "java(null == d.getPlanIncreaseSalaryDate() ? null : (int)cn.hutool.core.date.DateUtil.between(new java.util.Date(), com.lead.fund.base.common.util.DateUtil.parse(d.getPlanIncreaseSalaryDate()), cn.hutool.core.date.DateUnit.DAY, false))")
+    @Mapping(target = "organizationalStructureList", expression = "java(java.util.Arrays.stream(com.lead.fund.base.common.util.StrUtil.defaultIfBlank(d.getOrganizationalStructure()).split(\",\", -1)).filter(com.lead.fund.base.common.util.StrUtil::isNotBlank).collect(java.util.stream.Collectors.toList()))")
     MpUserResponse data(MpUserEntity d);
 
     /**
@@ -51,6 +52,7 @@ public interface MpSystemConverter extends Serializable {
     MpRoleResponse data(MpRoleEntity d);
 
     @Mapping(target = "id", source = "userId")
+    @Mapping(target = "organizationalStructure", expression = "java(\",\" + String.join(\",\", request.getOrganizationalStructureList()) + \",\")")
     MpUserEntity entity(MpUserMergeRequest request);
 
     @Mapping(target = "photoCompressUrl", expression = "java(e.getPhotoCompressUrl())")

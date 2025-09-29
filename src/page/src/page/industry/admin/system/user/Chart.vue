@@ -56,8 +56,8 @@ onMounted(() => {
 })
 const loopDepart = (list: any[], strList: string[] = [], parentId: string = '', linkList: string[] = []) => {
   list.forEach(t => {
-    strList.push(parentId ? `${parentId} --> ${t.id}[${t.label}]` : `${t.id}[${t.label}]`)
-    linkList.push(`click ${t.id} href "/industry/admin/system/user?tabIndex=0&department=${t.id}" _blank`)
+    strList.push(parentId ? `${parentId} --> ${t.id}[${t.label}\n（${t.totalUserCount}人）]` : `${t.id}[${t.label}\n（${t.totalUserCount}人）]`)
+    // linkList.push(`click ${t.id} href "/industry/admin/system/user?tabIndex=0&organizationalStructure=${t.id}" _blank`)
     if (t.children && t.children.length > 0) {
       loopDepart(t.children, strList, t.id, linkList)
     }

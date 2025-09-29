@@ -89,7 +89,12 @@ const commonConfig = {
       name: 'tinymce-vue',
       global: 'tinymce',
       path: '/third/@tinymce/tinymce-vue@6.1.0/lib/browser/tinymce-vue.min.js',
-    },
+    },/*
+    mermaidModule = {
+      name: 'mermaid',
+      global: 'Mermaid',
+      path: '/third/mermaid@11.12.0/dist/mermaid.min.js',
+    },*/
     reportPlusCssModule = {
       htmlTag: {
         tag: 'link',

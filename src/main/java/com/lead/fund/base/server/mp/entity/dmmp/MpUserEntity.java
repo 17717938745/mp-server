@@ -102,6 +102,12 @@ public class MpUserEntity extends AbstractAdmin {
     @Size(max = 256, message = "部门")
     private String department;
     /**
+     * 组织架构
+     */
+    @FieldRemark(value = "组织架构")
+    @Size(max = 1024, message = "组织架构")
+    private String organizationalStructure;
+    /**
      * 职位
      */
     @FieldRemark(value = "职位")

@@ -69,15 +69,13 @@ import com.lead.fund.base.server.mp.response.ParamConfigResponse;
 import com.lead.fund.base.server.mp.response.SignInResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -348,6 +346,9 @@ public class SystemController {
             if (isNotBlank(request.getDepartment())) {
                 lambda.eq(MpUserEntity::getDepartment, request.getDepartment());
             }
+            if (isNotBlank(request.getOrganizationalStructure())) {
+                lambda.like(MpUserEntity::getOrganizationalStructure, "," + request.getOrganizationalStructure() + ",");
+            }
             if (isNotBlank(request.getProfession())) {
                 lambda.eq(MpUserEntity::getProfession, request.getProfession());
             }
@@ -411,13 +412,6 @@ public class SystemController {
                 )
         ));
         MultitaskUtil.supplementList(
-                list.stream().filter(t -> isNotBlank(t.getDepartment())).collect(Collectors.toList()),
-                MpUserResponse::getDepartment,
-                l -> paramDao.listByCategoryId("department"),
-                (t, r) -> t.getDepartment().equals(r.getValue()),
-                (t, r) -> t.setDepartmentFormat(r.getLabel())
-        );
-        MultitaskUtil.supplementList(
                 list.stream().filter(t -> isNotBlank(t.getUserProperty())).collect(Collectors.toList()),
                 MpUserResponse::getUserProperty,
                 l -> paramDao.listByCategoryId("userProperty"),
@@ -455,9 +449,21 @@ public class SystemController {
                 (t, r) -> t.getLeaderUserId().equals(r.getId()),
                 (t, r) -> t.setLeaderUserIdFormat(r.getName())
         );
+        final Map<Object, String> departmentMap = paramDao.listByCategoryId("department").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, ParamConfigResponse::getLabel));
+        MultitaskUtil.supplementList(
+                list.stream().filter(t -> isNotBlank(t.getDepartment())).collect(Collectors.toList()),
+                MpUserResponse::getDepartment,
+                l -> paramDao.listByCategoryId("department"),
+                (t, r) -> t.getDepartment().equals(r.getValue()),
+                (t, r) -> t.setDepartmentFormat(r.getLabel())
+        );
         return new ListResult<>(
                 list.stream()
                         .peek(t -> {
+                            t
+                                    .setDepartmentFormat(departmentMap.getOrDefault(t.getDepartment(), t.getDepartment()))
+                                    .setOrganizationalStructureFormat(t.getOrganizationalStructureList().stream().map(tt -> departmentMap.getOrDefault(tt, tt)).collect(Collectors.joining(",")))
+                            ;
                             t.setExternalSign(Boolean.TRUE.equals(t.getExternalSign()));
                             t.setExternalSignFormat(Boolean.TRUE.equals(t.getExternalSign()) ? "Yes" : "No");
                             t.setProfessionIndex(0);
@@ -670,7 +676,7 @@ public class SystemController {
         final MpUserEntity e = CollUtil.getFirst(userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().eq(MpUserEntity::getUsername, request.getUsername()).or(true, l -> l.eq(MpUserEntity::getMobile, request.getUsername()))));
         if (!Boolean.TRUE.equals(e.getExternalSign()) && paramDao.listByCategoryId("innerNetSection").stream()
                 .filter(StrUtil::isNotBlank)
-                .noneMatch(t -> ip.startsWith(String.valueOf(t.getValue())))) {
+                .noneMatch(t -> ip.startsWith(String.valueOf(t.getValue()))) && !"0:0:0:0:0:0:0:1".equals(ip) && !"localhost".equals(ip) && !"127.0.0.1".equals(ip)) {
             log.error("User not allow sign in, ip: {}, request: {}", ip, JSONUtil.toJsonStr(request));
             throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "该ip地址禁止登录（This ip not allow sign in）：" + ip);
         }
@@ -773,16 +779,50 @@ public class SystemController {
             @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId
     ) {
         accountHelper.getUser(deviceId);
-        final List<DepartResponse> list = TreeUtil.tree(
-                paramDao.list(
-                        new LambdaQueryWrapper<ParamEntity>()
-                                .eq(ParamEntity::getParamCategoryId, "department")
+        final Map<String, List<MpUserEntity>> orgUserListMap = userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().isNotNull(MpUserEntity::getOrganizationalStructure)
+                .select(MpUserEntity::getOrganizationalStructure, MpUserEntity::getId)
+        ).stream().flatMap(t -> Arrays.stream(t.getOrganizationalStructure().split(",")).filter(StrUtil::isNotBlank).map(tt ->
+                (MpUserEntity) new MpUserEntity()
+                        .setOrganizationalStructure(tt)
+                        .setId(t.getId())
+        )).collect(Collectors.groupingBy(MpUserEntity::getOrganizationalStructure));
+        return new ListResult<>(
+                reverseLoop(
+                        TreeUtil.tree(
+                                paramDao.list(
+                                        new LambdaQueryWrapper<ParamEntity>()
+                                                .eq(ParamEntity::getParamCategoryId, "department")
+                                )
+                                , t -> {
+                                    final List<String> userIdList = orgUserListMap.getOrDefault(t.getParamCode(), new ArrayList<>()).stream().map(MpUserEntity::getId).collect(Collectors.toList());
+                                    return new DepartResponse()
+                                            .setId(t.getParamCode())
+                                            .setLabel(t.getParamName())
+                                            .setUserIdList(userIdList)
+                                            .setUserCount(userIdList.size());
+                                }
+                        )
+                        , orgUserListMap
                 )
-                , t -> new DepartResponse()
-                        .setId(t.getParamCode())
-                        .setLabel(t.getParamName())
         );
-        return new ListResult<>(list);
+    }
+
+    private List<DepartResponse> reverseLoop(List<DepartResponse> list, Map<String, List<MpUserEntity>> orgUserListMap) {
+        for (DepartResponse t : list) {
+            if (CollUtil.isNotEmpty(t.getChildren())) {
+                reverseLoop(t.getChildren(), orgUserListMap);
+            }
+            t.setTotalUserIdList(
+                            Stream.of(
+                                            t.getUserIdList().stream()
+                                            , t.getChildren().stream().flatMap(tt -> tt.getTotalUserIdList().stream())
+                                    ).flatMap(tt -> tt)
+                                    .distinct().collect(Collectors.toList())
+                    )
+                    .setTotalUserCount(t.getTotalUserIdList().size())
+            ;
+        }
+        return list;
     }
 
     /**

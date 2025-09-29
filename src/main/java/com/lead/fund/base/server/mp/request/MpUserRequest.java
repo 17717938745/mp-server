@@ -34,6 +34,10 @@ public class MpUserRequest implements Serializable {
      */
     private String department;
     /**
+     * 组织架构
+     */
+    private String organizationalStructure;
+    /**
      * 职位
      */
     private String profession;

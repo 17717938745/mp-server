@@ -1,0 +1,1 @@
+import{_ as o}from"./main-DIEboGyv.js";const r={};function n(t,c){const e=Vue.resolveComponent("router-view");return Vue.openBlock(),Vue.createBlock(e,{class:"douson"})}const _=o(r,[["render",n]]);export{_ as default};

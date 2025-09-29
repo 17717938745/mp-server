@@ -6,14 +6,18 @@ VALUES ('accidentView', '事故报告查看员 NV kiểm tra báo cáo sự cố
        ('assemblyRecordView', '整机记录查看员 Nhân viên kiểm tra ghi chép máy', '整机装配记录管理员 Nhân viên quản lý ghi chép lắp ráp máy', '整机装配记录 Ghi chép lắp ráp máy', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'assemblyRecordView'),
        ('assemblyTesterRecord', '整机试压记录员 Nhân viên ghi chép thử áp máy', '整机装配记录管理员 Nhân viên quản lý ghi chép lắp ráp máy', '整机装配记录 Ghi chép lắp ráp máy', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'assemblyTesterRecord'),
        ('box', '装箱员 Nhân viên đóng hàng', '装箱员', '装箱标识卡 Biểu đóng thùng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'box'),
-       ('boxManager', '装箱管理员 Nhân viên đóng hàng quản lý', '装箱管理员', '装箱标识卡 Biểu đóng thùng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'boxManager'),
+       ('boxManager', '装箱管理员 Nhân viên đóng hàng quản lý', '装箱管理员', '装箱标识卡 Biểu đóng thùng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'boxManager');
+INSERT INTO dmmp.`mp_role`
+VALUES
        ('computerView', '量具查看 Kiểm tra sổ dụng cụ đo lường', '量具查看', '检测设备台帐 Sổ nhật ký thiết bị thí nghiệm', 'system', 'system', 0, '2024-07-25 16:35:28', '2024-07-25 16:35:34', 'computerView'),
        ('dimensionRecord', 'QC尺寸记录员 Nhân viên ghi chép kích thước QC', 'QC尺寸记录员 Nhân viên ghi chép kích thước QC', '订单检验记录 Hồ sơ kiểm tra đơn hàng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'dimensionRecord'),
        ('disqualificationView', 'NCR查看 Kiểm tra NCR', 'NCR查看', '不合格单 Số NCR', 'system', 'system', 0, '2024-07-24 17:23:28', '2024-07-24 17:23:25', 'disqualificationView'),
        ('dressManager', '工装管理员 Nhân viên quản lí đồ gá', '工装管理员 Nhân viên quản lí đồ gá', '工装管理 Quản lí đồ gá', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'dressManager'),
        ('dressView', '工装查看员 nhân viên kiểm tra đồ gá', '工装查看员 nhân viên kiểm tra đồ gá', '工装管理 Quản lí đồ gá', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'dressView'),
        ('ehsView', 'EHS安全查看 kiểm tra An toàn EHS', 'EHS安全查看', 'EHS安全 An toànEHS', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'ehsView'),
-       ('engineer', '工程师 Kỹ sư', '工程师', 'system', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'engineer'),
+       ('engineer', '工程师 Kỹ sư', '工程师', 'system', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'engineer');
+INSERT INTO dmmp.`mp_role`
+VALUES
        ('equipmentManager', '设备管理员 Người quản lý thiết bị', '设备管理员', '生产设备台帐 Danh sách máy móc sản xuất', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'equipmentManager'),
        ('equipmentView', '设备维修履历查看 Kiểm tra lịch sử bảo trì thiết bị', '设备维修履历查看', '生产设备台帐 Danh sách máy móc sản xuất', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'equipmentView'),
        ('examineManager', '检验计划管理员 Nhân viên quản lí kế hoạch kiểm tra', '检验计划管理员 Nhân viên quản lí kế hoạch kiểm tra', '订单检验记录 Hồ sơ kiểm tra đơn hàng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'examineManager'),
@@ -21,7 +25,9 @@ VALUES ('accidentView', '事故报告查看员 NV kiểm tra báo cáo sự cố
        ('gauger', '计量员 Nhân viên đo lường', '计量员', '检测设备台帐 Sổ nhật ký thiết bị thí nghiệm', 'system', 'system', 0, '2024-07-20 20:59:33', '2024-07-20 20:59:30', 'gauger'),
        ('hardnessRecord', '硬度记录员 Nhân viên ghi chép độ cứng', '硬度记录员 Nhân viên ghi chép độ cứng', '订单检验记录 Hồ sơ kiểm tra đơn hàng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'hardnessRecord'),
        ('identificationRecord', '标识记录员 Nhân viên ghi chép khắc dấu', '标识记录员 Nhân viên ghi chép khắc dấu', '订单检验记录 Hồ sơ kiểm tra đơn hàng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'identificationRecord'),
-       ('inspector', '检查 QC', '检查', '装箱标识卡 Biểu đóng thùng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'inspector'),
+       ('inspector', '检查 QC', '检查', '装箱标识卡 Biểu đóng thùng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'inspector');
+INSERT INTO dmmp.`mp_role`
+VALUES
        ('inventoryManager', '计划外库存管理员 Người quản lý hàng tồn kho ngoài kế hoạch', '计划外库存管理员 Người quản lý hàng tồn kho ngoài kế hoạch', '计划外库存 hàng tồn kho ngoài kế hoạch', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'inventoryManager'),
        ('inventoryView', '计划外库存查看员 Người kiểm tra hàng tồn kho ngoài kế hoạch', '计划外库存查看员 Người kiểm tra hàng tồn kho ngoài kế hoạch', '计划外库存 hàng tồn kho ngoài kế hoạch', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'inventoryView'),
        ('itManager', 'IT管理员 Nhân viên quản lý', 'IT管理员', '电脑管理 Mẫu theo dõi máy tính', 'system', 'system', 0, '2024-07-24 17:22:41', '2024-07-24 17:22:46', 'itManager'),
@@ -29,7 +35,9 @@ VALUES ('accidentView', '事故报告查看员 NV kiểm tra báo cáo sự cố
        ('maintainView', '生产设备维修履历查看员 Lịch sử bảo trì thiết bị sản xuất', '设备维修履历查看', '生产设备台帐 Danh sách máy móc sản xuất', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'maintainView'),
        ('manager', '生产经理 Giám đốc sản xuất', '经理', '不合格单 Số NCR', 'system', 'system', 0, '2024-06-04 11:21:58', '2024-06-04 11:22:00', 'manager'),
        ('material', '计划员 Nhân viên kế hoạch', '计划员 Nhân viên kế hoạch', '生产工单', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'material'),
-       ('materialManager', '台机计划管理员 NV quản lý điều hành', '台机计划管理员', '生产工单', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'materialManager'),
+       ('materialManager', '台机计划管理员 NV quản lý điều hành', '台机计划管理员', '生产工单', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'materialManager');
+INSERT INTO dmmp.`mp_role`
+VALUES
        ('ndeRecord', 'NDE记录员 Nhân viên ghi chép NDE', 'NDE记录员 Nhân viên ghi chép NDE', '订单检验记录 Hồ sơ kiểm tra đơn hàng', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'ndeRecord'),
        ('planView', '精益生产查看员 Nhân viên kiểm tra tinh gọn sản xuất', '精益生产查看员', '精益持续改善 Cải thiện sai lệch', 'system', 'system', 0, '2024-07-24 17:22:41', '2024-07-24 17:22:46', 'planView'),
        ('qualityManager', '质量经理 Giám đốc chất lượng ', '质量经理', '不合格单 Số NCR', 'system', 'system', 0, '2024-06-04 11:21:58', '2024-06-04 11:22:00', 'qualityManager'),
@@ -41,7 +49,9 @@ VALUES ('accidentView', '事故报告查看员 NV kiểm tra báo cáo sự cố
        ('supplierManager', '供应商管理员 NV quản lý nhà cung cấp', '供应商管理员 NV quản lý nhà cung cấp', '作业计划 kế hoạch làm việc', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'supplierManager'),
        ('taskManager', '台机管理员 NV quản lý điều hành', '台机管理员 NV quản lý điều hành', '作业计划 kế hoạch làm việc', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'taskManager'),
        ('taskView', '作业计划查看员 Nhân viên đối chiếu kế hoạch làm việc', '作业计划查看员 Nhân viên đối chiếu kế hoạch làm việc', '作业计划 kế hoạch làm việc', 'system', 'system', 0, '2024-07-30 13:56:27', '2024-07-30 13:56:25', 'taskView'),
-       ('technologyManager', '技术经理 Giám đốc kỹ thuật', '技术经理', '不合格单 Số NCR', 'system', 'system', 0, '2024-06-04 11:21:58', '2024-06-04 11:22:00', 'technologyManager'),
+       ('technologyManager', '技术经理 Giám đốc kỹ thuật', '技术经理', '不合格单 Số NCR', 'system', 'system', 0, '2024-06-04 11:21:58', '2024-06-04 11:22:00', 'technologyManager');
+INSERT INTO dmmp.`mp_role`
+VALUES
        ('templateManager', '物品借出单管理员', '物品借出单管理员', '副本供应商刀具', 'system', 'system', 0, '2024-07-28 21:33:55', '2024-07-28 21:33:57', 'templateManager'),
        ('templateView', '物品借出单查看员', '物品借出单查看员', '副本供应商刀具', 'system', 'system', 0, '2024-07-28 21:33:55', '2024-07-28 21:33:57', 'templateView'),
        ('user', '普通用户 người dùng thông thường', '普通用户', 'system', 'system', 'system', 0, '2024-06-04 11:22:20', '2024-06-04 11:22:21', 'user'),

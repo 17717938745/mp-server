@@ -724,6 +724,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "部门"
         },
         {
+          "value": "organizationalStructure",
+          "label": "组织架构"
+        },
+        {
           "value": "optimizeType",
           "label": "精益类型"
         },
@@ -2669,6 +2673,10 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "Bộ phận"
         },
         {
+          "value": "organizationalStructure",
+          "label": "cơ cấu tổ chức"
+        },
+        {
           "value": "optimizeType",
           "label": "Hạng mục cần cải tiến"
         },
@@ -3988,7 +3996,8 @@ export interface StoreType extends CommonStoreType {
   disqualificationOrderId: string,
 }
 
-const textKeyConst = getStorage(TEXT_KEY) || 'CHS|THA'
+// const textKeyConst = getStorage(TEXT_KEY) || 'CHS|THA'
+const textKeyConst = getStorage(TEXT_KEY) || 'CHS'
 
 // noinspection JSUnusedGlobalSymbols
 export const storeOptions: StoreOptions<StoreType> = {

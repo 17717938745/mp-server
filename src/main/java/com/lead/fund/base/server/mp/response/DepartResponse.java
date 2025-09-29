@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DepartResponse
  *
@@ -25,6 +28,10 @@ public class DepartResponse extends AbstractTree<String, DepartResponse> {
      */
     private String id;
     private String label;
+    private List<String> userIdList = new ArrayList<>();
+    private int userCount;
+    private List<String> totalUserIdList = new ArrayList<>();
+    private int totalUserCount;
 
     @Override
     public String getId() {

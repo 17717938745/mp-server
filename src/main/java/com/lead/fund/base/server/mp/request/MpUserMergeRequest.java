@@ -4,6 +4,7 @@ import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import com.lead.fund.base.server.mp.model.PhotoImgModel;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
@@ -60,6 +61,10 @@ public class MpUserMergeRequest implements Serializable {
      * 部门
      */
     private String department;
+    /**
+     * 组织架构
+     */
+    private List<String> organizationalStructureList = new ArrayList<>();
     /**
      * 职位
      */
