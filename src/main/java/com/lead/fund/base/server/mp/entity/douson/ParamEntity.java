@@ -2,12 +2,12 @@ package com.lead.fund.base.server.mp.entity.douson;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
+import com.lead.fund.base.common.basic.api.frame.TreeItemApi;
 import com.lead.fund.base.common.basic.cons.frame.ClassFunction;
 import com.lead.fund.base.common.basic.cons.frame.FieldRemark;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +28,7 @@ import lombok.ToString;
 @Builder
 @TableName("MP_INDUSTRY_PARAM")
 @ClassFunction("参数表")
-public class ParamEntity implements Serializable {
+public class ParamEntity implements Serializable, TreeItemApi<String>  {
 
     private static final long serialVersionUID = 1290544322994587440L;
     /**
@@ -60,9 +60,26 @@ public class ParamEntity implements Serializable {
     @NotNull
     private String expandFirst;
     /**
+     * 上级参数编码
+     */
+    @FieldRemark(value = "上级参数编码")
+    @Size(max = 128, message = "上级参数编码长度最大为128")
+    @NotNull
+    private String parentParamCode;
+    /**
      * 排序
      */
     @FieldRemark(value = "排序", defaultValue = "0")
     @Size(max = 8, message = "排序长度最大为8")
     private Integer sorter;
+
+    @Override
+    public String getId() {
+        return this.paramCode;
+    }
+
+    @Override
+    public String getParentId() {
+        return this.parentParamCode;
+    }
 }

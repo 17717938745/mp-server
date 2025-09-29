@@ -35,11 +35,12 @@ export const menuTreeToBreadCrumbList = (
 
 export const getFullSignUri = (): string => {
   const signUri = getSignUri()
-  if (location.pathname === signUri) {
-    return '/' + location.href.split('://')[1].split('/').slice(1).join('/')
-  }
   const goBack = getFullUri()
-  const uriTail = encodeURIComponent(signUri) === goBack ? '' : ('?' + 'goBack' + '=' + encodeURIComponent(getFullUri()))
+  // 避免死循环，如果goBack是当前页面，则不返回
+  const uriTail =
+      encodeURIComponent(signUri) === goBack
+          ? ''
+          : '?' + 'goBack' + '=' + encodeURIComponent(getFullUri())
   return signUri + uriTail
 };
 
@@ -53,11 +54,21 @@ export const getSignUri = (): string => {
 
 export const getFullUri = (): string => {
   const uri = '/' + location.href.split('://')[1].split('/').slice(1).join('/')
-  const arr = uri.split('?') || ['']
-  const params = arr.length <= 1 ? '' : arr[1].split('&').filter(k => k.split('=').length > 0 && k.split('=')[0] !== 'goBack').join('&')
-  const goBack = arr[0] + (params ? ('?' + params) : '')
-  // console.log(`uri: ${uri}, goBack: ${goBack}`);
-  return encodeURIComponent(goBack)
+  const arr = uri.split('?') || []
+  const paramArrayList = arr.length <= 1 ? [] : arr[1].split('&').map(t => t.split('=')).filter(t => t.length > 0)
+  const goBackArray = paramArrayList.filter(t => t.length > 1).filter(t => t[0] === 'goBack')
+  // 一个页面可能触发多次Http请求，处理多次goBack时，传递goBack（取第一次goBack的处理结果）
+  if (goBackArray.length > 0) {
+    return decodeURIComponent(goBackArray[0][1])
+  } else {
+    // 正常拼接goBack
+    const params =
+        paramArrayList.length <= 1
+            ? ''
+            : paramArrayList.filter(t => t.length > 1).filter(t => t[0] !== 'goBack').map(t => t[0] + '=' + t[1])
+            .join("&")
+    return encodeURIComponent(arr[0] + (params ? ('?' + params) : ''))
+  }
 };
 // 分销登录地址（杭州市民卡）
 export const getDistributionSignUrl = () => {
@@ -279,20 +290,12 @@ const getComponent = (
     name: string
 ): any => {
   const path: string = getComponentPath(moduleMap, bashPathList, componentPath);
-  if (!moduleMap[path]) {
-    // console.log(`not found component from moduleMap, path: ${path}, keys of moduleMap: ${Object.keys(moduleMap)}`)
-  }
+  // if (!moduleMap[path]) {
+  //   console.log(`not found component from moduleMap, path: ${path}, keys of moduleMap: ${Object.keys(moduleMap)}`)
+  // }
   // console.log(`path: ${path}`)
   // return defineAsyncComponent(() => import(path))
-  const component = moduleMap[path]
-  if (component) {
-    component().then(c => {
-      if (c.default && !c.default.name && name) {
-        c.default.name = name
-      }
-    })
-  }
-  return component
+  return  moduleMap[path]
 }
 
 const containsComponent = (

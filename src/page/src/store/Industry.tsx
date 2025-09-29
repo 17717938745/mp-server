@@ -1068,6 +1068,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "职务"
         },
         {
+          "value": "departManage",
+          "label": "部门管理"
+        },
+        {
+          "value": "organizationalChart",
+          "label": "组织架构图"
+        },
+        {
           "value": "productInfo",
           "label": "产品信息"
         },
@@ -2999,6 +3007,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "profession",
           "label": "chức vụ"
+        },
+        {
+          "value": "departManage",
+          "label": "Quản lý bộ phận"
+        },
+        {
+          "value": "organizationalChart",
+          "label": "Sơ đồ tổ chức"
         },
         {
           "value": "productInfo",

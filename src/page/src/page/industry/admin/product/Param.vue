@@ -161,6 +161,9 @@ import {DEFAULT_LIMIT, DEFAULT_PAGE,} from '@/typing/Common'
 import {includes} from '@/util/ArrayUtil'
 import {StoreType} from '@/store/Index'
 
+defineOptions({
+  name: '/industry/admin/product/param',
+});
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)

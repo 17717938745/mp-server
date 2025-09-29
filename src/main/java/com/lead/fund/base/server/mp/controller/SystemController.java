@@ -31,6 +31,7 @@ import com.lead.fund.base.common.util.DateUtil;
 import com.lead.fund.base.common.util.MultitaskUtil;
 import com.lead.fund.base.common.util.SecurityUtil;
 import com.lead.fund.base.common.util.StrUtil;
+import com.lead.fund.base.common.util.TreeUtil;
 import com.lead.fund.base.common.web.util.HttpUtil;
 import com.lead.fund.base.server.mp.cons.MpExceptionType;
 import com.lead.fund.base.server.mp.dao.MpDeviceDao;
@@ -43,17 +44,20 @@ import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserPhotoEntity;
 import com.lead.fund.base.server.mp.entity.dmmp.MpUserRoleEntity;
+import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpSignInHistoryMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserRoleMapper;
+import com.lead.fund.base.server.mp.request.DepartRequest;
 import com.lead.fund.base.server.mp.request.MpUserMergeRequest;
 import com.lead.fund.base.server.mp.request.MpUserPasswordRequest;
 import com.lead.fund.base.server.mp.request.MpUserRequest;
 import com.lead.fund.base.server.mp.request.SignInHistoryPageRequest;
 import com.lead.fund.base.server.mp.request.SignInRequest;
+import com.lead.fund.base.server.mp.response.DepartResponse;
 import com.lead.fund.base.server.mp.response.MpRoleGroupResponse;
 import com.lead.fund.base.server.mp.response.MpRoleResponse;
 import com.lead.fund.base.server.mp.response.MpSignInHistoryResponse;
@@ -756,5 +760,59 @@ public class SystemController {
         accountHelper.checkUserAdmin(deviceId);
         accountHelper.clearAll();
         return new Result();
+    }
+
+    /**
+     * 部门列表
+     *
+     * @param deviceId 设备 ID
+     * @return {@link ListResult<DepartResponse>}
+     */
+    @GetMapping("depart/list")
+    public ListResult<DepartResponse> departList(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId
+    ) {
+        accountHelper.getUser(deviceId);
+        final List<DepartResponse> list = TreeUtil.tree(
+                paramDao.list(
+                        new LambdaQueryWrapper<ParamEntity>()
+                                .eq(ParamEntity::getParamCategoryId, "department")
+                )
+                , t -> new DepartResponse()
+                        .setId(t.getParamCode())
+                        .setLabel(t.getParamName())
+        );
+        return new ListResult<>(list);
+    }
+
+    /**
+     * 修改部门
+     *
+     * @param deviceId 设备 ID
+     * @param list     {@link DepartRequest}
+     * @return {@link Result}
+     */
+    @PutMapping("depart/list")
+    public Result departList(
+            @RequestHeader(value = REQUEST_METHOD_KEY_DEVICE_ID) String deviceId,
+            @RequestBody List<DepartRequest> list
+    ) {
+        accountHelper.getUser(deviceId);
+        loopUpdateDepart(list, null);
+        return new Result();
+    }
+
+    private void loopUpdateDepart(List<DepartRequest> list, String parentId) {
+        for (DepartRequest t : list) {
+            paramDao.update(null,
+                    new LambdaUpdateWrapper<ParamEntity>()
+                            .set(ParamEntity::getParentParamCode, parentId)
+                            .eq(ParamEntity::getParamCategoryId, "department")
+                            .eq(ParamEntity::getParamCode, t.getId())
+            );
+            if (CollUtil.isNotEmpty(t.getChildren())) {
+                loopUpdateDepart(t.getChildren(), t.getId());
+            }
+        }
     }
 }

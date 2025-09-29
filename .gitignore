@@ -12,5 +12,5 @@ logs/
 */*/yarn.lock
 */*/node_modules/
 */*/dist/
-static/industry/
-static/industry.zip
+#static/industry/
+#static/industry.zip

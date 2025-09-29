@@ -21,6 +21,8 @@ import {TabsPaneContext} from 'element-plus'
 import Index from './user/Index.vue'
 import Department from './user/Department.vue'
 import Profession from './user/Profession.vue'
+import Depart from './user/Depart.vue'
+import Chart from './user/Chart.vue'
 const route = useRoute()
 const store: Store<StoreType> = useStore<StoreType>()
 
@@ -37,6 +39,14 @@ const componentList = ref([
   {
     label: store.state.label.profession,
     component: shallowRef(Profession),
+  },
+  {
+    label: store.state.label.departManage,
+    component: shallowRef(Depart),
+  },
+  {
+    label: store.state.label.organizationalChart,
+    component: shallowRef(Chart),
   },
 ]);
 let tabIndex
