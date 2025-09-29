@@ -56,6 +56,7 @@ sdk default maven 3.8.3
 
 ```shell
 rm -rf ~/.m2/repository/com/lead/fund/base/
+mkdir -p ~/.m2/repository/com/lead/fund/base/
 cp -rf ./resources/lib/* ~/.m2/repository/com/lead/fund/base/
 ```
 
@@ -102,7 +103,9 @@ $ npm -v
 ```shell
 wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 rpm -ivh mysql57-community-release-el7-11.noarch.rpm
+rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 yum install mysql-community-server
+# rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 && yum install mysql-community-server 
 yum --disablerepo="*" --enablerepo="mysql57-community" install mysql-community-server
 vim /etc/my.cnf
 ```
@@ -135,7 +138,6 @@ default-character-set=utf8mb4
 
 ```shell
 systemctl start mysqld
-mysql_config_editor set --login-path=local --host=localhost --user=root --password
 mysql -uroot -p
 ```
 
