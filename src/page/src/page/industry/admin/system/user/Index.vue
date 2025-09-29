@@ -322,6 +322,7 @@
 
 <script lang="ts" setup>
 import {reactive, Ref, ref, toRefs} from 'vue'
+import {useRoute} from 'vue-router'
 import {Store, useStore} from 'vuex'
 import {Plus, Search} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
@@ -337,6 +338,7 @@ import {formatDate} from '@/util/DateUtil'
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
 const roleCodeList = store.state.roleCodeList
+const route = useRoute()
 const formRef: Ref = ref(null)
 const createTimeDateTimeList = ref([])
 const planIncreaseSalaryDateDateTimeList = ref([])
@@ -388,7 +390,7 @@ const columnConfigList = ref<ViewConfig[]>([
   {value: 'interviewResume', labelKey: 'interviewResume', width: 368, type: ValueType.Text, showOverflow: true,},
   {value: 'photoList', labelKey: 'photo', width: 269, type: ValueType.Image,},
   {value: 'stateFormat', labelKey: 'state', width: 72,},
-  {value: 'externalSignFormat', originValue: 'externalSign', labelKey: 'externalSign', width: 72,type: 'admin' === user.username ? ValueType.SwitchEdit : ValueType.Text,},
+  {value: 'externalSignFormat', originValue: 'externalSign', labelKey: 'externalSign', width: 72, type: 'admin' === user.username ? ValueType.SwitchEdit : ValueType.Text,},
 ])
 const defaultFormData = {
   userId: '',
@@ -416,7 +418,7 @@ const state = reactive({
       endPlanIncreaseSalaryDate: '',
       startCreateTime: '',
       endCreateTime: '',
-      department: '',
+      department: route.query.department || '',
       profession: '',
       username: '',
       employeeId: '',

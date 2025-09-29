@@ -54,11 +54,12 @@ const renderChart = async () => {
 onMounted(() => {
 
 })
-const loopDepart = (list: any[], strList: string[] = [], parentId: string = '') => {
+const loopDepart = (list: any[], strList: string[] = [], parentId: string = '', linkList: string[] = []) => {
   list.forEach(t => {
     strList.push(parentId ? `${parentId} --> ${t.id}[${t.label}]` : `${t.id}[${t.label}]`)
+    linkList.push(`click ${t.id} href "/industry/admin/system/user?tabIndex=0&department=${t.id}" _blank`)
     if (t.children && t.children.length > 0) {
-      loopDepart(t.children, strList, t.id)
+      loopDepart(t.children, strList, t.id, linkList)
     }
   })
   return strList
@@ -67,11 +68,15 @@ const data = ref([])
 const handleList = () => {
   return httpGet(`/system/depart/list`, {}).then(r => {
     data.value = r.list
-    const chartList = loopDepart(data.value)
+    const chartList = []
+    const linkList = []
+    loopDepart(data.value, chartList, '', linkList)
     chartDefinition.value = `
 flowchart TD
-    ${chartList.join('    \n    ')}
-    click 0 href "https://www.baidu.com" _blank
+    ${chartList.join('\n    ')}
+
+    ${linkList.join('\n    ')}
+
 `
     console.log(chartDefinition.value)
     //
