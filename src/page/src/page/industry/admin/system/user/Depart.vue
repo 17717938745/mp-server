@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div style="margin-bottom: 20px;">
+      <el-link type="primary" class="login-helper" @click="handleJumpToParam">
+        配置组织架构
+      </el-link>
+    </div>
     <el-tree
         style="max-width: 600px"
         :allow-drop="allowDrop"
@@ -35,7 +40,15 @@ import type {DragEvents} from 'element-plus/es/components/tree/src/model/useDrag
 const router = useRouter()
 const store: Store<StoreType> = useStore<StoreType>()
 const user = store.state.user
-
+const handleJumpToParam = () => {
+  router.push(
+      {
+        path: '/industry/admin/product/param',
+        query: {
+          paramCategoryId: `organizationalStructure`,
+        },
+      })
+}
 type Node = RenderContentContext['node']
 
 const handleDragStart = (node: Node, ev: DragEvents) => {

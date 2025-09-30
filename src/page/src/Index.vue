@@ -7,20 +7,17 @@
 </template>
 
 <script lang="tsx" setup>
-import {initClient, registerInterceptor} from './util/HttpUtil';
+import {httpGet, initClient, registerInterceptor,} from './util/HttpUtil';
 import {ref} from 'vue';
-import {DataResult} from '@/typing/ma/System';
+import {useStore} from 'vuex'
 import {getFullSignUri} from '@/util/RouterUtil';
 import {useRouter} from 'vue-router';
 import {toast} from './component/lead/toast';
 
 const router = useRouter();
-const initialized = ref(false /*location && location.pathname && location.pathname.length <= 1*/);
-if (!initialized.value) {
-  initClient().then((result: DataResult<any>) => {
-    initialized.value = true;
-  });
-}
+const store = useStore();
+const initialized = ref(false);
+
 registerInterceptor(
     (result: any) => {
       if (result) {
@@ -82,6 +79,23 @@ registerInterceptor(
       return Promise.reject(error);
     }
 );
+Promise.all([
+  httpGet('douson/config', {
+    categoryIdList: [
+      'commonConfig',
+    ]
+  })
+  ,initClient()
+]).then(l => {
+  const d = l[0].data.commonConfig
+  const c = {}
+  for (let i = 0; i <d.length; i++) {
+    const t = d[i]
+    c[t.value] = t.label
+  }
+  store.commit("setCommonConfig", c)
+  initialized.value = true;
+})
 </script>
 
 <style lang="scss">

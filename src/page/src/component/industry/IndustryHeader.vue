@@ -1,8 +1,8 @@
 <template>
   <div class="header">
     <div class="header-left" style="padding-left: 10px;">
-      <a href="http://192.168.9.14:8081/#/dashboard" style="color: #10bf8a; display: flex; align-items: center;" target="_blank">
-        http://192.168.9.14:8081/#/dashboard
+      <a v-if="storeState.commonConfig.adminPage" :href="storeState.commonConfig.adminPage" style="color: #10bf8a; display: flex; align-items: center;" target="_blank">
+        {{ storeState.commonConfig.adminPage }}
       </a>
     </div>
     <el-space class="header-right">
@@ -94,6 +94,7 @@ const languageList = [
 const route = useRoute()
 const router = useRouter()
 const store: Store<StoreType> = useStore()
+const storeState: StoreType = store.state;
 const roleCodeList = store.state.roleCodeList
 const modifyPasswordModal = ref(false)
 const user = store.state.user

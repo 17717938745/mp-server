@@ -13,9 +13,9 @@
         active-text-color="#20a0ff"
         router
     >
-      <a href="https://vn.douson.cn/" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;" target="_blank">
+      <a v-if="storeState.commonConfig.homePage" :href="storeState.commonConfig.homePage" style="color: #ffffff; display: flex; align-items: center; text-decoration: none;" target="_blank">
         <img :src="fullUrl('/third/img/industry/logo.ico', '')" alt="" style="height: 30px; margin-right: 10px;"/>
-        https://vn.douson.cn/
+        {{storeState.commonConfig.homePage}}
       </a>
       <template v-for="sidebarTree in sidebarTreeList">
         <Industry-sidebar-item class="leadSidebarItem" :sidebar-tree="sidebarTree"/>
@@ -35,6 +35,7 @@ import {useRoute} from 'vue-router'
 import IndustrySidebarItem from './IndustrySidebarItem.vue'
 import {StoreType} from '@/store/Industry'
 import {includes} from '@/util/ArrayUtil'
+
 
 const sidebarRef = ref(null)
 export default {

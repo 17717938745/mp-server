@@ -8,6 +8,7 @@ import {storeOptions as commonStoreOptions, StoreType as CommonStoreType} from '
 const ROLE_LIST_KEY: string = 'industry_role_list'
 const USER_KEY: string = 'industry_user'
 const TEXT_KEY: string = 'industry_text'
+const COMMON_CONFIG_KEY: string = 'common_config_text'
 
 export interface Text {
   value: string;
@@ -726,6 +727,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
         {
           "value": "organizationalStructure",
           "label": "组织架构"
+        },
+        {
+          "value": "systemConfig",
+          "label": "系统配置"
+        },
+        {
+          "value": "commonConfig",
+          "label": "通用配置"
         },
         {
           "value": "optimizeType",
@@ -2677,6 +2686,14 @@ const MULTIPLE_TEXT_LIST: MultipleText = {
           "label": "cơ cấu tổ chức"
         },
         {
+          "value": "systemConfig",
+          "label": "cấu hình hệ thống"
+        },
+        {
+          "value": "commonConfig",
+          "label": "cấu hình chung"
+        },
+        {
           "value": "optimizeType",
           "label": "Hạng mục cần cải tiến"
         },
@@ -3987,7 +4004,8 @@ export interface StoreType extends CommonStoreType {
   tagList: Tag[]
   pathList: string[]
   roleList: string[]
-  roleCodeList: string[]
+  roleCodeList: string[],
+  commonConfig: any,
   menuTreeList: MenuTree[],
   textKey: string,
   text: TextObject,
@@ -4008,6 +4026,7 @@ export const storeOptions: StoreOptions<StoreType> = {
         pathList: location.pathname.split('/').filter(temp => temp),
         roleList: JSON.parse(getStorage(ROLE_LIST_KEY) || '[]'),
         roleCodeList: JSON.parse(getStorage(ROLE_LIST_KEY) || '[]'),
+        commonConfig: JSON.parse(getStorage(COMMON_CONFIG_KEY) || '{}'),
         tagList: new Array<Tag>(),
         menuTreeList: getMenuTreeList(),
         textKey: textKeyConst,
@@ -4040,6 +4059,10 @@ export const storeOptions: StoreOptions<StoreType> = {
         setMenuTreeList(state: StoreType, menuTreeList: MenuTree[]) {
           replaceAll(state.menuTreeList, menuTreeList)
           setMenuTreeList(menuTreeList)
+        },
+        setCommonConfig(state: StoreType, commonConfig: any) {
+          state.commonConfig = commonConfig
+          setStorage(COMMON_CONFIG_KEY, JSON.stringify(commonConfig))
         },
         clearMenuTreeList(state: StoreType) {
           clearAll(state.menuTreeList)

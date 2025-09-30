@@ -22,6 +22,10 @@ public class ParamResponse implements Serializable {
 
     private static final long serialVersionUID = -5102590282487063037L;
     /**
+     * 通用配置
+     */
+    private List<ParamConfigResponse> commonConfig;
+    /**
      * 加工工序
      */
     private List<ParamConfigResponse> processProcedureList;
@@ -85,6 +89,10 @@ public class ParamResponse implements Serializable {
      * 部门
      */
     private List<ParamConfigResponse> departmentList;
+    /**
+     * 组织架构
+     */
+    private List<ParamConfigResponse> organizationalStructureList;
     /**
      * 精益类型
      */

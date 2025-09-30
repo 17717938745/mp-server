@@ -112,7 +112,8 @@
     <el-dialog :title="formSave ? 'Add' : 'Edit'" v-model="formVisible" width="60%" :close-on-click-modal="false">
       <el-form :rules="formRuleList" :model="formData" ref="formRef" label-width="128px">
         <el-form-item prop="paramCategoryId" label="参数分类" ref="formAutoFocusRef">
-          <el-select v-model="formData.paramCategoryId" :disabled="!formSave" clearable placeholder="参数类型" @change="query.data.paramCategoryId = formData.paramCategoryId">
+          <el-select v-model="formData.paramCategoryId" :disabled="!formSave" clearable placeholder="参数类型"
+                     @change="query.data.paramCategoryId = formData.paramCategoryId">
             <el-option-group
                 v-for="(g, i) in paramCategoryGroupList"
                 :key="`group-${i}`"
@@ -152,6 +153,7 @@
 
 <script lang="tsx" setup>
 import {reactive, Ref, ref, toRefs} from 'vue'
+import {useRoute,} from 'vue-router'
 import {Store, useStore} from 'vuex'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Edit, Plus, Search} from '@element-plus/icons-vue'
@@ -163,14 +165,15 @@ import {StoreType} from '@/store/Index'
 
 defineOptions({
   name: '/industry/admin/product/param',
-});
+})
 const store: Store<StoreType> = useStore<StoreType>()
 const roleCodeList = store.state.roleCodeList
 const formRef: Ref = ref(null)
+const route = useRoute()
 const state = reactive({
   query: {
     data: {
-      paramCategoryId: '',
+      paramCategoryId: route.query.paramCategoryId || '',
     },
     page: {
       page: DEFAULT_PAGE,
@@ -197,6 +200,19 @@ const state = reactive({
 })
 
 const paramCategoryGroupList = [
+  {
+    labelKey: 'systemConfig',
+    paramCategoryIdOptionList: [
+      /*{
+        value: 'accidentType',
+        label: store.state.label.accidentType,
+      },*/
+      {
+        value: 'commonConfig',
+        label: store.state.label.commonConfig,
+      },
+    ],
+  },
   {
     labelKey: 'vocationRecord',
     paramCategoryIdOptionList: [
@@ -254,6 +270,10 @@ const paramCategoryGroupList = [
       {
         value: 'department',
         label: store.state.label.department,
+      },
+      {
+        value: 'organizationalStructure',
+        label: store.state.label.organizationalStructure,
       },
       {
         value: 'profession',
@@ -484,7 +504,9 @@ const handleChangeAndList = () => {
   formData.value.paramCategoryId = state.query.data.paramCategoryId
   handleList()
 }
-// handleList()
+if(state.query.data.paramCategoryId) {
+  handleList()
+}
 const handleSaveModal = () => {
   state.formVisible = true
   state.formSave = true
@@ -518,10 +540,10 @@ const handleDelete = (row: typeof state.tableData) => {
     type: 'warning',
   }).then(() => {
     httpDelete('douson/admin/param', row)
-    .then(() => {
-      ElMessage.success('Delete success')
-      handleList()
-    })
+        .then(() => {
+          ElMessage.success('Delete success')
+          handleList()
+        })
   })
 }
 const {

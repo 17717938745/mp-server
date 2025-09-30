@@ -1,0 +1,1 @@
+import{a,e}from"./Chart.vue_vue_type_script_setup_true_lang-DoYX8CxP.js";var g=a((o,t)=>{let n;return t==="sandbox"&&(n=e("#i"+o)),(t==="sandbox"?e(n.nodes()[0].contentDocument.body):e("body")).select(`[id="${o}"]`)},"getDiagramElement");export{g};

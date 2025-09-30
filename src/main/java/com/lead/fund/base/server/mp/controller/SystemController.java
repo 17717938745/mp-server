@@ -412,19 +412,13 @@ public class SystemController {
                 (t, r) -> t.setLeaderUserIdFormat(r.getName())
         );
         final Map<Object, String> departmentMap = paramDao.listByCategoryId("department").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, ParamConfigResponse::getLabel));
-        MultitaskUtil.supplementList(
-                list.stream().filter(t -> isNotBlank(t.getDepartment())).collect(Collectors.toList()),
-                MpUserResponse::getDepartment,
-                l -> paramDao.listByCategoryId("department"),
-                (t, r) -> t.getDepartment().equals(r.getValue()),
-                (t, r) -> t.setDepartmentFormat(r.getLabel())
-        );
+        final Map<Object, String> organizationalStructureMap = paramDao.listByCategoryId("organizationalStructure").stream().collect(Collectors.toMap(ParamConfigResponse::getValue, ParamConfigResponse::getLabel));
         return new ListResult<>(
                 list.stream()
                         .peek(t -> {
                             t
                                     .setDepartmentFormat(departmentMap.getOrDefault(t.getDepartment(), t.getDepartment()))
-                                    .setOrganizationalStructureFormat(t.getOrganizationalStructureList().stream().map(tt -> departmentMap.getOrDefault(tt, tt)).collect(Collectors.joining(",")))
+                                    .setOrganizationalStructureFormat(t.getOrganizationalStructureList().stream().map(tt -> organizationalStructureMap.getOrDefault(tt, tt)).collect(Collectors.joining(",")))
                             ;
                             t.setExternalSign(Boolean.TRUE.equals(t.getExternalSign()));
                             t.setExternalSignFormat(Boolean.TRUE.equals(t.getExternalSign()) ? "Yes" : "No");
@@ -752,7 +746,7 @@ public class SystemController {
                         TreeUtil.tree(
                                 paramDao.list(
                                         new LambdaQueryWrapper<ParamEntity>()
-                                                .eq(ParamEntity::getParamCategoryId, "department")
+                                                .eq(ParamEntity::getParamCategoryId, "organizationalStructure")
                                 )
                                 , t -> {
                                     final List<String> userIdList = orgUserListMap.getOrDefault(t.getParamCode(), new ArrayList<>()).stream().map(MpUserEntity::getId).collect(Collectors.toList());
@@ -808,7 +802,7 @@ public class SystemController {
             paramDao.update(null,
                     new LambdaUpdateWrapper<ParamEntity>()
                             .set(ParamEntity::getParentParamCode, parentId)
-                            .eq(ParamEntity::getParamCategoryId, "department")
+                            .eq(ParamEntity::getParamCategoryId, "organizationalStructure")
                             .eq(ParamEntity::getParamCode, t.getId())
             );
             if (CollUtil.isNotEmpty(t.getChildren())) {

@@ -65,7 +65,7 @@ interface Image {
 interface PropType {
   photoList: Image[]
   maxSize?: number
-  disabled: boolean
+  disabled?: boolean
 }
 
 defineExpose({})

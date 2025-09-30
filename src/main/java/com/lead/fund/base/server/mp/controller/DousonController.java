@@ -425,6 +425,7 @@ public class DousonController {
                                 .map(t -> (ParamConfigResponse) new ParamConfigResponse().setValue(t.getId()).setLabel(t.getDeviceName()))
                                 .collect(Collectors.toList())
                 );
+                case "commonConfig" -> builder.commonConfig(paramDao.listByCategoryId(categoryId));
                 case "processProcedure" -> builder.processProcedureList(paramDao.listByCategoryId(categoryId));
                 case "schedule" -> builder.scheduleList(paramDao.listByCategoryId(categoryId));
                 case "workMinute" -> builder.workMinuteList(
@@ -445,6 +446,7 @@ public class DousonController {
                 case "skillDealOpinion" -> builder.skillDealOpinionList(paramDao.listByCategoryId(categoryId));
                 case "defectType" -> builder.defectTypeList(paramDao.listByCategoryId(categoryId));
                 case "department" -> builder.departmentList(paramDao.listByCategoryId(categoryId));
+                case "organizationalStructure" -> builder.organizationalStructureList(paramDao.listByCategoryId(categoryId));
                 case "profession" -> builder.professionList(paramDao.listByCategoryId(categoryId));
                 case "optimizeType" -> builder.optimizeTypeList(paramDao.listByCategoryId(categoryId));
                 case "chineseVietnamName" -> builder.chineseVietnamNameList(paramDao.listByCategoryId(categoryId));

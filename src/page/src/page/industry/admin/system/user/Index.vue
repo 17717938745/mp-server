@@ -21,7 +21,7 @@
                  :placeholder="store.state.label.organizationalStructure"
                  @change="handleList">
         <el-option
-            v-for="item in config.departmentList"
+            v-for="item in config.organizationalStructureList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -216,7 +216,7 @@
                      :placeholder="store.state.label.department"
                      :disabled="!includes(roleCodeList, 'admin')">
             <el-option
-                v-for="item in config.departmentList"
+                v-for="item in config.organizationalStructureList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -470,6 +470,7 @@ const state = reactive({
     testDeviceList: [],
     customerShortNameList: [],
     departmentList: [],
+    organizationalStructureList: [],
     professionList: [],
     optimizeTypeList: [],
     userPropertyList: [],
@@ -571,6 +572,7 @@ Promise.all([
       'testDevice',
       'customerShortName',
       'department',
+      'organizationalStructure',
       'profession',
       'optimizeType',
       'userProperty',

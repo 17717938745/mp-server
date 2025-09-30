@@ -7,7 +7,7 @@
       <el-affix position="top" :offset="90">
         <div class="douson-flex" style="justify-content: space-between; font-size: 20px; font-weight: 600; border-bottom: 1px solid #eeeeee; padding: 20px; background: radial-gradient(circle, #7b6262, #be8b5a, #6facb7); color: #2927cf;">
         <span>
-          {{ store.state.label[props.titleLabelKey] }}
+          {{ storeState.commonConfig.communityName || store.state.label[props.titleLabelKey] }}
           <el-input
               v-model="forumRequest.data.title"
               @keyup.enter="handleResetForumPage"
@@ -108,6 +108,7 @@ import {ArrowDown, ArrowUp, CaretBottom, CaretTop, ChatDotSquare, Delete, Edit, 
 import {Store, useStore} from 'vuex'
 import Commentary from './Commentary.vue'
 import Tinymce from './Tinymce.vue'
+import {StoreType} from "@/store/Industry";
 
 interface PropType {
   titleLabelKey?: string
@@ -117,6 +118,7 @@ const props = withDefaults(defineProps<PropType>(), {
   titleLabelKey: 'dousonVoiceCommunity',
 })
 const store: Store<StoreType> = useStore<StoreType>()
+const storeState: StoreType = store.state;
 const user = store.state.user
 const router = useRouter()
 const route = useRoute()
