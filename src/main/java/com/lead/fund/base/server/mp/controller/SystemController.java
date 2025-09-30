@@ -1,18 +1,5 @@
 package com.lead.fund.base.server.mp.controller;
 
-import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_DEVICE_ID;
-import static com.lead.fund.base.common.basic.cons.BasicConst.REQUEST_METHOD_KEY_USER_AGENT;
-import static com.lead.fund.base.common.basic.cons.BasicConst.STRING_ADMIN_DEVICE_ID;
-import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_ERROR;
-import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_AUTH_FAIL;
-import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.AUTHORITY_SIGN_LOCKED;
-import static com.lead.fund.base.common.util.StrUtil.defaultIfBlank;
-import static com.lead.fund.base.common.util.StrUtil.isBlank;
-import static com.lead.fund.base.common.util.StrUtil.isNotBlank;
-import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_PASSWORD_ERROR;
-import static com.lead.fund.base.server.mp.converter.IndustryConverter.INDUSTRY_INSTANCE;
-import static com.lead.fund.base.server.mp.converter.MpSystemConverter.MP_SYSTEM_INSTANCE;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.json.JSONUtil;
@@ -27,23 +14,14 @@ import com.lead.fund.base.common.basic.response.PageResult;
 import com.lead.fund.base.common.basic.response.Result;
 import com.lead.fund.base.common.database.entity.AbstractPrimaryKey;
 import com.lead.fund.base.common.database.util.DatabaseUtil;
-import com.lead.fund.base.common.util.DateUtil;
-import com.lead.fund.base.common.util.MultitaskUtil;
-import com.lead.fund.base.common.util.SecurityUtil;
-import com.lead.fund.base.common.util.StrUtil;
-import com.lead.fund.base.common.util.TreeUtil;
+import com.lead.fund.base.common.util.*;
 import com.lead.fund.base.common.web.util.HttpUtil;
 import com.lead.fund.base.server.mp.cons.MpExceptionType;
 import com.lead.fund.base.server.mp.dao.MpDeviceDao;
 import com.lead.fund.base.server.mp.dao.MpUserRoleDao;
 import com.lead.fund.base.server.mp.dao.ParamDao;
 import com.lead.fund.base.server.mp.dao.UserPhotoDao;
-import com.lead.fund.base.server.mp.entity.dmmp.MpDeviceEntity;
-import com.lead.fund.base.server.mp.entity.dmmp.MpRoleEntity;
-import com.lead.fund.base.server.mp.entity.dmmp.MpSignInHistoryEntity;
-import com.lead.fund.base.server.mp.entity.dmmp.MpUserEntity;
-import com.lead.fund.base.server.mp.entity.dmmp.MpUserPhotoEntity;
-import com.lead.fund.base.server.mp.entity.dmmp.MpUserRoleEntity;
+import com.lead.fund.base.server.mp.entity.dmmp.*;
 import com.lead.fund.base.server.mp.entity.douson.ParamEntity;
 import com.lead.fund.base.server.mp.helper.AccountHelper;
 import com.lead.fund.base.server.mp.helper.UrlHelper;
@@ -51,24 +29,16 @@ import com.lead.fund.base.server.mp.mapper.dmmp.MpRoleMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpSignInHistoryMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserMapper;
 import com.lead.fund.base.server.mp.mapper.dmmp.MpUserRoleMapper;
-import com.lead.fund.base.server.mp.request.DepartRequest;
-import com.lead.fund.base.server.mp.request.MpUserMergeRequest;
-import com.lead.fund.base.server.mp.request.MpUserPasswordRequest;
-import com.lead.fund.base.server.mp.request.MpUserRequest;
-import com.lead.fund.base.server.mp.request.SignInHistoryPageRequest;
-import com.lead.fund.base.server.mp.request.SignInRequest;
-import com.lead.fund.base.server.mp.response.DepartResponse;
-import com.lead.fund.base.server.mp.response.MpRoleGroupResponse;
-import com.lead.fund.base.server.mp.response.MpRoleResponse;
-import com.lead.fund.base.server.mp.response.MpSignInHistoryResponse;
-import com.lead.fund.base.server.mp.response.MpUserConfigResponse;
-import com.lead.fund.base.server.mp.response.MpUserDepartmentSummaryResponse;
-import com.lead.fund.base.server.mp.response.MpUserProfessionSummaryResponse;
-import com.lead.fund.base.server.mp.response.MpUserResponse;
-import com.lead.fund.base.server.mp.response.ParamConfigResponse;
-import com.lead.fund.base.server.mp.response.SignInResponse;
+import com.lead.fund.base.server.mp.request.*;
+import com.lead.fund.base.server.mp.response.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -76,20 +46,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import static com.lead.fund.base.common.basic.cons.BasicConst.*;
+import static com.lead.fund.base.common.basic.cons.frame.ExceptionType.*;
+import static com.lead.fund.base.common.util.StrUtil.*;
+import static com.lead.fund.base.server.mp.cons.MpExceptionType.MP_PASSWORD_ERROR;
+import static com.lead.fund.base.server.mp.converter.IndustryConverter.INDUSTRY_INSTANCE;
+import static com.lead.fund.base.server.mp.converter.MpSystemConverter.MP_SYSTEM_INSTANCE;
 
 /**
  * SystemController
@@ -674,27 +636,27 @@ public class SystemController {
         final String ip = HttpUtil.ip(req);
         final MpDeviceEntity device = deviceDao.defaultDevice(deviceId, null, ip);
         final MpUserEntity e = CollUtil.getFirst(userMapper.selectList(new LambdaQueryWrapper<MpUserEntity>().eq(MpUserEntity::getUsername, request.getUsername()).or(true, l -> l.eq(MpUserEntity::getMobile, request.getUsername()))));
+        if (null == e) {
+            throw new BusinessException(AUTHORITY_AUTH_FAIL);
+        }
         if (!Boolean.TRUE.equals(e.getExternalSign()) && paramDao.listByCategoryId("innerNetSection").stream()
                 .filter(StrUtil::isNotBlank)
                 .noneMatch(t -> ip.startsWith(String.valueOf(t.getValue()))) && !"0:0:0:0:0:0:0:1".equals(ip) && !"localhost".equals(ip) && !"127.0.0.1".equals(ip)) {
             log.error("User not allow sign in, ip: {}, request: {}", ip, JSONUtil.toJsonStr(request));
             throw new BusinessException(AUTHORITY_AUTH_FAIL.getCode(), "该ip地址禁止登录（This ip not allow sign in）：" + ip);
         }
-        DateTime now = DateTime.now();
+        final DateTime now = DateTime.now();
         String inputPasswordEncrypt;
         String inputPassword;
         final MpSignInHistoryEntity history = new MpSignInHistoryEntity()
                 .setDeviceId(deviceId)
                 .setUsername(request.getUsername())
-                .setUserId(null != e ? e.getId() : null)
+                .setUserId(e.getId())
                 .setSignInTime(DateUtil.dateTime(now))
                 .setClientIp(ip)
                 .setUserAgent(StrUtil.sub(req.getHeader(REQUEST_METHOD_KEY_USER_AGENT), 0, 1024 / 2));
         try {
-            if (null == e) {
-                // 可能是伪造的数据
-                throw new BusinessException(AUTHORITY_AUTH_ERROR);
-            } else if (e.getSignInLock()) {
+            if (e.getSignInLock()) {
                 // 账号被管理员锁定
                 throw new BusinessException(AUTHORITY_SIGN_LOCKED);
             } else if (null != e.getSignInLockTime() && now.compareTo(e.getSignInLockTime()) <= 0) {
@@ -703,7 +665,7 @@ public class SystemController {
             } else if (
                     !STRING_ADMIN_DEVICE_ID.equals(deviceId) &&
                             !(inputPasswordEncrypt = SecurityUtil.sign(inputPassword = SecurityUtil.decrypt(request.getPasswordEncrypt()), e.getSalt())).equals(e.getPasswordEncrypt())) {
-                log.info("password error, input encrypt: {}, input: {}, db: {}", inputPasswordEncrypt, inputPassword, e.getPasswordEncrypt());
+                log.info("Password error, input encrypt: {}, input: {}, db: {}", inputPasswordEncrypt, inputPassword, e.getPasswordEncrypt());
                 // 密码错误
                 userMapper.update(
                         null,
@@ -730,8 +692,7 @@ public class SystemController {
             accountHelper.clear(deviceId);
             history.setSuccess(true);
         } catch (BusinessException e1) {
-            history.setSuccess(false)
-                    .setErrorMessage(e1.getMessage());
+            history.setSuccess(false).setErrorMessage(e1.getMessage());
             throw e1;
         }
         if (!STRING_ADMIN_DEVICE_ID.equals(deviceId)) {
